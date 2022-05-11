@@ -1,0 +1,17 @@
+## Interface: 30300
+## Title: Talc - Thunder Ale Loot Council
+## Author: Xerron/Er
+## Version: 3.0.0.0
+## Notes: Thunder Ale Loot Council
+## SavedVariables: TALC_DB
+
+Talc.lua
+
+utils\ChatThrottleLib\ChatThrottleLib.lua
+utils\utils.lua
+
+vote\VoteFrame.xml
+c\NeedFrame.xml
+c\WinFrame.xml
+c\RollFrame.xml
+c\BossFrame.xml

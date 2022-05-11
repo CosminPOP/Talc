@@ -1,0 +1,2827 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+
+    <Script file="VoteFrame.lua"/>
+
+    <Button name="Talc_CLVotedButton" inherits="UIPanelButtonTemplate" text="" virtual="true">
+        <NormalTexture file="Interface\AddOns\Talc\images\classes\rogue"/>
+        <PushedTexture file="Interface\AddOns\Talc\images\classes\rogue"/>
+        <HighlightTexture file="Interface\AddOns\Talc\images\classes\rogue" alphaMode="Add"/>
+        <Size>
+            <AbsDimension x="24" y="24"/>
+        </Size>
+        <Anchors>
+            <Anchor point="LEFT">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+            </OnLoad>
+            <OnClick>
+            </OnClick>
+            <OnEnter>
+            </OnEnter>
+            <OnLeave>
+            </OnLeave>
+        </Scripts>
+    </Button>
+
+    <Texture name="TalcButtonNormal" virtual="true" file="Interface\addons\Talc\images\gradbluedark">
+        <!--        <Color r="1" g="0" b="0" a="0"/>-->
+    </Texture>
+
+    <Texture name="TalcButtonPushed" virtual="true" file="Interface\addons\Talc\images\gradbluedark">
+        <!--        <Color r="0" g="0.56" b="0.27" a="1"/>-->
+    </Texture>
+
+    <Texture name="TalcButtonDisabled" virtual="true">
+        <Color r="0.3" g="0.3" b="0.3" a="0.3"/>
+    </Texture>
+
+    <Texture name="TalcButtonHighlight" virtual="true" alphamode="ADD">
+        <!--        <Color r="0" g="0.56" b="0.27" a="0.3"/>-->
+        <Color r="1" g="1" b="1" a=".2"/>
+    </Texture>
+
+    <Frame name="Talc_VotedItemsFrameTemplate" virtual="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="35" y="35"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="5" y="5"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                  edgeFile="Interface\Tooltips\UI-Tooltip-Border"
+                  tile="true">
+            <EdgeSize>
+                <AbsValue val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="16"/>
+            </TileSize>
+            <!--            <BackgroundInsets>-->
+            <!--                <AbsInset left="4" right="4" top="4" bottom="4"/>-->
+            <!--            </BackgroundInsets>-->
+        </Backdrop>
+        <Frames>
+            <Button name="$parentVotedItemButton" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="35" y="35"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
+                               alphaMode="ADD">
+                    <Size>
+                        <AbsDimension x="35" y="35"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="35" y="35"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <Size>
+                    <AbsDimension x="35" y="35"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+                            <Size>
+                                <AbsDimension x="32" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:VotedItemButton(this:GetID())
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+
+    <Frame name="Talc_CLFrameTemplate" virtual="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="292" y="24"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentAName" inherits="GameFontNormal" text="[Assist Name]">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="20" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <Texture name="$parentStatusIconOnline" file="Interface\addons\Talc\images\statusicon-online">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="5" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentStatusIconOffline" file="Interface\addons\Talc\images\statusicon-offline">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="5" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                  tile="true">
+        </Backdrop>
+        <Frames>
+            <CheckButton name="$parentAssistCheck">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="140" y="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        -- RegisterForSave("SHOW_OFFLINE_GUILD_MEMBERS");
+                        -- this:RegisterEvent("VARIABLES_LOADED");
+                    </OnLoad>
+                    <OnClick>
+                        TalcFrame:SetAssist(this:GetID(), this:GetChecked())
+                    </OnClick>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+            </CheckButton>
+            <CheckButton name="$parentCLCheck">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="240" y="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        -- RegisterForSave("SHOW_OFFLINE_GUILD_MEMBERS");
+                        -- this:RegisterEvent("VARIABLES_LOADED");
+                    </OnLoad>
+                    <OnClick>
+                        TalcFrame:SetCL(this:GetID(), this:GetChecked())
+                    </OnClick>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+            </CheckButton>
+        </Frames>
+    </Frame>
+
+    <Frame name="Talc_ContestantFrame" virtual="true">
+        <Size>
+            <AbsDimension x="590" y="20"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="0" y="-100"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true" edgeSize="1">
+            <!--            <BackgroundInsets>-->
+            <!--                <AbsInset left="5" right="5" top="0" bottom="0"/>-->
+            <!--            </BackgroundInsets>-->
+        </Backdrop>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture name="$parentClassIcon" hidden="false" file="Interface\AddOns\Talc\images\classes\rogue">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="3" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <FontString name="$parentName" inherits="GameFontNormal" text="[name]" hidden="false">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="25" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentNeed" inherits="GameFontNormal" text="MS Upgrade" hidden="false">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="150" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <Texture name="$parentWinnerIcon" hidden="true" file="Interface\GroupFrame\UI-Group-MasterLooter">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-5" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentCLVote1" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="424" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote2" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="440" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote3" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="456" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote4" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="472" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote5" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="488" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote6" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="504" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote7" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="520" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote8" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="536" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote9" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="552" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentCLVote10" hidden="false" file="Interface\AddOns\Talc\images\classes\paladin">
+                    <Size>
+                        <AbsDimension x="18" y="18"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="568" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentCLVote" hidden="true" file="Interface\GroupFrame\UI-Group-LeaderIcon">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="30" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentRollWinner" hidden="true" file="Interface\Buttons\UI-GroupLoot-Dice-Up">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="298" y="-2"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentRollPass" hidden="true" file="Interface\Buttons\UI-GroupLoot-Pass-Up">
+                    <Size>
+                        <AbsDimension x="16" y="16"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="298" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <FontString name="$parentRoll" inherits="GameFontNormal" text="69" hidden="false">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="280" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentVotes" inherits="GameFontNormal" text="10" hidden="false">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="400" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+
+            <Button name="$parentRightClickMenuButton1" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="210" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
+                    </OnLoad>
+                    <OnClick>
+                        TalcFrame:ContestantClick(this:GetID())
+                    </OnClick>
+                    <OnEnter>
+                        TalcFrame:ContestantOnEnter(this:GetID())
+                    </OnEnter>
+                    <OnLeave>
+                        TalcFrame:ContestantOnLeave()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentRightClickMenuButton2" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="45" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="272" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
+                    </OnLoad>
+                    <OnClick>
+                        TalcFrame:ContestantClick(this:GetID())
+                    </OnClick>
+                    <OnEnter>
+                        TalcFrame:ContestantOnEnter(this:GetID())
+                    </OnEnter>
+                    <OnLeave>
+                        TalcFrame:ContestantOnLeave(this:GetID())
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentRightClickMenuButton3" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="30" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="393" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
+                    </OnLoad>
+                    <OnClick>
+                        TalcFrame:ContestantClick(this:GetID())
+                    </OnClick>
+                    <OnEnter>
+                        TalcFrame:ContestantOnEnter(this:GetID())
+                    </OnEnter>
+                    <OnLeave>
+                        TalcFrame:ContestantOnLeave(this:GetID())
+                    </OnLeave>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="210" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentReplacesItem2" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="231" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentReplacesItem3" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="252" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentVoteButton" inherits="UIPanelButtonTemplate" text="VOTE">
+                <NormalTexture inherits="TalcButtonNormal"/>
+                <PushedTexture inherits="TalcButtonPushed"/>
+                <DisabledTexture inherits="TalcButtonDisabled"/>
+                <HighlightTexture inherits="TalcButtonHighlight"/>
+                <Size>
+                    <AbsDimension x="70" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="320" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+                            <Size>
+                                <AbsDimension x="12" y="12"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:VoteButton(this:GetID());
+                    </OnClick>
+                    <OnEnter>
+                        TalcFrame:ContestantOnEnter(this:GetID())
+                    </OnEnter>
+                    <OnLeave>
+                        TalcFrame:ContestantOnLeave(this:GetID())
+                    </OnLeave>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentCLVote1Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="424" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote2Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="440" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote3Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="456" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote4Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="472" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote5Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="488" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote6Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="504" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote7Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="520" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote8Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="536" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote9Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="552" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+            <Button name="$parentCLVote10Tooltip" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="16" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="568" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnEnter>
+                TalcFrame:ContestantOnEnter(this:GetID())
+            </OnEnter>
+            <OnLeave>
+                TalcFrame:ContestantOnLeave(this:GetID())
+            </OnLeave>
+        </Scripts>
+    </Frame>
+
+    <Frame name="Talc_HistoryItemTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="184" y="21"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="8" y="-40"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true" edgeSize="1">
+            <Color a=".3"/>
+        </Backdrop>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentDate" inherits="GameFontNormal" text="23/05" hidden="false">
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-5" y="-1"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentItem" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Icons\inv_staff_20"/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormal"
+                                    text="[longest item name ever ever ever ever ever ever]" hidden="false">
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="25" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="100" y="20"/>
+                            </Size>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnEnter>
+            </OnEnter>
+            <OnLeave>
+            </OnLeave>
+        </Scripts>
+    </Frame>
+
+    <Frame name="TalcVoteFrame" hidden="true" toplevel="true"
+           parent="UIParent" movable="true" enableMouse="true" resizable="true">
+        <Size>
+            <AbsDimension x="600" y="246"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <ResizeBounds>
+            <minResize x="600" y="246"/>
+            <maxResize x="600" y="456"/>
+        </ResizeBounds>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  tile="false">
+            <EdgeSize>
+                <AbsValue val="20"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="1"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="5" right="5" top="5" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="[mwtitle]">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-9"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentNameLabel" inherits="GameFontNormalSmall" text="Name"
+                            hidden="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="8" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentPickLabel" inherits="GameFontNormalSmall" text="Pick" hidden="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="155" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentReplacesLabel" inherits="GameFontNormalSmall" text="Replaces" hidden="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="216" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentRollLabel" inherits="GameFontNormalSmall" text="Roll" hidden="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="285" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentVotesLabel" inherits="GameFontNormalSmall" text="Votes" hidden="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="406" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentContestantCount" inherits="GameFontNormal" text="" hidden="false">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="10" y="10"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentTimeLeft" inherits="GameFontNormal" text="" hidden="true">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="480" y="10"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentVotedItemName" hidden="true" inherits="GameFontNormalLarge"
+                            text="[voted item name]" justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="270" y="30"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="63" y="-30"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentVotedItemType" hidden="true" inherits="GameFontNormal"
+                            text="[voted item type]">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="65" y="-63"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+
+            <Button name="$parentResizeButton">
+                <NormalTexture file="Interface\AddOns\Talc\images\ResizeGrip"/>
+                <HighlightTexture file="Interface\AddOns\Talc\images\ResizeGrip" alphaMode="ADD"/>
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnMouseDown>
+                        TalcFrame:StartSizing("BOTTOMRIGHT")
+                        TalcFrame:SetUserPlaced(true)
+                        TalcFrame:Resizing()
+                    </OnMouseDown>
+                    <OnMouseUp>
+                        TalcFrame:StopMovingOrSizing()
+                        TalcFrame:Resized()
+                    </OnMouseUp>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
+                <Size>
+                    <AbsDimension x="590" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\addons\Talc\images\gradblue"
+                          tile="false">
+                </Backdrop>
+            </Frame>
+
+            <Frame name="$parentHeaderBackground" hidden="false" framestrata="BACKGROUND">
+                <Size>
+                    <AbsDimension x="594" y="12"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="0" y="-84"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\addons\Talc\images\gradblue" tile="false">
+                </Backdrop>
+            </Frame>
+
+            <Button name="Talc_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
+                    frameStrata="LOW">
+                <Size x="33" y="33"/>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="Minimap" relativePoint="LEFT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\Icons\inv_drink_13">
+                            <Size x="21" y="21"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="7" y="-6"/>
+                                </Anchor>
+                            </Anchors>
+                            <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+                            <Size x="56" y="56"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForClicks("RightButtonUp")
+                        this:RegisterForDrag("LeftButton")
+                        this:SetClampedToScreen(true)
+                    </OnLoad>
+                    <OnDragStart>
+                        this:LockHighlight()
+                        this:StartMoving()
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:UnlockHighlight()
+                        this:StopMovingOrSizing()
+                    </OnDragStop>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 0, 0)
+                        GameTooltip:AddLine('TALC', 1, 1, 1)
+                        GameTooltip:AddLine('Left-click to toggle frame')
+                        GameTooltip:AddLine('Right-click for options')
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                    <OnMouseUp>
+                        if arg1 == "LeftButton" then
+                        TalcFrame:ToggleMainWindow()
+                        else
+                        TalcFrame:ShowMinimapDropdown()
+                        end
+                    </OnMouseUp>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentRLExtraFrame" hidden="true" toplevel="true" movable="false" enableMouse="true">
+                <Size>
+                    <AbsDimension x="600" y="90"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="-90"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          tile="false">
+                    <EdgeSize>
+                        <AbsValue val="16"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="1"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="5" top="5" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <Frames>
+
+                    <Button name="$parentBroadcastLoot" framstrata="HIGH" inherits="UIPanelButtonTemplate"
+                            hidden="false"
+                            text="Broadcast Loot">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="180" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="20" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:BroadcastLoot();
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentResetClose" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="false"
+                            text="Reset and close">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="120" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOP">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:ResetClose();
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentRLOptionsButton" framstrata="HIGH" inherits="UIPanelButtonTemplate"
+                            hidden="true"
+                            text="RL Options">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="120" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-20" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:ToggleRLOptions();
+                                PlaySound("igMainMenuOptionCheckBoxOn");
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="TestNeedFrameButton" framstrata="HIGH" inherits="UIPanelButtonTemplate"
+                            hidden="false"
+                            text="Test Need">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="120" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-20" y="-54"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TestNeedButton_OnClick()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                </Frames>
+            </Frame>
+
+            <Button name="$parentMLToWinner" inherits="UIPanelButtonTemplate" hidden="true" text="ML to Winner">
+                <NormalTexture inherits="TalcButtonNormal"/>
+                <PushedTexture inherits="TalcButtonPushed"/>
+                <DisabledTexture inherits="TalcButtonDisabled"/>
+                <HighlightTexture inherits="TalcButtonHighlight"/>
+                <Size>
+                    <AbsDimension x="200" y="24"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-20" y="-33"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentNrOfVotes" inherits="GameFontNormal" text="">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-30"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:MLToWinner();
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentMLToEnchanter" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="true"
+                    text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\addons\Talc\images\de\ui-grouploot-de-up">
+                    <Size>
+                        <AbsDimension x="24" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentPushedTexture" file="Interface\addons\Talc\images\de\ui-grouploot-de-down"
+                               alphaMode="ADD">
+                    <Size>
+                        <AbsDimension x="24" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture name="$parentHighlightTexture"
+                                  file="Interface\addons\Talc\images\de\ui-grouploot-de-highlight" alphaMode="ADD">
+                    <Size>
+                        <AbsDimension x="24" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <Size>
+                    <AbsDimension x="24" y="24"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-222" y="-34"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:MLToEnchanter()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentWinnerStatus" inherits="UIPanelButtonTemplate" hidden="true" text="winner status">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <DisabledTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="200" y="24"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-20" y="-33"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentNrOfVotes" inherits="GameFontNormal" text="non ML vote status">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-30"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Button>
+
+            <Frame name="$parentCLThatVotedList">
+                <Size>
+                    <AbsDimension x="200" y="24"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-20" y="-60"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Frames>
+                </Frames>
+            </Frame>
+
+            <Button name="$parentMinimizeButton" inherits="UIPanelCloseButton">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-4"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:ToggleMainWindow()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentVotedItemsFrame">
+                <Size>
+                    <AbsDimension x="50" y="200"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="-50" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="1Interface\DialogFrame\UI-DialogBox-Background"
+                          edgeFile="1Interface\addons\Talc\images\border-maw"
+                          tile="false">
+                    <EdgeSize>
+                        <AbsValue val="16"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="1"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="5" top="5" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <Frames>
+                </Frames>
+            </Frame>
+
+            <Button name="$parentCurrentVotedItemIcon" inherits="UIPanelButtonTemplate" hidden="true" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="45" y="45"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="45" y="45"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="50" y="50"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentCurrentVotedItemQuestReward1" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="150" y="-58"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward2" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward1">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward3" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward2">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward4" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward3">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward5" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward4">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward6" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward5">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward7" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward6">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward8" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward7">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward9" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward8">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentCurrentVotedItemQuestReward10" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="CurrentVotedItemQuestReward9">
+                        <Offset>
+                            <AbsDimension x="22" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentContestantScrollListBackground">
+                <Size>
+                    <AbsDimension x="590" y="220"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="0" y="-96"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+                    <!--                    <BackgroundInsets>-->
+                    <!--                        <AbsInset left="5" right="5" top="0" bottom="0"/>-->
+                    <!--                    </BackgroundInsets>-->
+                </Backdrop>
+                <Frames>
+                </Frames>
+            </Frame>
+
+            <Frame name="$parentContestantFrame1" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="TalcVoteFrame">
+                        <Offset>
+                            <AbsDimension x="5" y="-100"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame2" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame1"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame3" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame2"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame4" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame3"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame5" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame4"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame6" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame5"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame7" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame6"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame8" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame7"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame9" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame8"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame10" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame9"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame11" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame10"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame12" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame11"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame13" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame12"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame14" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame13"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentContestantFrame15" hidden="true" inherits="Talc_ContestantFrame">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame14"
+                            relativePoint="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+
+            <ScrollFrame name="$parentContestantScrollListFrame" hidden="true" inherits="FauxScrollFrameTemplate">
+                <Size>
+                    <AbsDimension x="590" y="220"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="TalcVoteFrame" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-27" y="-98"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnVerticalScroll>
+                        FauxScrollFrame_OnVerticalScroll(20, TalcFrame_VoteFrameListScroll_Update);
+                    </OnVerticalScroll>
+                </Scripts>
+            </ScrollFrame>
+
+            <Frame name="$parentTimeLeftBar" framestrata="BACKGROUND">
+                <Size>
+                    <AbsDimension x="592" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="4" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\addons\Talc\images\gradbluedark" tile="true">
+                    <!--                    <Color r="0" g="0.88" b="0.06" a="1"/>-->
+                </Backdrop>
+            </Frame>
+
+            <Button name="$parentDoneVoting" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="false"
+                    text="Done Voting">
+                <NormalTexture inherits="TalcButtonNormal"/>
+                <PushedTexture inherits="TalcButtonPushed"/>
+                <DisabledTexture inherits="TalcButtonDisabled"/>
+                <HighlightTexture inherits="TalcButtonHighlight"/>
+                <Size>
+                    <AbsDimension x="120" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-20" y="6"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+                            <Size>
+                                <AbsDimension x="12" y="12"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:DoneVoting();
+                    </OnClick>
+
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentRLWindowFrame" hidden="true">
+                <Size>
+                    <AbsDimension x="300" y="450"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="300" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          tile="false">
+                    <EdgeSize>
+                        <AbsValue val="20"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="1"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="5" top="5" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontNormal" text="Raid Leader Options">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-9"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentNameTitle" inherits="GameFontNormal" text="Name">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="12" y="-80"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentAssist" inherits="GameFontNormal" text="Assist">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="145" y="-80"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentOfficer" inherits="GameFontNormal" text="Officer">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="230" y="-80"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentNeedButtonsDesc" inherits="GameFontNormal" text="Need buttons">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="-70"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                        <Size>
+                            <AbsDimension x="22" y="22"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-5" y="-4"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                HideUIPanel(TalcFrameRLWindowFrame)
+                                PlaySound("igMainMenuOptionCheckBoxOn");
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
+                        <Size>
+                            <AbsDimension x="292" y="22"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOP">
+                                <Offset>
+                                    <AbsDimension x="0" y="-3"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Backdrop bgFile="Interface\addons\Talc\images\gradblue"
+                                  tile="false">
+                            <!--                    <Color r="0" g="1" b="0"/>-->
+                        </Backdrop>
+                    </Frame>
+
+                    <Button name="$parentSyncLootHistory" inherits="UIPanelButtonTemplate" text="Sync Loot History">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="220" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="10" y="-80"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:SyncLootHistory()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentTab1" inherits="UIPanelButtonTemplate" text="Officers">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="80" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="10" y="-40"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:ChangeTab(1);
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button name="$parentTab2" inherits="UIPanelButtonTemplate" text="Need Buttons">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="80" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="100" y="-40"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:ChangeTab(2);
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button name="$parentTab3" inherits="UIPanelButtonTemplate" text="Loot History">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="190" y="-40"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:ChangeTab(3);
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <CheckButton name="$parentBISButton">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="10" y="-85"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal" text="|cffa335eeBIS">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveLootButton('BIS', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+                    </CheckButton>
+                    <CheckButton name="$parentMSButton">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="60" y="-85"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal" text="|cff0070ddMS">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveLootButton('MS', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+                    </CheckButton>
+                    <CheckButton name="$parentOSButton">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="110" y="-85"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal" text="|cffe79e08OS">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveLootButton('OS', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+                    </CheckButton>
+                    <CheckButton name="$parentXMOGButton">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="160" y="-85"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal" text="|cffb518ffXMOG">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveLootButton('XMOG', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                        <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+                        <PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+                        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+                        <CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+                        <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+                    </CheckButton>
+
+                </Frames>
+            </Frame>
+
+            <Frame name="$parentRaiderDetailsFrame" hidden="true">
+                <Size>
+                    <AbsDimension x="220" y="335"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="220" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          tile="false">
+                    <EdgeSize>
+                        <AbsValue val="20"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="1"/>
+                    </TileSize>
+                    <BackgroundInsets>
+                        <AbsInset left="5" right="5" top="5" bottom="5"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontNormal" text="Raiders details">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-9"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentLootHistoryTitle" inherits="GameFontNormal" text="Loot History">
+                            <Anchors>
+                                <Anchor point="TOP">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-60"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
+                        <Size>
+                            <AbsDimension x="212" y="22"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOP">
+                                <Offset>
+                                    <AbsDimension x="0" y="-3"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Backdrop bgFile="Interface\addons\Talc\images\gradblue"
+                                  tile="false">
+                            <!--                    <Color r="0" g="1" b="0"/>-->
+                        </Backdrop>
+                    </Frame>
+
+                    <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                        <Size>
+                            <AbsDimension x="22" y="22"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-5" y="-4"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:RaiderDetailsClose()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentTab1" inherits="UIPanelButtonTemplate" text="Loot History">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="80" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="100" y="-30"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:RaiderDetailsChangeTab(1);
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <ScrollFrame name="$parentScrollFrame" hidden="true"
+                                 inherits="FauxScrollFrameTemplate">
+                        <Size>
+                            <AbsDimension x="190" y="235"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-84"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnVerticalScroll>
+                                FauxScrollFrame_OnVerticalScroll(22, Talc_LootHistory_Update);
+                            </OnVerticalScroll>
+                        </Scripts>
+                    </ScrollFrame>
+
+                </Frames>
+            </Frame>
+
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="VoteFrameWho" hidden="true" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="150" y="260"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  tile="false">
+            <EdgeSize>
+                <AbsValue val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="1"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="5" right="5" top="5" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" text="Title" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-5"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentText" justifyH="LEFT" text="" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="-20" y="-40"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        closeWhoWindow();
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentRefreshWho" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="false"
+                    text="Refresh">
+                <NormalTexture inherits="TalcButtonNormal"/>
+                <PushedTexture inherits="TalcButtonPushed"/>
+                <DisabledTexture inherits="TalcButtonDisabled"/>
+                <HighlightTexture inherits="TalcButtonHighlight"/>
+                <Size>
+                    <AbsDimension x="140" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:RefreshWho();
+                    </OnClick>
+
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+</Ui>

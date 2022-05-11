@@ -1,0 +1,909 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="NeedFrame.lua"/>
+
+    <GameTooltip name="NewItemTooltip1" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip2" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip3" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip4" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip5" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip6" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip7" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip8" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip9" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip10" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip11" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip12" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip13" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip14" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="NewItemTooltip15" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+
+    <Font name="Mono" font="Interface\addons\Talc\fonts\RobotoMono.ttf" virtual="true">
+        <FontHeight>
+            <AbsValue val="10"/>
+        </FontHeight>
+    </Font>
+
+    <Frame name="TalcNeedFrameItemTemplate" virtual="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="512" y="128"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOP">
+                <Offset>
+                    <AbsDimension x="0" y="-50"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Frames>
+
+            <Frame name="$parentGlowFrame" framestrata="HIGH">
+                <Size>
+                    <AbsDimension x="512" y="128"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentGlow" file="Interface\addons\Talc\images\need\need_glow"
+                                 alphamode="ADD">
+                            <Size>
+                                <AbsDimension x="512" y="128"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame name="$parentBgImage" framestrata="MEDIUM">
+                <Size>
+                    <AbsDimension x="512" y="128"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+
+            <Button name="$parentItemIcon" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <DisabledTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </DisabledTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="40" y="40"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="124" y="-37"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentItemName" inherits="GameFontNormal" text="[name of nname]"
+                                    hidden="false"
+                                    justifyH="LEFT">
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="50" y="-1"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="135" y="37"/>
+                            </Size>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentBISButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Addons\Talc\images\need\bis_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\bis_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\bis_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="318" y="-40"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="BIS" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        PlayerNeedItemButton_OnClick(this:GetID(), 'bis');
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentMSUpgradeButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Addons\Talc\images\need\ms_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\ms_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\ms_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="355" y="-40"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="MS" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        PlayerNeedItemButton_OnClick(this:GetID(), 'ms');
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Addons\Talc\images\need\os_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\os_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\os_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="392" y="-40"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="OS" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        PlayerNeedItemButton_OnClick(this:GetID(), 'os');
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Addons\Talc\images\need\xmog_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\xmog_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\xmog_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="392" y="-40"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="XMOG" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        PlayerNeedItemButton_OnClick(this:GetID(), 'xmog');
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentPassButton" inherits="UIPanelCloseButton" text="Pass">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-66" y="-27"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PlayerNeedItemButton_OnClick(this:GetID(), 'pass');
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentTimeLeftBar" framestrata="HIGH">
+                <Size>
+                    <AbsDimension x="190" y="8"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="119" y="-88"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+                    <Color r="0" g="0.88" b="0.06" a=".5"/>
+                </Backdrop>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentText" inherits="GameFontNormalSmall" text="" hidden="false">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="5" y="1"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame name="$parentQuestRewards" framestrata="MEDIUM" hidden="true">
+                <Backdrop bgFile="Interface\Addons\Talc\images\quest-rewards">
+                </Backdrop>
+                <Size>
+                    <AbsDimension x="128" y="128"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="60" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentQuestRewardsText" inherits="GameFontNormal" text="Awards:">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="20" y="-15"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentReward1" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </NormalTexture>
+                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </PushedTexture>
+                        <HighlightTexture inherits=""/>
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="20" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button name="$parentReward2" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </NormalTexture>
+                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </PushedTexture>
+                        <HighlightTexture inherits=""/>
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="43" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button name="$parentReward3" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </NormalTexture>
+                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </PushedTexture>
+                        <HighlightTexture inherits=""/>
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="66" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                    <Button name="$parentReward4" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </NormalTexture>
+                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                            <Size>
+                                <AbsDimension x="20" y="20"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </PushedTexture>
+                        <HighlightTexture inherits=""/>
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="89" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+            </Frame>
+
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+            </OnLoad>
+            <OnDragStart>
+                TalcNeedFrame:StartMoving();
+                TalcNeedFrame.isMoving = true;
+                <!--                    Talc_NeedFrame_DragStart()-->
+            </OnDragStart>
+            <OnDragStop>
+                TalcNeedFrame:StopMovingOrSizing();
+                TalcNeedFrame.isMoving = false;
+                <!--                    Talc_NeedFrame_DragEnd()-->
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="TalcNeedFrame" hidden="false" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="310" y="20"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="100"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="[NEED] ANCHOR (move me)">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="20" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentScaleText" inherits="GameFontNormal" text="scale">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="13" y="-18"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+
+            <Frame name="$parentBackground" framestrata="LOW">
+                <Size>
+                    <AbsDimension x="360" y="600"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-20"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                          tile="false">
+                    <Color a="0.5"/>
+                </Backdrop>
+            </Frame>
+
+            <Button name="$parentTestPlacement" inherits="UIPanelButtonTemplate2" text="Test 7 items">
+                <Size>
+                    <AbsDimension x="85" y="30"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        Talc_NeedFrame_Test()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentClosePlacement" inherits="UIPanelButtonTemplate2" text="Close Anchor">
+                <Size>
+                    <AbsDimension x="90" y="30"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="50" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        need_frame_close()
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentScaleDown" inherits="UIPanelButtonTemplate2" text="-">
+                <Size>
+                    <AbsDimension x="24" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="CENTER">
+                        <Offset>
+                            <AbsDimension x="-20" y="-18"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame_Scale('down')
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentScaleUp" inherits="UIPanelButtonTemplate2" text="+">
+                <Size>
+                    <AbsDimension x="24" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="CENTER">
+                        <Offset>
+                            <AbsDimension x="50" y="-18"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame_Scale('up')
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="NeedFrameList" hidden="true" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="530" y="210"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+        </Backdrop>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" inherits="Mono" text="Title">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentText" inherits="Mono" text="need who">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentWith" inherits="Mono" text="need who">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentWhoQuery" inherits="UIPanelButtonTemplate" text="Refresh">
+                <Size>
+                    <AbsDimension x="80" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        queryWho()
+                    </OnClick>
+
+                </Scripts>
+            </Button>
+            <Button name="$parentAnnounceWithoutAddon" inherits="UIPanelButtonTemplate2" text="Notify Without Addon">
+                <Size>
+                    <AbsDimension x="150" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        announceWithoutAddon()
+                    </OnClick>
+
+                </Scripts>
+            </Button>
+            <Button name="$parentAnnounceOlderAddon" inherits="UIPanelButtonTemplate2" text="Notify Older Versions">
+                <Size>
+                    <AbsDimension x="160" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        announceOlderAddon()
+                    </OnClick>
+
+                </Scripts>
+            </Button>
+            <Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        hideNeedFrameList();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+</Ui>
