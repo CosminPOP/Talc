@@ -1,15 +1,4 @@
 TALC = CreateFrame("Frame")
-TALC:RegisterEvent("ADDON_LOADED")
-
-TALC:RegisterEvent("LOOT_OPENED")
-TALC:RegisterEvent("LOOT_SLOT_CLEARED")
-TALC:RegisterEvent("LOOT_CLOSED")
-TALC:RegisterEvent("RAID_ROSTER_UPDATE")
-TALC:RegisterEvent("CHAT_MSG_SYSTEM")
-TALC:RegisterEvent("PLAYER_TARGET_CHANGED") --for bosses
-TALC:RegisterEvent("CHAT_MSG_ADDON")
-TALC:RegisterEvent("CHAT_MSG_LOOT")
-TALC:RegisterEvent("COMBAT_LOG_EVENT")
 
 TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
@@ -18,9 +7,12 @@ TALC.me = UnitName('player')
 local core, db
 local init = false
 
-TALC:SetScript("OnEvent", function()
+TALC:SetScript("OnEvent", function(__, event, ...)
     if event then
-        if event == "ADDON_LOADED" and arg1 == "Talc" then
+
+        if event == "ADDON_LOADED" and arg1 == "Blizzard_TimeManager" then
+
+            TALC:UnregisterEvent("ADDON_LOADED")
 
             if not TALC_DB then
                 TALC_DB = {}
@@ -84,9 +76,6 @@ TALC:SetScript("OnEvent", function()
             end
             if not TALC_DB['VOTE_SCALE'] then
                 TALC_DB['VOTE_SCALE'] = 1
-            end
-            if not TALC_DB['VOTE_PPP'] then
-                TALC_DB['VOTE_PPP'] = 10
             end
             if not TALC_DB['VOTE_ALPHA'] then
                 TALC_DB['VOTE_ALPHA'] = 1
@@ -331,6 +320,17 @@ TALC:SetScript("OnEvent", function()
 
     end
 end)
+
+TALC:RegisterEvent("ADDON_LOADED")
+TALC:RegisterEvent("LOOT_OPENED")
+TALC:RegisterEvent("LOOT_SLOT_CLEARED")
+TALC:RegisterEvent("LOOT_CLOSED")
+TALC:RegisterEvent("RAID_ROSTER_UPDATE")
+TALC:RegisterEvent("CHAT_MSG_SYSTEM")
+TALC:RegisterEvent("PLAYER_TARGET_CHANGED") --for bosses
+TALC:RegisterEvent("CHAT_MSG_ADDON")
+TALC:RegisterEvent("CHAT_MSG_LOOT")
+TALC:RegisterEvent("COMBAT_LOG_EVENT")
 
 SLASH_TALC1 = "/talc"
 SlashCmdList["TALC"] = function(cmd)
