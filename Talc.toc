@@ -1,5 +1,5 @@
 ## Interface: 30300
-## Title: Talc - Thunder Ale Loot Council
+## Title: Talc
 ## Author: Xerron/Er
 ## Version: 3.0.0.0
 ## Notes: Thunder Ale Loot Council
@@ -8,6 +8,7 @@
 Talc.lua
 
 utils\ChatThrottleLib\ChatThrottleLib.lua
+utils\tokens.lua
 utils\utils.lua
 
 vote\VoteFrame.xml
