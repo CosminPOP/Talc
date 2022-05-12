@@ -30,11 +30,9 @@
     </Button>
 
     <Texture name="TalcButtonNormal" virtual="true" file="Interface\addons\Talc\images\gradbluedark">
-        <!--        <Color r="1" g="0" b="0" a="0"/>-->
     </Texture>
 
     <Texture name="TalcButtonPushed" virtual="true" file="Interface\addons\Talc\images\gradbluedark">
-        <!--        <Color r="0" g="0.56" b="0.27" a="1"/>-->
     </Texture>
 
     <Texture name="TalcButtonDisabled" virtual="true">
@@ -42,9 +40,37 @@
     </Texture>
 
     <Texture name="TalcButtonHighlight" virtual="true" alphamode="ADD">
-        <!--        <Color r="0" g="0.56" b="0.27" a="0.3"/>-->
         <Color r="1" g="1" b="1" a=".2"/>
     </Texture>
+
+    <Button name="Talc_InspectGearButton" inherits="UIPanelButtonTemplate" text="" virtual="true">
+        <NormalTexture inherits="TalcButtonNormal"/>
+        <PushedTexture inherits="TalcButtonPushed" />
+        <HighlightTexture inherits="TalcButtonHighlight" />
+        <Size>
+            <AbsDimension x="24" y="24"/>
+        </Size>
+        <Anchors>
+            <Anchor point="LEFT">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentItemLevel" text="123" inherits="GameFontHighlightSmall">
+                    <Anchors>
+                        <Anchor point="BOTTOM">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
 
     <Frame name="Talc_VotedItemsFrameTemplate" virtual="true" enableMouse="true">
         <Size>
@@ -251,7 +277,7 @@
         </Frames>
     </Frame>
 
-    <Frame name="Talc_ContestantFrame" virtual="true">
+    <Frame name="Talc_ContestantFrame" virtual="true" hidden="false">
         <Size>
             <AbsDimension x="590" y="20"/>
         </Size>
@@ -271,17 +297,17 @@
             <Layer level="OVERLAY">
                 <Texture name="$parentClassIcon" hidden="false" file="Interface\AddOns\Talc\images\classes\rogue">
                     <Size>
-                        <AbsDimension x="20" y="20"/>
+                        <AbsDimension x="24" y="24"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>
-                                <AbsDimension x="3" y="0"/>
+                                <AbsDimension x="2" y="0"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <FontString name="$parentName" inherits="GameFontNormal" text="[name]" hidden="false">
+                <FontString name="$parentName" inherits="GameFontNormal" text="[name]">
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>
@@ -291,7 +317,17 @@
                     </Anchors>
                 </FontString>
 
-                <FontString name="$parentNeed" inherits="GameFontNormal" text="MS Upgrade" hidden="false">
+                <FontString name="$parentGearScore" inherits="GameFontNormal" text="[gearscore]">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="75" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentNeed" inherits="GameFontNormal" text="MS Upgrade">
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>
@@ -447,7 +483,6 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-
                 <Texture name="$parentRollWinner" hidden="true" file="Interface\Buttons\UI-GroupLoot-Dice-Up">
                     <Size>
                         <AbsDimension x="16" y="16"/>
@@ -460,7 +495,6 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-
                 <Texture name="$parentRollPass" hidden="true" file="Interface\Buttons\UI-GroupLoot-Pass-Up">
                     <Size>
                         <AbsDimension x="16" y="16"/>
@@ -473,6 +507,7 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
+
                 <FontString name="$parentRoll" inherits="GameFontNormal" text="69" hidden="false">
                     <Anchors>
                         <Anchor point="LEFT">
@@ -495,6 +530,7 @@
         </Layers>
         <Frames>
 
+            <!--            todo fix widths-->
             <Button name="$parentRightClickMenuButton1" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture inherits=""/>
                 <PushedTexture inherits=""/>
@@ -978,7 +1014,7 @@
         </Scripts>
     </Frame>
 
-    <Frame name="TalcVoteFrame" hidden="true" toplevel="true"
+    <Frame name="TalcVoteFrame" hidden="false" toplevel="true"
            parent="UIParent" movable="true" enableMouse="true" resizable="true">
         <Size>
             <AbsDimension x="600" y="246"/>
@@ -988,7 +1024,7 @@
         </Anchors>
         <ResizeBounds>
             <minResize x="600" y="246"/>
-            <maxResize x="600" y="456"/>
+            <maxResize x="1000" y="600"/>
         </ResizeBounds>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
                   edgeFile="Interface\addons\Talc\images\border-maw"
@@ -1004,18 +1040,57 @@
             </BackgroundInsets>
         </Backdrop>
         <Layers>
+            <Layer level="BACKGROUND">
+
+            </Layer>
+
+            <Layer level="BORDER">
+                <Texture file="Interface\addons\Talc\images\gradblue" alphamode="ADD" alpha="0.2">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="5" y="-5"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                            <Offset x="-5" y="-24"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture file="Interface\addons\Talc\images\gradblue" alphamode="ADD" alpha="0.5">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="5" y="-84"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                            <Offset x="-5" y="-100"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentTimeLeftBar" file="Interface\addons\Talc\images\gradblue" alphamode="ADD"
+                         alpha="0.2">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+                            <Offset x="5" y="28"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset x="-5" y="5"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+            </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parentTitle" inherits="GameFontNormal" text="[mwtitle]">
+                <FontString name="$parentTitle" inherits="GameFontNormal" text="[title]">
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset>
-                                <AbsDimension x="0" y="-9"/>
+                                <AbsDimension x="0" y="-8"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentNameLabel" inherits="GameFontNormalSmall" text="Name"
-                            hidden="false">
+
+                <FontString name="$parentNameLabel" inherits="GameFontNormal" text="Name">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
@@ -1024,7 +1099,16 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentPickLabel" inherits="GameFontNormalSmall" text="Pick" hidden="false">
+                <FontString name="$parentGearScoreLabel" inherits="GameFontNormal" text="Gear Score">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="90" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentPickLabel" inherits="GameFontNormal" text="Pick">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
@@ -1033,16 +1117,16 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentReplacesLabel" inherits="GameFontNormalSmall" text="Replaces" hidden="false">
+                <FontString name="$parentReplacesLabel" inherits="GameFontNormal" text="Replaces">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
-                                <AbsDimension x="216" y="-85"/>
+                                <AbsDimension x="218" y="-85"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentRollLabel" inherits="GameFontNormalSmall" text="Roll" hidden="false">
+                <FontString name="$parentRollLabel" inherits="GameFontNormal" text="Roll">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
@@ -1051,7 +1135,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentVotesLabel" inherits="GameFontNormalSmall" text="Votes" hidden="false">
+                <FontString name="$parentVotesLabel" inherits="GameFontNormal" text="Votes">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
@@ -1060,6 +1144,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
+
                 <FontString name="$parentContestantCount" inherits="GameFontNormal" text="" hidden="false">
                     <Anchors>
                         <Anchor point="BOTTOMLEFT">
@@ -1122,49 +1207,18 @@
                 </Anchors>
                 <Scripts>
                     <OnMouseDown>
-                        TalcFrame:StartSizing("BOTTOMRIGHT")
-                        TalcFrame:SetUserPlaced(true)
+                        TalcVoteFrame:StartSizing("BOTTOMRIGHT")
+                        TalcVoteFrame:SetUserPlaced(true)
                         TalcFrame:Resizing()
                     </OnMouseDown>
                     <OnMouseUp>
-                        TalcFrame:StopMovingOrSizing()
+                        TalcVoteFrame:StopMovingOrSizing()
                         TalcFrame:Resized()
                     </OnMouseUp>
                     <OnClick>
                     </OnClick>
                 </Scripts>
             </Button>
-
-            <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
-                <Size>
-                    <AbsDimension x="590" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOP">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop bgFile="Interface\addons\Talc\images\gradblue"
-                          tile="false">
-                </Backdrop>
-            </Frame>
-
-            <Frame name="$parentHeaderBackground" hidden="false" framestrata="BACKGROUND">
-                <Size>
-                    <AbsDimension x="594" y="12"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOP">
-                        <Offset>
-                            <AbsDimension x="0" y="-84"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop bgFile="Interface\addons\Talc\images\gradblue" tile="false">
-                </Backdrop>
-            </Frame>
 
             <Button name="Talc_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
                     frameStrata="LOW">
@@ -1346,6 +1400,30 @@
                         <Scripts>
                             <OnClick>
                                 TestNeedButton_OnClick()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="TestNeedFrameButton" framstrata="HIGH" inherits="UIPanelButtonTemplate"
+                            hidden="false"
+                            text="ListScroll_Update">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
+                        <Size>
+                            <AbsDimension x="320" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-420" y="-54"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame_VoteFrameListScroll_Update()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -1989,209 +2067,40 @@
                 </Scripts>
             </Button>
 
-            <Frame name="$parentContestantScrollListBackground">
+            <ScrollFrame name="$parentContestantScrollListFrame" inherits="UIPanelScrollFrameTemplate">
                 <Size>
-                    <AbsDimension x="590" y="220"/>
+                    <AbsDimension x="222" y="220"/>
                 </Size>
+                <!--                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"-->
+                <!--                          tile="false">-->
+                <!--                </Backdrop>-->
                 <Anchors>
-                    <Anchor point="TOP">
+                    <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="0" y="-96"/>
+                            <AbsDimension x="5" y="-101"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
-                    <!--                    <BackgroundInsets>-->
-                    <!--                        <AbsInset left="5" right="5" top="0" bottom="0"/>-->
-                    <!--                    </BackgroundInsets>-->
-                </Backdrop>
-                <Frames>
-                </Frames>
-            </Frame>
-
-            <Frame name="$parentContestantFrame1" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="TalcVoteFrame">
-                        <Offset>
-                            <AbsDimension x="5" y="-100"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame2" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame1"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame3" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame2"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame4" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame3"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame5" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame4"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame6" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame5"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame7" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame6"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame8" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame7"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame9" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame8"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame10" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame9"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame11" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame10"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame12" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame11"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame13" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame12"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame14" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame13"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentContestantFrame15" hidden="true" inherits="Talc_ContestantFrame">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="ContestantFrame14"
-                            relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-
-            <ScrollFrame name="$parentContestantScrollListFrame" hidden="true" inherits="FauxScrollFrameTemplate">
-                <Size>
-                    <AbsDimension x="590" y="220"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="TalcVoteFrame" relativePoint="TOPRIGHT">
-                        <Offset>
-                            <AbsDimension x="-27" y="-98"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnVerticalScroll>
-                        FauxScrollFrame_OnVerticalScroll(20, TalcFrame_VoteFrameListScroll_Update);
-                    </OnVerticalScroll>
-                </Scripts>
+                <ScrollChild>
+                    <Frame name="$parentChild">
+                        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                                  tile="false">
+                        </Backdrop>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Size>
+                            <AbsDimension x="181" y="351"/>
+                        </Size>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </ScrollChild>
             </ScrollFrame>
-
-            <Frame name="$parentTimeLeftBar" framestrata="BACKGROUND">
-                <Size>
-                    <AbsDimension x="592" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="4" y="5"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop bgFile="Interface\addons\Talc\images\gradbluedark" tile="true">
-                    <!--                    <Color r="0" g="0.88" b="0.06" a="1"/>-->
-                </Backdrop>
-            </Frame>
 
             <Button name="$parentDoneVoting" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="false"
                     text="Done Voting">
@@ -2573,14 +2482,14 @@
                 </Frames>
             </Frame>
 
-            <Frame name="$parentRaiderDetailsFrame" hidden="true">
+            <Frame name="$parentRaiderDetailsFrame" hidden="false">
                 <Size>
-                    <AbsDimension x="220" y="335"/>
+                    <AbsDimension x="225" y="335"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPRIGHT">
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="220" y="0"/>
+                            <AbsDimension x="0" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -2608,21 +2517,12 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
-                        <FontString name="$parentLootHistoryTitle" inherits="GameFontNormal" text="Loot History">
-                            <Anchors>
-                                <Anchor point="TOP">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-60"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
                     </Layer>
                 </Layers>
                 <Frames>
                     <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
                         <Size>
-                            <AbsDimension x="212" y="22"/>
+                            <AbsDimension x="218" y="22"/>
                         </Size>
                         <Anchors>
                             <Anchor point="TOP">
@@ -2655,18 +2555,18 @@
                         </Scripts>
                     </Button>
 
-                    <Button name="$parentTab1" inherits="UIPanelButtonTemplate" text="Loot History">
+                    <Button name="$parentTab1" inherits="UIPanelButtonTemplate" text="Gear">
                         <NormalTexture inherits="TalcButtonNormal"/>
                         <PushedTexture inherits="TalcButtonPushed"/>
                         <DisabledTexture inherits="TalcButtonDisabled"/>
                         <HighlightTexture inherits="TalcButtonHighlight"/>
                         <Size>
-                            <AbsDimension x="80" y="20"/>
+                            <AbsDimension x="105" y="20"/>
                         </Size>
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="100" y="-30"/>
+                                    <AbsDimension x="6" y="-30"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -2676,25 +2576,264 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-
-                    <ScrollFrame name="$parentScrollFrame" hidden="true"
-                                 inherits="FauxScrollFrameTemplate">
+                    <Button name="$parentTab2" inherits="UIPanelButtonTemplate" text="Loot History">
+                        <NormalTexture inherits="TalcButtonNormal"/>
+                        <PushedTexture inherits="TalcButtonPushed"/>
+                        <DisabledTexture inherits="TalcButtonDisabled"/>
+                        <HighlightTexture inherits="TalcButtonHighlight"/>
                         <Size>
-                            <AbsDimension x="190" y="235"/>
+                            <AbsDimension x="105" y="20"/>
                         </Size>
                         <Anchors>
-                            <Anchor point="TOPLEFT">
+                            <Anchor point="TOPRIGHT">
                                 <Offset>
-                                    <AbsDimension x="0" y="-84"/>
+                                    <AbsDimension x="-6" y="-30"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
                         <Scripts>
-                            <OnVerticalScroll>
-                                FauxScrollFrame_OnVerticalScroll(22, Talc_LootHistory_Update);
-                            </OnVerticalScroll>
+                            <OnClick>
+                                TalcFrame:RaiderDetailsChangeTab(2);
+                            </OnClick>
                         </Scripts>
-                    </ScrollFrame>
+                    </Button>
+
+
+                    <Frame name="$parentInspectGearFrame">
+                        <Size>
+                            <AbsDimension x="207" y="223"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-80"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+                            <PlayerModel name="$parentModelFrame">
+                                <Size>
+                                    <AbsDimension x="207" y="223"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="-4" y="20"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Frames>
+                                </Frames>
+                            </PlayerModel>
+                            <Button name="$parentHeadSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentNeckSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentHeadSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentShoulderSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentNeckSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentBackSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentShoulderSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentChestSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentBackSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentShirtSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentChestSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentTabardSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentShirtSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentWristSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentTabardSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+
+                            <Button name="$parentHandsSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="180" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentWaistSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentHandsSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentLegsSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentWaistSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentFeetSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentLegsSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentFinger0Slot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentFeetSlot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentFinger1Slot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentFinger0Slot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentTrinket0Slot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentFinger1Slot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentTrinket1Slot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentTrinket0Slot" relativePoint="BOTTOMLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="-4"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+
+                            <Button name="$parentMainHandSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="60" y="-196"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentSecondaryHandSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentMainHandSlot" relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="5" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                            <Button name="$parentRangedSlot" inherits="Talc_InspectGearButton">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentSecondaryHandSlot"
+                                            relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="5" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+                        </Frames>
+                    </Frame>
+
+                    <Frame name="$parentLootHistoryFrame">
+                        <Size>
+                            <AbsDimension x="207" y="223"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-80"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+                            <ScrollFrame name="$parentScrollFrame" hidden="true"
+                                         inherits="FauxScrollFrameTemplate">
+                                <Size>
+                                    <AbsDimension x="190" y="235"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Scripts>
+                                    <OnVerticalScroll>
+                                        FauxScrollFrame_OnVerticalScroll(22, Talc_LootHistory_Update);
+                                    </OnVerticalScroll>
+                                </Scripts>
+                            </ScrollFrame>
+                        </Frames>
+                    </Frame>
 
                 </Frames>
             </Frame>
