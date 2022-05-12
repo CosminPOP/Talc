@@ -133,8 +133,6 @@ function NeedFrames.cacheItem(data)
 end
 
 function NeedFrames:addItem(data)
-    print("additem")
-    print(data)
     local item = core.split("=", data)
 
     NeedFrameCountdown.timeToNeed = core.int(item[6])
@@ -430,9 +428,42 @@ function PlayerNeedItemButton_OnClick(id, need)
         -- end KT item
     end
 
-    core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3)
+
+    local gearscore = 0
+
+    for i = 0, 19 do
+        if GetInventoryItemLink("player", i) then
+            local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
+            gearscore = gearscore + itemLevel
+        end
+    end
+
+    core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "=" .. gearscore)
     _G['NewItemTooltip' .. id]:Hide()
     fadeOutFrame(id)
+end
+
+function NeedFrame:SendGear(to)
+    core.wsend("NORMAL", "sending=gear=start", to)
+    for i = 1, 19 do
+        if GetInventoryItemLink("player", i) then
+            local _, iL, _, _, _, _, _, _, equip_slot = GetItemInfo(GetInventoryItemLink("player", i));
+            local _, _, shortLink = core.find(iL, "(item:%d+:%d+:%d+:%d+)")
+            local slotString = ''
+            for slot, data in next, core.equipSlotsDetails do
+                if (slot == equip_slot or slot == equip_slot .. "0" or slot == equip_slot .. "1") and i == data.id then
+                    slotString = data.slot
+                    break
+                end
+            end
+            if slotString == '' then
+                talc_debug("cant determine slot, send gear " .. equip_slot)
+                return
+            end
+            core.wsend("NORMAL", "sending=gear=" .. shortLink .. ":" .. i .. ":" .. slotString, to)
+        end
+    end
+    core.wsend("NORMAL", "sending=gear=end", to)
 end
 
 function fadeInFrame(id)
@@ -567,12 +598,18 @@ function NeedFrameComs:handleSync(arg1, msg, arg3, sender)
                 updateWithAddon()
             end
         end
+        return
     end
     if core.find(msg, 'needframe=', 1, true) then
         local command = core.split('=', msg)
         if command[2] == "whoNF" then
             core.asend("withAddonNF=" .. sender .. "=" .. core.me .. "=" .. core.addonVer)
         end
+        return
+    end
+    if core.find(msg, 'sendgear=', 1, true) then
+        NeedFrame:SendGear(sender)
+        return
     end
     if core.isRL(sender) then
         if core.find(msg, 'loot=', 1, true) then
@@ -582,10 +619,12 @@ function NeedFrameComs:handleSync(arg1, msg, arg3, sender)
                 TalcNeedFrame:Show()
                 NeedFrameCountdown:Show()
             end
+            return
         end
 
         if core.find(msg, 'preSend=', 1, true) then
             NeedFrames.cacheItem(msg)
+            return
         end
 
         if core.find(msg, 'doneSending=', 1, true) then
@@ -593,10 +632,11 @@ function NeedFrameComs:handleSync(arg1, msg, arg3, sender)
             if not nrItems[2] or not nrItems[3] then
                 talc_debug('wrong doneSending syntax')
                 talc_debug(msg)
-                return false
+                return
             end
 
             core.asend("received=" .. NeedFrame.numItems .. "=items")
+            return
         end
 
         if core.find(msg, 'needframe=', 1, true) then
@@ -604,19 +644,10 @@ function NeedFrameComs:handleSync(arg1, msg, arg3, sender)
             if command[2] == "reset" then
                 NeedFrame.ResetVars()
             end
+            return
         end
     end
 end
-
---function Talc_NeedFrame_DragStart()
---    NeedFrame:StartMoving();
---    NeedFrame.isMoving = true;
---end
---
---function Talc_NeedFrame_DragEnd()
---    NeedFrame:StopMovingOrSizing();
---    NeedFrame.isMoving = false;
---end
 
 function NeedFrame:ShowAnchor()
     TalcNeedFrame:Show()
