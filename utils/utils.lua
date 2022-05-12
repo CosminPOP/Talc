@@ -42,6 +42,10 @@ Talc_Utils.init = function()
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "RAID")
     end
 
+    core.wsend = function(prio, msg, to)
+        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "WHISPER", to)
+    end
+
     core.classColors = {
         ["warrior"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "|cffc79c6e" },
         ["mage"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "|cff69ccf0" },
@@ -63,6 +67,43 @@ Talc_Utils.init = function()
         ["pass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff696969", text = 'pass' },
         ["autopass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff696969", text = 'auto pass' },
         ["wait"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff999999", text = 'Waiting pick...' },
+    }
+
+    core.equipSlotsDetails = {
+        ["INVTYPE_HEAD"] = { slot = "Head", id = 1 },
+        ["INVTYPE_NECK"] = { slot = "Neck", id = 2 },
+        ["INVTYPE_SHOULDER"] = { slot = "Shoulder", id = 3 },
+        ["INVTYPE_BODY"] = { slot = "Shirt", id = 4 },
+        ["INVTYPE_CHEST"] = { slot = "Chest", id = 5 },
+        ["INVTYPE_ROBE"] = { slot = "Chest", id = 5 },
+        ["INVTYPE_WAIST"] = { slot = "Waist", id = 6 },
+        ["INVTYPE_LEGS"] = { slot = "Legs", id = 7 },
+        ["INVTYPE_FEET"] = { slot = "Feet", id = 8 },
+        ["INVTYPE_WRIST"] = { slot = "Wrist", id = 9 },
+        ["INVTYPE_HAND"] = { slot = "Hands", id = 10 },
+
+        ["INVTYPE_FINGER0"] = { slot = "Finger0", id = 11 },
+        ["INVTYPE_FINGER1"] = { slot = "Finger1", id = 12 },
+
+        ["INVTYPE_TRINKET0"] = { slot = "Trinket0", id = 13 },
+        ["INVTYPE_TRINKET1"] = { slot = "Trinket1", id = 14 },
+
+        ["INVTYPE_CLOAK"] = { slot = "Back", id = 15 },
+
+        ["INVTYPE_2HWEAPON"] = { slot = "MainHand", id = 16 },
+        ["INVTYPE_WEAPONMAINHAND"] = { slot = "MainHand", id = 16 },
+        ["INVTYPE_WEAPON0"] = { slot = "MainHand", id = 16 },
+
+        ["INVTYPE_WEAPON1"] = { slot = "SecondaryHand", id = 17 },
+        ["INVTYPE_SHIELD"] = { slot = "SecondaryHand", id = 17 },
+        ["INVTYPE_WEAPONOFFHAND"] = { slot = "SecondaryHand", id = 17 },
+        ["INVTYPE_HOLDABLE"] = { slot = "SecondaryHand", id = 17 },
+
+        ["INVTYPE_RANGED"] = { slot = "Ranged", id = 18 },
+        ["INVTYPE_THROWN"] = { slot = "Ranged", id = 18 },
+        ["INVTYPE_RANGEDRIGHT"] = { slot = "Ranged", id = 18 },
+        ["INVTYPE_RELIC"] = { slot = "Ranged", id = 18 },
+        ["INVTYPE_TABARD"] = { slot = "Tabard", id = 19 },
     }
 
     core.equipSlots = {
