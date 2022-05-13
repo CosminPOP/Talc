@@ -15,6 +15,7 @@ Talc_Utils.init = function()
     core.sub = string.sub
     core.int = tonumber
     core.lower = string.lower
+    core.upper = string.upper
     core.find = string.find
     core.string = tostring
     core.len = string.len
@@ -59,14 +60,33 @@ Talc_Utils.init = function()
         ["deathknight"] = { r = 0.77, g = 0.12, b = 0.23, colorStr = "|cffC41F3B" },
     }
 
+    core.ucFirst = function(str)
+        return core.upper(core.sub(str, 1, 1)) .. core.sub(str, 2, core.len(str))
+    end
+
+    core.fixClassColorsInStr = function(str)
+        for class, data in next, core.classColors do
+            if core.find(str, class, 1, true) then
+                local cEx = core.split(class, str)
+                str = cEx[1] .. data.colorStr .. class .. '|r' .. cEx[2]
+            end
+
+            if core.find(str, core.ucFirst(class), 1, true) then
+                local cEx = core.split(core.ucFirst(class), str)
+                str = cEx[1] .. data.colorStr .. core.ucFirst(class) .. '|r' .. cEx[2]
+            end
+        end
+        return str
+    end
+
     core.needs = {
-        ["bis"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cffa335ee", text = 'BIS' },
-        ["ms"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff0070dd", text = 'MS Upgrade' },
-        ["os"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cffe79e08", text = 'Offspec' },
-        ["xmog"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cffb518ff", text = 'Transmog' },
-        ["pass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff696969", text = 'pass' },
-        ["autopass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff696969", text = 'auto pass' },
-        ["wait"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "|cff999999", text = 'Waiting pick...' },
+        ["bis"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[4].hex, text = 'BIS' },
+        ["ms"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[3].hex, text = 'Main Spec' },
+        ["os"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[2].hex, text = 'Offspec' },
+        ["xmog"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[6].hex, text = 'Transmog' },
+        ["pass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[1].hex, text = 'pass' },
+        ["autopass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[0].hex, text = 'auto pass' },
+        ["wait"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[1].hex, text = 'Waiting pick...' },
     }
 
     core.equipSlotsDetails = {
@@ -386,7 +406,7 @@ Talc_Utils.init = function()
 
     core.syncRoster = function()
         local index = 0
-        for i = 1, #RLWindowFrame.assistFrames do
+        for i = 1, #TalcFrame.RLFrame.assistFrames do
             _G['AssistFrame' .. i .. 'AssistCheck']:Disable()
             _G['AssistFrame' .. i .. 'CLCheck']:Disable()
         end
@@ -397,10 +417,10 @@ Talc_Utils.init = function()
         end
         core.bsend("BULK", "syncRoster=end")
 
-        TalcFrameRLWindowFrameOfficer:SetText('Officer(' .. index .. ')')
+        TalcVoteFrameRLWindowFrameOfficer:SetText('Officer(' .. index .. ')')
 
         if core.isRL(core.me) then
-            core.checkAssists()
+            TalcFrame.RLFrame:CheckAssists()
         end
     end
 
