@@ -1,12 +1,14 @@
-local db, core
+local db, core, tokenRewards
 local _G = _G
 NeedFrame = CreateFrame("Frame")
 
 NeedFrame.init = function()
     core = TALC
     db = TALC_DB
+    tokenRewards = TALC_TOKENS
 
-    NeedFrame:HideAnchor()
+    NeedFrame:ShowAnchor() --dev
+    --NeedFrame:HideAnchor() --dev
 
     talc_print('TALC NeedFrame (v' .. core.addonVer .. ') Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
 
@@ -150,6 +152,7 @@ function NeedFrames:addItem(data)
     end
 
     local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+    local itemID = core.int(core.split(':', itemLink)[2])
 
     GameTooltip:SetHyperlink(itemLink)
     GameTooltip:Hide()
@@ -171,54 +174,12 @@ function NeedFrames:addItem(data)
         end
     end
 
-    local reward1 = ''
-    local reward2 = ''
-    local reward3 = ''
-    local reward4 = ''
-
     local _, class = UnitClass('player')
     class = core.lower(class)
 
-    if name == 'Head of Nefarian' then
-        reward1 = "\124cffa335ee\124Hitem:19383:0:0:0:0:0:0:0:0\124h[Master Dragonslayer's Medallion]\124h\124r"
-        reward2 = "\124cffa335ee\124Hitem:19366:0:0:0:0:0:0:0:0\124h[Master Dragonslayer's Orb]\124h\124r"
-        reward3 = "\124cffa335ee\124Hitem:19384:0:0:0:0:0:0:0:0\124h[Master Dragonslayer's Ring]\124h\124r"
-    end
-
-    --naxx tokens
-    --bracer
-    if name == "Desecrated Bindings" then
-        if class == 'priest' then
-            reward1 = "\124cffa335ee\124Hitem:22519:0:0:0:0:0:0:0:0\124h[Bindings of Faith]\124h\124r"
-        end
-        if class == 'mage' then
-            reward1 = "\124cffa335ee\124Hitem:22503:0:0:0:0:0:0:0:0\124h[Frostfire Bindings]\124h\124r"
-        end
-        if class == 'warlock' then
-            reward1 = "\124cffa335ee\124Hitem:22511:0:0:0:0:0:0:0:0\124h[Plagueheart Bindings]\124h\124r"
-        end
-    end
-    if name == "Desecrated Wristguards" then
-        if class == "paladin" then
-            reward1 = "\124cffa335ee\124Hitem:22424:0:0:0:0:0:0:0:0\124h[Redemption Wristguards]\124h\124r"
-        end
-        if class == "hunter" then
-            reward1 = "\124cffa335ee\124Hitem:22443:0:0:0:0:0:0:0:0\124h[Cryptstalker Wristguards]\124h\124r"
-        end
-        if class == "shaman" then
-            reward1 = "\124cffa335ee\124Hitem:22471:0:0:0:0:0:0:0:0\124h[Earthshatter Wristguards]\124h\124r"
-        end
-        if class == "druid" then
-            reward1 = "\124cffa335ee\124Hitem:22495:0:0:0:0:0:0:0:0\124h[Dreamwalker Wristguards]\124h\124r"
-        end
-    end
-    if name == "Desecrated Bracers" then
-        if class == 'warrior' then
-            reward1 = "\124cffa335ee\124Hitem:22423:0:0:0:0:0:0:0:0\124h[Dreadnaught Bracers]\124h\124r";
-        end
-        if class == 'rogue' then
-            reward1 = "\124cffa335ee\124Hitem:22483:0:0:0:0:0:0:0:0\124h[Bonescythe Bracers]\124h\124r";
-        end
+    local hasRewards = false
+    if tokenRewards[itemID] and (core.find(core.lower(tokenRewards[itemID].classes), class, 1, true) or tokenRewards[itemID].classes == "") then
+        hasRewards = true
     end
 
     NeedFrames.execs = 0
@@ -232,7 +193,7 @@ function NeedFrames:addItem(data)
     local backdrop = {
         bgFile = "Interface\\Addons\\Talc\\images\\need\\need_" .. quality,
         tile = false,
-    };
+    }
 
     _G['NeedFrame' .. index .. 'BgImage']:SetBackdrop(backdrop)
 
@@ -240,43 +201,6 @@ function NeedFrames:addItem(data)
     _G['NeedFrame' .. index .. 'QuestRewardsReward2']:Hide()
     _G['NeedFrame' .. index .. 'QuestRewardsReward3']:Hide()
     _G['NeedFrame' .. index .. 'QuestRewardsReward4']:Hide()
-
-    if reward1 ~= '' then
-        if not SetQuestRewardLink(reward1, _G['NeedFrame' .. index .. 'QuestRewardsReward1']) then
-            talc_debug(' quest reward 1 name or quality not found for data :' .. reward1)
-            talc_debug(' going to delay add item ')
-            delayAddItem.data[index] = data
-            delayAddItem:Show()
-            return false
-        end
-    end
-    if reward2 ~= '' then
-        if not SetQuestRewardLink(reward2,_G['NeedFrame' .. index .. 'QuestRewardsReward2']) then
-            talc_debug(' quest reward 2 name or quality not found for data :' .. reward2)
-            talc_debug(' going to delay add item ')
-            delayAddItem.data[index] = data
-            delayAddItem:Show()
-            return false
-        end
-    end
-    if reward3 ~= '' then
-        if not SetQuestRewardLink(reward3,_G['NeedFrame' .. index .. 'QuestRewardsReward3']) then
-            talc_debug(' quest reward 3 name or quality not found for data :' .. reward3)
-            talc_debug(' going to delay add item ')
-            delayAddItem.data[index] = data
-            delayAddItem:Show()
-            return false
-        end
-    end
-    if reward4 ~= '' then
-        if not SetQuestRewardLink(reward4,_G['NeedFrame' .. index .. 'QuestRewardsReward4']) then
-            talc_debug(' quest reward 4 name or quality not found for data :' .. reward4)
-            talc_debug(' going to delay add item ')
-            delayAddItem.data[index] = data
-            delayAddItem:Show()
-            return false
-        end
-    end
 
     NeedFrames.itemFrames[index]:Show()
     NeedFrames.itemFrames[index]:SetAlpha(0)
@@ -307,26 +231,39 @@ function NeedFrames:addItem(data)
     _G['NeedFrame' .. index .. 'OSButton']:Hide()
     _G['NeedFrame' .. index .. 'XMOGButton']:Hide()
 
+    local m = 38
+    if core.len(buttons) == 2 then
+        m = 38 * 2
+    end
+
+    if core.len(buttons) == 3 then
+        m = 38 + 38 / 3
+    end
+
     if core.find(buttons, 'b', 1, true) then
         buttonIndex = buttonIndex + 1
         _G['NeedFrame' .. index .. 'BISButton']:Show()
-        _G['NeedFrame' .. index .. 'BISButton']:SetPoint('TOPLEFT', 318 + buttonIndex * 38, -40)
+        _G['NeedFrame' .. index .. 'BISButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
     end
     if core.find(buttons, 'm', 1, true) then
         buttonIndex = buttonIndex + 1
         _G['NeedFrame' .. index .. 'MSUpgradeButton']:Show()
-        _G['NeedFrame' .. index .. 'MSUpgradeButton']:SetPoint('TOPLEFT', 318 + buttonIndex * 38, -40)
+        _G['NeedFrame' .. index .. 'MSUpgradeButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
     end
     if core.find(buttons, 'o', 1, true) then
         buttonIndex = buttonIndex + 1
         _G['NeedFrame' .. index .. 'OSButton']:Show()
-        _G['NeedFrame' .. index .. 'OSButton']:SetPoint('TOPLEFT', 318 + buttonIndex * 38, -40)
+        _G['NeedFrame' .. index .. 'OSButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
     end
     if core.find(buttons, 'x', 1, true) then
         buttonIndex = buttonIndex + 1
         _G['NeedFrame' .. index .. 'XMOGButton']:Show()
-        _G['NeedFrame' .. index .. 'XMOGButton']:SetPoint('TOPLEFT', 318 + buttonIndex * 38, -40)
+        _G['NeedFrame' .. index .. 'XMOGButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
     end
+
+    buttonIndex = buttonIndex + 1
+    _G['NeedFrame' .. index .. 'PassButton']:Show()
+    _G['NeedFrame' .. index .. 'PassButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
 
     local r, g, b = GetItemQualityColor(quality)
 
@@ -335,8 +272,76 @@ function NeedFrames:addItem(data)
     core.addButtonOnEnterTooltip(_G['NeedFrame' .. index .. 'ItemIcon'], link)
 
     _G['NeedFrame' .. index .. 'QuestRewards']:Hide()
-    if reward1 ~= '' then
-        _G['NeedFrame' .. index .. 'QuestRewards']:Show()
+
+    if hasRewards then
+        -- only show my rewards
+        local hasRewardsForMe = false
+        local foundClasses = false
+
+        GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+        GameTooltip:SetHyperlink(itemLink)
+
+        for i = 1, 5 do
+            if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
+                local itemText = _G["GameTooltipTextLeft" .. i]:GetText()
+                if core.find(itemText, "Classes:", 1, true) then
+                    foundClasses = true
+                    if core.find(core.lower(itemText), class, 1, true) then
+                        hasRewardsForMe = true
+                        break
+                    end
+                end
+            end
+        end
+
+        if hasRewardsForMe or not foundClasses then
+            _G['NeedFrame' .. index .. 'QuestRewards']:Show()
+            local rewardSpot = 0
+            for i, rewardID in next, tokenRewards[itemID].rewards do
+
+                if i < 5 then
+
+                    local set, il, frame = SetQuestRewardLink(rewardID, _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i])
+
+                    if not set then
+                        talc_debug(' quest reward ' .. i .. ' name or quality not found for data :' .. rewardID)
+                        talc_debug(' going to delay add item ')
+                        delayAddItem.data[index] = data
+                        delayAddItem:Show()
+                        return false
+                    end
+
+                    GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                    GameTooltip:SetHyperlink(il)
+
+                    local showReward = false
+
+                    if foundClasses then
+                        for j = 1, 20 do
+                            if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
+                                local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
+                                if core.find(itemText, "Classes:", 1, true) then
+                                    if core.find(core.lower(itemText), class, 1, true) then
+                                        showReward = true
+                                        rewardSpot = rewardSpot + 1
+                                        frame:SetPoint("TOPLEFT", 20 + 23 * (rewardSpot - 1) , -32)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        showReward = true
+                    end
+
+                    if not showReward then
+                        _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i]:Hide()
+                    end
+
+                end
+            end
+        end
+
     end
 
     fadeInFrame(index)
@@ -361,7 +366,7 @@ function PlayerNeedItemButton_OnClick(id, need)
     local _, _, itemLink = core.find(NeedFrames.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
     local name, _, _, _, _, _, _, _, equip_slot = GetItemInfo(itemLink)
     if equip_slot then
-        talc_debug('player need equip_slot frame : ' .. equip_slot)
+        --talc_debug('player need equip_slot frame : ' .. equip_slot)
     else
         talc_debug(' nu am gasit item slot wtffff : ' .. itemLink)
 
@@ -427,7 +432,6 @@ function PlayerNeedItemButton_OnClick(id, need)
 
         -- end KT item
     end
-
 
     local gearscore = 0
 
@@ -559,7 +563,7 @@ function NeedFrame:ResetVars()
     NewItemTooltip14:Hide()
     NewItemTooltip15:Hide()
 
-    TalcNeedFrame:Hide()
+    --TalcNeedFrame:Hide() --dev
 
     NeedFrameCountdown:Hide()
     NeedFrameCountdown.T = 1
@@ -697,13 +701,14 @@ end
 
 function Talc_NeedFrame_Test()
 
+
     local linkStrings = {
-        '\124cffa335ee\124Hitem:22369:0:0:0:0:0:0:0:0\124h[Desecrated Bindings]\124h\124r',
-        '\124cffa335ee\124Hitem:22362:0:0:0:0:0:0:0:0\124h[Desecrated Wristguards]\124h\124r',
-        '\124cffa335ee\124Hitem:22355:0:0:0:0:0:0:0:0\124h[Desecrated Bracers]\124h\124r',
+        '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
+        '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
+        '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
         '\124cffa335ee\124Hitem:21221:0:0:0:0:0:0:0:0\124h[Eye of C\'Thun]\124h\124r',
         '\124cffa335ee\124Hitem:19347:0:0:0:0:0:0:0:0\124h[Claw of Chromaggus]\124h\124r',
-        '\124cffa335ee\124Hitem:19375:0:0:0:0:0:0:0:0\124h[Mish\'undare, Circlet of the Mind Flayer]\124h\124r',
+        '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
         '\124cffff8000\124Hitem:17204:0:0:0:0:0:0:0:0\124h[Eye of Sulfuras]\124h\124r'
     }
 
@@ -733,8 +738,6 @@ NeedFrame.olderAddonCount = 0
 NeedFrame.withCloak = 0
 NeedFrame.withoutCloak = 0
 NeedFrame.playersWithoutCloak = {}
-
-
 
 function queryWho()
     NeedFrame.withAddon = {}
@@ -845,20 +848,19 @@ end
 --    end)
 --end
 
-function SetQuestRewardLink(reward, frame)
+function SetQuestRewardLink(id, frame)
 
-    local _, _, itemLink = core.find(reward, "(item:%d+:%d+:%d+:%d+)");
-    local _, link, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+    local _, link, _, _, _, _, _, _, _, tex = GetItemInfo(id)
     if link then
+        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
         core.addButtonOnEnterTooltip(frame, link)
         frame:SetNormalTexture(tex)
         frame:SetPushedTexture(tex)
         frame:Show()
-        return true
+        return true, itemLink, frame
     else
-        GameTooltip:SetHyperlink(itemLink)
+        GameTooltip:SetHyperlink(id)
         GameTooltip:Hide()
-        return false
+        return false, false, frame
     end
 end
-

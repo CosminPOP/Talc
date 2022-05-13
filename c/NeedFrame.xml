@@ -121,7 +121,7 @@
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="124" y="-37"/>
+                            <AbsDimension x="60" y="-37"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -373,17 +373,55 @@
                 </Scripts>
             </Button>
 
-            <Button name="$parentPassButton" inherits="UIPanelCloseButton" text="Pass">
+            <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture file="Interface\Addons\Talc\images\need\pass_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\pass_icon">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\pass_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
                 <Size>
-                    <AbsDimension x="22" y="22"/>
+                    <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPRIGHT">
+                    <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="-66" y="-27"/>
+                            <AbsDimension x="392" y="-40"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="PASS" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
                 <Scripts>
                     <OnClick>
                         PlayerNeedItemButton_OnClick(this:GetID(), 'pass');
@@ -398,7 +436,7 @@
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="119" y="-88"/>
+                            <AbsDimension x="55" y="-88"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -623,12 +661,10 @@
             <OnDragStart>
                 TalcNeedFrame:StartMoving();
                 TalcNeedFrame.isMoving = true;
-                <!--                    Talc_NeedFrame_DragStart()-->
             </OnDragStart>
             <OnDragStop>
                 TalcNeedFrame:StopMovingOrSizing();
                 TalcNeedFrame.isMoving = false;
-                <!--                    Talc_NeedFrame_DragEnd()-->
             </OnDragStop>
         </Scripts>
     </Frame>
@@ -670,12 +706,12 @@
 
             <Frame name="$parentBackground" framestrata="LOW">
                 <Size>
-                    <AbsDimension x="360" y="600"/>
+                    <AbsDimension x="420" y="600"/>
                 </Size>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT">
                         <Offset>
-                            <AbsDimension x="0" y="-20"/>
+                            <AbsDimension x="-60" y="-20"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -692,7 +728,7 @@
                 <Anchors>
                     <Anchor point="LEFT">
                         <Offset>
-                            <AbsDimension x="0" y="-5"/>
+                            <AbsDimension x="-50" y="-5"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
