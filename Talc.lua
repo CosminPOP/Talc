@@ -132,11 +132,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             if GetRaidRosterInfo(i) then
                                 local n, r = GetRaidRosterInfo(i);
                                 if core.isCL(n) and r == 0 and n ~= core.me then
-                                    LCVoteFrame.assistTriggers = LCVoteFrame.assistTriggers + 1
+                                    TalcFrame.assistTriggers = TalcFrame.assistTriggers + 1
                                     PromoteToAssistant(n)
-                                    talc_print(n .. ' |cff69ccf0autopromoted|cffffffff(' .. LCVoteFrame.assistTriggers .. '/100). Type |cff69ccf0/talc autoassist |cffffffffto disable this feature.')
+                                    talc_print(n .. ' |cff69ccf0autopromoted|cffffffff.')
 
-                                    if LCVoteFrame.assistTriggers > 100 then
+                                    if TalcFrame.assistTriggers > 100 then
                                         talc_error('Autoassist trigger error (>100). Autoassist disabled.')
                                         db['VOTE_AUTO_ASSIST'] = false
                                     end
@@ -405,15 +405,6 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('Debug ENABLED')
             else
                 talc_print('Debug DISABLED')
-            end
-        end
-        if cmd == 'autoassist' then
-            db['VOTE_AUTO_ASSIST'] = not db['VOTE_AUTO_ASSIST']
-            if db['VOTE_AUTO_ASSIST'] then
-                talc_print('AutoAssist ENABLED')
-                LCVoteFrame.assistTriggers = 0
-            else
-                talc_print('AutoAssist DISABLED')
             end
         end
         if cmd == 'who' then
