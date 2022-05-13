@@ -103,7 +103,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             Talc_Utils.init();
             TalcFrame:init();
 
-            NeedFrame.init();
+            NeedFrame:init();
             WinFrame:init();
             RollFrame:init();
             BossFrame:init();
@@ -120,7 +120,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_ADDON' and arg1 == TALC.channel then
                 TalcFrame:handleSync(arg1, arg2, arg3, arg4)
-                NeedFrameComs:handleSync(arg1, arg2, arg3, arg4)
+                NeedFrame:handleSync(arg1, arg2, arg3, arg4)
                 WinFrame:handleSync(arg1, arg2, arg3, arg4)
             end
 
@@ -185,18 +185,18 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     local roll = core.int(r[3])
 
                     --check if name is in playersWhoWantItems with vote == -2
-                    for pwIndex, pwPlayer in next, LCVoteFrame.playersWhoWantItems do
+                    for pwIndex, pwPlayer in next, TalcFrame.playersWhoWantItems do
                         if (pwPlayer['name'] == name and pwPlayer['roll'] == -2) then
-                            LCVoteFrame.playersWhoWantItems[pwIndex]['roll'] = roll
-                            core.asend("playerRoll:" .. pwIndex .. ":" .. roll .. ":" .. LCVoteFrame.CurrentVotedItem)
-                            VoteFrameListScroll_Update()
+                            TalcFrame.playersWhoWantItems[pwIndex]['roll'] = roll
+                            core.asend("playerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
+                            TalcFrame_VoteFrameListScroll_Update()
                             break
                         end
                     end
                 end
             end
             if event == "LOOT_OPENED" then
-                LCVoteFrame.LOOT_OPENED = true
+                TalcFrame.LOOT_OPENED = true
                 if not db['VOTE_ENABLED'] then
                     return
                 end
@@ -249,11 +249,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                         end
 
                         TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
-                        TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Prepare Broadcast')
-                        LCVoteFrame.sentReset = false
+                        TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
+                        TalcFrame.sentReset = false
                         if core.me ~= 'Er' then
                             -- dont show for me, ill show it from erui addon
-                            LootLCVoteFrameWindow:Show()
+                            TalcFrame:showWindow()
                         end
 
                         --pre send items for never seen
@@ -265,8 +265,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                                 local itemID, _, quality = GetItemInfo(itemLink)
                                 if quality >= 3 then
 
-                                    if not LCVoteFrame.itemsToPreSend[itemID] then
-                                        LCVoteFrame.itemsToPreSend[itemID] = true
+                                    if not TalcFrame.itemsToPreSend[itemID] then
+                                        TalcFrame.itemsToPreSend[itemID] = true
 
                                         --send to all
                                         core.asend("preSend=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
@@ -283,7 +283,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if event == "LOOT_SLOT_CLEARED" then
             end
             if event == "LOOT_CLOSED" then
-                LCVoteFrame.LOOT_OPENED = false
+                TalcFrame.LOOT_OPENED = false
                 TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
             end
 
