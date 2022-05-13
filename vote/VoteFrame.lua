@@ -125,6 +125,7 @@ function TalcFrame:Resized()
     TalcVoteFrameVotesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(406 * ratio), -92)
 
     TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
+    TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
 
     TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
 
@@ -246,9 +247,9 @@ end
 
 function TalcFrame:BroadcastLoot()
 
-    local lootmethod = GetLootMethod()
-    if lootmethod ~= 'master' then
-        talc_print('Looting method is not master looter. (' .. lootmethod .. ')')
+    local lootMethod = GetLootMethod()
+    if lootMethod ~= 'master' then
+        talc_print('Looting method is not master looter. (' .. lootMethod .. ')')
         return false
     end
 
@@ -309,7 +310,8 @@ function TalcFrame:BroadcastLoot()
         core.syncRoster()
         self.sentReset = true
 
-        TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Broadcast Loot (' .. db['VOTE_TTN'] .. ')')
+        --TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Broadcast Loot (' .. db['VOTE_TTN'] .. 's)')
+        TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Waiting sync...')
 
         return false
     end
@@ -340,7 +342,7 @@ function TalcFrame:BroadcastLoot()
                 if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
                     buttons = buttons .. 'x'
                 end
-                --send to twneed
+                --send to c
                 core.bsend("ALERT", "loot=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id) .. "=" .. self.LootCountdown.countDownFrom .. "=" .. buttons)
                 numLootItems = numLootItems + 1
             end
@@ -348,6 +350,8 @@ function TalcFrame:BroadcastLoot()
     end
     core.bsend("ALERT", "doneSending=" .. numLootItems .. "=items")
     TalcVoteFrameMLToWinner:Disable();
+
+    TalcVoteFrameRLExtraFrameBroadcastLoot:SetText(numLootItems .. " items sent")
 end
 
 function TalcFrame:addVotedItem(index, texture, link)
@@ -784,17 +788,17 @@ function TalcFrame_VoteFrameListScroll_Update()
             end
         end
 
-        TalcVoteFrameContestantCount:SetText('|cff1fba1fEveryone(' .. TalcFrame.pickResponses[TalcFrame.CurrentVotedItem]
+        TalcVoteFrameContestantCount:SetText('Everyone(' .. TalcFrame.pickResponses[TalcFrame.CurrentVotedItem]
                 .. ') has picked(' .. pass .. ' passes).')
         TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].pickedByEveryone = true
-        TalcVoteFrameTimeLeftBar:Hide()
+        --TalcVoteFrameTimeLeftBar:Hide()
 
     else
         TalcVoteFrameContestantCount:SetText('Waiting picks ' ..
                 TalcFrame.pickResponses[TalcFrame.CurrentVotedItem] .. '/' ..
                 core.getNumOnlineRaidMembers())
         TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].pickedByEveryone = false
-        TalcVoteFrameTimeLeftBar:Show()
+        --TalcVoteFrameTimeLeftBar:Show()
     end
 
     local itemIndex, name, need, votes, ci1, ci2, ci3, roll, gearscore
@@ -882,10 +886,6 @@ function TalcFrame_VoteFrameListScroll_Update()
                 if (roll == -2) then
                     _G['TalcVoteFrameContestantFrame' .. index .. 'Roll']:SetText('...');
                 end
-
-                _G['TalcVoteFrameContestantFrame' .. index .. 'RightClickMenuButton1']:SetID(index);
-                _G['TalcVoteFrameContestantFrame' .. index .. 'RightClickMenuButton2']:SetID(index);
-                _G['TalcVoteFrameContestantFrame' .. index .. 'RightClickMenuButton3']:SetID(index);
 
                 _G['TalcVoteFrameContestantFrame' .. index .. 'Votes']:SetText(votes);
 
@@ -1117,6 +1117,7 @@ function TalcFrame:ResetVars()
     self.VoteCountdown.votingOpen = false
 
     TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
+    TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
 
     TalcVoteFrameCurrentVotedItemIcon:Hide()
     TalcVoteFrameVotedItemName:Hide()
@@ -1221,7 +1222,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             talc_error(t)
             return false
         end
-        TalcVoteFrameContestantCount:SetText('|cff1fba1fLoot sent. Waiting picks...')
+        TalcVoteFrameContestantCount:SetText('Loot sent. Waiting picks...')
         core.asend("CLreceived=" .. self.numItems .. "=items")
         return
     end
@@ -1631,6 +1632,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
         if sender == core.me and t == 'syncRoster=end' then
+            TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Send Loot (' .. db['VOTE_TTN'] .. 's)')
             TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
             return
         end
@@ -2570,68 +2572,101 @@ function TalcFrame.RLFrame:ChangeTab(tab)
 end
 
 TalcFrame.VoteCountdown = CreateFrame("Frame")
-TalcFrame.LootCountdown = CreateFrame("Frame")
+TalcFrame.VoteCountdown:Hide()
+TalcFrame.VoteCountdown.currentTime = 1
+TalcFrame.VoteCountdown.votingOpen = false
+TalcFrame.VoteCountdown:SetScript("OnShow", function()
+    this.startTime = GetTime();
+end)
+TalcFrame.VoteCountdown:SetScript("OnUpdate", function()
+    local plus = 0.03
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
+    if gt >= st then
+        if (TalcFrame.VoteCountdown.currentTime ~= TalcFrame.VoteCountdown.countDownFrom + plus) then
+            --tick
+            if (TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime) >= 0 then
+                TalcVoteFrameTimeLeft:Show()
+                local secondsLeftToVote = core.floor((TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime)) --.. 's left ! '
+                if TalcFrame.doneVoting[TalcFrame.CurrentVotedItem] == true then
+                    TalcVoteFrameTimeLeft:SetText('')
+                else
+                    TalcVoteFrameTimeLeft:SetText('Please VOTE ! ' .. core.SecondsToClock(secondsLeftToVote))
+                end
 
+                local w = core.floor(((TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime) / TalcFrame.VoteCountdown.countDownFrom) * 1000)
+                w = w / 1000
+
+                TalcVoteFrameTimeLeftBarBG:SetWidth((TalcVoteFrame:GetWidth() - 8) - (TalcVoteFrame:GetWidth() - 8) * w)
+            end
+
+            TalcFrame.VoteCountdown:Hide()
+            if (TalcFrame.VoteCountdown.currentTime < TalcFrame.VoteCountdown.countDownFrom + plus) then
+                --still tick
+                TalcFrame.VoteCountdown.currentTime = TalcFrame.VoteCountdown.currentTime + plus
+                TalcFrame.VoteCountdown:Show()
+            elseif (TalcFrame.VoteCountdown.currentTime > TalcFrame.VoteCountdown.countDownFrom + plus) then
+                TalcFrame.VoteCountdown:Hide()
+                TalcFrame.VoteCountdown.currentTime = 1
+
+                TalcVoteFrameTimeLeft:Show()
+                TalcVoteFrameTimeLeft:SetText('')
+                TalcVoteFrameMLToWinner:Enable()
+            end
+        end
+    end
+end)
+
+
+TalcFrame.LootCountdown = CreateFrame("Frame")
 TalcFrame.LootCountdown:Hide()
 TalcFrame.LootCountdown.currentTime = 1
 TalcFrame.LootCountdown:SetScript("OnShow", function()
     this.startTime = GetTime();
 end)
-
 TalcFrame.LootCountdown:SetScript("OnUpdate", function()
     local plus = 0.03
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
         if TalcFrame.LootCountdown.currentTime ~= TalcFrame.LootCountdown.countDownFrom + plus then
-            --tick
 
             if TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem] then
                 if TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].pickedByEveryone then
-                    TalcVoteFrameTimeLeftBar:Hide()
+                    --TalcVoteFrameTimeLeftBar:Hide()
                 else
-                    TalcVoteFrameTimeLeftBar:Show()
+                    --TalcVoteFrameTimeLeftBar:Show()
                 end
             end
 
-            local tlx = 15 + ((TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime + plus) * 500 / TalcFrame.LootCountdown.countDownFrom)
-            if tlx > 470 then
-                tlx = 470
-            end
-            if tlx <= 250 then
-                tlx = 250
-            end
-            if core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) > 55 then
+            if core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) >= 1 then
                 TalcVoteFrameTimeLeft:Show()
-            end
-            if core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) <= 55 then
-                TalcVoteFrameTimeLeft:Show()
-            end
-            if core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) < 1 then
+            else
                 TalcVoteFrameTimeLeft:Hide()
             end
 
-            local secondsLeft = core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) -- .. 's'
+            local secondsLeft = core.floor(TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime)
 
             TalcVoteFrameTimeLeft:SetText(core.SecondsToClock(secondsLeft))
-            TalcVoteFrameTimeLeft:SetPoint("BOTTOMLEFT", 280, 10)
 
-            TalcVoteFrameTimeLeftBar:SetWidth((TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime + plus) * (TalcVoteFrame:GetWidth() - 8) / TalcFrame.LootCountdown.countDownFrom)
+            local w = core.floor(((TalcFrame.LootCountdown.countDownFrom - TalcFrame.LootCountdown.currentTime) / TalcFrame.LootCountdown.countDownFrom) * 1000)
+            w = w / 1000
+
+            TalcVoteFrameTimeLeftBarBG:SetWidth((TalcVoteFrame:GetWidth() - 8) - (TalcVoteFrame:GetWidth() - 8) * w)
         end
+
         TalcFrame.LootCountdown:Hide()
-        if (TalcFrame.LootCountdown.currentTime < TalcFrame.LootCountdown.countDownFrom + plus) then
-            --still tick
+
+        if TalcFrame.LootCountdown.currentTime < TalcFrame.LootCountdown.countDownFrom + plus then
             TalcFrame.LootCountdown.currentTime = TalcFrame.LootCountdown.currentTime + plus
             TalcFrame.LootCountdown:Show()
-        elseif (TalcFrame.LootCountdown.currentTime > TalcFrame.LootCountdown.countDownFrom + plus) then
+        elseif TalcFrame.LootCountdown.currentTime > TalcFrame.LootCountdown.countDownFrom + plus then
 
-            --end
             TalcFrame.LootCountdown:Hide()
             TalcFrame.LootCountdown.currentTime = 1
 
             TalcVoteFrameMLToWinner:Enable()
 
-            --set all auto pass v2 (no wait=)
             local onlineRaiders = core.getNumOnlineRaidMembers()
             for raidi = 0, GetNumRaidMembers() do
                 if GetRaidRosterInfo(raidi) then
@@ -2685,57 +2720,7 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
     end
 end)
 
-TalcFrame.VoteCountdown:Hide()
-TalcFrame.VoteCountdown.currentTime = 1
-TalcFrame.VoteCountdown.votingOpen = false
-TalcFrame.VoteCountdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
-end)
 
-TalcFrame.VoteCountdown:SetScript("OnUpdate", function()
-    local plus = 0.03
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-    if gt >= st then
-        if (TalcFrame.VoteCountdown.currentTime ~= TalcFrame.VoteCountdown.countDownFrom + plus) then
-            --tick
-            if (TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime) >= 0 then
-                TalcVoteFrameTimeLeft:Show()
-                local secondsLeftToVote = core.floor((TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime)) --.. 's left ! '
-                TalcVoteFrameTimeLeft:SetPoint("BOTTOMLEFT", 240, 10)
-                if TalcFrame.doneVoting[TalcFrame.CurrentVotedItem] == true then
-                    TalcVoteFrameTimeLeft:SetText('')
-                else
-                    TalcVoteFrameTimeLeft:SetText('Please VOTE ! ' .. core.SecondsToClock(secondsLeftToVote))
-                end
-
-                local w = core.floor(((TalcFrame.VoteCountdown.countDownFrom - TalcFrame.VoteCountdown.currentTime) / TalcFrame.VoteCountdown.countDownFrom) * 1000)
-                w = w / 1000
-
-                if w > 0 and w <= 1 then
-                    TalcVoteFrameTimeLeftBar:Show()
-                    TalcVoteFrameTimeLeftBar:SetWidth((TalcVoteFrame:GetWidth() - 8) * w)
-                else
-                    TalcVoteFrameTimeLeftBar:Hide()
-                end
-            end
-
-            TalcFrame.VoteCountdown:Hide()
-            if (TalcFrame.VoteCountdown.currentTime < TalcFrame.VoteCountdown.countDownFrom + plus) then
-                --still tick
-                TalcFrame.VoteCountdown.currentTime = TalcFrame.VoteCountdown.currentTime + plus
-                TalcFrame.VoteCountdown:Show()
-            elseif (TalcFrame.VoteCountdown.currentTime > TalcFrame.VoteCountdown.countDownFrom + plus) then
-                TalcFrame.VoteCountdown:Hide()
-                TalcFrame.VoteCountdown.currentTime = 1
-
-                TalcVoteFrameTimeLeft:Show()
-                TalcVoteFrameTimeLeft:SetText('')
-                TalcVoteFrameMLToWinner:Enable()
-            end
-        end
-    end
-end)
 
 function buildMinimapMenu()
     local separator = {};

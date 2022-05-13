@@ -405,94 +405,6 @@
         </Layers>
         <Frames>
 
-            <!--            todo fix widths-->
-            <Button name="$parentRightClickMenuButton1" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture inherits=""/>
-                <PushedTexture inherits=""/>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="210" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
-                    </OnLoad>
-                    <OnClick>
-                        TalcFrame:ContestantClick(this:GetID())
-                    </OnClick>
-                    <OnEnter>
-                        TalcFrame:ContestantOnEnter(this:GetID())
-                    </OnEnter>
-                    <OnLeave>
-                        TalcFrame:ContestantOnLeave()
-                    </OnLeave>
-                </Scripts>
-            </Button>
-            <Button name="$parentRightClickMenuButton2" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture inherits=""/>
-                <PushedTexture inherits=""/>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="45" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT">
-                        <Offset>
-                            <AbsDimension x="272" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
-                    </OnLoad>
-                    <OnClick>
-                        TalcFrame:ContestantClick(this:GetID())
-                    </OnClick>
-                    <OnEnter>
-                        TalcFrame:ContestantOnEnter(this:GetID())
-                    </OnEnter>
-                    <OnLeave>
-                        TalcFrame:ContestantOnLeave(this:GetID())
-                    </OnLeave>
-                </Scripts>
-            </Button>
-            <Button name="$parentRightClickMenuButton3" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture inherits=""/>
-                <PushedTexture inherits=""/>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="30" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT">
-                        <Offset>
-                            <AbsDimension x="393" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        this:RegisterForClicks("LeftButtonUp", "RightButtonDown");
-                    </OnLoad>
-                    <OnClick>
-                        TalcFrame:ContestantClick(this:GetID())
-                    </OnClick>
-                    <OnEnter>
-                        TalcFrame:ContestantOnEnter(this:GetID())
-                    </OnEnter>
-                    <OnLeave>
-                        TalcFrame:ContestantOnLeave(this:GetID())
-                    </OnLeave>
-                </Scripts>
-            </Button>
 
             <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
@@ -813,6 +725,9 @@
             <OnLeave>
                 TalcFrame:ContestantOnLeave(this:GetID())
             </OnLeave>
+            <OnMouseUp>
+                TalcFrame:ContestantClick(this:GetID())
+            </OnMouseUp>
         </Scripts>
     </Frame>
 
@@ -925,13 +840,25 @@
                 </Texture>
 
                 <Texture name="$parentTimeLeftBar" file="Interface\addons\Talc\images\grad1">
+                    <Size>
+                        <AbsDimension x="180" y="24"/>
+                    </Size>
                     <Color r="0.24" g="0.45" b="0.84"/>
                     <Anchors>
-                        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
-                            <Offset x="5" y="28"/>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset x="4" y="4"/>
                         </Anchor>
-                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
-                            <Offset x="-5" y="5"/>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentTimeLeftBarBG" file="Interface\DialogFrame\UI-DialogBox-Background">
+<!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
+                    <Size>
+                        <AbsDimension x="180" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT">
+                            <Offset x="-4" y="4"/>
                         </Anchor>
                     </Anchors>
                 </Texture>
@@ -1936,7 +1863,7 @@
 
                     <Button name="$parentBroadcastLoot" framstrata="HIGH" inherits="Talc_ButtonTemplate"
                             hidden="false"
-                            text="Broadcast Loot">
+                            text="Load Items">
                         <Size>
                             <AbsDimension x="180" y="20"/>
                         </Size>
@@ -2117,7 +2044,6 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-
 
                     <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Officers">
                         <Size>
