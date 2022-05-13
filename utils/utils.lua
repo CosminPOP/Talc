@@ -417,7 +417,7 @@ Talc_Utils.init = function()
         end
         core.bsend("BULK", "syncRoster=end")
 
-        TalcVoteFrameRLWindowFrameOfficer:SetText('Officer(' .. index .. ')')
+        TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. index .. ')')
 
         if core.isRL(core.me) then
             TalcFrame.RLFrame:CheckAssists()
