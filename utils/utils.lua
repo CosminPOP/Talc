@@ -153,7 +153,7 @@ function Talc_Utils:init()
         ["INVTYPE_HOLDABLE"] = 'Held In Off-Hand', --	17',
         ["INVTYPE_RANGED"] = 'Bow', --	18',
         ["INVTYPE_THROWN"] = 'Ranged', --	18',
-        ["INVTYPE_RANGEDRIGHT"] = 'Wands, Guns, and Crossbows', --	18',
+        ["INVTYPE_RANGEDRIGHT"] = '', --	18', --Wands, Guns, and Crossbows
         ["INVTYPE_RELIC"] = 'Relic', --	18',
         ["INVTYPE_TABARD"] = 'Tabard', --	19',
         ["INVTYPE_BAG"] = 'Container', --	20,21,22,23',
@@ -173,7 +173,7 @@ function Talc_Utils:init()
         return core.gsub(s, "^%s*(.-)%s*$", "%1")
     end
 
-    core.pairsByKeys = function(t, f)
+    core.pairsByKeys = function(t)
         local a = {}
         for n in core.pairs(t) do
             core.insert(a, n)
@@ -194,7 +194,7 @@ function Talc_Utils:init()
         return iter
     end
 
-    core.pairsByKeysReverse = function(t, f)
+    core.pairsByKeysReverse = function(t)
         local a = {}
         for n in core.pairs(t) do
             core.insert(a, n)
@@ -221,9 +221,9 @@ function Talc_Utils:init()
             local ex = core.split("|", itemLink)
 
             if not ex[2] or not ex[3] then
-                talc_error('bad addButtonOnEnterTooltip itemLink syntadx')
+                talc_error('bad addButtonOnEnterTooltip itemLink syntax')
                 talc_error(itemLink)
-                return false
+                return
             end
 
             frame:SetScript("OnEnter", function(self)
@@ -270,18 +270,19 @@ function Talc_Utils:init()
         end)
     end
 
-    core.ver = function(ver)
-        if core.sub(ver, 7, 7) == '' then
-            ver = '0.' .. ver
-        end
+    core.remButtonOnEnterTooltip = function(frame)
+        frame:SetScript("OnEnter", nil)
+        frame:SetScript("OnLeave", nil)
+    end
 
+    core.ver = function(ver)
         return core.int(core.sub(ver, 1, 1)) * 1000 +
                 core.int(core.sub(ver, 3, 3)) * 100 +
                 core.int(core.sub(ver, 5, 5)) * 10 +
                 core.int(core.sub(ver, 7, 7)) * 1
     end
 
-    core.SetDynTTN = function(numItems, updateButton)
+    core.SetDynTTN = function(numItems)
         local t = 20
         if numItems == 2 then
             t = 25
@@ -294,9 +295,6 @@ function Talc_Utils:init()
         end
         if numItems >= 5 then
             t = 50
-        end
-        if updateButton then
-            BroadcastLoot:SetText('Broadcast Loot (' .. t .. 's)')
         end
         db['VOTE_TTN'] = t
     end
@@ -471,7 +469,7 @@ function Talc_Utils:init()
                 db['VOTE_ROSTER'][newName] = nil
                 talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |rremoved from TALC Roster')
                 core.syncRoster()
-                return true
+                return
             end
         end
         talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |rdoes not exist in the roster.')
