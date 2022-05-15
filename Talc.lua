@@ -17,83 +17,83 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if not TALC_DB then
                 TALC_DB = {}
             end
-            if not TALC_DB['_DEBUG'] then
+            if TALC_DB['_DEBUG'] == nil then
                 TALC_DB['_DEBUG'] = false
             end
 
-            if not TALC_DB['WIN_THRESHOLD'] then
+            if TALC_DB['WIN_THRESHOLD'] == nil then
                 TALC_DB['WIN_THRESHOLD'] = 3
             end
-            if not TALC_DB['WIN_ENABLE_SOUND'] then
+            if TALC_DB['WIN_ENABLE_SOUND']  == nil then
                 TALC_DB['WIN_ENABLE_SOUND'] = true
             end
-            if not TALC_DB['WIN_VOLUME'] then
+            if TALC_DB['WIN_VOLUME']  == nil then
                 TALC_DB['WIN_VOLUME'] = 'high'
             end
 
-            if not TALC_DB['ROLL_ENABLE_SOUND'] then
+            if TALC_DB['ROLL_ENABLE_SOUND'] == nil then
                 TALC_DB['ROLL_ENABLE_SOUND'] = true
             end
-            if not TALC_DB['ROLL_VOLUME'] then
+            if TALC_DB['ROLL_VOLUME'] == nil then
                 TALC_DB['ROLL_VOLUME'] = 'high'
             end
-            if not TALC_DB['ROLL_TROMBONE'] then
+            if TALC_DB['ROLL_TROMBONE'] == nil then
                 TALC_DB['ROLL_TROMBONE'] = 'true'
             end
 
-            if not TALC_DB['NEED_SCALE'] then
+            if TALC_DB['NEED_SCALE'] == nil then
                 TALC_DB['NEED_SCALE'] = 1
             end
 
-            if not TALC_DB['PULL'] then
+            if TALC_DB['PULL'] == nil then
                 TALC_DB['PULL'] = true
             end
-            if not TALC_DB['PULL_SOUND'] then
+            if TALC_DB['PULL_SOUND'] == nil then
                 TALC_DB['PULL_SOUND'] = true
             end
 
-            if not TALC_DB['BOSS_FRAME'] then
+            if TALC_DB['BOSS_FRAME'] == nil then
                 TALC_DB['BOSS_FRAME'] = true
             end
 
-            if not TALC_DB['VOTE_ROSTER'] then
+            if TALC_DB['VOTE_ROSTER'] == nil then
                 TALC_DB['VOTE_ROSTER'] = {}
             end
-            if not TALC_DB['VOTE_ROSTER_GUILD_NAME'] then
+            if TALC_DB['VOTE_ROSTER_GUILD_NAME'] == nil then
                 TALC_DB['VOTE_ROSTER_GUILD_NAME'] = ''
             end
-            if not TALC_DB['VOTE_LOOT_HISTORY'] then
+            if TALC_DB['VOTE_LOOT_HISTORY'] == nil then
                 TALC_DB['VOTE_LOOT_HISTORY'] = {}
             end
-            if not TALC_DB['VOTE_TTN'] then
+            if TALC_DB['VOTE_TTN'] == nil then
                 TALC_DB['VOTE_TTN'] = 30
             end
-            if not TALC_DB['VOTE_TTV'] then
+            if TALC_DB['VOTE_TTV'] == nil then
                 TALC_DB['VOTE_TTV'] = 30
             end
-            if not TALC_DB['VOTE_TTR'] then
+            if TALC_DB['VOTE_TTR'] == nil then
                 TALC_DB['VOTE_TTR'] = 30
             end
-            if not TALC_DB['VOTE_ENABLED'] then
+            if TALC_DB['VOTE_ENABLED'] == nil then
                 TALC_DB['VOTE_ENABLED'] = true
             end
-            if not TALC_DB['VOTE_SCALE'] then
+            if TALC_DB['VOTE_SCALE'] == nil then
                 TALC_DB['VOTE_SCALE'] = 1
             end
-            if not TALC_DB['VOTE_ALPHA'] then
+            if TALC_DB['VOTE_ALPHA'] == nil then
                 TALC_DB['VOTE_ALPHA'] = 1
             end
-            if not TALC_DB['VOTE_AUTO_ASSIST'] then
-                TALC_DB['VOTE_AUTO_ASSIST'] = false --todo check these falses
+            if TALC_DB['VOTE_AUTO_ASSIST'] == nil then
+                TALC_DB['VOTE_AUTO_ASSIST'] = false
             end
-            if not TALC_DB['VOTE_DESENCHANTER'] then
-                TALC_DB['VOTE_DESENCHANTER'] = ''
+            if TALC_DB['VOTE_ENCHANTER'] == nil then
+                TALC_DB['VOTE_ENCHANTER'] = ''
             end
-            if not TALC_DB['VOTE_SCREENSHOT_LOOT'] then --todo add ui checkbox
+            if TALC_DB['VOTE_SCREENSHOT_LOOT'] == nil then
                 TALC_DB['VOTE_SCREENSHOT_LOOT'] = true
             end
 
-            if not TALC_DB['VOTE_CONFIG'] then
+            if TALC_DB['VOTE_CONFIG'] == nil then
                 TALC_DB['VOTE_CONFIG'] = {
                     ['AutoML'] = false,
                     ['AutoMLItems'] = {},
@@ -105,6 +105,14 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     }
                 }
             end
+
+            TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['BIS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['MS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['OS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsXMOGButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['XMOG']);
+
+            TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(TALC_DB['VOTE_AUTO_ASSIST']);
+            TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(TALC_DB['VOTE_SCREENSHOT_LOOT']);
 
             Talc_Utils:init();
             TalcFrame:init();
@@ -125,7 +133,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
         if init then
 
             if event == 'CHAT_MSG_ADDON' and arg1 == TALC.channel then
-                print(arg1, arg2, arg3, arg4)
+                --print(arg1, arg2, arg3, arg4)
                 TalcFrame:handleSync(...)
                 NeedFrame:handleSync(...)
                 WinFrame:handleSync(...)
@@ -344,46 +352,22 @@ SlashCmdList["TALC"] = function(cmd)
             local setEx = core.split(' ', cmd)
             if setEx[2] and setEx[3] then
                 if core.isRL(core.me) then
-                    if setEx[2] == 'disenchanter' or setEx[2] == 'enchanter' then
-                        if setEx[3] == '' or core.int(setEx[3]) then
-                            talc_print('Incorrect syntax. Use /talc set disenchanter/enchanter [name]')
-                            return false
+                    if setEx[2] == 'enchanter' then
+                        if not setEx[3] then
+                            talc_print('Incorrect syntax. Use /talc set enchanter [name]')
+                            return
                         end
-                        db['VOTE_DESENCHANTER'] = setEx[3]
-                        local deClassColor = core.classColors[getPlayerClass(db['VOTE_DESENCHANTER'])].colorStr
-                        talc_print('VOTE_DESENCHANTER - set to ' .. deClassColor .. db['VOTE_DESENCHANTER'])
+                        db['VOTE_ENCHANTER'] = setEx[3]
+                        local deClassColor = core.classColors[core.getPlayerClass(db['VOTE_DESENCHANTER'])].colorStr
+                        talc_print('Enchanter set to ' .. deClassColor .. db['VOTE_DESENCHANTER'])
                         TalcVoteFrameMLToEnchanter:Show()
-
-                        TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
-                            GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0);
-                            if db['VOTE_DESENCHANTER'] == '' then
-                                GameTooltip:AddLine("Enchanter not set. Type /talc set enchanter [name]")
-                            else
-                                GameTooltip:AddLine("ML to " .. db['VOTE_DESENCHANTER'] .. " to disenchant.")
-                            end
-                            GameTooltip:Show();
-                        end)
-
-                        TalcVoteFrameMLToEnchanter:SetScript("OnLeave", function(self)
-                            GameTooltip:Hide();
-                        end)
-                    end
-                    if setEx[2] == 'ttr' then
-                        if setEx[3] == '' or not core.int(setEx[3]) then
-                            talc_print('Incorrect syntax. Use /talc set ttr [time in seconds]')
-                            return false
-                        end
-                        db['VOTE_TTR'] = core.int(setEx[3])
-                        talc_print('VOTE_TTR - set to ' .. db['VOTE_TTR'] .. 's')
-                        core.asend('ttr=' .. db['VOTE_TTR'])
                     end
                 else
                     talc_print('You are not the raid leader.')
                 end
             else
-                talc_print('SET Options')
-                talc_print('/talc set ttr <time> - sets VOTE_TTR (current value: ' .. db['VOTE_TTR'] .. 's)')
-                talc_print('/talc set enchanter/disenchanter <name> - sets VOTE_DESENCHANTER (current value: ' .. db['VOTE_DESENCHANTER'] .. ')')
+                talc_print('Options')
+                talc_print('/talc set enchanter [name] (current value: ' .. db['VOTE_ENCHANTER'] .. ')')
             end
         end
         if cmd == 'debug' then
@@ -393,20 +377,16 @@ SlashCmdList["TALC"] = function(cmd)
             else
                 talc_print('Debug DISABLED')
             end
+            return
         end
         if cmd == 'who' then
             TalcFrame:RefreshWho()
             return
         end
-        if cmd == 'synchistory' then
-            if not core.isRL(core.me) then
-                return
-            end
-            Talc_SyncLootHistory()
-        end
         if cmd == 'clearhistory' then
             db['VOTE_LOOT_HISTORY'] = {}
             talc_print('Loot History cleared.')
+            return
         end
         if core.sub(cmd, 1, 6) == 'search' then
             local cmdEx = core.split(' ', cmd)
@@ -525,7 +505,6 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('Win Sound Disabled')
             end
         end
-
         if core.find(cmd, 'win') then
             local winSplit = core.split(' ', cmd)
             if winSplit[2] and core.int(winSplit[2]) then
@@ -554,7 +533,6 @@ SlashCmdList["TALC"] = function(cmd)
             end
             return
         end
-
         if core.find(cmd, 'trombone') then
             db['ROLL_TROMBONE'] = not db['ROLL_TROMBONE']
             if db['ROLL_TROMBONE'] then
@@ -582,6 +560,7 @@ SlashCmdList["TALC"] = function(cmd)
 
         if cmd == 'roll' then
             RollFrame:showAnchor()
+            return
         end
 
         if cmd == 'boss' then
@@ -591,6 +570,7 @@ SlashCmdList["TALC"] = function(cmd)
             else
                 talc_print('BossFrame Disabled. Type |cfffff569/talc |cff69ccf0boss |rto toggle boss frame.')
             end
+            return
         end
 
     end
