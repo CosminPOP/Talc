@@ -153,7 +153,7 @@ function TalcFrame:ResetVars()
     TalcVoteFrameRLExtraFrameDragLoot:SetText("Drag Loot")
     TalcVoteFrameRLExtraFrameDragLoot:Enable()
 
-    if core.isRL(core.me) then
+    if core.isRL() then
         TalcVoteFrameRLExtraFrame:Show()
 
         TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
@@ -382,7 +382,7 @@ function TalcFrame:ToggleMainWindow()
     if TalcVoteFrame:IsVisible() then
         self:CloseWindow()
     else
-        if not core.canVote(core.me) and not core.isRL(core.me) then
+        if not core.canVote() and not core.isRL() then
             return false
         end
         TalcVoteFrame:Show()
@@ -624,10 +624,10 @@ end
 function TalcFrame:VotedItemButton(id)
 
     TalcVoteFrameMLToWinner:Hide()
-    if core.isRL(core.me) then
+    if core.isRL() then
         TalcVoteFrameMLToWinner:Show()
     end
-    if core.canVote(core.me) and not core.isRL(core.me) then
+    if core.canVote() and not core.isRL() then
         TalcVoteFrameWinnerStatus:Show()
     end
 
@@ -756,7 +756,7 @@ function TalcFrame:ChangePlayerPickTo(playerName, newPick, itemIndex)
             break
         end
     end
-    if core.isRL(core.me) then
+    if core.isRL() then
         core.asend("changePickTo@" .. playerName .. "@" .. newPick .. "@" .. itemIndex)
     end
 
@@ -1073,7 +1073,7 @@ end
 
 function TalcFrame:ShowContestantDropdownMenu(id)
 
-    if not core.isRL(core.me) then
+    if not core.isRL() then
         return
     end
 
@@ -1369,7 +1369,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     talc_debug(sender .. ' says: ' .. t)
 
     if core.find(t, 'NeedButtons=', 1, true) then
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return false
         end
         if not core.isRL(sender) then
@@ -1389,7 +1389,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.find(t, 'boss&', 1, true) then
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return false
         end
         if not core.isRL(sender) then
@@ -1406,7 +1406,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.find(t, 'giveml=', 1, true) then
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return false
         end
         if not core.isRL(sender) then
@@ -1428,7 +1428,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'doneSending=', 1, true) and core.canVote(core.me) then
+    if core.find(t, 'doneSending=', 1, true) and core.canVote() then
         if not core.isRL(sender) then
             return false
         end
@@ -1444,7 +1444,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.sub(t, 1, 11) == 'CLreceived=' then
-        if not core.isRL(core.me) then
+        if not core.isRL() then
             return
         end
 
@@ -1462,7 +1462,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.sub(t, 1, 9) == 'received=' then
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return
         end
 
@@ -1486,7 +1486,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if not core.isRL(sender) or sender == core.me then
             return
         end
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return
         end
 
@@ -1512,7 +1512,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if not core.isRL(sender) or sender == core.me then
             return
         end
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return
         end
 
@@ -1535,7 +1535,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'rollChoice=', 1, true) then
 
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return
         end
 
@@ -1569,7 +1569,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if not core.canVote(sender) or sender == core.me then
             return
         end
-        if not core.canVote(core.me) then
+        if not core.canVote() then
             return
         end
 
@@ -1593,7 +1593,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.find(t, 'doneVoting;', 1, true) then
-        if not core.canVote(sender) or not core.canVote(core.me) then
+        if not core.canVote(sender) or not core.canVote() then
             return
         end
 
@@ -1627,10 +1627,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if not core.isRL(sender) then
-            return
-        end
-        if not core.canVote(core.me) then
+        if not core.isRL(sender) or not core.canVote() then
             return
         end
 
@@ -1681,10 +1678,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'countdownframe=', 1, true) then
 
-        if not core.isRL(sender) then
-            return
-        end
-        if not core.canVote(core.me) then
+        if not core.isRL(sender) or not core.canVote() then
             return
         end
 
@@ -1709,7 +1703,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             or core.sub(t, 1, 5) == 'pass='
             or core.sub(t, 1, 9) == 'autopass=' then
 
-        if core.canVote(core.me) then
+        if core.canVote() then
 
             local needEx = core.split('=', t)
 
