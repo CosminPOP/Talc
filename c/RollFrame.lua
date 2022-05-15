@@ -7,7 +7,7 @@ RollFrame.watchRolls = false
 RollFrame.rolls = {}
 
 function RollFrame:handleSync(pre, msg, ch, sender)
-    if core:isRL(sender) then
+    if core.isRL(sender) then
 
         if core.find(msg, 'rollFor=', 1, true) then
 
