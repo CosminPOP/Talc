@@ -319,10 +319,16 @@ function Talc_Utils:init()
     end
 
     core.isCL = function(name)
+        if not name then
+            name = core.me
+        end
         return db['VOTE_ROSTER'][name] ~= nil
     end
 
     core.isRL = function(name)
+        if not name then
+            name = core.me
+        end
         if not UnitInRaid('player') then
             return false
         end
@@ -338,6 +344,9 @@ function Talc_Utils:init()
     end
 
     core.isAssist = function(name)
+        if not name then
+            name = core.me
+        end
         if not UnitInRaid('player') then
             return false
         end
@@ -353,10 +362,16 @@ function Talc_Utils:init()
     end
 
     core.isRLorAssist = function(name)
+        if not name then
+            name = core.me
+        end
         return core.isAssist(name) or core.isRL(name)
     end
 
     core.canVote = function(name)
+        if not name then
+            name = core.me
+        end
         if not core.isRLorAssist(name) then
             return false
         end
@@ -367,6 +382,9 @@ function Talc_Utils:init()
     end
 
     core.onlineInRaid = function(name)
+        if not name then
+            name = core.me
+        end
         for i = 0, GetNumRaidMembers() do
             if GetRaidRosterInfo(i) then
                 local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
@@ -395,6 +413,9 @@ function Talc_Utils:init()
     end
 
     core.getPlayerClass = function(name)
+        if not name then
+            name = core.me
+        end
         for i = 0, GetNumRaidMembers() do
             if GetRaidRosterInfo(i) then
                 local n = GetRaidRosterInfo(i);
@@ -453,7 +474,7 @@ function Talc_Utils:init()
                 return true
             end
         end
-        talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName  .. ' |rdoes not exist in the roster.')
+        talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |rdoes not exist in the roster.')
     end
 
     core.SecondsToClock = function(seconds)
