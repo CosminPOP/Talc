@@ -141,6 +141,20 @@
                                 <AbsDimension x="135" y="37"/>
                             </Size>
                         </FontString>
+                        <FontString name="$parentItemLevel" inherits="NumberFontNormalSmall" text="215"
+                                    hidden="false"
+                                    justifyH="CENTER">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-13"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="40" y="40"/>
+                            </Size>
+                        </FontString>
                     </Layer>
                 </Layers>
                 <Scripts>
@@ -200,11 +214,10 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        PlayerNeedItemButton_OnClick(this:GetID(), 'bis');
+                        NeedFrame:NeedClick(this:GetID(), 'bis');
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentMSUpgradeButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Addons\Talc\images\need\ms_icon">
                     <Size x="64" y="64"/>
@@ -256,11 +269,10 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        PlayerNeedItemButton_OnClick(this:GetID(), 'ms');
+                        NeedFrame:NeedClick(this:GetID(), 'ms');
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Addons\Talc\images\need\os_icon">
                     <Size x="64" y="64"/>
@@ -312,11 +324,10 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        PlayerNeedItemButton_OnClick(this:GetID(), 'os');
+                        NeedFrame:NeedClick(this:GetID(), 'os');
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Addons\Talc\images\need\xmog_icon">
                     <Size x="64" y="64"/>
@@ -368,11 +379,10 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        PlayerNeedItemButton_OnClick(this:GetID(), 'xmog');
+                        NeedFrame:NeedClick(this:GetID(), 'xmog');
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Addons\Talc\images\need\pass_icon">
                     <Size x="64" y="64"/>
@@ -424,7 +434,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        PlayerNeedItemButton_OnClick(this:GetID(), 'pass');
+                        NeedFrame:NeedClick(this:GetID(), 'pass');
                     </OnClick>
                 </Scripts>
             </Button>
@@ -751,7 +761,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        need_frame_close()
+                        NeedFrame:Close()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -768,7 +778,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame_Scale('down')
+                        NeedFrame:ScaleWindow('down')
                     </OnClick>
                 </Scripts>
             </Button>
@@ -785,7 +795,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame_Scale('up')
+                        NeedFrame:ScaleWindow('up')
                     </OnClick>
                 </Scripts>
             </Button>
