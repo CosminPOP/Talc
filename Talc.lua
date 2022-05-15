@@ -59,6 +59,9 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if not TALC_DB['VOTE_ROSTER'] then
                 TALC_DB['VOTE_ROSTER'] = {}
             end
+            if not TALC_DB['VOTE_ROSTER_GUILD_NAME'] then
+                TALC_DB['VOTE_ROSTER_GUILD_NAME'] = ''
+            end
             if not TALC_DB['VOTE_LOOT_HISTORY'] then
                 TALC_DB['VOTE_LOOT_HISTORY'] = {}
             end
@@ -81,10 +84,13 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 TALC_DB['VOTE_ALPHA'] = 1
             end
             if not TALC_DB['VOTE_AUTO_ASSIST'] then
-                TALC_DB['VOTE_AUTO_ASSIST'] = false
+                TALC_DB['VOTE_AUTO_ASSIST'] = false --todo check these falses
             end
             if not TALC_DB['VOTE_DESENCHANTER'] then
                 TALC_DB['VOTE_DESENCHANTER'] = ''
+            end
+            if not TALC_DB['VOTE_SCREENSHOT_LOOT'] then --todo add ui checkbox
+                TALC_DB['VOTE_SCREENSHOT_LOOT'] = true
             end
 
             if not TALC_DB['VOTE_CONFIG'] then
@@ -100,7 +106,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 }
             end
 
-            Talc_Utils.init();
+            Talc_Utils:init();
             TalcFrame:init();
 
             NeedFrame:init();
@@ -119,9 +125,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
         if init then
 
             if event == 'CHAT_MSG_ADDON' and arg1 == TALC.channel then
-                TalcFrame:handleSync(arg1, arg2, arg3, arg4)
-                NeedFrame:handleSync(arg1, arg2, arg3, arg4)
-                WinFrame:handleSync(arg1, arg2, arg3, arg4)
+                print(arg1, arg2, arg3, arg4)
+                TalcFrame:handleSync(...)
+                NeedFrame:handleSync(...)
+                WinFrame:handleSync(...)
+                RollFrame:handleSync(...)
             end
 
             if event == "RAID_ROSTER_UPDATE" then
@@ -134,7 +142,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                                 if core.isCL(n) and r == 0 and n ~= core.me then
                                     TalcFrame.assistTriggers = TalcFrame.assistTriggers + 1
                                     PromoteToAssistant(n)
-                                    talc_print(n .. ' |cff69ccf0autopromoted|cffffffff.')
+                                    talc_print(core.classColors[core.getPlayerClass(n)].colorStr .. n .. ' |rauto promoted.')
 
                                     if TalcFrame.assistTriggers > 100 then
                                         talc_error('Autoassist trigger error (>100). Autoassist disabled.')
@@ -146,17 +154,12 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             end
                         end
                     end
-                    TalcVoteFrameRLExtraFrameRLOptionsButton:Show()
                     TalcVoteFrameRLExtraFrame:Show()
-                    TalcVoteFrameMLToWinner:Show()
-                    TalcVoteFrameRLExtraFrameResetClose:Show()
+
                     TalcFrame.RLFrame:CheckAssists()
                 else
-                    TalcVoteFrameMLToWinner:Hide()
                     TalcVoteFrameRLExtraFrame:Hide()
-                    TalcVoteFrameRLOptionsButton:Hide()
-                    TalcVoteFrameRLWindowFrame:Hide()
-                    TalcVoteFrameRLExtraFrameResetClose:Hide()
+
                 end
                 if not core.canVote(core.me) then
                     TalcVoteFrame:Hide()
@@ -173,7 +176,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     SendChatMessage(arg1, "RAID")
                 end
                 if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
-                    local r = core.explode(arg1, " ")
+                    local r = core.split(" ", arg1)
 
                     if not r[2] or not r[3] then
                         talc_error('bad roll syntax')
@@ -186,17 +189,18 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
                     --check if name is in playersWhoWantItems with vote == -2
                     for pwIndex, pwPlayer in next, TalcFrame.playersWhoWantItems do
-                        if (pwPlayer['name'] == name and pwPlayer['roll'] == -2) then
+                        if pwPlayer['name'] == name and pwPlayer['roll'] == -2 then
                             TalcFrame.playersWhoWantItems[pwIndex]['roll'] = roll
                             core.asend("playerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
-                            TalcFrame_VoteFrameListScroll_Update()
+                            TalcFrame:VoteFrameListUpdate()
                             break
                         end
                     end
                 end
             end
             if event == "LOOT_OPENED" then
-                TalcFrame.LOOT_OPENED = true
+                TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
+                TalcVoteFrameRLExtraFrameDragLoot:Disable()
                 if not db['VOTE_ENABLED'] then
                     return
                 end
@@ -283,8 +287,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if event == "LOOT_SLOT_CLEARED" then
             end
             if event == "LOOT_CLOSED" then
-                TalcFrame.LOOT_OPENED = false
                 TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
+                TalcVoteFrameRLExtraFrameDragLoot:Enable()
             end
 
             if event == "COMBAT_LOG_EVENT" then
@@ -295,7 +299,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             return true
                         end
                     end
-
                 end
             end
 
@@ -310,10 +313,12 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 if UnitName('target') == master and CheckInteractDistance("target", 3) then
                     PlaySoundFile("Sound\\Character\\Dwarf\\DwarfVocalFemale\\DwarfFemaleHello0" .. math.random(1, 3) .. ".wav", "Dialog")
                 end
+                return
             end
 
             if event == 'CHAT_MSG_LOOT' then
                 WinFrame:handleLoot(arg1)
+                return
             end
         end
 
@@ -335,26 +340,8 @@ TALC:RegisterEvent("COMBAT_LOG_EVENT")
 SLASH_TALC1 = "/talc"
 SlashCmdList["TALC"] = function(cmd)
     if cmd then
-        if core.sub(cmd, 1, 3) == 'add' then
-            local setEx = core.explode(cmd, ' ')
-            if setEx[2] then
-                addToRoster(setEx[2])
-            else
-                talc_print('Adds LC member')
-                talc_print('syntax: /talc add <name>')
-            end
-        end
-        if core.sub(cmd, 1, 3) == 'rem' then
-            local setEx = core.explode(cmd, ' ')
-            if setEx[2] then
-                remFromRoster(setEx[2])
-            else
-                talc_print('Removes LC member')
-                talc_print('syntax: /talc rem <name>')
-            end
-        end
         if core.sub(cmd, 1, 3) == 'set' then
-            local setEx = core.explode(cmd, ' ')
+            local setEx = core.split(' ', cmd)
             if setEx[2] and setEx[3] then
                 if core.isRL(core.me) then
                     if setEx[2] == 'disenchanter' or setEx[2] == 'enchanter' then
@@ -408,7 +395,8 @@ SlashCmdList["TALC"] = function(cmd)
             end
         end
         if cmd == 'who' then
-            RefreshWho_OnClick()
+            TalcFrame:RefreshWho()
+            return
         end
         if cmd == 'synchistory' then
             if not core.isRL(core.me) then
@@ -421,7 +409,7 @@ SlashCmdList["TALC"] = function(cmd)
             talc_print('Loot History cleared.')
         end
         if core.sub(cmd, 1, 6) == 'search' then
-            local cmdEx = core.explode(cmd, ' ')
+            local cmdEx = core.split(' ', cmd)
 
             if cmdEx[2] then
 
@@ -465,7 +453,7 @@ SlashCmdList["TALC"] = function(cmd)
             end
         end
         if core.sub(cmd, 1, 5) == 'scale' then
-            local scaleEx = core.explode(cmd, ' ')
+            local scaleEx = core.split(' ', cmd)
             if not scaleEx[1] or not scaleEx[2] or not core.int(scaleEx[2]) then
                 talc_print('Set scale syntax: |cfffff569/talc scale [scale from 0.5 to 2]')
                 return false
@@ -482,7 +470,7 @@ SlashCmdList["TALC"] = function(cmd)
             end
         end
         if core.sub(cmd, 1, 5) == 'alpha' then
-            local alphaEx = core.explode(cmd, ' ')
+            local alphaEx = core.split(' ', msg)
             if not alphaEx[1] or not alphaEx[2] or not core.int(alphaEx[2]) then
                 talc_print('Set alpha syntax: |cfffff569/talc alpha [0.2-1]')
                 return false
