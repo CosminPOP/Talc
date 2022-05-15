@@ -3,25 +3,28 @@ local _G = _G
 
 Talc_Utils = CreateFrame("Frame")
 
-Talc_Utils.init = function()
+function Talc_Utils:init()
     core = TALC
     db = TALC_DB
 
     core.type = type
     core.floor = math.floor
     core.ceil = math.ceil
-    core.insert = table.insert
+    core.max = math.max
     core.rep = string.rep
     core.sub = string.sub
     core.int = tonumber
     core.lower = string.lower
     core.upper = string.upper
     core.find = string.find
+    core.format = string.format
     core.string = tostring
     core.len = string.len
     core.gsub = string.gsub
     core.pairs = pairs
     core.sort = table.sort
+    core.insert = table.insert
+
     core.split = function(delimiter, str)
         local result = {}
         local from = 1
@@ -341,7 +344,7 @@ Talc_Utils.init = function()
         for i = 0, GetNumRaidMembers() do
             if GetRaidRosterInfo(i) then
                 local n, r = GetRaidRosterInfo(i);
-                if (n == name and r == 1) then
+                if n == name and r == 1 then
                     return true
                 end
             end
@@ -406,10 +409,6 @@ Talc_Utils.init = function()
 
     core.syncRoster = function()
         local index = 0
-        for i = 1, #TalcFrame.RLFrame.assistFrames do
-            _G['AssistFrame' .. i .. 'AssistCheck']:Disable()
-            _G['AssistFrame' .. i .. 'CLCheck']:Disable()
-        end
         core.bsend("BULK", "syncRoster=start")
         for name, _ in next, db['VOTE_ROSTER'] do
             index = index + 1
@@ -431,12 +430,12 @@ Talc_Utils.init = function()
         end
         for name, _ in next, db['VOTE_ROSTER'] do
             if name == newName then
-                talc_print(newName .. ' already exists.')
+                talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |ralready exists.')
                 return false
             end
         end
         db['VOTE_ROSTER'][newName] = false
-        talc_print(newName .. ' added to TALC Roster')
+        talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |radded to TALC Roster')
         PromoteToAssistant(newName)
         core.syncRoster()
     end
@@ -449,12 +448,12 @@ Talc_Utils.init = function()
         for name, _ in next, db['VOTE_ROSTER'] do
             if name == newName then
                 db['VOTE_ROSTER'][newName] = nil
-                talc_print(newName .. ' removed from TALC Roster')
+                talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |rremoved from TALC Roster')
                 core.syncRoster()
                 return true
             end
         end
-        talc_print(newName .. ' does not exist in the roster.')
+        talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName  .. ' |rdoes not exist in the roster.')
     end
 
     core.SecondsToClock = function(seconds)
@@ -463,9 +462,15 @@ Talc_Utils.init = function()
         if seconds <= 0 then
             return "00:00";
         else
-            local hours = string.format("%02.f", math.floor(seconds / 3600));
-            local mins = string.format("%02.f", math.floor(seconds / 60 - (hours * 60)));
-            local secs = string.format("%02.f", math.floor(seconds - hours * 3600 - mins * 60));
+            local hours = core.int(core.format("%02.f", core.floor(seconds / 3600)))
+            local mins = core.format("%02.f", core.floor(seconds / 60 - (hours * 60)))
+            local secs = core.format("%02.f", core.floor(seconds - hours * 3600 - mins * 60))
+            if hours > 0 then
+                return hours .. "h"
+            end
+            if core.int(mins) > 0 and secs == '00' then
+                return mins .. "m"
+            end
             return mins .. ":" .. secs
         end
     end
