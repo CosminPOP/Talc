@@ -3,8 +3,6 @@ local _G = _G
 NeedFrame = CreateFrame("Frame")
 
 NeedFrame.numItems = 0
-NeedFrame.countdown.T = 1
-NeedFrame.countdown.C = 30
 NeedFrame.itemFrames = {}
 NeedFrame.execs = 0
 
@@ -18,14 +16,14 @@ function NeedFrame:init()
     db = TALC_DB
     tokenRewards = TALC_TOKENS
 
-    NeedFrame:ShowAnchor() --dev
-    --NeedFrame:HideAnchor() --dev
+    --self:ShowAnchor() --dev
+    self:HideAnchor() --dev
 
     TalcNeedFrame:SetScale(db['NEED_SCALE'])
 
     self:ResetVars()
 
-    talc_print('TALC NeedFrame (v' .. core.addonVer .. ') Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
+    talc_print('TALC NeedFrame Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
 end
 
 function NeedFrame:cacheItem(data)
@@ -61,7 +59,7 @@ function NeedFrame:addItem(data)
     local texture = item[3]
     local link = item[5]
 
-    local buttons = 'bmox'
+    local buttons = 'mo'
     if item[7] then
         buttons = item[7]
     end
@@ -209,7 +207,7 @@ function NeedFrame:addItem(data)
         hasRewards = true
     end
 
-    if hasRewards then
+    if hasRewards and tokenRewards[itemID].rewards then
         -- only show my rewards
         local hasRewardsForMe = false
         local foundClasses = false
@@ -278,6 +276,7 @@ function NeedFrame:addItem(data)
             end
         end
 
+        GameTooltip:Hide()
     end
 
     self:fadeInFrame(index)
@@ -306,14 +305,39 @@ function NeedFrame:SendGear(to)
     core.wsend("NORMAL", "sending=gear=end", to)
 end
 
-function NeedFrame.fadeInFrame(id)
+function NeedFrame:fadeInFrame(id)
     self.fadeInAnimationFrame.ids[id] = true
     self.fadeInAnimationFrame:Show()
 end
 
-function NeedFrame.fadeOutFrame(id)
+function NeedFrame:fadeOutFrame(id, need)
     self.fadeOutAnimationFrame.ids[id] = true
+    self.fadeOutAnimationFrame.need[id] = need
     self.fadeOutAnimationFrame:Show()
+end
+
+function NeedFrame:ShowAnchor()
+    TalcNeedFrame:Show()
+    TalcNeedFrame:EnableMouse(true)
+    TalcNeedFrameTitle:Show()
+    TalcNeedFrameTestPlacement:Show()
+    TalcNeedFrameClosePlacement:Show()
+    TalcNeedFrameBackground:Show()
+    TalcNeedFrameScaleDown:Show()
+    TalcNeedFrameScaleUp:Show()
+    TalcNeedFrameScaleText:Show()
+end
+
+function NeedFrame:HideAnchor()
+    TalcNeedFrame:Hide()
+    TalcNeedFrame:EnableMouse(false)
+    TalcNeedFrameTitle:Hide()
+    TalcNeedFrameTestPlacement:Hide()
+    TalcNeedFrameClosePlacement:Hide()
+    TalcNeedFrameBackground:Hide()
+    TalcNeedFrameScaleDown:Hide()
+    TalcNeedFrameScaleUp:Hide()
+    TalcNeedFrameScaleText:Hide()
 end
 
 function NeedFrame:ResetVars()
@@ -420,35 +444,11 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
         if core.find(msg, 'needframe=', 1, true) then
             local command = core.split('=', msg)
             if command[2] == "reset" then
-                self.ResetVars()
+                self:ResetVars()
             end
             return
         end
     end
-end
-
-function NeedFrame:ShowAnchor()
-    TalcNeedFrame:Show()
-    TalcNeedFrame:EnableMouse(true)
-    TalcNeedFrameTitle:Show()
-    TalcNeedFrameTestPlacement:Show()
-    TalcNeedFrameClosePlacement:Show()
-    TalcNeedFrameBackground:Show()
-    TalcNeedFrameScaleDown:Show()
-    TalcNeedFrameScaleUp:Show()
-    TalcNeedFrameScaleText:Show()
-end
-
-function NeedFrame:HideAnchor()
-    TalcNeedFrame:Hide()
-    TalcNeedFrame:EnableMouse(false)
-    TalcNeedFrameTitle:Hide()
-    TalcNeedFrameTestPlacement:Hide()
-    TalcNeedFrameClosePlacement:Hide()
-    TalcNeedFrameBackground:Hide()
-    TalcNeedFrameScaleDown:Hide()
-    TalcNeedFrameScaleUp:Hide()
-    TalcNeedFrameScaleText:Hide()
 end
 
 function NeedFrame:ScaleWindow(dir)
@@ -490,9 +490,109 @@ function NeedFrame:SetQuestRewardLink(id, frame)
     end
 end
 
+function NeedFrame:NeedClick(id, need)
+
+    if need == 'autopass' then
+        self:fadeOutFrame(id)
+        return false
+    end
+
+    if id < 0 then
+        self:fadeOutFrame(id)
+        return
+    end --test items
+
+    local gearscore = 0
+    for i = 0, 19 do
+        if GetInventoryItemLink("player", i) then
+            local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
+            gearscore = gearscore + itemLevel
+        end
+    end
+
+    local myItem1 = "0"
+    local myItem2 = "0"
+    local myItem3 = "0"
+
+    local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
+    local itemID = core.int(core.split(':', itemLink)[2])
+    local name, _, _, _, _, _, _, _, equip_slot = GetItemInfo(itemLink)
+    if equip_slot then
+        --talc_debug('player need equip_slot frame : ' .. equip_slot) --todo check this
+    else
+        talc_debug(' nu am gasit item slot wtffff : ' .. itemLink)
+
+        core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "= " .. gearscore)
+        _G['NewItemTooltip' .. id]:Hide()
+        NeedFrame:fadeOutFrame(id, need)
+
+        return
+    end
+
+    if need ~= 'pass' and need ~= 'autopass' then
+        for i = 1, 19 do
+            if GetInventoryItemLink('player', i) then
+                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', i), "(item:%d+:%d+:%d+:%d+)");
+                local _, _, _, _, _, _, _, _, itemSlot = GetItemInfo(eqItemLink)
+
+                if itemSlot then
+                    if core.equipSlots[equip_slot] == core.equipSlots[itemSlot] then
+                        if myItem1 == "0" then
+                            myItem1 = eqItemLink
+                        else
+                            myItem2 = eqItemLink
+                        end
+                    end
+                else
+                    talc_debug('cant get inventory item ' .. i)
+                end
+            end
+        end
+
+        -- token fix
+        if tokenRewards[itemID] and tokenRewards[itemID].rewards then
+            local _, _, _, _, _, _, _, _, r_equip_slot = GetItemInfo(tokenRewards[itemID].rewards[1])
+            local _, _, eqItemLink = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[r_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
+            myItem1 = eqItemLink
+        end
+
+        --mh/oh fix
+        if equip_slot == 'INVTYPE_WEAPON' or equip_slot == 'INVTYPE_SHIELD' or equip_slot == 'INVTYPE_WEAPONMAINHAND'
+                or equip_slot == 'INVTYPE_WEAPONOFFHAND' or equip_slot == 'INVTYPE_HOLDABLE' or equip_slot == 'INVTYPE_2HWEAPON' then
+            --mh
+            if GetInventoryItemLink('player', 16) then
+                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 16), "(item:%d+:%d+:%d+:%d+)");
+                myItem1 = eqItemLink
+            end
+            --oh
+            if GetInventoryItemLink('player', 17) then
+                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 17), "(item:%d+:%d+:%d+:%d+)");
+                myItem2 = eqItemLink
+            end
+        end
+
+        if name == "The Phylactery of Kel'Thuzad" then
+            if GetInventoryItemLink('player', 13) then
+                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 13), "(item:%d+:%d+:%d+:%d+)");
+                myItem1 = eqItemLink
+            end
+            if GetInventoryItemLink('player', 14) then
+                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 14), "(item:%d+:%d+:%d+:%d+)");
+                myItem2 = eqItemLink
+            end
+        end
+    end
+
+    core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "=" .. gearscore)
+    _G['NewItemTooltip' .. id]:Hide()
+    self:fadeOutFrame(id, need)
+end
+
 NeedFrame.countdown = CreateFrame("Frame")
 NeedFrame.countdown:Hide()
 NeedFrame.countdown.timeToNeed = 30 --default, will be gotten via addonMessage
+NeedFrame.countdown.T = 1
+NeedFrame.countdown.C = 30
 
 NeedFrame.countdown:SetScript("OnUpdate", function()
     local plus = 0.03
@@ -521,7 +621,7 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
             -- hide frames and send auto pass
             for index in next, NeedFrame.itemFrames do
                 if NeedFrame.itemFrames[index]:GetAlpha() == 1 then
-                    PlayerNeedItemButton_OnClick(index, 'autopass')
+                    NeedFrame:NeedClick(index, 'autopass')
                 end
             end
             -- end hide frames
@@ -545,24 +645,23 @@ NeedFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
         this.startTime = GetTime()
 
         local atLeastOne = false
-        for id in next, self.ids do
-            if self.ids[id] then
+        for id in next, this.ids do
+            if this.ids[id] then
                 atLeastOne = true
                 local frame = _G["NeedFrame" .. id]
                 if frame:GetAlpha() < 1 then
                     frame:SetAlpha(frame:GetAlpha() + 0.1)
 
-                    -- todo fix glowframe texture
                     _G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(1 - frame:GetAlpha())
                 else
-                    self.ids[id] = false
-                    self.ids[id] = nil
+                    this.ids[id] = false
+                    this.ids[id] = nil
                 end
                 return
             end
         end
         if not atLeastOne then
-            self:Hide()
+            this:Hide()
         end
     end
 end)
@@ -570,6 +669,7 @@ end)
 NeedFrame.fadeOutAnimationFrame = CreateFrame("Frame")
 NeedFrame.fadeOutAnimationFrame:Hide()
 NeedFrame.fadeOutAnimationFrame.ids = {}
+NeedFrame.fadeOutAnimationFrame.need = {}
 NeedFrame.fadeOutAnimationFrame:SetScript("OnShow", function()
     this.startTime = GetTime()
 end)
@@ -579,22 +679,22 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
         this.startTime = GetTime()
 
         local atLeastOne = false
-        for id in next, self.ids do
-            if self.ids[id] then
+        for id in next, this.ids do
+            if this.ids[id] then
                 atLeastOne = true
                 local frame = _G["NeedFrame" .. id]
                 if frame:GetAlpha() > 0 then
                     frame:SetAlpha(frame:GetAlpha() - 0.15)
-                    _G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(frame:GetAlpha() - 0.15)
+                    --_G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(frame:GetAlpha() - 0.15)
                 else
-                    self.ids[id] = false
-                    self.ids[id] = nil
+                    this.ids[id] = false
+                    this.ids[id] = nil
                     frame:Hide()
                 end
             end
         end
         if not atLeastOne then
-            self:Hide()
+            this:Hide()
         end
     end
 end)
@@ -632,106 +732,6 @@ NeedFrame.countdown:SetScript("OnShow", function()
 end)
 
 
-
-function PlayerNeedItemButton_OnClick(id, need)
-
-    if need == 'autopass' then
-        NeedFrame:fadeOutFrame(id)
-        return false
-    end
-
-    if id < 0 then
-        NeedFrame:fadeOutFrame(id)
-        return
-    end --test items
-
-    local myItem1 = "0"
-    local myItem2 = "0"
-    local myItem3 = "0"
-
-    local _, _, itemLink = core.find(NeedFrame.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
-    local name, _, _, _, _, _, _, _, equip_slot = GetItemInfo(itemLink)
-    if equip_slot then
-        --talc_debug('player need equip_slot frame : ' .. equip_slot)
-    else
-        talc_debug(' nu am gasit item slot wtffff : ' .. itemLink)
-
-        core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3)
-        _G['NewItemTooltip' .. id]:Hide()
-        NeedFrame:fadeOutFrame(id)
-
-        return false
-    end
-
-    if need ~= 'pass' and need ~= 'autopass' then
-        for i = 1, 19 do
-            if GetInventoryItemLink('player', i) then
-                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', i), "(item:%d+:%d+:%d+:%d+)");
-                local _, _, _, _, _, _, _, _, itemSlot = GetItemInfo(eqItemLink)
-
-                if itemSlot then
-                    if core.equipSlots[equip_slot] == core.equipSlots[itemSlot] then
-                        if myItem1 == "0" then
-                            myItem1 = eqItemLink
-                        else
-                            myItem2 = eqItemLink
-                        end
-                    end
-                else
-                    talc_debug(' !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! itemslot ')
-                end
-            end
-        end
-
-        --mh/oh fix
-        if equip_slot == 'INVTYPE_WEAPON' or equip_slot == 'INVTYPE_SHIELD' or equip_slot == 'INVTYPE_WEAPONMAINHAND'
-                or equip_slot == 'INVTYPE_WEAPONOFFHAND' or equip_slot == 'INVTYPE_HOLDABLE' or equip_slot == 'INVTYPE_2HWEAPON' then
-            if GetInventoryItemLink('player', 16) then
-                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 16), "(item:%d+:%d+:%d+:%d+)");
-                myItem1 = eqItemLink
-            end
-            --ranged/relic weapon fix
-            if GetInventoryItemLink('player', 17) then
-                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 17), "(item:%d+:%d+:%d+:%d+)");
-                myItem2 = eqItemLink
-            end
-        end
-
-        --head
-        if name == "Desecrated Circlet" or name == "Desecrated Headpiece" or name == "Desecrated Helmet" then
-            if GetInventoryItemLink('player', 1) then
-                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 1), "(item:%d+:%d+:%d+:%d+)");
-                myItem1 = eqItemLink
-            end
-        end
-
-        if name == "The Phylactery of Kel'Thuzad" then
-            if GetInventoryItemLink('player', 13) then
-                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 13), "(item:%d+:%d+:%d+:%d+)");
-                myItem1 = eqItemLink
-            end
-            if GetInventoryItemLink('player', 14) then
-                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 14), "(item:%d+:%d+:%d+:%d+)");
-                myItem2 = eqItemLink
-            end
-        end
-
-        -- end KT item
-    end
-
-    local gearscore = 0
-
-    for i = 0, 19 do
-        if GetInventoryItemLink("player", i) then
-            local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
-            gearscore = gearscore + itemLevel
-        end
-    end
-
-    core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "=" .. gearscore)
-    _G['NewItemTooltip' .. id]:Hide()
-    NeedFrame:fadeOutFrame(id)
-end
 
 function Talc_NeedFrame_Test()
 
