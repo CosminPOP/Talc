@@ -407,7 +407,13 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
         local command = core.split('=', msg)
         if command[2] == "whoNF" then
             core.asend("withAddonNF=" .. sender .. "=" .. core.me .. "=" .. core.addonVer)
+            return
         end
+        if command[2] == "reset" and core.isRL(sender) then
+            self:ResetVars()
+            return
+        end
+        return
     end
     if core.find(msg, 'sendgear=', 1, true) then
         self:SendGear(sender)
@@ -438,14 +444,6 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
             end
 
             core.asend("received=" .. self.numItems .. "=items")
-            return
-        end
-
-        if core.find(msg, 'needframe=', 1, true) then
-            local command = core.split('=', msg)
-            if command[2] == "reset" then
-                self:ResetVars()
-            end
             return
         end
     end
