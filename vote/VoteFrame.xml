@@ -1,7 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-
     <Script file="VoteFrame.lua"/>
+
+    <!--Templates-->
 
     <Button name="Talc_CLVotedButton" inherits="UIPanelButtonTemplate" text="" virtual="true">
         <NormalTexture file="Interface\AddOns\Talc\images\classes\rogue"/>
@@ -74,104 +75,6 @@
         <PushedTexture file="Interface\addons\Talc\images\ui-panel-minimizebutton-down"/>
     </Button>
 
-    <Frame name="Talc_VotedItemsFrameTemplate" virtual="true" enableMouse="true">
-        <Size>
-            <AbsDimension x="35" y="35"/>
-        </Size>
-        <Anchors>
-            <Anchor point="TOPLEFT">
-                <Offset>
-                    <AbsDimension x="5" y="5"/>
-                </Offset>
-            </Anchor>
-        </Anchors>
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
-                  edgeFile="Interface\Tooltips\UI-Tooltip-Border"
-                  tile="true">
-            <EdgeSize>
-                <AbsValue val="16"/>
-            </EdgeSize>
-            <TileSize>
-                <AbsValue val="16"/>
-            </TileSize>
-            <!--            <BackgroundInsets>-->
-            <!--                <AbsInset left="4" right="4" top="4" bottom="4"/>-->
-            <!--            </BackgroundInsets>-->
-        </Backdrop>
-        <Frames>
-            <Button name="$parentVotedItemButton" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="35" y="35"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
-                               alphaMode="ADD">
-                    <Size>
-                        <AbsDimension x="35" y="35"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="35" y="35"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </HighlightTexture>
-                <Size>
-                    <AbsDimension x="35" y="35"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
-                            <Size>
-                                <AbsDimension x="32" y="32"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="CENTER">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-                <Scripts>
-                    <OnClick>
-                        TalcFrame:VotedItemButton(this:GetID())
-                    </OnClick>
-                </Scripts>
-            </Button>
-        </Frames>
-    </Frame>
-
     <Button name="Talc_WelcomeItemTemplate" virtual="true" inherits="Talc_ButtonTemplate">
         <NormalTexture inherits=""/>
         <HighlightTexture inherits=""/>
@@ -196,7 +99,8 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parentName" inherits="GameFontNormal" text="Item Name Long Long Long Long Long " justifyH="LEFT">
+                <FontString name="$parentName" inherits="GameFontNormal" text="Item Name Long Long Long Long Long "
+                            justifyH="LEFT">
                     <Size x="130" y="14"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -217,6 +121,75 @@
                 </FontString>
             </Layer>
         </Layers>
+    </Button>
+
+    <Button name="Talc_VotedItemButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="38" y="38"/>
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalTexture>
+        <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
+                       alphaMode="ADD">
+            <Size>
+                <AbsDimension x="35" y="35"/>
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </PushedTexture>
+        <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="35" y="35"/>
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </HighlightTexture>
+        <Size x="38" y="38"/>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+                    <Size>
+                        <AbsDimension x="32" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick>
+                TalcFrame:VotedItemButton(this:GetID())
+            </OnClick>
+        </Scripts>
     </Button>
 
     <Frame name="Talc_CLFrameTemplate" virtual="true" enableMouse="true">
@@ -932,6 +905,8 @@
         </Frames>
     </Frame>
 
+    <!--End Templates-->
+
     <Frame name="TalcVoteFrame" hidden="false" toplevel="true"
            parent="UIParent" movable="true" enableMouse="true" resizable="true">
         <Size>
@@ -948,7 +923,7 @@
                   edgeFile="Interface\addons\Talc\images\border-maw"
                   tile="false">
             <EdgeSize>
-                <AbsValue val="20"/>
+                <AbsValue val="16"/>
             </EdgeSize>
             <TileSize>
                 <AbsValue val="1"/>
@@ -983,7 +958,7 @@
                     </Anchors>
                 </Texture>
 
-<!--                <Texture name="$parentTimeLeftBarBG" file="Interface\DialogFrame\UI-DialogBox-Background">-->
+                <!--                <Texture name="$parentTimeLeftBarBG" file="Interface\DialogFrame\UI-DialogBox-Background">-->
                 <Texture name="$parentTimeLeftBarBG" file="Interface\addons\Talc\images\grad2">
                     <!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
                     <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
@@ -1184,7 +1159,8 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
-                        <FontString name="$parentLCStatus" inherits="GameFontHighlight" text="You are not part of Loot Council">
+                        <FontString name="$parentLCStatus" inherits="GameFontHighlight"
+                                    text="You are not part of Loot Council">
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
@@ -1460,9 +1436,9 @@
                     <AbsDimension x="50" y="200"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPRIGHT" relativePoint="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="-50" y="0"/>
+                            <AbsDimension x="0" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -1476,7 +1452,7 @@
                         <AbsValue val="1"/>
                     </TileSize>
                     <BackgroundInsets>
-                        <AbsInset left="5" right="5" top="5" bottom="5"/>
+                        <AbsInset left="4" right="4" top="4" bottom="4"/>
                     </BackgroundInsets>
                 </Backdrop>
                 <Frames>
@@ -1532,417 +1508,6 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-
-            <Button name="$parentCurrentVotedItemQuestReward1" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="150" y="-55"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward2" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward1">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward3" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward2">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward4" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward3">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward5" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward4">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward6" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward5">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward7" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward6">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward8" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward7">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward9" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward8">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentCurrentVotedItemQuestReward10" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="20" y="20"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture inherits=""/>
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentCurrentVotedItemQuestReward9">
-                        <Offset>
-                            <AbsDimension x="22" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
                 <Scripts>
                     <OnClick>
                     </OnClick>
@@ -2216,7 +1781,7 @@
                           edgeFile="Interface\addons\Talc\images\border-maw"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="20"/>
+                        <AbsValue val="16"/>
                     </EdgeSize>
                     <TileSize>
                         <AbsValue val="1"/>
@@ -2416,7 +1981,8 @@
                     <Frame name="$parentTab2Contents">
                         <Layers>
                             <Layer level="OVERLAY">
-                                <FontString name="$parentNeedButtonsTitle" inherits="GameFontHighlight" text="Need Buttons">
+                                <FontString name="$parentNeedButtonsTitle" inherits="GameFontHighlight"
+                                            text="Need Buttons">
                                     <Anchors>
                                         <Anchor point="TOPLEFT">
                                             <Offset>
@@ -2425,7 +1991,8 @@
                                         </Anchor>
                                     </Anchors>
                                 </FontString>
-                                <FontString name="$parentSyncLootHistoryTitle" inherits="GameFontHighlight" text="Loot History">
+                                <FontString name="$parentSyncLootHistoryTitle" inherits="GameFontHighlight"
+                                            text="Loot History">
                                     <Anchors>
                                         <Anchor point="TOPLEFT">
                                             <Offset>
@@ -2619,7 +2186,8 @@
                                 </Anchors>
                                 <Layers>
                                     <Layer level="OVERLAY">
-                                        <FontString name="$parentText" inherits="GameFontNormal" text="Screenshot Awarded Loot">
+                                        <FontString name="$parentText" inherits="GameFontNormal"
+                                                    text="Screenshot Awarded Loot">
                                             <Anchors>
                                                 <Anchor point="LEFT">
                                                     <Offset>
@@ -2660,8 +2228,6 @@
                         <Frames>
 
 
-
-
                         </Frames>
                     </Frame>
 
@@ -2684,7 +2250,7 @@
                           edgeFile="Interface\addons\Talc\images\border-maw"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="20"/>
+                        <AbsValue val="16"/>
                     </EdgeSize>
                     <TileSize>
                         <AbsValue val="1"/>
@@ -3033,7 +2599,7 @@
                           edgeFile="Interface\addons\Talc\images\border-maw"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="20"/>
+                        <AbsValue val="16"/>
                     </EdgeSize>
                     <TileSize>
                         <AbsValue val="1"/>

@@ -132,8 +132,8 @@ function TalcFrame:ResetVars()
     TalcVoteFrameVotedItemName:Hide()
     TalcVoteFrameVotedItemType:Hide()
 
-    for i = 1, 10 do
-        _G['TalcVoteFrameCurrentVotedItemQuestReward' .. i]:Hide()
+    for i = 1, #self.itemRewardsFrames do
+        self.itemRewardsFrames[i]:Hide()
     end
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
@@ -585,35 +585,35 @@ function TalcFrame:addVotedItem(index, texture, link)
     self.selectedPlayer[index] = ''
 
     if not self.VotedItemsFrames[index] then
-        self.VotedItemsFrames[index] = CreateFrame("Frame", "VotedItem" .. index,
-                TalcVoteFrameVotedItemsFrame, "Talc_VotedItemsFrameTemplate")
+        self.VotedItemsFrames[index] = CreateFrame("Button", "VotedItem" .. index,
+                TalcVoteFrameVotedItemsFrame, "Talc_VotedItemButtonTemplate")
     end
 
-    local button = _G['VotedItem' .. index .. 'VotedItemButton']
+    local frame = 'VotedItem' .. index
 
     TalcVoteFrameVotedItemsFrame:SetHeight(40 * index + 35)
 
-    self.VotedItemsFrames[index]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemsFrame, "TOPLEFT", 8, 30 - (40 * index))
+    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemsFrame, "TOPLEFT", 8, 30 - (40 * index))
 
-    self.VotedItemsFrames[index]:Show()
-    self.VotedItemsFrames[index].link = link
-    self.VotedItemsFrames[index].texture = texture
-    self.VotedItemsFrames[index].awardedTo = ''
-    self.VotedItemsFrames[index].rolled = false
-    self.VotedItemsFrames[index].pickedByEveryone = false
+    _G[frame]:Show()
+    _G[frame].link = link
+    _G[frame].texture = texture
+    _G[frame].awardedTo = ''
+    _G[frame].rolled = false
+    _G[frame].pickedByEveryone = false
 
-    core.addButtonOnEnterTooltip(button, link)
+    core.addButtonOnEnterTooltip(_G[frame], link)
 
-    button:SetID(index)
-    button:SetNormalTexture(texture)
-    button:SetPushedTexture(texture)
-    button:SetHighlightTexture(texture)
+    _G[frame]:SetID(index)
+    _G[frame]:SetNormalTexture(texture)
+    _G[frame]:SetPushedTexture(texture)
+    _G[frame]:SetHighlightTexture(texture)
 
-    _G['VotedItem' .. index .. 'VotedItemButtonCheck']:Hide()
-    button:SetHighlightTexture(texture)
+    _G[frame .. 'Check']:Hide()
+    _G[frame]:SetHighlightTexture(texture)
 
     if index ~= 1 then
-        SetDesaturation(button:GetNormalTexture(), 1)
+        SetDesaturation(_G[frame]:GetNormalTexture(), 1)
     end
 
     if not self.CurrentVotedItem then
@@ -631,22 +631,16 @@ function TalcFrame:VotedItemButton(id)
         TalcVoteFrameWinnerStatus:Show()
     end
 
-    SetDesaturation(_G['VotedItem' .. id .. 'VotedItemButton']:GetNormalTexture(), 0)
+    SetDesaturation(_G['VotedItem' .. id]:GetNormalTexture(), 0)
     for index, _ in next, self.VotedItemsFrames do
         if index ~= id then
-            SetDesaturation(_G['VotedItem' .. index .. 'VotedItemButton']:GetNormalTexture(), 1)
+            SetDesaturation(_G['VotedItem' .. index]:GetNormalTexture(), 1)
         end
     end
     self:SetCurrentVotedItem(id)
 end
 
-function TalcFrame:DoneVoting()
-    self.doneVoting[self.CurrentVotedItem] = true
-    TalcVoteFrameDoneVoting:Disable();
-    TalcVoteFrameDoneVotingCheck:Show();
-    core.asend("doneVoting;" .. self.CurrentVotedItem)
-    self:VoteFrameListUpdate()
-end
+TalcFrame.itemRewardsFrames = {}
 
 function TalcFrame:SetCurrentVotedItem(id)
 
@@ -701,22 +695,44 @@ function TalcFrame:SetCurrentVotedItem(id)
     TalcVoteFrameCurrentVotedItemButtonItemLevel:SetText(ITEM_QUALITY_COLORS[q].hex .. iLevel)
 
     if core.find(votedItemType, 'Quest', 1, true) or core.find(votedItemType, 'Token', 1, true) then
-        votedItemType = core.trim(votedItemType) .. ' Awards:'
+        votedItemType = core.trim(votedItemType) .. ' awards:'
     end
 
-    for i = 1, 10 do
-        _G['TalcVoteFrameCurrentVotedItemQuestReward' .. i]:Hide()
+    for i = 1, #self.itemRewardsFrames do
+        self.itemRewardsFrames[i]:Hide()
     end
 
     local showDe = true
 
     if tokenRewards[itemID] and tokenRewards[itemID].rewards then
         showDe = false
-        TalcVoteFrameCurrentVotedItemQuestReward1:SetPoint("TOPLEFT", TalcVoteFrameVotedItemType, "TOPRIGHT", 5, 8)
+        if not self.itemRewardsFrames[1] then
+            self.itemRewardsFrames[1] = CreateFrame("Button", "TALCItemReward1", TalcVoteFrame, 'UIPanelButtonTemplate2')
+        end
+
+        _G["TALCItemReward1"]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemType, "TOPRIGHT", 5, 8)
+
         for i, rewardID in next, tokenRewards[itemID].rewards do
-            local _, il = GetItemInfo(rewardID)
+            local _, il, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
             if il then
-                TalcFrame:SetTokenRewardLink(il, i)
+
+                if not self.itemRewardsFrames[i] then
+                    self.itemRewardsFrames[i] = CreateFrame("Button", "TALCItemReward" .. i, TalcVoteFrame, 'UIPanelButtonTemplate2')
+                end
+                local frame = "TALCItemReward" .. i
+                if i > 1 then
+                    _G[frame]:SetPoint("TOPLEFT", _G["TALCItemReward" .. (i - 1)], "TOPRIGHT", 1, 0)
+                end
+
+                _G[frame]:SetSize(24, 24)
+
+                _G[frame]:SetNormalTexture(tex)
+                _G[frame]:SetHighlightTexture(tex)
+                _G[frame]:SetPushedTexture(tex)
+                _G[frame]:Show()
+
+                core.addButtonOnEnterTooltip(_G[frame], il)
+
             end
         end
     end
@@ -729,6 +745,14 @@ function TalcFrame:SetCurrentVotedItem(id)
         TalcVoteFrameMLToEnchanter:Hide()
     end
 
+    self:VoteFrameListUpdate()
+end
+
+function TalcFrame:DoneVoting()
+    self.doneVoting[self.CurrentVotedItem] = true
+    TalcVoteFrameDoneVoting:Disable();
+    TalcVoteFrameDoneVotingCheck:Show();
+    core.asend("doneVoting;" .. self.CurrentVotedItem)
     self:VoteFrameListUpdate()
 end
 
@@ -2472,13 +2496,13 @@ function TalcFrame:UpdateCLVotedButtons()
             GameTooltip:Hide();
         end)
 
-        _G['CLVotedButton' .. index]:SetAlpha(0.3)
+        frame:SetAlpha(0.3)
 
         --normal votes
         for n, _ in next, self.itemVotes[self.CurrentVotedItem] do
             for voter, vote in next, self.itemVotes[self.CurrentVotedItem][n] do
                 if voter == officer and vote == '+' then
-                    _G['CLVotedButton' .. index]:SetAlpha(1)
+                    frame:SetAlpha(1)
                 end
             end
         end
@@ -2489,7 +2513,7 @@ function TalcFrame:UpdateCLVotedButtons()
             if self.clDoneVotingItem[officer] then
                 for itemIndex, doneVoting in next, self.clDoneVotingItem[officer] do
                     if itemIndex == self.CurrentVotedItem and doneVoting then
-                        _G['CLVotedButton' .. index]:SetAlpha(1)
+                        frame:SetAlpha(1)
                     end
                 end
             end
@@ -2586,21 +2610,6 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
     end
 
     TalcVoteFrameRaiderDetailsFrame:Show()
-end
-
-function TalcFrame:SetTokenRewardLink(reward, index)
-
-    local _, _, itemLink = core.find(reward, "(item:%d+:%d+:%d+:%d+)");
-    local _, link, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
-    if link then
-        core.addButtonOnEnterTooltip(_G['TalcVoteFrameCurrentVotedItemQuestReward' .. index], link)
-        _G['TalcVoteFrameCurrentVotedItemQuestReward' .. index]:SetNormalTexture(tex)
-        _G['TalcVoteFrameCurrentVotedItemQuestReward' .. index]:SetPushedTexture(tex)
-        _G['TalcVoteFrameCurrentVotedItemQuestReward' .. index]:Show()
-    else
-        GameTooltip:SetHyperlink(itemLink)
-        GameTooltip:Hide()
-    end
 end
 
 TalcFrame.tradableItemsCheck = CreateFrame("Frame")
