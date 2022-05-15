@@ -50,19 +50,15 @@ end
 function NeedFrame:addItem(data)
     local item = core.split("=", data)
 
-    self.countdown.timeToNeed = core.int(item[6])
+    self.countdown.timeToNeed = db['VOTE_TTN']
     self.countdown.C = self.countdown.timeToNeed
 
     self.execs = self.execs + 1
 
     local index = core.int(item[2])
     local texture = item[3]
+    --local name = item[4]
     local link = item[5]
-
-    local buttons = 'mo'
-    if item[7] then
-        buttons = item[7]
-    end
 
     local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
     local itemID = core.int(core.split(':', itemLink)[2])
@@ -76,6 +72,12 @@ function NeedFrame:addItem(data)
         self.delayAddItem:Show()
         return false
     end
+
+    local buttons = 'mo'
+    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['BIS'] and 'b' or '')
+    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['MS'] and 'm' or '')
+    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['OS'] and 'o' or '')
+    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['XMOG'] and 'x' or '')
 
     --hide xmog button for necks, rings, trinkets
     if itemSlot and core.find(buttons, 'x', 1, true) then
@@ -403,6 +405,7 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
         end
         return
     end
+
     if core.find(msg, 'needframe=', 1, true) then
         local command = core.split('=', msg)
         if command[2] == "whoNF" then
@@ -415,10 +418,12 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
         end
         return
     end
+
     if core.find(msg, 'sendgear=', 1, true) then
         self:SendGear(sender)
         return
     end
+
     if core.isRL(sender) then
         if core.find(msg, 'loot=', 1, true) then
             self.numItems = self.numItems + 1
