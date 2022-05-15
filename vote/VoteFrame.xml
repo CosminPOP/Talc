@@ -18,16 +18,6 @@
                 </Offset>
             </Anchor>
         </Anchors>
-        <Scripts>
-            <OnLoad>
-            </OnLoad>
-            <OnClick>
-            </OnClick>
-            <OnEnter>
-            </OnEnter>
-            <OnLeave>
-            </OnLeave>
-        </Scripts>
     </Button>
 
     <Button name="Talc_ButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
@@ -43,7 +33,7 @@
         </HighlightTexture>
     </Button>
 
-    <Button name="Talc_InspectGearButtonTemplate" inherits="Talc_ButtonTemplate" text="" virtual="true">
+    <Button name="Talc_InspectGearButtonTemplate" inherits="UIPanelButtonTemplate2" virtual="true">
         <Size>
             <AbsDimension x="24" y="24"/>
         </Size>
@@ -56,7 +46,7 @@
         </Anchors>
         <Layers>
             <Layer level="OVERLAY">
-                <FontString name="$parentItemLevel" text="123" inherits="GameFontHighlightSmall">
+                <FontString name="$parentItemLevel" text="123" inherits="NumberFontNormalSmall">
                     <Anchors>
                         <Anchor point="BOTTOM">
                             <Offset>

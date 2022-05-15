@@ -86,6 +86,7 @@ function TalcFrame:ResetVars()
     self.CLVoted = {}
 
     self.selectedPlayer = {}
+    self.inspectPlayerGear = {}
 
     self.doneVoting = {}
     self.clDoneVotingItem = {}
@@ -239,6 +240,7 @@ function TalcFrame:ShowVotingElements()
     TalcVoteFrameVotesLabel:Show()
     TalcVoteFrameContestantCount:Show()
     TalcVoteFrameTimeLeft:Show()
+    TalcVoteFrameTimeLeft:SetText('')
     TalcVoteFrameDoneVoting:Show()
 
     if core.isRL() then
@@ -666,14 +668,33 @@ function TalcFrame:SetCurrentVotedItem(id)
     if t2 then
         if not core.find(core.lower(t2), 'misc', 1, true)
                 and not core.find(core.lower(t2), 'shields', 1, true) then
-            votedItemType = votedItemType .. t2 .. ' '
+            votedItemType = votedItemType .. t2
         end
     end
+
     if equip_slot then
-        votedItemType = votedItemType .. core.getEquipSlot(equip_slot)
+        votedItemType = core.getEquipSlot(equip_slot) .. " " .. votedItemType
     end
 
-    if votedItemType == 'Cloth Cloak' then
+    if core.find(votedItemType, 'Relic', 1, true) then
+
+        if t2 == 'Idols' then
+            votedItemType = "Druid" .. votedItemType
+        end
+        if t2 == 'Librams' then
+            votedItemType = "Paladin" .. votedItemType
+        end
+        if t2 == 'Sigils' then
+            votedItemType = "Deathknight" .. votedItemType
+        end
+        if t2 == 'Totems' then
+            votedItemType = "Shaman" .. votedItemType
+        end
+        votedItemType = core.gsub(votedItemType, "Relic", "")
+        votedItemType = core.sub(votedItemType, 1, core.len(votedItemType) - 1)
+    end
+
+    if core.find(votedItemType, 'Cloak Cloth', 1, true) then
         votedItemType = 'Cloak'
     end
 
@@ -1977,7 +1998,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     if core.find(t, 'sending=gear', 1, true) then
 
         if core.find(t, '=start', 1, true) then
-            self.inspectPlayerGear = {}
+            self.inspectPlayerGear[sender] = {}
             return
         end
 
@@ -1989,7 +2010,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         local tEx = core.split('=', t)
         local gearEx = core.split(':', tEx[3])
 
-        self.inspectPlayerGear[core.int(gearEx[6])] = {
+        self.inspectPlayerGear[sender][core.int(gearEx[6])] = {
             item = gearEx[1] .. ":" .. gearEx[2] .. ":" .. gearEx[3] .. ":" .. gearEx[4] .. ":" .. gearEx[5],
             slot = gearEx[7]
         }
@@ -2353,15 +2374,18 @@ function TalcFrame:ContestantClick(id)
     if TalcVoteFrameRaiderDetailsFrame:IsVisible() and self.selectedPlayer[self.CurrentVotedItem] == _G['TalcVoteFrameContestantFrame' .. id].name then
         self:RaiderDetailsClose()
     else
+        self.selectedPlayer[self.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
+        if not self.inspectPlayerGear[self.selectedPlayer[self.CurrentVotedItem]] then
+            self.inspectPlayerGear[self.selectedPlayer[self.CurrentVotedItem]] = {}
+        end
         self.HistoryId = id
-        local historyPlayerName = _G['TalcVoteFrameContestantFrame' .. id].name
         local totalItems = 0
         for _, item in next, db['VOTE_LOOT_HISTORY'] do
-            if historyPlayerName == item.player then
+            if _G['TalcVoteFrameContestantFrame' .. id].name == item.player then
                 totalItems = totalItems + 1
             end
         end
-        self:RaiderDetailsChangeTab(1, historyPlayerName);
+        self:RaiderDetailsChangeTab(1, _G['TalcVoteFrameContestantFrame' .. id].name);
     end
 end
 
@@ -2525,7 +2549,27 @@ function TalcFrame:UpdateCLVotedButtons()
 end
 
 function TalcFrame:RaiderDetailsShowGear()
-    for _, d in next, self.inspectPlayerGear do
+
+    for _, d in next, core.equipSlotsDetails do
+        if _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot'] then
+
+            local frame = _G['Character' .. d.slot .. 'SlotIconTexture']
+            if frame then
+                local tex = frame:GetTexture()
+                _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetNormalTexture(tex)
+                --_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetPushedTexture(tex)
+                --_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetHighlightTexture(tex)
+                _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText('')
+
+                core.remButtonOnEnterTooltip(_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot'])
+            else
+                talc_debug('no frame Character' .. d.slot .. 'SlotIconTexture RaiderDetailsShowGear')
+            end
+
+        end
+    end
+
+    for _, d in next, self.inspectPlayerGear[self.selectedPlayer[self.CurrentVotedItem]] do
         local _, link, q, il, _, _, _, _, _, tex = GetItemInfo(d.item)
 
         local frame = _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']
@@ -2535,8 +2579,8 @@ function TalcFrame:RaiderDetailsShowGear()
             _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText(ITEM_QUALITY_COLORS[q].hex .. il)
 
             frame:SetNormalTexture(tex)
-            frame:SetPushedTexture(tex)
-            frame:SetHighlightTexture(tex)
+            --frame:SetPushedTexture(tex)
+            --frame:SetHighlightTexture(tex)
 
             core.addButtonOnEnterTooltip(frame, link)
         end
@@ -2568,7 +2612,7 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
             end
         end
 
-        if #self.inspectPlayerGear == 0 then
+        if #self.inspectPlayerGear[playerName] == 0 then
             core.wsend("ALERT", "sendgear=", playerName)
         else
             TalcFrame:RaiderDetailsShowGear()
