@@ -4,6 +4,10 @@ TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
 TALC.me = UnitName('player')
 
+-- todo better current voted item indicator
+-- todo check if classes are needed in tokens.lua
+-- todo fix player details loot history
+
 local core, db
 local init = false
 
@@ -14,87 +18,85 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TALC:UnregisterEvent("ADDON_LOADED")
 
-            if not TALC_DB then
-                TALC_DB = {}
+            Talc_Utils:init();
+
+            core = TALC
+            db = TALC_DB
+
+            if not db then
+                db = {}
             end
-            if TALC_DB['_DEBUG'] == nil then
-                TALC_DB['_DEBUG'] = false
+            if db['_DEBUG'] == nil then
+                db['_DEBUG'] = false
             end
 
-            if TALC_DB['WIN_THRESHOLD'] == nil then
-                TALC_DB['WIN_THRESHOLD'] = 3
+            if db['WIN_THRESHOLD'] == nil then
+                db['WIN_THRESHOLD'] = 3
             end
-            if TALC_DB['WIN_ENABLE_SOUND']  == nil then
-                TALC_DB['WIN_ENABLE_SOUND'] = true
+            if db['WIN_ENABLE_SOUND']  == nil then
+                db['WIN_ENABLE_SOUND'] = true
             end
-            if TALC_DB['WIN_VOLUME']  == nil then
-                TALC_DB['WIN_VOLUME'] = 'high'
-            end
-
-            if TALC_DB['ROLL_ENABLE_SOUND'] == nil then
-                TALC_DB['ROLL_ENABLE_SOUND'] = true
-            end
-            if TALC_DB['ROLL_VOLUME'] == nil then
-                TALC_DB['ROLL_VOLUME'] = 'high'
-            end
-            if TALC_DB['ROLL_TROMBONE'] == nil then
-                TALC_DB['ROLL_TROMBONE'] = 'true'
+            if db['WIN_VOLUME']  == nil then
+                db['WIN_VOLUME'] = 'high'
             end
 
-            if TALC_DB['NEED_SCALE'] == nil then
-                TALC_DB['NEED_SCALE'] = 1
+            if db['ROLL_ENABLE_SOUND'] == nil then
+                db['ROLL_ENABLE_SOUND'] = true
+            end
+            if db['ROLL_VOLUME'] == nil then
+                db['ROLL_VOLUME'] = 'high'
+            end
+            if db['ROLL_TROMBONE'] == nil then
+                db['ROLL_TROMBONE'] = true
             end
 
-            if TALC_DB['PULL'] == nil then
-                TALC_DB['PULL'] = true
-            end
-            if TALC_DB['PULL_SOUND'] == nil then
-                TALC_DB['PULL_SOUND'] = true
+            if db['NEED_SCALE'] == nil then
+                db['NEED_SCALE'] = 1
             end
 
-            if TALC_DB['BOSS_FRAME'] == nil then
-                TALC_DB['BOSS_FRAME'] = true
+            if db['BOSS_FRAME_ENABLE'] == nil then
+                db['BOSS_FRAME_ENABLE'] = true
             end
 
-            if TALC_DB['VOTE_ROSTER'] == nil then
-                TALC_DB['VOTE_ROSTER'] = {}
+            if db['VOTE_ROSTER'] == nil then
+                db['VOTE_ROSTER'] = {}
             end
-            if TALC_DB['VOTE_ROSTER_GUILD_NAME'] == nil then
-                TALC_DB['VOTE_ROSTER_GUILD_NAME'] = ''
+            if db['VOTE_ROSTER_GUILD_NAME'] == nil then
+                db['VOTE_ROSTER_GUILD_NAME'] = ''
             end
-            if TALC_DB['VOTE_LOOT_HISTORY'] == nil then
-                TALC_DB['VOTE_LOOT_HISTORY'] = {}
+            if db['VOTE_LOOT_HISTORY'] == nil then
+                db['VOTE_LOOT_HISTORY'] = {}
             end
-            if TALC_DB['VOTE_TTN'] == nil then
-                TALC_DB['VOTE_TTN'] = 30
+            if db['VOTE_TTN'] == nil then
+                db['VOTE_TTN'] = 30
             end
-            if TALC_DB['VOTE_TTV'] == nil then
-                TALC_DB['VOTE_TTV'] = 30
+            if db['VOTE_TTV'] == nil then
+                db['VOTE_TTV'] = 30
             end
-            if TALC_DB['VOTE_TTR'] == nil then
-                TALC_DB['VOTE_TTR'] = 30
+            if db['VOTE_TTR'] == nil then
+                db['VOTE_TTR'] = 30
             end
-            if TALC_DB['VOTE_ENABLED'] == nil then
-                TALC_DB['VOTE_ENABLED'] = true
+            if db['VOTE_ENABLED'] == nil then
+                db['VOTE_ENABLED'] = true
             end
-            if TALC_DB['VOTE_SCALE'] == nil then
-                TALC_DB['VOTE_SCALE'] = 1
+            if db['VOTE_SCALE'] == nil then
+                db['VOTE_SCALE'] = 1
             end
-            if TALC_DB['VOTE_ALPHA'] == nil then
-                TALC_DB['VOTE_ALPHA'] = 1
+            if db['VOTE_ALPHA'] == nil then
+                db['VOTE_ALPHA'] = 1
             end
-            if TALC_DB['VOTE_AUTO_ASSIST'] == nil then
-                TALC_DB['VOTE_AUTO_ASSIST'] = false
+            if db['VOTE_AUTO_ASSIST'] == nil then
+                db['VOTE_AUTO_ASSIST'] = false
             end
-            if TALC_DB['VOTE_ENCHANTER'] == nil then
-                TALC_DB['VOTE_ENCHANTER'] = ''
+            if db['VOTE_ENCHANTER'] == nil then
+                db['VOTE_ENCHANTER'] = ''
             end
-            if TALC_DB['VOTE_SCREENSHOT_LOOT'] == nil then
-                TALC_DB['VOTE_SCREENSHOT_LOOT'] = true
+            if db['VOTE_SCREENSHOT_LOOT'] == nil then
+                db['VOTE_SCREENSHOT_LOOT'] = true
             end
 
-            if TALC_DB['VOTE_CONFIG'] == nil then
-                TALC_DB['VOTE_CONFIG'] = {
+            if db['VOTE_CONFIG'] == nil then
+                db['VOTE_CONFIG'] = {
                     ['AutoML'] = false,
                     ['AutoMLItems'] = {},
                     ['NeedButtons'] = {
@@ -106,24 +108,57 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 }
             end
 
-            TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['BIS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['MS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['OS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsXMOGButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['XMOG']);
+            TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['BIS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['MS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['OS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsXMOGButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['XMOG']);
 
-            TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(TALC_DB['VOTE_AUTO_ASSIST']);
-            TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(TALC_DB['VOTE_SCREENSHOT_LOOT']);
+            TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(db['VOTE_AUTO_ASSIST']);
+            TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(db['VOTE_SCREENSHOT_LOOT']);
 
-            Talc_Utils:init();
+
+            TalcVoteFrameSettingsFrameWinEnableSound:SetChecked(db['WIN_ENABLE_SOUND'])
+            if db['WIN_ENABLE_SOUND'] then
+                TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
+                TalcVoteFrameSettingsFrameWinSoundLow:Enable()
+            else
+                TalcVoteFrameSettingsFrameWinSoundHigh:Disable()
+                TalcVoteFrameSettingsFrameWinSoundLow:Disable()
+            end
+            TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(db['WIN_VOLUME'] == 'high')
+            TalcVoteFrameSettingsFrameWinSoundLow:SetChecked(db['WIN_VOLUME'] == 'low')
+
+            TalcVoteFrameSettingsFrameWinCommon:SetChecked(core.find(db['WIN_THRESHOLD'], '1', 1, true))
+            TalcVoteFrameSettingsFrameWinUncommon:SetChecked(core.find(db['WIN_THRESHOLD'], '2', 1, true))
+            TalcVoteFrameSettingsFrameWinRare:SetChecked(core.find(db['WIN_THRESHOLD'], '3', 1, true))
+            TalcVoteFrameSettingsFrameWinEpic:SetChecked(core.find(db['WIN_THRESHOLD'], '4', 1, true))
+            TalcVoteFrameSettingsFrameWinLegendary:SetChecked(core.find(db['WIN_THRESHOLD'], '5', 1, true))
+
+            TalcVoteFrameSettingsFrameRollEnableSound:SetChecked(db['ROLL_ENABLE_SOUND'])
+            if db['ROLL_ENABLE_SOUND'] then
+                TalcVoteFrameSettingsFrameRollSoundHigh:Enable()
+                TalcVoteFrameSettingsFrameRollSoundLow:Enable()
+                TalcVoteFrameSettingsFrameRollTrombone:Enable()
+            else
+                TalcVoteFrameSettingsFrameRollSoundHigh:Disable()
+                TalcVoteFrameSettingsFrameRollSoundLow:Disable()
+                TalcVoteFrameSettingsFrameRollTrombone:Disable()
+            end
+            TalcVoteFrameSettingsFrameRollSoundHigh:SetChecked(db['ROLL_VOLUME'] == 'high')
+            TalcVoteFrameSettingsFrameRollSoundLow:SetChecked(db['ROLL_VOLUME'] == 'low')
+
+            TalcVoteFrameSettingsFrameRollTrombone:SetChecked(db['ROLL_TROMBONE'])
+
+            TalcVoteFrameSettingsFrameBossEnable:SetChecked(db['BOSS_FRAME_ENABLE'])
+
+            TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
+
             TalcFrame:init();
 
             NeedFrame:init();
             WinFrame:init();
             RollFrame:init();
             BossFrame:init();
-
-            core = TALC
-            db = TALC_DB
 
             print("TALC INIt")
 
@@ -300,29 +335,29 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "COMBAT_LOG_EVENT" then
-                if arg2 == 'UNIT_DIED' then
+                if arg2 == 'UNIT_DIED' and db['BOSS_FRAME_ENABLE'] then
                     for _, boss in next, BossFrame.Bosses do
-                        if arg7 == boss and db['BOSS_FRAME'] then
+                        if arg7 == boss then
                             BossFrame:StartBossAnimation(boss)
-                            return true
+                            return
                         end
                     end
                 end
             end
 
-            if event == 'PLAYER_TARGET_CHANGED' then
-                local master = 'Er'
-                if core.me == master then
-                    return false
-                end
-                if not UnitExists('target') or UnitAffectingCombat('player') then
-                    return
-                end
-                if UnitName('target') == master and CheckInteractDistance("target", 3) then
-                    PlaySoundFile("Sound\\Character\\Dwarf\\DwarfVocalFemale\\DwarfFemaleHello0" .. math.random(1, 3) .. ".wav", "Dialog")
-                end
-                return
-            end
+            --if event == 'PLAYER_TARGET_CHANGED' then
+            --    local master = 'Er'
+            --    if core.me == master then
+            --        return
+            --    end
+            --    if not UnitExists('target') or UnitAffectingCombat('player') then
+            --        return
+            --    end
+            --    if UnitName('target') == master and CheckInteractDistance("target", 3) then
+            --        PlaySoundFile("Sound\\Character\\Dwarf\\DwarfVocalFemale\\DwarfFemaleHello0" .. math.random(1, 3) .. ".wav", "Dialog")
+            --    end
+            --    return
+            --end
 
             if event == 'CHAT_MSG_LOOT' then
                 WinFrame:handleLoot(arg1)
@@ -481,7 +516,7 @@ SlashCmdList["TALC"] = function(cmd)
                 return false
             end
 
-            queryWho()
+            NeedFrame:queryWho()
             return
         end
         if core.find(cmd, 'need') then
