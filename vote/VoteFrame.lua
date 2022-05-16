@@ -149,7 +149,12 @@ function TalcFrame:ResetVars()
     TalcVoteFrameDoneVoting:Disable();
     TalcVoteFrameDoneVotingCheck:Hide();
     TalcVoteFrameContestantScrollListFrame:Hide()
+
     TalcVoteFrameContestantScrollListFrameScrollBar:SetAlpha(0)
+
+    TalcVoteFrameWelcomeItemsScrollFrameScrollBar:SetAlpha(0)
+    TalcVoteFrameWelcomeItemHistoryScrollFrameScrollBar:SetAlpha(0)
+    TalcVoteFrameWelcomePlayerHistoryScrollFrameScrollBar:SetAlpha(0)
 
     TalcVoteFrameTradableItemsFrame:Hide()
 
@@ -166,10 +171,10 @@ function TalcFrame:ResetVars()
 
         TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
             GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0);
-            if db['VOTE_DESENCHANTER'] == nil then
+            if db['VOTE_ENCHANTER'] == '' then
                 GameTooltip:AddLine("Enchanter not set. Type /talc set enchanter [name]")
             else
-                GameTooltip:AddLine("ML to " .. db['VOTE_DESENCHANTER'] .. " to disenchant.")
+                GameTooltip:AddLine("ML to " .. db['VOTE_ENCHANTER'] .. " to disenchant.")
             end
             GameTooltip:Show()
         end)
@@ -197,6 +202,19 @@ function TalcFrame:ShowSettingsScreen(a)
     TalcFrame.closeVoteFrameFromSettings = a
     TalcVoteFrame:Show()
     TalcVoteFrameSettingsFrame:Show()
+
+    local totalItems = 0
+    for _ in next, db['VOTE_LOOT_HISTORY'] do
+        totalItems = totalItems + 1
+    end
+
+    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History (' .. totalItems .. ')');
+
+    if totalItems > 0 then
+        TalcVoteFrameSettingsFramePurgeLootHistory:Enable()
+    else
+        TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
+    end
 end
 
 function TalcFrame:HideSettingsScreen(showWelcome)
@@ -234,6 +252,15 @@ function TalcFrame:ShowWelcomeScreen()
 
     self:ShowWelcomeItems()
     TalcVoteFrameWelcome:Show()
+
+    TalcVoteFrameWelcomeRecentItems:SetText('Recent Items')
+
+    TalcVoteFrameWelcomeBackButton:Hide()
+
+    TalcVoteFrameWelcomeItemsScrollFrame:Show()
+
+    TalcVoteFrameWelcomeItemHistoryScrollFrame:Hide()
+    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Hide()
 end
 
 function TalcFrame:HideWelcomeScreen()
@@ -300,50 +327,52 @@ function TalcFrame:ShowWelcomeItems()
     end
 
     local x = TalcVoteFrameWelcome:GetWidth()
-    local y = TalcVoteFrameWelcome:GetHeight()
     local numCols = core.floor(x / 185)
-    local numRows = core.floor((y - 30) / 46)
     local col, row = 1, 1
     local day = 0
     for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-        if timestamp then
-            index = index + 1
+        index = index + 1
 
-            if day ~= date("%d/%m", timestamp) then
-                day = date("%d/%m", timestamp)
-                if col ~= 1 then
-                    row = row + 1
-                end
-                col = 1
-            end
-
-            if row == numRows then
-                break
-            end
-
-            if not self.welcomeItemsFrames[index] then
-                self.welcomeItemsFrames[index] = CreateFrame('Button', 'WelcomeItem' .. index, TalcVoteFrameWelcome, 'Talc_WelcomeItemTemplate')
-            end
-            local frame = 'WelcomeItem' .. index
-            _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcome', 'TOPLEFT', -180 + 185 * col, -10 - 34 - 44 * row)
-            _G[frame .. 'Name']:SetText(item.item)
-            _G[frame .. 'PlayerName']:SetText(core.classColors[core.getPlayerClass(item.player)].colorStr .. item.player .. " " ..
-                    (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
-
-            local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
-            _G[frame .. 'Icon']:SetTexture(tex)
-            core.addButtonOnEnterTooltip(_G[frame], item.item)
-
-            _G[frame]:Show()
-
-            col = col + 1
-
-            if col > numCols then
-                col = 1
+        if day ~= date("%d/%m", timestamp) then
+            day = date("%d/%m", timestamp)
+            if col ~= 1 then
                 row = row + 1
             end
+            col = 1
+        end
+
+        if not self.welcomeItemsFrames[index] then
+            self.welcomeItemsFrames[index] = CreateFrame('Button', 'WelcomeItem' .. index, TalcVoteFrameWelcomeItemsScrollFrameChild, 'Talc_WelcomeItemTemplate')
+        end
+
+        self.welcomeItemsFrames[index]:SetID(index)
+        self.welcomeItemsFrames[index].playerName = item.player
+        self.welcomeItemsFrames[index].itemName = item.item
+
+        local frame = 'WelcomeItem' .. index
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeItemsScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
+        _G[frame .. 'Name']:SetText(item.item)
+        _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
+
+        _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text .. " " ..
+                (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
+
+
+        local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
+        _G[frame .. 'Icon']:SetTexture(tex)
+        core.addButtonOnEnterTooltip(_G[frame], item.item)
+
+        _G[frame]:Show()
+
+        col = col + 1
+
+        if col > numCols then
+            col = 1
+            row = row + 1
         end
     end
+
+    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
 end
 
 function TalcFrame:SetTitle(to)
@@ -355,7 +384,7 @@ function TalcFrame:SetTitle(to)
 end
 
 function TalcFrame:Resizing()
-    TalcVoteFrame:SetAlpha(0.5)
+    --TalcVoteFrame:SetAlpha(0.8)
 end
 
 function TalcFrame:Resized()
@@ -1320,9 +1349,9 @@ end
 
 function TalcFrame:updateVotedItemsFrames()
     for index, _ in next, self.VotedItemsFrames do
-        _G['VotedItem' .. index .. 'VotedItemButtonCheck']:Hide()
+        _G['VotedItem' .. index .. 'Check']:Hide()
         if self.VotedItemsFrames[index].awardedTo ~= '' then
-            _G['VotedItem' .. index .. 'VotedItemButtonCheck']:Show()
+            _G['VotedItem' .. index .. 'Check']:Show()
         end
     end
 
@@ -1758,20 +1787,21 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         end
         local wonData = core.split("#", t) --playerWon#unitName#link#votedItem
 
-        if not wonData[2] or not wonData[3] then
+        if not wonData[5] then
             talc_error('bad playerWon syntax')
             talc_error(t)
             return false
         end
 
-        self.VotedItemsFrames[core.int(wonData[3])].awardedTo = wonData[2]
+        self.VotedItemsFrames[core.int(wonData[4])].awardedTo = wonData[2]
         self:updateVotedItemsFrames()
 
         --save loot in history
         db['VOTE_LOOT_HISTORY'][time()] = {
+            pick = wonData[5],
             class = core.getPlayerClass(wonData[2]),
             player = wonData[2],
-            item = self.VotedItemsFrames[core.int(wonData[3])].link
+            item = self.VotedItemsFrames[core.int(wonData[4])].link
         }
         return
     end
@@ -2206,7 +2236,7 @@ function TalcFrame:MLToWinner()
 end
 
 function TalcFrame:MLToEnchanter()
-    if db['VOTE_ENCHANTER'] == nil then
+    if db['VOTE_ENCHANTER'] == '' then
         talc_print('Enchanter not set. Use /talc set enchanter [name] to set it.')
         return false;
     end
@@ -2291,7 +2321,7 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
     if #self.bagItems > 0 then
         local _, _, need = TalcFrame:GetPlayerInfo(playerName);
 
-        core.asend("playerWon#" .. playerName .. "#" .. cvi)
+        core.asend("playerWon#" .. playerName .. "#" .. self.VotedItemsFrames[cvi].link .. "#" .. cvi ..'#' .. need)
 
         if db['VOTE_SCREENSHOT_LOOT'] then
             Screenshot()
@@ -2687,7 +2717,6 @@ function TalcFrame:updateWithAddon()
             _G[frame]:Enable()
         end
 
-
         col = col + 1
         if col == 6 then
             col = 1
@@ -2706,14 +2735,14 @@ function TalcFrame:updateWithAddon()
         end
     end
     if without > 0 then
-        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon (' .. without ..')')
+        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon (' .. without .. ')')
         TalcVoteFrameWhoAnnounceWithoutAddon:Enable()
     else
         TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon')
         TalcVoteFrameWhoAnnounceWithoutAddon:Disable()
     end
     if older > 0 then
-        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions (' .. older ..')')
+        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions (' .. older .. ')')
         TalcVoteFrameWhoAnnounceOlderAddon:Enable()
     else
         TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions')
@@ -2723,7 +2752,9 @@ end
 
 function TalcFrame:PurgeLootHistory()
     db['VOTE_LOOT_HISTORY'] = {}
-    talc_print('Loot History cleared.')
+    talc_print('Loot History purged.')
+    TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
+    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History');
 end
 
 TalcFrame.tradableItemsCheck = CreateFrame("Frame")
@@ -3137,8 +3168,6 @@ function TalcFrame:ShowMinimapDropdown()
     ToggleDropDownMenu(1, nil, TALCMinimapMenuFrame, Talc_Minimap, 1, 1);
 end
 
-
-
 function Talc_BuildContestantDropdownMenu()
     local id = ContestantDropdownMenu.currentContestantId
     local separator = {};
@@ -3277,4 +3306,148 @@ function Talc_BuildMinimapMenu()
     close.disabled = false
     close.isTitle = false
     UIDropDownMenu_AddButton(close);
+end
+
+TalcFrame.itemHistoryIndex = 0
+TalcFrame.itemHistoryFrames = {}
+TalcFrame.playerHistoryFrames = {}
+
+function TalcFrame:WelcomeItemClick(id)
+
+    TalcFrame.itemHistoryIndex = id
+
+    TalcVoteFrameWelcomeBackButton:Show()
+
+    TalcVoteFrameWelcomeItemsScrollFrame:Hide()
+    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Hide()
+
+    TalcVoteFrameWelcomeItemHistoryScrollFrame:Show()
+
+    local itemHistory = {}
+
+    -- item history
+    local numPlayers = 0
+    for timestamp, item in next, db['VOTE_LOOT_HISTORY'] do
+        if item.item == self.welcomeItemsFrames[id].itemName then
+            itemHistory[timestamp] = item
+            numPlayers = numPlayers + 1
+        end
+    end
+
+    TalcVoteFrameWelcomeRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. numPlayers .. ')')
+
+    local index = 0
+
+    for _, frame in next, self.itemHistoryFrames do
+        frame:Hide()
+    end
+
+    for timestamp, item in core.pairsByKeysReverse(itemHistory) do
+
+        index = index + 1
+
+        if not self.itemHistoryFrames[index] then
+            self.itemHistoryFrames[index] = CreateFrame('Button', 'ItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
+        end
+        local frame = 'ItemHistoryPlayerFrame' .. index
+
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
+        _G[frame .. 'Name']:SetText(core.classColors[item.class].colorStr .. item.player)
+        _G[frame .. 'Pick']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+        _G[frame .. 'Date']:SetText((date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
+
+        _G[frame .. 'Icon']:SetTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. item.class)
+
+        _G[frame].name = item.player
+
+        _G[frame]:Show()
+    end
+
+    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+end
+
+function TalcFrame:WelcomePlayerClick(name)
+
+    TalcVoteFrameWelcomeBackButton:Show()
+
+    TalcVoteFrameWelcomeItemsScrollFrame:Hide()
+    TalcVoteFrameWelcomeItemHistoryScrollFrame:Hide()
+
+    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Show()
+
+    local playerHistory = {}
+
+    -- item history
+    local numItems = 0
+    for timestamp, item in next, db['VOTE_LOOT_HISTORY'] do
+        if item.player == name then
+            playerHistory[timestamp] = item
+            numItems = numItems + 1
+        end
+    end
+
+    TalcVoteFrameWelcomeRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
+
+    local index = 0
+
+    local x = TalcVoteFrameWelcome:GetWidth()
+    local numCols = core.floor(x / 185)
+    local col, row = 1, 1
+    local day = 0
+
+    for _, frame in next, self.playerHistoryFrames do
+        frame:Hide()
+    end
+
+    for timestamp, item in core.pairsByKeysReverse(playerHistory) do
+
+        index = index + 1
+
+        if day ~= date("%d/%m", timestamp) then
+            day = date("%d/%m", timestamp)
+            if col ~= 1 then
+                row = row + 1
+            end
+            col = 1
+        end
+
+        if not self.playerHistoryFrames[index] then
+            self.playerHistoryFrames[index] = CreateFrame('Button', 'PlayerHistoryFrame' .. index, TalcVoteFrameWelcomePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
+        end
+        local frame = 'PlayerHistoryFrame' .. index
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
+
+        _G[frame]:SetID(index)
+        _G[frame .. 'Name']:SetText(item.item)
+        _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
+
+        _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text .. " " ..
+                (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
+
+        _G[frame].name = item.player
+
+        local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
+        _G[frame .. 'Icon']:SetTexture(tex)
+        core.addButtonOnEnterTooltip(_G[frame], item.item)
+
+        _G[frame]:Show()
+
+        col = col + 1
+
+        if col > numCols then
+            col = 1
+            row = row + 1
+        end
+    end
+
+    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+end
+
+function TalcFrame:WelcomeBack()
+    if TalcVoteFrameWelcomeItemHistoryScrollFrame:IsVisible() then
+        TalcFrame:ShowWelcomeScreen()
+    end
+    if TalcVoteFrameWelcomePlayerHistoryScrollFrame:IsVisible() then
+        TalcFrame:WelcomeItemClick(TalcFrame.itemHistoryIndex)
+    end
 end
