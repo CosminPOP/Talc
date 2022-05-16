@@ -509,9 +509,9 @@ function talc_error(a)
 end
 
 function talc_debug(a)
-    --if not db['_DEBUG'] then
-    --    return
-    --end
+    if not db['_DEBUG'] then
+        return
+    end
     if core.type(a) == 'boolean' then
         if a then
             talc_print('|cff0070de[DEBUG:' .. time() .. ']|cffffffff[true]')
