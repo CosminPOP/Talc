@@ -31,7 +31,6 @@
                     </Anchor>
                 </Anchors>
             </Frame>
-
             <Button name="$parentItemIcon" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
                     <Size>
@@ -103,7 +102,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentRoll" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Buttons\UI-GroupLoot-Dice-Up"/>
                 <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Dice-Highlight" alphaMode="ADD"/>
@@ -120,7 +118,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Talc_RollItemButtonOnClick(this:GetID(), 'roll');
+                        RollFrame:PickRoll(this:GetID(), 'roll');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 0, 0)
@@ -132,12 +130,10 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-
-
             <Button name="$parentPass" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
                 <!--                <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Highlight" alphaMode="ADD"/>-->
-                <PushedTexture file="Interface\Buttons\UI-GroupLoot-Pass-Down"/>
+                <PushedTexture file="Interface\Buttons\UI-GroupLoot-Pass-Down" alphaMode="ADD"/>
                 <Size>
                     <AbsDimension x="32" y="32"/>
                 </Size>
@@ -150,7 +146,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Talc_RollItemButtonOnClick(this:GetID(), 'pass');
+                        RollFrame:PickRoll(this:GetID(), 'pass');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 0, 0)
@@ -162,7 +158,6 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-
             <Frame name="$parentTimeLeftBar" framestrata="HIGH">
                 <Size>
                     <AbsDimension x="190" y="8"/>
@@ -191,9 +186,7 @@
                     </Layer>
                 </Layers>
             </Frame>
-
         </Frames>
-
         <Scripts>
             <OnLoad>
                 this:RegisterForDrag("LeftButton");
@@ -237,8 +230,7 @@
             </Layer>
         </Layers>
         <Frames>
-
-            <Button name="$parentTestPlacement" inherits="UIPanelButtonTemplate2" text="Test">
+            <Button name="$parentTestPlacement" inherits="Talc_ButtonTemplate" text="Test">
                 <Size>
                     <AbsDimension x="50" y="25"/>
                 </Size>
@@ -251,11 +243,11 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Talc_RollFrameTest()
+                        RollFrame:Test()
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentClosePlacement" inherits="UIPanelButtonTemplate2" text="Close">
+            <Button name="$parentClosePlacement" inherits="Talc_ButtonTemplate" text="Close">
                 <Size>
                     <AbsDimension x="50" y="25"/>
                 </Size>
@@ -268,12 +260,11 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Talc_RollFrameHideAnchor()
+                        RollFrame:hideAnchor(true)
                     </OnClick>
                 </Scripts>
             </Button>
         </Frames>
-
         <Scripts>
             <OnLoad>
                 this:RegisterForDrag("LeftButton");
