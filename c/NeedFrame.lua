@@ -6,24 +6,16 @@ NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
 NeedFrame.execs = 0
 
-NeedFrame.withAddon = {}
-NeedFrame.withAddonCount = 0
-NeedFrame.withoutAddonCount = 0
-NeedFrame.olderAddonCount = 0
-
 function NeedFrame:init()
     core = TALC
     db = TALC_DB
     tokenRewards = TALC_TOKENS
 
-    --self:ShowAnchor() --dev
-    self:HideAnchor() --dev
-
     TalcNeedFrame:SetScale(db['NEED_SCALE'])
 
     self:ResetVars()
 
-    talc_print('TALC NeedFrame Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
+    talc_print('NeedFrame Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
 end
 
 function NeedFrame:cacheItem(data)
@@ -237,7 +229,7 @@ function NeedFrame:addItem(data)
 
                 if i < 5 then
 
-                    local set, il, frame = NeedFrame:SetQuestRewardLink(rewardID, _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i])
+                    local set, il, frame = self:SetQuestRewardLink(rewardID, _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i])
 
                     if not set then
                         talc_debug(' quest reward ' .. i .. ' name or quality not found for data :' .. rewardID)
@@ -366,7 +358,7 @@ function NeedFrame:ResetVars()
     NewItemTooltip14:Hide()
     NewItemTooltip15:Hide()
 
-    --TalcNeedFrame:Hide() --dev
+    TalcNeedFrame:Hide()
 
     self.countdown:Hide()
     self.countdown.T = 1
@@ -376,42 +368,8 @@ end
 
 function NeedFrame:handleSync(arg1, msg, arg3, sender)
 
-    if core.find(msg, 'withAddonNF=', 1, true) then
-        local i = core.split("=", msg)
-        if i[2] == core.me then
-            --i[2] = who requested the who
-            if i[4] then
-                local verColor = ""
-                if core.ver(i[4]) == core.ver(core.addonVer) then
-                    verColor = core.classColors['hunter'].colorStr
-                end
-                if core.ver(i[4]) < core.ver(core.addonVer) then
-                    verColor = '|cffff1111'
-                end
-                if (core.ver(i[4]) + 1 == core.ver(core.addonVer)) then
-                    verColor = '|cffff8810'
-                end
-
-                if core.strlen(i[4]) < 7 then
-                    i[4] = '0.' .. i[4]
-                end
-
-                self.withAddon[sender]['v'] = verColor .. i[4]
-
-                self.withAddonCount = self.withAddonCount + 1
-                self.withoutAddonCount = self.withoutAddonCount - 1
-                updateWithAddon()
-            end
-        end
-        return
-    end
-
     if core.find(msg, 'needframe=', 1, true) then
         local command = core.split('=', msg)
-        if command[2] == "whoNF" then
-            core.asend("withAddonNF=" .. sender .. "=" .. core.me .. "=" .. core.addonVer)
-            return
-        end
         if command[2] == "reset" and core.isRL(sender) then
             self:ResetVars()
             return
@@ -459,8 +417,7 @@ function NeedFrame:ScaleWindow(dir)
         if TalcNeedFrame:GetScale() < 1.4 then
             TalcNeedFrame:SetScale(TalcNeedFrame:GetScale() + 0.05)
         end
-    end
-    if dir == 'down' then
+    elseif dir == 'down' then
         if TalcNeedFrame:GetScale() > 0.4 then
             TalcNeedFrame:SetScale(TalcNeedFrame:GetScale() - 0.05)
         end
@@ -527,7 +484,7 @@ function NeedFrame:NeedClick(id, need)
 
         core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "= " .. gearscore)
         _G['NewItemTooltip' .. id]:Hide()
-        NeedFrame:fadeOutFrame(id, need)
+        self:fadeOutFrame(id, need)
 
         return
     end
@@ -597,29 +554,32 @@ NeedFrame.countdown.timeToNeed = 30 --default, will be gotten via addonMessage
 NeedFrame.countdown.T = 1
 NeedFrame.countdown.C = 30
 
+NeedFrame.countdown:SetScript("OnShow", function()
+    this.startTime = GetTime();
+end)
 NeedFrame.countdown:SetScript("OnUpdate", function()
     local plus = 0.03
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        if (NeedFrame.countdown.T ~= NeedFrame.countdown.timeToNeed + plus) then
+        if this.countdown.T ~= this.timeToNeed + plus then
 
             for index in next, NeedFrame.itemFrames do
-                if core.floor(NeedFrame.countdown.C - NeedFrame.countdown.T + plus) < 0 then
+                if core.floor(this.C - this.T + plus) < 0 then
                     _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText("CLOSED")
                 else
-                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText(core.ceil(NeedFrame.countdown.C - NeedFrame.countdown.T + plus) .. "s")
+                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText(core.ceil(this.C - this.T + plus) .. "s")
                 end
 
-                _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((NeedFrame.countdown.C - NeedFrame.countdown.T + plus) * 190 / NeedFrame.countdown.timeToNeed)
+                _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 190 / this.timeToNeed)
             end
         end
-        NeedFrame.countdown:Hide()
-        if (NeedFrame.countdown.T < NeedFrame.countdown.C + plus) then
+        self:Hide()
+        if this.T < this.C + plus then
             --still tick
-            NeedFrame.countdown.T = NeedFrame.countdown.T + plus
-            NeedFrame.countdown:Show()
-        elseif (NeedFrame.countdown.T > NeedFrame.countdown.timeToNeed + plus) then
+            this.T = this.T + plus
+            self:Show()
+        elseif this.T > this.timeToNeed + plus then
 
             -- hide frames and send auto pass
             for index in next, NeedFrame.itemFrames do
@@ -629,8 +589,8 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
             end
             -- end hide frames
 
-            NeedFrame.countdown:Hide()
-            NeedFrame.countdown.T = 1
+            self:Hide()
+            this.T = 1
 
         end
     end
@@ -664,7 +624,7 @@ NeedFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
             end
         end
         if not atLeastOne then
-            this:Hide()
+            self:Hide()
         end
     end
 end)
@@ -697,7 +657,7 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
             end
         end
         if not atLeastOne then
-            this:Hide()
+            self:Hide()
         end
     end
 end)
@@ -716,23 +676,21 @@ NeedFrame.delayAddItem:SetScript("OnUpdate", function()
     if gt >= st then
 
         local atLeastOne = false
-        for id, data in next, NeedFrame.delayAddItem.data do
-            if NeedFrame.delayAddItem.data[id] then
+        for id, data in next, this.data do
+            if this.data[id] then
                 atLeastOne = true
                 talc_debug('delay add item on update for item id ' .. id .. ' data:[' .. data)
-                NeedFrame.delayAddItem.data[id] = nil
+                this.data[id] = nil
                 NeedFrame:addItem(data)
             end
         end
 
         if not atLeastOne then
-            NeedFrame.delayAddItem:Hide()
+            self:Hide()
         end
     end
 end)
-NeedFrame.countdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
-end)
+
 
 
 
@@ -767,87 +725,3 @@ function Talc_NeedFrame_Test()
     end
 end
 
-function queryWho()
-    NeedFrame.withAddon = {}
-    NeedFrame.withAddonCount = 0
-    NeedFrame.withoutAddonCount = 0
-
-    TalcNeedFrameListTitle:SetText('NeedFrame v' .. core.addonVer)
-
-    TalcNeedFrameList:Show()
-
-    core.bsend("NORMAL", "needframe=whoNF=" .. core.addonVer)
-
-    for i = 0, GetNumRaidMembers() do
-        if GetRaidRosterInfo(i) then
-            local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
-            local _, class = UnitClass('raid' .. i)
-
-            NeedFrame.withAddon[n] = {
-                ['class'] = core.lower(class),
-                ['v'] = '|cff888888   -   '
-            }
-            if z == 'Offline' then
-                NeedFrame.withAddon[n]['v'] = '|cffff0000offline'
-            else
-                NeedFrame.withoutAddonCount = NeedFrame.withoutAddonCount + 1
-            end
-        end
-    end
-
-    updateWithAddon()
-end
-
-function announceWithoutAddon()
-    local withoutAddon = ''
-    for n, d in NeedFrame.withAddon do
-        if core.find(d['v'], '-', 1, true) then
-            withoutAddon = withoutAddon .. n .. ', '
-        end
-    end
-    if withoutAddon ~= '' then
-        SendChatMessage('Players without TALC addon: ' .. withoutAddon, "RAID")
-        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
-    end
-end
-
-function announceOlderAddon()
-    local olderAddon = ''
-    for n, d in NeedFrame.withAddon do
-        if not core.find(d['v'], 'offline', 1, true) and not core.find(d['v'], '-', 1, true) then
-            if core.ver(core.sub(d['v'], 11, 17)) < core.ver(core.addonVer) then
-                olderAddon = olderAddon .. n .. ', '
-            end
-        end
-    end
-    if olderAddon ~= '' then
-        SendChatMessage('Players with older versions of TALC addon: ' .. olderAddon, "RAID")
-        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
-    end
-end
-
-function hideNeedFrameList()
-    NeedFrameList:Hide()
-end
-
-function updateWithAddon()
-    local rosterList = ''
-    local i = 0
-    for n, data in next, NeedFrame.withAddon do
-        i = i + 1
-        rosterList = rosterList .. core.classColors[data['class']].c .. n .. core.rep(' ', 12 - core.len(n)) .. ' ' .. data['v'] .. ' |cff888888| '
-        if i == 3 then
-            rosterList = rosterList .. '\n'
-            i = 0
-        end
-    end
-    TalcNeedFrameListText:SetText(rosterList)
-    TalcNeedFrameListWith:SetText('With addon: ' .. NeedFrame.withAddonCount)
-    if NeedFrame.withoutAddonCount == 0 then
-        TalcNeedFrameListAnnounceWithoutAddon:SetText('Notify without ' .. NeedFrame.withoutAddonCount)
-        TalcNeedFrameListAnnounceWithoutAddon:Disable()
-    else
-        TalcNeedFrameListAnnounceWithoutAddon:SetText('Notify without ' .. NeedFrame.withoutAddonCount)
-        TalcNeedFrameListAnnounceWithoutAddon:Enable()
-    end
-end
