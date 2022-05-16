@@ -33,6 +33,28 @@
         </HighlightTexture>
     </Button>
 
+    <Button name="Talc_WhoButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+        <NormalTexture file="Interface\addons\Talc\images\grad1">
+            <Color r="0.24" g="0.45" b="0.84"/>
+        </NormalTexture>
+        <PushedTexture file="Interface\addons\Talc\images\grad1"/>
+        <DisabledTexture file="Interface\addons\Talc\images\grad1">
+            <Color r="0.3" g="0.3" b="0.3" a="1"/>
+        </DisabledTexture>
+        <HighlightTexture alphaMode="BLEND">
+            <Color r="0.24" g="0.45" b="0.84" a="0.2"/>
+        </HighlightTexture>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentStatus" inherits="GameFontNormal" text="Status">
+                    <Anchors>
+                        <Anchor point="CENTER"></Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
     <Button name="Talc_InspectGearButtonTemplate" inherits="UIPanelButtonTemplate2" virtual="true">
         <Size>
             <AbsDimension x="24" y="24"/>
@@ -900,13 +922,13 @@
     <Frame name="TalcVoteFrame" hidden="false" toplevel="true"
            parent="UIParent" movable="true" enableMouse="true" resizable="true">
         <Size>
-            <AbsDimension x="785" y="246"/>
+            <AbsDimension x="785" y="350"/>
         </Size>
         <Anchors>
             <Anchor point="CENTER"/>
         </Anchors>
         <ResizeBounds>
-            <minResize x="785" y="246"/>
+            <minResize x="785" y="350"/>
             <maxResize x="1200" y="600"/>
         </ResizeBounds>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
@@ -1180,6 +1202,25 @@
                     </Layer>
                 </Layers>
                 <Frames>
+
+                    <Button name="$parentOpenSettings" inherits="Talc_ButtonTemplate" text="Settings">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-10" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:ShowSettingsScreen()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
                 </Frames>
             </Frame>
 
@@ -1735,7 +1776,7 @@
                     </Button>
 
                     <Button name="TestNeedFrameButton2" framstrata="HIGH" inherits="Talc_ButtonTemplate"
-                            text="Fill Test Data">
+                            text="Fill Test Data" hidden="true">
                         <Size>
                             <AbsDimension x="180" y="20"/>
                         </Size>
@@ -1749,6 +1790,25 @@
                         <Scripts>
                             <OnClick>
                                 TalcFrame_FillTestData()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentQueryWho" framstrata="HIGH" inherits="Talc_ButtonTemplate"
+                            text="Query Who">
+                        <Size>
+                            <AbsDimension x="180" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOP" relativeTo="$parentResetClose" relativePoint="BOTTOM">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:queryWho()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2225,6 +2285,624 @@
                 </Frames>
             </Frame>
 
+            <Frame name="$parentSettingsFrame" hidden="false">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-35"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleUnderline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-25"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-26"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontHighlightLarge" text="Settings">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-9"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentWinFrameLabel" inherits="GameFontHighlight" text="Win Frame">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentWinThresholdLabel" inherits="GameFontHighlight" text="Win Threshold">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="-100"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentRollFrameLabel" inherits="GameFontHighlight" text="Roll Frame">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="180" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentNeedFrameLabel" inherits="GameFontHighlight" text="Need Frame">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="360" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentBossFrameLabel" inherits="GameFontHighlight"
+                                    text="Boss Defeated Frame">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="520" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                    </Layer>
+                </Layers>
+                <Frames>
+
+                    <CheckButton name="$parentWinEnableSound" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinFrameLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Win Sound">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_ENABLE_SOUND', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentWinSoundHigh" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinEnableSound" relativePoint="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="High">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentWinSoundLow" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeTo="$parentWinSoundHigh" relativePoint="RIGHT">
+                                <Offset>
+                                    <AbsDimension x="40" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Low">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'low' or 'high')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentWinCommon" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinThresholdLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="|cffffffffCommon">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '1' or '0')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentWinUncommon" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinCommon" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="|cff1eff00Uncommon">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '2' or '0')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentWinRare" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinUncommon" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="|cff0070ddRare">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '3' or '0')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentWinEpic" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinRare" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="|cffa335eeEpic">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '4' or '0')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentWinLegendary" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinEpic" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="|cffff8000Legendary">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '5' or '0')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentRollEnableSound" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentRollFrameLabel">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Roll Sound">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('ROLL_ENABLE_SOUND', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentRollSoundHigh" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentRollEnableSound" relativePoint="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="High">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+                    <CheckButton name="$parentRollSoundLow" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeTo="$parentRollSoundHigh" relativePoint="RIGHT">
+                                <Offset>
+                                    <AbsDimension x="40" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Low">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'low' or 'high')
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentRollTrombone" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentRollSoundHigh" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="-20" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Sad Trombone">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('ROLL_TROMBONE', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentBossEnable" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentBossFrameLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Boss Defeated Toast">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('BOSS_FRAME_ENABLE', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">
+                        <Size>
+                            <AbsDimension x="20" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-80" y="30"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Debugging">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('_DEBUG', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <Button name="$parentWinShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinLegendary" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                WinFrame.animFrame:showAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentRollShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentRollTrombone" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                RollFrame:showAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentRollNeedAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentNeedFrameLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                NeedFrame:showAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+
+
+                    <Button name="$parentPurgeLootHistory" inherits="Talc_ButtonTemplate" text="Purge Loot History">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-150" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                VoteFrame:PurgeLootHistory()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentCloseWindow" inherits="Talc_ButtonTemplate" text="Close Settings">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-10" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:HideSettingsScreen(true)
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                </Frames>
+            </Frame>
+
             <Frame name="$parentRaiderDetailsFrame" hidden="true">
                 <Size>
                     <AbsDimension x="225" y="335"/>
@@ -2690,9 +3368,10 @@
         </Scripts>
     </Frame>
 
-    <Frame name="TalcVoteFrameWho" hidden="true" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+    <Frame name="TalcVoteFrameWho" hidden="true" toplevel="true" parent="UIParent"
+           movable="true" enableMouse="true">
         <Size>
-            <AbsDimension x="150" y="260"/>
+            <AbsDimension x="525" y="260"/>
         </Size>
         <Anchors>
             <Anchor point="CENTER">
@@ -2701,7 +3380,7 @@
                 </Offset>
             </Anchor>
         </Anchors>
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
                   edgeFile="Interface\addons\Talc\images\border-maw"
                   tile="false">
             <EdgeSize>
@@ -2715,21 +3394,35 @@
             </BackgroundInsets>
         </Backdrop>
         <Layers>
+            <Layer level="BACKGROUND">
+                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
+                    <Color r="0.24" g="0.45" b="0.84"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-4"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                            <Offset x="-2" y="-24"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-24"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset x="-2" y="5"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
             <Layer level="OVERLAY">
                 <FontString name="$parentTitle" text="Title" inherits="GameFontNormal">
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset>
-                                <AbsDimension x="0" y="-5"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
-                <FontString name="$parentText" justifyH="LEFT" text="" inherits="GameFontNormal">
-                    <Anchors>
-                        <Anchor point="TOP">
-                            <Offset>
-                                <AbsDimension x="-20" y="-40"/>
+                                <AbsDimension x="0" y="-8"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -2744,30 +3437,66 @@
                 <Anchors>
                     <Anchor point="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="0" y="0"/>
+                            <AbsDimension x="-5" y="-4"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
             </Button>
 
-            <Button name="$parentRefreshWho" framstrata="HIGH" inherits="Talc_ButtonTemplate" hidden="false"
-                    text="Refresh">
+            <Button name="$parentAnnounceOlderAddon" inherits="Talc_ButtonTemplate" text="Older Versions">
+                <Size>
+                    <AbsDimension x="140" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:announceOlderAddon()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentRefreshWho" framstrata="HIGH" inherits="Talc_ButtonTemplate" text="Refresh">
                 <Size>
                     <AbsDimension x="140" y="20"/>
                 </Size>
                 <Anchors>
                     <Anchor point="BOTTOM">
                         <Offset>
-                            <AbsDimension x="0" y="0"/>
+                            <AbsDimension x="0" y="10"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:RefreshWho();
+                        TalcFrame:queryWho();
                     </OnClick>
                 </Scripts>
             </Button>
+
+            <Button name="$parentAnnounceWithoutAddon" inherits="Talc_ButtonTemplate" text="Without Addon">
+                <Size>
+                    <AbsDimension x="140" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:announceWithoutAddon()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
         </Frames>
         <Scripts>
             <OnLoad>
