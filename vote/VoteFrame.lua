@@ -57,6 +57,13 @@ TalcFrame.durationNotification = 1000 * 60 -- 10 * 60 -- s
 
 TalcFrame.welcomeItemsFrames = {}
 
+TalcFrame.withAddon = {}
+TalcFrame.withAddonFrames = {}
+
+TalcFrame.closeVoteFrameFromSettings = false
+
+TalcFrame.itemRewardsFrames = {}
+
 function TalcFrame:init()
 
     db = TALC_DB
@@ -184,8 +191,6 @@ function TalcFrame:ResetVars()
     self:HideSettingsScreen()
 
 end
-
-TalcFrame.closeVoteFrameFromSettings = false
 
 function TalcFrame:ShowSettingsScreen(a)
     self:HideWelcomeScreen()
@@ -453,11 +458,10 @@ function TalcFrame:SetAssist(id, to)
                     talc_debug('demote ')
                     DemoteAssistant(n)
                 end
-                return true
+                return
             end
         end
     end
-    return false
 end
 
 function TalcFrame:ToggleRLOptions()
@@ -475,11 +479,8 @@ function TalcFrame:ToggleRLOptions()
         end
 
         TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
-
         ShowUIPanel(TalcVoteFrameRLWindowFrame)
-
         self.RLFrame:ChangeTab(1)
-
     end
 end
 
@@ -653,8 +654,6 @@ function TalcFrame:VotedItemButton(id)
     end
     self:SetCurrentVotedItem(id)
 end
-
-TalcFrame.itemRewardsFrames = {}
 
 function TalcFrame:SetCurrentVotedItem(id)
 
@@ -968,12 +967,12 @@ function TalcFrame:ReceiveDrag()
 
 end
 
-function Talc_LootHistory_Update()
+function TalcFrame:LootHistoryUpdate()
     local itemOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame);
 
-    local id = TalcFrame.HistoryId
+    local id = self.HistoryId
 
-    TalcFrame.selectedPlayer[TalcFrame.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
+    self.selectedPlayer[TalcFrame.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
 
     local totalItems = 0
 
@@ -984,8 +983,8 @@ function Talc_LootHistory_Update()
         end
     end
 
-    for index in next, TalcFrame.lootHistoryFrames do
-        TalcFrame.lootHistoryFrames[index]:Hide()
+    for index in next, self.lootHistoryFrames do
+        self.lootHistoryFrames[index]:Hide()
     end
 
     if totalItems > 0 then
@@ -998,12 +997,12 @@ function Talc_LootHistory_Update()
 
                 if index > itemOffset and index <= itemOffset + 11 then
 
-                    if not TalcFrame.lootHistoryFrames[index] then
-                        TalcFrame.lootHistoryFrames[index] = CreateFrame('Frame', 'HistoryItem' .. index, TalcVoteFrameRaiderDetailsFrame, 'Talc_HistoryItemTemplate')
+                    if not self.lootHistoryFrames[index] then
+                        self.lootHistoryFrames[index] = CreateFrame('Frame', 'HistoryItem' .. index, TalcVoteFrameRaiderDetailsFrame, 'Talc_HistoryItemTemplate')
                     end
 
-                    TalcFrame.lootHistoryFrames[index]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrame, "TOPLEFT", 10, -8 - 22 * (index - itemOffset) - 50)
-                    TalcFrame.lootHistoryFrames[index]:Show()
+                    self.lootHistoryFrames[index]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrame, "TOPLEFT", 10, -8 - 22 * (index - itemOffset) - 50)
+                    self.lootHistoryFrames[index]:Show()
 
                     local today = ''
                     if date("%d/%m") == date("%d/%m", lootTime) then
@@ -1034,100 +1033,6 @@ function TalcFrame:RaiderDetailsClose()
         self.selectedPlayer[self.CurrentVotedItem] = ''
     end
     TalcVoteFrameRaiderDetailsFrame:Hide()
-end
-
-function Talc_BuildContestantDropdownMenu()
-    local id = ContestantDropdownMenu.currentContestantId
-    local separator = {};
-    separator.text = ""
-    separator.disabled = true
-
-    local title = {};
-    title.text = _G['TalcVoteFrameContestantFrame' .. id].name .. ' ' .. _G['TalcVoteFrameContestantFrame' .. id .. 'Need']:GetText()
-    title.disabled = false
-    title.notCheckable = true
-    title.isTitle = true
-    UIDropDownMenu_AddButton(title);
-    UIDropDownMenu_AddButton(separator);
-
-    local award = {};
-    if TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= '' then
-        award.text = "Awarded " .. TalcVoteFrameVotedItemName:GetText()
-    else
-        award.text = "Award " .. TalcVoteFrameVotedItemName:GetText()
-    end
-    award.disabled = TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
-    award.isTitle = false
-    award.notCheckable = true
-    award.tooltipTitle = 'Award'
-    award.tooltipText = 'Send item to player'
-    award.justifyH = 'LEFT'
-    award.func = function()
-        TalcFrame:AwardPlayer(_G['TalcVoteFrameContestantFrame' .. id].name, TalcFrame.CurrentVotedItem)
-    end
-    UIDropDownMenu_AddButton(award);
-    UIDropDownMenu_AddButton(separator);
-
-    local changeToBIS = {}
-    changeToBIS.text = "Change to " .. core.needs['bis'].colorStr .. core.needs['bis'].text
-    changeToBIS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'bis' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
-    changeToBIS.isTitle = false
-    changeToBIS.notCheckable = true
-    changeToBIS.tooltipTitle = 'Change choice'
-    changeToBIS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['bis'].colorStr .. core.needs['bis'].text
-    changeToBIS.justifyH = 'LEFT'
-    changeToBIS.func = function()
-        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'bis', TalcFrame.CurrentVotedItem)
-    end
-    UIDropDownMenu_AddButton(changeToBIS);
-
-    local changeToMS = {}
-    changeToMS.text = "Change to " .. core.needs['ms'].colorStr .. core.needs['ms'].text
-    changeToMS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'ms' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
-    changeToMS.isTitle = false
-    changeToMS.notCheckable = true
-    changeToMS.tooltipTitle = 'Change choice'
-    changeToMS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['ms'].colorStr .. core.needs['ms'].text
-    changeToMS.justifyH = 'LEFT'
-    changeToMS.func = function()
-        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'ms', TalcFrame.CurrentVotedItem)
-    end
-    UIDropDownMenu_AddButton(changeToMS);
-
-    local changeToOS = {}
-    changeToOS.text = "Change to " .. core.needs['os'].colorStr .. core.needs['os'].text
-    changeToOS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'os' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
-    changeToOS.isTitle = false
-    changeToOS.notCheckable = true
-    changeToOS.tooltipTitle = 'Change choice'
-    changeToOS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['os'].colorStr .. core.needs['os'].text
-    changeToOS.justifyH = 'LEFT'
-    changeToOS.func = function()
-        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'os', TalcFrame.CurrentVotedItem)
-    end
-    UIDropDownMenu_AddButton(changeToOS);
-
-    local changeToXMOG = {}
-    changeToXMOG.text = "Change to " .. core.needs['xmog'].colorStr .. core.needs['xmog'].text
-    changeToXMOG.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'xmog' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
-    changeToXMOG.isTitle = false
-    changeToXMOG.notCheckable = true
-    changeToXMOG.tooltipTitle = 'Change choice'
-    changeToXMOG.tooltipText = 'Change contestant\'s choice to ' .. core.needs['xmog'].colorStr .. core.needs['xmog'].text
-    changeToXMOG.justifyH = 'LEFT'
-    changeToXMOG.func = function()
-        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'xmog', TalcFrame.CurrentVotedItem)
-    end
-    UIDropDownMenu_AddButton(changeToXMOG);
-
-    UIDropDownMenu_AddButton(separator);
-
-    local close = {};
-    close.text = "Close"
-    close.disabled = false
-    close.notCheckable = true
-    close.isTitle = false
-    UIDropDownMenu_AddButton(close);
 end
 
 function TalcFrame:ShowContestantDropdownMenu(id)
@@ -2268,7 +2173,7 @@ function TalcFrame:UpdateLCVoters()
 end
 
 function TalcFrame:MLToWinner()
-    --    talc_debug(self.voteTiePlayers)
+
     if self.voteTiePlayers ~= '' then
         self.VotedItemsFrames[self.CurrentVotedItem].rolled = true
         local players = core.split(' ', self.voteTiePlayers)
@@ -2621,10 +2526,204 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
             self.lootHistoryFrames[index]:Hide()
         end
 
-        Talc_LootHistory_Update()
+        self:LootHistoryUpdate()
     end
 
     TalcVoteFrameRaiderDetailsFrame:Show()
+end
+
+function TalcFrame:SendTestItems()
+
+    local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r";
+    local testItem2 = "\124cffa335ee\124Hitem:40612:0:0:0:0:0:0:0:0\124h[LEATHER BELT LVL 18]\124h\124r"
+
+    local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
+    local lootName1, _, quality1, _, _, _, _, _, _, lootIcon1 = GetItemInfo(itemLink1)
+
+    local _, _, itemLink2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
+    local lootName2, _, quality2, _, _, _, _, _, _, lootIcon2 = GetItemInfo(itemLink2)
+
+    if quality1 and lootIcon1 and quality2 and lootIcon2 then
+
+        SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
+        TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
+
+        core.SetDynTTN(2)
+        core.SetDynTTV(2)
+        self.LootCountdown.countDownFrom = db['VOTE_TTN']
+
+        self:SendTimersAndButtons()
+
+        self:SendReset()
+
+        self.LootCountdown:Show()
+        core.asend('countdownframe=show')
+
+        core.bsend("ALERT", "preloadInVoteFrame=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+        core.bsend("ALERT", "preloadInVoteFrame=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+
+        local buttons = ''
+        if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
+            buttons = buttons .. 'b'
+        end
+        if db['VOTE_CONFIG']['NeedButtons']['MS'] then
+            buttons = buttons .. 'm'
+        end
+        if db['VOTE_CONFIG']['NeedButtons']['OS'] then
+            buttons = buttons .. 'o'
+        end
+        if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
+            buttons = buttons .. 'x'
+        end
+
+        core.bsend("ALERT", "loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+        core.bsend("ALERT", "loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+        core.bsend("ALERT", "doneSending=2=items")
+
+        TalcVoteFrameMLToWinner:Disable()
+    else
+
+        local _, _, link1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
+        GameTooltip:SetHyperlink(link1)
+        GameTooltip:Hide()
+
+        local _, _, link2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
+        GameTooltip:SetHyperlink(link2)
+        GameTooltip:Hide()
+
+        talc_error(testItem1 .. ' or ' .. testItem2 .. ' was not seen before, try again...')
+    end
+end
+
+function TalcFrame:queryWho()
+
+    if not UnitInRaid('player') then
+        talc_print('You are not in a raid.')
+        return
+    end
+
+    TalcVoteFrameWho:Show()
+
+    core.asend("versionQuery=")
+
+    TalcFrame.withAddon = {}
+    TalcFrame.withAddonFrames = {}
+
+    TalcVoteFrameWhoTitle:SetText('TALC v' .. core.addonVer)
+
+    for i = 0, GetNumRaidMembers() do
+        if GetRaidRosterInfo(i) then
+            local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
+            local _, class = UnitClass('raid' .. i)
+
+            self.withAddon[n] = {
+                class = core.lower(class),
+                v = '-'
+            }
+            if z == 'Offline' then
+                self.withAddon[n].v = '|cff777777offline'
+            end
+        end
+    end
+
+    self:updateWithAddon()
+end
+
+function TalcFrame:announceWithoutAddon()
+    local withoutAddon = ''
+    for n, d in next, self.withAddon do
+        if core.find(d.v, '-', 1, true) then
+            withoutAddon = withoutAddon .. n .. ', '
+        end
+    end
+    if withoutAddon ~= '' then
+        SendChatMessage('Players without TALC addon: ' .. withoutAddon, "RAID")
+        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
+    end
+end
+
+function TalcFrame:announceOlderAddon()
+    local olderAddon = ''
+    for n, d in next, self.withAddon do
+        if not core.find(d.v, 'offline', 1, true) and not core.find(d.v, '-', 1, true) then
+            if core.ver(core.sub(d.v, 11, 17)) < core.ver(core.addonVer) then
+                olderAddon = olderAddon .. n .. ', '
+            end
+        end
+    end
+    if olderAddon ~= '' then
+        SendChatMessage('Players with older versions of TALC addon: ' .. olderAddon, "RAID")
+        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
+    end
+end
+
+function TalcFrame:updateWithAddon()
+
+    TalcFrame.withAddonFrames = {}
+
+    local row, col = 1, 1
+
+    local index = 0
+
+    for name, data in next, self.withAddon do
+
+        index = index + 1
+
+        if not self.withAddonFrames[index] then
+            self.withAddonFrames[index] = CreateFrame("Button", "TalcAddonStatus" .. index, TalcVoteFrameWho, "Talc_WhoButtonTemplate")
+        end
+
+        local frame = "TalcAddonStatus" .. index
+
+        _G[frame]:SetSize(100, 32)
+
+        _G[frame]:SetPoint('TOPLEFT', TalcVoteFrameWho, "TOPLEFT", 10 + (col - 1) * 101, -5 - 35 * row)
+
+        _G[frame .. 'Status']:SetText(core.classColors[core.getPlayerClass(name)].colorStr .. name .. '\n' .. data.v)
+
+        if data.v == '|cff777777offline' then
+            _G[frame]:Disable()
+        else
+            _G[frame]:Enable()
+        end
+
+
+        col = col + 1
+        if col == 6 then
+            col = 1
+            row = row + 1
+        end
+
+    end
+
+    local without = 0
+    local older = 0
+    for _, data in next, self.withAddon do
+        if data.v == '-' then
+            without = without + 1
+        elseif data.v ~= (core.classColors['hunter'].colorStr .. core.addonVer) and data.v ~= '|cff777777offline' then
+            older = older + 1
+        end
+    end
+    if without > 0 then
+        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon (' .. without ..')')
+        TalcVoteFrameWhoAnnounceWithoutAddon:Enable()
+    else
+        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon')
+        TalcVoteFrameWhoAnnounceWithoutAddon:Disable()
+    end
+    if older > 0 then
+        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions (' .. older ..')')
+        TalcVoteFrameWhoAnnounceOlderAddon:Enable()
+    else
+        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions')
+        TalcVoteFrameWhoAnnounceOlderAddon:Disable()
+    end
+end
+
+function TalcFrame:PurgeLootHistory()
+    db['VOTE_LOOT_HISTORY'] = {}
+    talc_print('Loot History cleared.')
 end
 
 TalcFrame.tradableItemsCheck = CreateFrame("Frame")
@@ -2700,6 +2799,7 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
         this.startTime = GetTime()
     end
 end)
+
 function TalcFrame.tradableItemsCheck:ItemClick(id)
     if TalcVoteFrame:IsVisible() and TalcVoteFrameRLExtraFrameDragLoot:IsEnabled() then
 
@@ -3033,11 +3133,107 @@ end)
 
 function TalcFrame:ShowMinimapDropdown()
     local TALCMinimapMenuFrame = CreateFrame('Frame', 'TALCMinimapMenuFrame', UIParent, 'UIDropDownMenuTemplate')
-    UIDropDownMenu_Initialize(TALCMinimapMenuFrame, TalcFrame_BuildMinimapMenu, "MENU");
+    UIDropDownMenu_Initialize(TALCMinimapMenuFrame, Talc_BuildMinimapMenu, "MENU");
     ToggleDropDownMenu(1, nil, TALCMinimapMenuFrame, Talc_Minimap, 1, 1);
 end
 
-function TalcFrame_BuildMinimapMenu()
+
+
+function Talc_BuildContestantDropdownMenu()
+    local id = ContestantDropdownMenu.currentContestantId
+    local separator = {};
+    separator.text = ""
+    separator.disabled = true
+
+    local title = {};
+    title.text = _G['TalcVoteFrameContestantFrame' .. id].name .. ' ' .. _G['TalcVoteFrameContestantFrame' .. id .. 'Need']:GetText()
+    title.disabled = false
+    title.notCheckable = true
+    title.isTitle = true
+    UIDropDownMenu_AddButton(title);
+    UIDropDownMenu_AddButton(separator);
+
+    local award = {};
+    if TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= '' then
+        award.text = "Awarded " .. TalcVoteFrameVotedItemName:GetText()
+    else
+        award.text = "Award " .. TalcVoteFrameVotedItemName:GetText()
+    end
+    award.disabled = TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
+    award.isTitle = false
+    award.notCheckable = true
+    award.tooltipTitle = 'Award'
+    award.tooltipText = 'Send item to player'
+    award.justifyH = 'LEFT'
+    award.func = function()
+        TalcFrame:AwardPlayer(_G['TalcVoteFrameContestantFrame' .. id].name, TalcFrame.CurrentVotedItem)
+    end
+    UIDropDownMenu_AddButton(award);
+    UIDropDownMenu_AddButton(separator);
+
+    local changeToBIS = {}
+    changeToBIS.text = "Change to " .. core.needs['bis'].colorStr .. core.needs['bis'].text
+    changeToBIS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'bis' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
+    changeToBIS.isTitle = false
+    changeToBIS.notCheckable = true
+    changeToBIS.tooltipTitle = 'Change choice'
+    changeToBIS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['bis'].colorStr .. core.needs['bis'].text
+    changeToBIS.justifyH = 'LEFT'
+    changeToBIS.func = function()
+        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'bis', TalcFrame.CurrentVotedItem)
+    end
+    UIDropDownMenu_AddButton(changeToBIS);
+
+    local changeToMS = {}
+    changeToMS.text = "Change to " .. core.needs['ms'].colorStr .. core.needs['ms'].text
+    changeToMS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'ms' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
+    changeToMS.isTitle = false
+    changeToMS.notCheckable = true
+    changeToMS.tooltipTitle = 'Change choice'
+    changeToMS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['ms'].colorStr .. core.needs['ms'].text
+    changeToMS.justifyH = 'LEFT'
+    changeToMS.func = function()
+        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'ms', TalcFrame.CurrentVotedItem)
+    end
+    UIDropDownMenu_AddButton(changeToMS);
+
+    local changeToOS = {}
+    changeToOS.text = "Change to " .. core.needs['os'].colorStr .. core.needs['os'].text
+    changeToOS.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'os' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
+    changeToOS.isTitle = false
+    changeToOS.notCheckable = true
+    changeToOS.tooltipTitle = 'Change choice'
+    changeToOS.tooltipText = 'Change contestant\'s choice to ' .. core.needs['os'].colorStr .. core.needs['os'].text
+    changeToOS.justifyH = 'LEFT'
+    changeToOS.func = function()
+        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'os', TalcFrame.CurrentVotedItem)
+    end
+    UIDropDownMenu_AddButton(changeToOS);
+
+    local changeToXMOG = {}
+    changeToXMOG.text = "Change to " .. core.needs['xmog'].colorStr .. core.needs['xmog'].text
+    changeToXMOG.disabled = _G['TalcVoteFrameContestantFrame' .. id].need == 'xmog' or TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].awardedTo ~= ''
+    changeToXMOG.isTitle = false
+    changeToXMOG.notCheckable = true
+    changeToXMOG.tooltipTitle = 'Change choice'
+    changeToXMOG.tooltipText = 'Change contestant\'s choice to ' .. core.needs['xmog'].colorStr .. core.needs['xmog'].text
+    changeToXMOG.justifyH = 'LEFT'
+    changeToXMOG.func = function()
+        TalcFrame:ChangePlayerPickTo(_G['TalcVoteFrameContestantFrame' .. id].name, 'xmog', TalcFrame.CurrentVotedItem)
+    end
+    UIDropDownMenu_AddButton(changeToXMOG);
+
+    UIDropDownMenu_AddButton(separator);
+
+    local close = {};
+    close.text = "Close"
+    close.disabled = false
+    close.notCheckable = true
+    close.isTitle = false
+    UIDropDownMenu_AddButton(close);
+end
+
+function Talc_BuildMinimapMenu()
     local separator = {};
     separator.text = ""
     separator.disabled = true
@@ -3081,202 +3277,4 @@ function TalcFrame_BuildMinimapMenu()
     close.disabled = false
     close.isTitle = false
     UIDropDownMenu_AddButton(close);
-end
-
-function TestNeedButton_OnClick()
-
-
-    local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r";
-    local testItem2 = "\124cffa335ee\124Hitem:40612:0:0:0:0:0:0:0:0\124h[LEATHER BELT LVL 18]\124h\124r"
-
-    local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
-    local lootName1, _, quality1, _, _, _, _, _, _, lootIcon1 = GetItemInfo(itemLink1)
-
-    local _, _, itemLink2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
-    local lootName2, _, quality2, _, _, _, _, _, _, lootIcon2 = GetItemInfo(itemLink2)
-
-    if quality1 and lootIcon1 and quality2 and lootIcon2 then
-
-        --SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
-        TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
-
-        core.SetDynTTN(2)
-        core.SetDynTTV(2)
-        TalcFrame.LootCountdown.countDownFrom = db['VOTE_TTN']
-
-        TalcFrame:SendTimersAndButtons()
-
-        TalcFrame:SendReset()
-
-        TalcFrame.LootCountdown:Show()
-        core.asend('countdownframe=show')
-
-        core.bsend("ALERT", "preloadInVoteFrame=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-        core.bsend("ALERT", "preloadInVoteFrame=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-
-        local buttons = ''
-        if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
-            buttons = buttons .. 'b'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['MS'] then
-            buttons = buttons .. 'm'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['OS'] then
-            buttons = buttons .. 'o'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
-            buttons = buttons .. 'x'
-        end
-
-        core.bsend("ALERT", "loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-        core.bsend("ALERT", "loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-        core.bsend("ALERT", "doneSending=2=items")
-
-        TalcVoteFrameMLToWinner:Disable()
-    else
-
-        local _, _, link1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
-        GameTooltip:SetHyperlink(link1)
-        GameTooltip:Hide()
-
-        local _, _, link2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
-        GameTooltip:SetHyperlink(link2)
-        GameTooltip:Hide()
-
-        talc_error(testItem1 .. ' or ' .. testItem2 .. ' was not seen before, try again...')
-    end
-end
-
-TalcFrame.withAddon = {}
-TalcFrame.withAddonFrames = {}
-
-function TalcFrame:queryWho()
-
-    if not UnitInRaid('player') then
-        talc_print('You are not in a raid.')
-        return
-    end
-
-    TalcVoteFrameWho:Show()
-
-    core.asend("versionQuery=")
-
-    TalcFrame.withAddon = {}
-    TalcFrame.withAddonFrames = {}
-
-    TalcVoteFrameWhoTitle:SetText('TALC v' .. core.addonVer)
-
-    for i = 0, GetNumRaidMembers() do
-        if GetRaidRosterInfo(i) then
-            local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
-            local _, class = UnitClass('raid' .. i)
-
-            self.withAddon[n] = {
-                class = core.lower(class),
-                v = '-'
-            }
-            if z == 'Offline' then
-                self.withAddon[n].v = '|cff777777offline'
-            end
-        end
-    end
-
-    self:updateWithAddon()
-end
-
-function TalcFrame:announceWithoutAddon()
-    local withoutAddon = ''
-    for n, d in next, self.withAddon do
-        if core.find(d.v, '-', 1, true) then
-            withoutAddon = withoutAddon .. n .. ', '
-        end
-    end
-    if withoutAddon ~= '' then
-        SendChatMessage('Players without TALC addon: ' .. withoutAddon, "RAID")
-        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
-    end
-end
-
-function TalcFrame:announceOlderAddon()
-    local olderAddon = ''
-    for n, d in next, self.withAddon do
-        if not core.find(d.v, 'offline', 1, true) and not core.find(d.v, '-', 1, true) then
-            if core.ver(core.sub(d.v, 11, 17)) < core.ver(core.addonVer) then
-                olderAddon = olderAddon .. n .. ', '
-            end
-        end
-    end
-    if olderAddon ~= '' then
-        SendChatMessage('Players with older versions of TALC addon: ' .. olderAddon, "RAID")
-        SendChatMessage('Please check discord #annoucements channel or go to https://github.com/CosminPOP/Talc (latest version v' .. core.addonVer .. ')', "RAID")
-    end
-end
-
-function TalcFrame:updateWithAddon()
-
-    TalcFrame.withAddonFrames = {}
-
-    local row, col = 1, 1
-
-    local index = 0
-
-    for name, data in next, self.withAddon do
-
-        index = index + 1
-
-        if not self.withAddonFrames[index] then
-            self.withAddonFrames[index] = CreateFrame("Button", "TalcAddonStatus" .. index, TalcVoteFrameWho, "Talc_WhoButtonTemplate")
-        end
-
-        local frame = "TalcAddonStatus" .. index
-
-        _G[frame]:SetSize(100, 32)
-
-        _G[frame]:SetPoint('TOPLEFT', TalcVoteFrameWho, "TOPLEFT", 10 + (col - 1) * 101, -5 - 35 * row)
-
-        _G[frame .. 'Status']:SetText(core.classColors[core.getPlayerClass(name)].colorStr .. name .. '\n' .. data.v)
-
-        if data.v == '|cff777777offline' then
-            _G[frame]:Disable()
-        else
-            _G[frame]:Enable()
-        end
-
-
-        col = col + 1
-        if col == 6 then
-            col = 1
-            row = row + 1
-        end
-
-    end
-
-    local without = 0
-    local older = 0
-    for _, data in next, self.withAddon do
-        if data.v == '-' then
-            without = without + 1
-        elseif data.v ~= (core.classColors['hunter'].colorStr .. core.addonVer) and data.v ~= '|cff777777offline' then
-            older = older + 1
-        end
-    end
-    if without > 0 then
-        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon (' .. without ..')')
-        TalcVoteFrameWhoAnnounceWithoutAddon:Enable()
-    else
-        TalcVoteFrameWhoAnnounceWithoutAddon:SetText('Without Addon')
-        TalcVoteFrameWhoAnnounceWithoutAddon:Disable()
-    end
-    if older > 0 then
-        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions (' .. older ..')')
-        TalcVoteFrameWhoAnnounceOlderAddon:Enable()
-    else
-        TalcVoteFrameWhoAnnounceOlderAddon:SetText('Older Versions')
-        TalcVoteFrameWhoAnnounceOlderAddon:Disable()
-    end
-end
-
-function TalcFrame:PurgeLootHistory()
-    db['VOTE_LOOT_HISTORY'] = {}
-    talc_print('Loot History cleared.')
 end
