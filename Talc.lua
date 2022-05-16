@@ -415,12 +415,7 @@ SlashCmdList["TALC"] = function(cmd)
             return
         end
         if cmd == 'who' then
-            TalcFrame:RefreshWho()
-            return
-        end
-        if cmd == 'clearhistory' then
-            db['VOTE_LOOT_HISTORY'] = {}
-            talc_print('Loot History cleared.')
+            TalcFrame:queryWho()
             return
         end
         if core.sub(cmd, 1, 6) == 'search' then
@@ -501,7 +496,6 @@ SlashCmdList["TALC"] = function(cmd)
         end
 
         if core.find(cmd, 'need resetscale') then
-
             TalcNeedFrame:SetScale(1)
             TalcNeedFrame:ClearAllPoints()
             TalcNeedFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 100)
@@ -509,7 +503,7 @@ SlashCmdList["TALC"] = function(cmd)
             db['NEED_SCALE'] = 1
             return
         end
-        if core.find(cmd, 'need who') then
+        if cmd == 'who' then
 
             if not UnitInRaid('player') then
                 talc_print('You are not in a raid.')
@@ -519,94 +513,5 @@ SlashCmdList["TALC"] = function(cmd)
             NeedFrame:queryWho()
             return
         end
-        if core.find(cmd, 'need') then
-            NeedFrame:ShowAnchor()
-            return
-        end
-
-        if core.find(cmd, 'winsound') then
-            local soundSplit = core.split(' ', cmd)
-            if soundSplit[2] and (soundSplit[2] == 'high' or soundSplit[2] == 'low') then
-                db['WIN_VOLUME'] = soundSplit[2]
-                talc_print('Win Sound Volume set to |cfffff569' .. db['WIN_VOLUME'])
-                return true
-            end
-
-            db['WIN_ENABLE_SOUND'] = not db['WIN_ENABLE_SOUND']
-
-            if db['WIN_ENABLE_SOUND'] then
-                talc_print('Win Sound Enabled')
-            else
-                talc_print('Win Sound Disabled')
-            end
-        end
-        if core.find(cmd, 'win') then
-            local winSplit = core.split(' ', cmd)
-            if winSplit[2] and core.int(winSplit[2]) then
-                local newT = core.int(winSplit[2])
-                if newT >= 0 and newT <= 5 then
-                    db['WIN_THRESHOLD'] = newT
-                    local text = ''
-                    local qualities = {
-                        [0] = 'Poor',
-                        [1] = 'Common',
-                        [2] = 'Uncommon',
-                        [3] = 'Rare',
-                        [4] = 'Epic',
-                        [5] = 'Legendary'
-                    }
-                    for i = newT, 5 do
-                        local _, _, _, color = GetItemQualityColor(i)
-                        text = text .. color .. qualities[i] .. ' '
-                    end
-                    talc_print('[WIN] Loot threshold changed to ' .. db['WIN_THRESHOLD'] .. ', ' .. text)
-                else
-                    talc_print('[WIN] Accepted range is |cfffff5690-5')
-                end
-            else
-                WinFrame.animFrame:showAnchor()
-            end
-            return
-        end
-        if core.find(cmd, 'trombone') then
-            db['ROLL_TROMBONE'] = not db['ROLL_TROMBONE']
-            if db['ROLL_TROMBONE'] then
-                talc_print('Sad Trombone Sound is Enabled. Type |cfffff569/talc |cff69ccf0trombone |cffffffffto toggle sad trombone sound on or off.')
-            else
-                talc_print('Sad Trombone Sound is Disabled. Type |cfffff569/talc |cff69ccf0trombone |cffffffffto toggle sad trombone sound on or off.')
-            end
-        end
-
-        if core.find(cmd, 'rollsound') then
-            local cmdEx = core.split(' ', cmd)
-            if cmdEx[2] == 'high' or cmdEx[2] == 'low' then
-                db['ROLL_VOLUME'] = cmdEx[2]
-                talc_print('Roll Sound Volume set to |cfffff569' .. db['ROLL_VOLUME'])
-                return true
-            end
-            db['ROLL_ENABLE_SOUND'] = not db['ROLL_ENABLE_SOUND']
-            if db['ROLL_ENABLE_SOUND'] then
-                talc_print('Roll Sound Enabled')
-            else
-                talc_print('Roll Sound Disabled')
-            end
-            return
-        end
-
-        if cmd == 'roll' then
-            RollFrame:showAnchor()
-            return
-        end
-
-        if cmd == 'boss' then
-            db['BOSS_FRAME'] = not db['BOSS_FRAME']
-            if db['BOSS_FRAME'] then
-                talc_print('BossFrame Enabled. Type |cfffff569/talc |cff69ccf0boss |rto toggle boss frame.')
-            else
-                talc_print('BossFrame Disabled. Type |cfffff569/talc |cff69ccf0boss |rto toggle boss frame.')
-            end
-            return
-        end
-
     end
 end
