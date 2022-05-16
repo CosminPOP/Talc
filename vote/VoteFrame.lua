@@ -385,9 +385,16 @@ end
 
 function TalcFrame:Resizing()
     --TalcVoteFrame:SetAlpha(0.8)
+    TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
+    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMLEFT', TalcVoteFrame, "BOTTOMLEFT", 4, 4)
+    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 28)
 end
 
+
 function TalcFrame:Resized()
+
+    TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
+    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 4)
 
     local ratio = TalcVoteFrame:GetWidth() / 600;
     TalcVoteFrameNameLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(8 * ratio), -92)
@@ -629,15 +636,15 @@ function TalcFrame:addVotedItem(index, texture, link)
     self.selectedPlayer[index] = ''
 
     if not self.VotedItemsFrames[index] then
-        self.VotedItemsFrames[index] = CreateFrame("Button", "VotedItem" .. index,
-                TalcVoteFrameVotedItemsFrame, "Talc_VotedItemButtonTemplate")
+        self.VotedItemsFrames[index] = CreateFrame("Frame", "VotedItem" .. index,
+                TalcVoteFrameVotedItemsFrame, "Talc_VotedItemTemplate")
     end
 
     local frame = 'VotedItem' .. index
 
     TalcVoteFrameVotedItemsFrame:SetHeight(40 * index + 35)
 
-    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemsFrame, "TOPLEFT", 8, 30 - (40 * index))
+    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemsFrame, "TOPLEFT", 5, 35 - (45 * index))
 
     _G[frame]:Show()
     _G[frame].link = link
@@ -646,18 +653,18 @@ function TalcFrame:addVotedItem(index, texture, link)
     _G[frame].rolled = false
     _G[frame].pickedByEveryone = false
 
-    core.addButtonOnEnterTooltip(_G[frame], link)
+    core.addButtonOnEnterTooltip(_G[frame .. 'Button'], link)
 
-    _G[frame]:SetID(index)
-    _G[frame]:SetNormalTexture(texture)
-    _G[frame]:SetPushedTexture(texture)
-    _G[frame]:SetHighlightTexture(texture)
+    _G[frame .. 'Button']:SetID(index)
+    _G[frame .. 'Button']:SetNormalTexture(texture)
+    _G[frame .. 'Button']:SetPushedTexture(texture)
+    _G[frame .. 'Button']:SetHighlightTexture(texture)
 
-    _G[frame .. 'Check']:Hide()
-    _G[frame]:SetHighlightTexture(texture)
+    _G[frame .. 'ButtonCheck']:Hide()
+    _G[frame .. 'Button']:SetHighlightTexture(texture)
 
     if index ~= 1 then
-        SetDesaturation(_G[frame]:GetNormalTexture(), 1)
+        SetDesaturation(_G[frame .. 'Button']:GetNormalTexture(), 1)
     end
 
     if not self.CurrentVotedItem then
@@ -675,10 +682,10 @@ function TalcFrame:VotedItemButton(id)
         TalcVoteFrameWinnerStatus:Show()
     end
 
-    SetDesaturation(_G['VotedItem' .. id]:GetNormalTexture(), 0)
+    SetDesaturation(_G['VotedItem' .. id .. 'Button']:GetNormalTexture(), 0)
     for index, _ in next, self.VotedItemsFrames do
         if index ~= id then
-            SetDesaturation(_G['VotedItem' .. index]:GetNormalTexture(), 1)
+            SetDesaturation(_G['VotedItem' .. index .. 'Button']:GetNormalTexture(), 1)
         end
     end
     self:SetCurrentVotedItem(id)
@@ -691,6 +698,14 @@ function TalcFrame:SetCurrentVotedItem(id)
     TalcVoteFrameCurrentVotedItemButton:Show()
     TalcVoteFrameVotedItemName:Show()
     TalcVoteFrameVotedItemType:Show()
+
+    for index, frame in next, self.VotedItemsFrames do
+        if index == id then
+            _G[frame:GetName() .. 'Backdrop']:Show()
+        else
+            _G[frame:GetName() .. 'Backdrop']:Hide()
+        end
+    end
 
     TalcVoteFrameCurrentVotedItemButton:SetNormalTexture(self.VotedItemsFrames[id].texture)
     TalcVoteFrameCurrentVotedItemButton:SetPushedTexture(self.VotedItemsFrames[id].texture)
@@ -1349,9 +1364,9 @@ end
 
 function TalcFrame:updateVotedItemsFrames()
     for index, _ in next, self.VotedItemsFrames do
-        _G['VotedItem' .. index .. 'Check']:Hide()
+        _G['VotedItem' .. index .. 'ButtonCheck']:Hide()
         if self.VotedItemsFrames[index].awardedTo ~= '' then
-            _G['VotedItem' .. index .. 'Check']:Show()
+            _G['VotedItem' .. index .. 'ButtonCheck']:Show()
         end
     end
 

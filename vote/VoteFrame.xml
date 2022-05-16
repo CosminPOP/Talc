@@ -89,7 +89,6 @@
 
     <Button name="Talc_WelcomeItemTemplate" virtual="true" inherits="Talc_ButtonTemplate">
         <NormalTexture inherits=""/>
-<!--        <HighlightTexture />-->
         <PushedTexture inherits=""/>
         <Size x="164" y="36"/>
         <Anchors>
@@ -150,7 +149,6 @@
 
     <Button name="Talc_WelcomePlayerTemplate" virtual="true" inherits="Talc_ButtonTemplate">
         <NormalTexture inherits=""/>
-        <!--        <HighlightTexture />-->
         <PushedTexture inherits=""/>
         <Size x="280" y="24"/>
         <Anchors>
@@ -214,57 +212,15 @@
         </Scripts>
     </Button>
 
-    <Button name="Talc_VotedItemButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
-        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-            <Size>
-                <AbsDimension x="38" y="38"/>
-            </Size>
-            <Anchors>
-                <Anchor point="CENTER">
-                    <Offset>
-                        <AbsDimension x="0" y="0"/>
-                    </Offset>
-                </Anchor>
-            </Anchors>
-        </NormalTexture>
-        <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
-                       alphaMode="ADD">
-            <Size>
-                <AbsDimension x="35" y="35"/>
-            </Size>
-            <Anchors>
-                <Anchor point="CENTER">
-                    <Offset>
-                        <AbsDimension x="0" y="0"/>
-                    </Offset>
-                </Anchor>
-            </Anchors>
-        </PushedTexture>
-        <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
-            <Size>
-                <AbsDimension x="35" y="35"/>
-            </Size>
-            <Anchors>
-                <Anchor point="CENTER">
-                    <Offset>
-                        <AbsDimension x="0" y="0"/>
-                    </Offset>
-                </Anchor>
-            </Anchors>
-        </HighlightTexture>
-        <Size x="38" y="38"/>
-        <Anchors>
-            <Anchor point="TOPLEFT">
-                <Offset>
-                    <AbsDimension x="0" y="0"/>
-                </Offset>
-            </Anchor>
-        </Anchors>
-        <Layers>
-            <Layer level="OVERLAY">
-                <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+    <Frame name="Talc_VotedItemTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="44" y="44"/>
+        </Size>
+        <Frames>
+            <Button name="$parentButton" inherits="UIPanelButtonTemplate">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
                     <Size>
-                        <AbsDimension x="32" y="32"/>
+                        <AbsDimension x="38" y="38"/>
                     </Size>
                     <Anchors>
                         <Anchor point="CENTER">
@@ -273,15 +229,82 @@
                             </Offset>
                         </Anchor>
                     </Anchors>
-                </Texture>
-            </Layer>
-        </Layers>
-        <Scripts>
-            <OnClick>
-                TalcFrame:VotedItemButton(this:GetID())
-            </OnClick>
-        </Scripts>
-    </Button>
+                </NormalTexture>
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
+                               alphaMode="ADD">
+                    <Size>
+                        <AbsDimension x="35" y="35"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="35" y="35"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <Size x="38" y="38"/>
+                <Anchors>
+                    <Anchor point="CENTER">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentCheck" file="Interface\addons\Talc\images\green-check" hidden="true">
+                            <Size>
+                                <AbsDimension x="32" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:VotedItemButton(this:GetID())
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Frame name="$parentBackdrop" framestrata="HIGH" hidden="true">
+                <Size x="44" y="44"/>
+                <Anchors>
+                    <Anchor point="CENTER">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop edgeFile="Interface\addons\Talc\images\border-maw" tile="false">
+                    <EdgeSize>
+                        <AbsValue val="16"/>
+                    </EdgeSize>
+                    <TileSize>
+                        <AbsValue val="1"/>
+                    </TileSize>
+                </Backdrop>
+            </Frame>
+        </Frames>
+    </Frame>
 
     <Frame name="Talc_CLFrameTemplate" virtual="true" enableMouse="true">
         <Size>
@@ -1049,9 +1072,7 @@
                     </Anchors>
                 </Texture>
 
-                <!--                <Texture name="$parentTimeLeftBarBG" file="Interface\DialogFrame\UI-DialogBox-Background">-->
                 <Texture name="$parentTimeLeftBarBG" file="Interface\addons\Talc\images\grad2">
-                    <!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
                     <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
                     <Size>
                         <AbsDimension x="180" y="24"/>
@@ -3084,7 +3105,6 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-
 
 
                     <Button name="$parentPurgeLootHistory" inherits="Talc_ButtonTemplate" text="Purge Loot History">
