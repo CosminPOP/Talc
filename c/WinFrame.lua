@@ -41,27 +41,7 @@ function WinFrame:init()
 
     self.animFrame:hideAnchor()
 
-    local text = ''
-    local qualities = {
-        [0] = 'Poor',
-        [1] = 'Common',
-        [2] = 'Uncommon',
-        [3] = 'Rare',
-        [4] = 'Epic',
-        [5] = 'Legendary'
-    }
-    for i = db['WIN_THRESHOLD'], 5 do
-        local _, _, _, color = GetItemQualityColor(i)
-        text = text .. color .. qualities[i] .. ' '
-    end
-    talc_print('TALC WinFrame (v' .. core.addonVer .. ') Loaded. Type |cfffff569/talc |cff69ccf0win |rto show the Anchor window.')
-    talc_print('Type |cfffff569/talc |cff69ccf0win <0-5> |ro change loot window threshold '
-            .. '( current threshhold set at ' .. db['WIN_THRESHOLD'] .. ' : ' .. text .. '|r).')
-    if db['WIN_ENABLE_SOUND'] then
-        talc_print('Win Sound is Enabled(' .. db['WIN_VOLUME'] .. '). Type |cfffff569/talc |cff69ccf0win|cfffff569sound |rto toggle win sound on or off.')
-    else
-        talc_print('Win Sound is Disabled. Type |cfffff569/alc |cff69ccf0win|cfffff569sound |rto toggle win sound on or off.')
-    end
+    talc_print('WinFrame Loaded. Type |cfffff569/talc |cff69ccf0win |rto show the Anchor window.')
 end
 
 function WinFrame:startItemAnimation()
