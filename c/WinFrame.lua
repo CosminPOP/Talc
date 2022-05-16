@@ -71,7 +71,7 @@ function WinFrame:addWonItem(linkString, winText)
         return false
     end
 
-    if quality < db['WIN_THRESHOLD'] then
+    if  not core.find(db['WIN_THRESHOLD'], quality, 1, true) then
         return false
     end
 
