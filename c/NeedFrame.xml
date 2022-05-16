@@ -18,12 +18,6 @@
     <GameTooltip name="NewItemTooltip14" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
     <GameTooltip name="NewItemTooltip15" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
 
-    <Font name="Mono" font="Interface\addons\Talc\fonts\RobotoMono.ttf" virtual="true">
-        <FontHeight>
-            <AbsValue val="10"/>
-        </FontHeight>
-    </Font>
-
     <Frame name="TalcNeedFrameItemTemplate" virtual="true" enableMouse="true">
         <Size>
             <AbsDimension x="512" y="128"/>
@@ -731,9 +725,9 @@
                 </Backdrop>
             </Frame>
 
-            <Button name="$parentTestPlacement" inherits="UIPanelButtonTemplate2" text="Test 7 items">
+            <Button name="$parentTestPlacement" inherits="Talc_ButtonTemplate" text="Test 7 items">
                 <Size>
-                    <AbsDimension x="85" y="30"/>
+                    <AbsDimension x="85" y="20"/>
                 </Size>
                 <Anchors>
                     <Anchor point="LEFT">
@@ -744,13 +738,13 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Talc_NeedFrame_Test()
+                        NeedFrame:Test()
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentClosePlacement" inherits="UIPanelButtonTemplate2" text="Close Anchor">
+            <Button name="$parentClosePlacement" inherits="Talc_ButtonTemplate" text="Close Anchor">
                 <Size>
-                    <AbsDimension x="90" y="30"/>
+                    <AbsDimension x="90" y="20"/>
                 </Size>
                 <Anchors>
                     <Anchor point="RIGHT">
@@ -761,11 +755,11 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame:Close()
+                        NeedFrame:hideAnchor()
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentScaleDown" inherits="UIPanelButtonTemplate2" text="-">
+            <Button name="$parentScaleDown" inherits="Talc_ButtonTemplate" text="-">
                 <Size>
                     <AbsDimension x="24" y="16"/>
                 </Size>
@@ -782,7 +776,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentScaleUp" inherits="UIPanelButtonTemplate2" text="+">
+            <Button name="$parentScaleUp" inherits="Talc_ButtonTemplate" text="+">
                 <Size>
                     <AbsDimension x="24" y="16"/>
                 </Size>

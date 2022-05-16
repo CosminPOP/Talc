@@ -1,7 +1,6 @@
 local db, core, tokenRewards
 local _G = _G
 NeedFrame = CreateFrame("Frame")
-
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
 NeedFrame.execs = 0
@@ -29,14 +28,10 @@ function NeedFrame:cacheItem(data)
     _G['NewItemTooltip' .. index]:SetHyperlink(itemLink)
     _G['NewItemTooltip' .. index]:Show()
 
-    local name, _, quality = GetItemInfo(itemLink)
+    GetItemInfo(itemLink) -- should cache it here
+    _G['NewItemTooltip' .. index]:SetHyperlink(itemLink) -- or here
+    _G['NewItemTooltip' .. index]:Hide()
 
-    if not name or not quality then
-        talc_debug('item ' .. data .. ' not cached yet ')
-        return false
-    else
-        talc_debug('item ' .. data .. ' cached')
-    end
 end
 
 function NeedFrame:addItem(data)
@@ -310,7 +305,7 @@ function NeedFrame:fadeOutFrame(id, need)
     self.fadeOutAnimationFrame:Show()
 end
 
-function NeedFrame:ShowAnchor()
+function NeedFrame:showAnchor()
     TalcNeedFrame:Show()
     TalcNeedFrame:EnableMouse(true)
     TalcNeedFrameTitle:Show()
@@ -322,7 +317,7 @@ function NeedFrame:ShowAnchor()
     TalcNeedFrameScaleText:Show()
 end
 
-function NeedFrame:HideAnchor()
+function NeedFrame:hideAnchor()
     TalcNeedFrame:Hide()
     TalcNeedFrame:EnableMouse(false)
     TalcNeedFrameTitle:Hide()
@@ -336,27 +331,15 @@ end
 
 function NeedFrame:ResetVars()
 
-    self:HideAnchor()
+    self:hideAnchor()
 
     for index, _ in next, self.itemFrames do
         self.itemFrames[index]:Hide()
     end
 
-    NewItemTooltip1:Hide()
-    NewItemTooltip2:Hide()
-    NewItemTooltip3:Hide()
-    NewItemTooltip4:Hide()
-    NewItemTooltip5:Hide()
-    NewItemTooltip6:Hide()
-    NewItemTooltip7:Hide()
-    NewItemTooltip8:Hide()
-    NewItemTooltip9:Hide()
-    NewItemTooltip10:Hide()
-    NewItemTooltip11:Hide()
-    NewItemTooltip12:Hide()
-    NewItemTooltip13:Hide()
-    NewItemTooltip14:Hide()
-    NewItemTooltip15:Hide()
+    for i = 1, 15 do
+        _G['NewItemTooltip' .. i]:Hide()
+    end
 
     TalcNeedFrame:Hide()
 
@@ -426,11 +409,6 @@ function NeedFrame:ScaleWindow(dir)
     db['NEED_SCALE'] = TalcNeedFrame:GetScale()
 
     talc_print('Frame re-scaled. Type |cfffff569/talc |cff69ccf0need resetscale |rif the frame is offscreen')
-end
-
-function NeedFrame:Close()
-    talc_print('Anchor window closed. Type |cfffff569/talc |cff69ccf0need |rto show the Anchor window.')
-    self:HideAnchor()
 end
 
 function NeedFrame:SetQuestRewardLink(id, frame)
@@ -548,6 +526,36 @@ function NeedFrame:NeedClick(id, need)
     self:fadeOutFrame(id, need)
 end
 
+function NeedFrame:Test()
+
+    local linkStrings = {
+        '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
+        '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
+        '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
+        '\124cffa335ee\124Hitem:21221:0:0:0:0:0:0:0:0\124h[Eye of C\'Thun]\124h\124r',
+        '\124cffa335ee\124Hitem:40611:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Protector]\124h\124r',
+        '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
+        '\124cffff8000\124Hitem:17204:0:0:0:0:0:0:0:0\124h[Eye of Sulfuras]\124h\124r'
+    }
+
+    for i = 1, 7 do
+        local _, _, itemLink = core.find(linkStrings[i], "(item:%d+:%d+:%d+:%d+)");
+        local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+
+        if name and tex then
+            self:addItem('loot=-' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
+            if not TalcNeedFrame:IsVisible() then
+                TalcNeedFrame:Show()
+                self.countdown:Show()
+            end
+        else
+            talc_print('Caching items... please try again.')
+            GameTooltip:SetHyperlink(itemLink)
+            GameTooltip:Hide()
+        end
+    end
+end
+
 NeedFrame.countdown = CreateFrame("Frame")
 NeedFrame.countdown:Hide()
 NeedFrame.countdown.timeToNeed = 30 --default, will be gotten via addonMessage
@@ -562,7 +570,7 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        if this.countdown.T ~= this.timeToNeed + plus then
+        if this.T ~= this.timeToNeed + plus then
 
             for index in next, NeedFrame.itemFrames do
                 if core.floor(this.C - this.T + plus) < 0 then
@@ -574,11 +582,11 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
                 _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 190 / this.timeToNeed)
             end
         end
-        self:Hide()
+        this:Hide()
         if this.T < this.C + plus then
             --still tick
             this.T = this.T + plus
-            self:Show()
+            this:Show()
         elseif this.T > this.timeToNeed + plus then
 
             -- hide frames and send auto pass
@@ -589,12 +597,13 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
             end
             -- end hide frames
 
-            self:Hide()
+            this:Hide()
             this.T = 1
 
         end
     end
 end)
+
 
 NeedFrame.fadeInAnimationFrame = CreateFrame("Frame")
 NeedFrame.fadeInAnimationFrame:Hide()
@@ -624,7 +633,7 @@ NeedFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
             end
         end
         if not atLeastOne then
-            self:Hide()
+            this:Hide()
         end
     end
 end)
@@ -657,10 +666,11 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
             end
         end
         if not atLeastOne then
-            self:Hide()
+            this:Hide()
         end
     end
 end)
+
 
 NeedFrame.delayAddItem = CreateFrame("Frame")
 NeedFrame.delayAddItem:Hide()
@@ -686,42 +696,9 @@ NeedFrame.delayAddItem:SetScript("OnUpdate", function()
         end
 
         if not atLeastOne then
-            self:Hide()
+            this:Hide()
         end
     end
 end)
 
-
-
-
-function Talc_NeedFrame_Test()
-
-
-    local linkStrings = {
-        '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
-        '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
-        '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
-        '\124cffa335ee\124Hitem:21221:0:0:0:0:0:0:0:0\124h[Eye of C\'Thun]\124h\124r',
-        '\124cffa335ee\124Hitem:40611:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Protector]\124h\124r',
-        '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
-        '\124cffff8000\124Hitem:17204:0:0:0:0:0:0:0:0\124h[Eye of Sulfuras]\124h\124r'
-    }
-
-    for i = 1, 7 do
-        local _, _, itemLink = core.find(linkStrings[i], "(item:%d+:%d+:%d+:%d+)");
-        local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
-
-        if name and tex then
-            NeedFrame:addItem('loot=-' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60') --todo add button options
-            if not TalcNeedFrame:IsVisible() then
-                TalcNeedFrame:Show()
-                NeedFrame.countdown:Show()
-            end
-        else
-            talc_print('Caching items... please try again.')
-            GameTooltip:SetHyperlink(itemLink)
-            GameTooltip:Hide()
-        end
-    end
-end
 
