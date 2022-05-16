@@ -1756,7 +1756,7 @@
                         </Scripts>
                     </Button>
 
-                    <Button name="TestNeedFrameButton" framstrata="HIGH" inherits="Talc_ButtonTemplate"
+                    <Button name="$parentTestItems" framstrata="HIGH" inherits="Talc_ButtonTemplate"
                             text="Test Need">
                         <Size>
                             <AbsDimension x="180" y="20"/>
@@ -1770,7 +1770,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TestNeedButton_OnClick()
+                                TalcFrame:SendTestItems()
                             </OnClick>
                         </Scripts>
                     </Button>
