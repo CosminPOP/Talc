@@ -8,13 +8,6 @@ function BossFrame:init()
     db = TALC_DB
 
     TalcBossFrame:Hide()
-
-    if db['BOSS_FRAME'] then
-        talc_print('BossFrame Loaded and Enabled. Type |cfffff569/talc |cff69ccf0boss |rto toggle boss frame.')
-    else
-        talc_print('BossFrame Loaded and Disabled. Type |cfffff569/talc |cff69ccf0boss |rto toggle boss frame.')
-    end
-
 end
 
 BossFrame.Bosses = {
