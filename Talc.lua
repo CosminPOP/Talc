@@ -102,8 +102,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if db['VOTE_CONFIG'] == nil then
                 db['VOTE_CONFIG'] = {
-                    ['AutoML'] = false,
-                    ['AutoMLItems'] = {},
                     ['NeedButtons'] = {
                         ['BIS'] = false,
                         ['MS'] = true,
