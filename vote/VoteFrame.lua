@@ -35,7 +35,6 @@ TalcFrame.doneVoting = {} --self / item
 TalcFrame.clDoneVotingItem = {}
 TalcFrame.CLVoted = {}
 
-TalcFrame.itemsToPreSend = {}
 TalcFrame.sentReset = false
 
 TalcFrame.numItems = 0
@@ -97,8 +96,6 @@ function TalcFrame:ResetVars()
 
     self.doneVoting = {}
     self.clDoneVotingItem = {}
-
-    self.itemsToPreSend = {}
 
     self.numItems = 0
     self.assistTriggers = 0
@@ -755,14 +752,22 @@ function TalcFrame:SetCurrentVotedItem(id)
 
     if core.find(votedItemType, 'Junk', 1, true) then
         votedItemType = 'Token'
-        for tokenId, tokenData in next, tokenRewards do
-            if itemID == tokenId and tokenData.rewards then
-                votedItemType = votedItemType .. " for " .. tokenData.classes
-                local _, _, qq, il = GetItemInfo(tokenData.rewards[1])
-                iLevel = il
-                q = qq
-                break
+
+        if tokenRewards[itemID].rewards then
+            GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+            GameTooltip:SetHyperlink(itemLink)
+            for i = 1, 20 do
+                if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
+                    if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
+                        votedItemType = votedItemType .. " for " .. core.gsub(_G["GameTooltipTextLeft" .. i]:GetText(), 'Classes: ', '')
+                        local _, _, qq, il = GetItemInfo(tokenRewards[itemID].rewards[1])
+                        iLevel = il
+                        q = qq
+                        break
+                    end
+                end
             end
+            GameTooltip:Hide()
         end
     end
 
@@ -1634,13 +1639,21 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'preloadInVoteFrame=', 1, true) then
 
-        if not core.isRL(sender) then
+        local item = core.split("=", t)
+
+        local index = core.int(item[2])
+        local texture = item[3]
+        local link = item[5]
+
+        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local itemID = core.split(':', itemLink)
+        core.cacheItem(core.int(itemID[2]))
+
+        if not core.isRL(sender) or not core.canVote() then
             return
         end
 
-        local item = core.split("=", t)
-
-        if not item[2] or not item[3] or not item[4] or not item[5] then
+        if  not item[5] then
             talc_error('bad loot syntax')
             talc_error(t)
             return
@@ -1654,9 +1667,6 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         self.numItems = self.numItems + 1
 
-        local index = core.int(item[2])
-        local texture = item[3]
-        local link = item[5]
         self:addVotedItem(index, texture, link)
 
         self:HideWelcomeScreen()

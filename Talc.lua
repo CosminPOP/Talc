@@ -4,7 +4,6 @@ TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
 TALC.me = UnitName('player')
 
--- todo check if classes are needed in tokens.lua
 -- todo fix player details loot history
 -- todo fix scrollbars texture
 -- todo remove fonts, they exist in the game
