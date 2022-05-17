@@ -139,16 +139,16 @@ WinFrame.delayAddWonItem:SetScript("OnUpdate", function()
     if gt >= st then
 
         local atLeastOne = false
-        for id, data in next, self.delayAddWonItem.data do
-            if self.delayAddWonItem.data[id] then
+        for id, data in next, this.delayAddWonItem.data do
+            if this.delayAddWonItem.data[id] then
                 atLeastOne = true
-                self.addWonItem(id, data)
-                self.delayAddWonItem.data[id] = nil
+                WinFrame:addWonItem(id, data)
+                this.delayAddWonItem.data[id] = nil
             end
         end
 
         if not atLeastOne then
-            self.delayAddWonItem:Hide()
+            this.delayAddWonItem:Hide()
         end
     end
 end)

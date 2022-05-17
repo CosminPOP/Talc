@@ -24,8 +24,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentItemName" inherits="GameFontNormalLarge" justifyH="LEFT"
-                            text="|cffa335eeChromatically Tempered Sword">
+                <FontString name="$parentItemName" inherits="GameFontNormalLarge" justifyH="LEFT" text="">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
