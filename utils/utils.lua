@@ -228,7 +228,7 @@ function Talc_Utils:init()
             end
 
             frame:SetScript("OnEnter", function(self)
-                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", 0, -(this:GetHeight() / 4));
                 GameTooltip:SetHyperlink(core.sub(ex[3], 2, core.len(ex[3])));
 
                 if custom and custom == 'playerHistory' then
@@ -254,7 +254,7 @@ function Talc_Utils:init()
             end
         else
             frame:SetScript("OnEnter", function(self)
-                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", (this:GetWidth() ), -(this:GetHeight() / 4));
                 GameTooltip:SetHyperlink(itemLink);
                 GameTooltip:Show();
             end)
