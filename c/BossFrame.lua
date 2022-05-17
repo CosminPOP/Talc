@@ -110,7 +110,7 @@ BossFrame.Bosses = {
     'Magistrate Barthilas', 'Ramstein the Gorger', 'Nerub\'enkan', 'Maleki the Pallid', 'Baroness Anastari', 'Baron Rivendare', 'Stonespire',
 
 
-    --    Zul'Gurub
+    --Zul'Gurub
     'High Priestess Jeklik', 'High Priest Venoxis', 'High Priestess Mar\'li', 'High Priest Thekal',
     'High Priestess Arlokk', 'Bloodlord Mandokir', 'Jin\'do the Hexxer', 'Gahz\'ranka', 'Gri\'lek',
     'Hazza\'rah', 'Renataki', 'Wushoolay', 'Hakkar the Soulflayer',
@@ -137,16 +137,66 @@ BossFrame.Bosses = {
     'Anub\'Rekhan', 'Grand Widow Faerlina', 'Maexxna',
     'Noth the Plaguebringer', 'Heigan the Unclean', 'Loatheb',
     'Instructor Razuvious', 'Gothik the Harvester',
-    'Highlord Mograine', 'Thane Korth\'azz', 'Lady Blaumeux', 'Sir Zeliek',
+    'Thane Korth\'azz', 'Lady Blaumeux', 'Sir Zeliek',
     'Patchwerk', 'Grobbulus', 'Gluth', 'Thaddius',
     'Sapphiron', 'Kel\'Thuzad',
 
     --WORLD BOSSES
     'Azuregos', 'Lord Kazzak', 'Teremus the Devourer',
     'Emeriss', 'Lethon', 'Taerar', 'Ysondre',
-    'Nerubian Overseer',
-    'Turtlhu, the Black Turtle of Doom',
-    'Snowball', 'Dark Reaver of Karazhan'
+
+
+
+    -- WOTLK
+
+    --Utgarde Keep
+    'Prince Keleseth', 'Skarvald the Constructor', 'Dalronn the Controller', 'Ingvar the Plunderer',
+
+    --The Nexus
+    'Commander Kolurg', 'Commander Stoutbeard', 'Grand Magus Telestra',  'Anomalus', 'Ormorok the Tree-Shaper', 'Keristasza',
+
+    --Ajzol-Nerub
+    'Krik\'thir the Gatewatcher', 'Hadronox', 'Anub\'arak',
+
+    --Ahn’Kahet:The Old Kingdom
+    'Elder Nadox', 'Prince Taldaram', 'Amanitar', 'Jedoga Shadowseeker', 'Herald Volazj',
+
+    --Drak’Tharon Keep
+    'Trollgore', 'Novos the Summoner', 'King Dred', 'The Prophet Tharon\'ja',
+
+    --The Violet Hold
+    'Erekem', 'Moragg', 'Ichoron', 'Xevozz', 'Lavanthor', 'Zuramat the Obliterator', 'Cyanigosa',
+
+    --Gundrak
+    'Slad\'Ran', 'Drakkari Colossus', 'Moorabi', 'Eck the Ferocious', 'Gal\' Darah',
+
+    --Halls of Stone
+    'Maiden of Grief', 'Krystallus', 'Sjonnir the Ironshapper',
+
+    --Halls of Lightning
+    'General Bjarngrim', 'Volkhan', 'Ionar', 'Loken',
+
+    --The Culling of Stratholme
+    'Meathook', 'Salramm the Fleshcrafter', 'Chrono-Lord Epoch', 'Mal\'Ganis',
+
+    --The Oculus
+    'Drakos the Interrogator', 'Varos Cloudstrider', 'Mage-Lord Urom', 'Ley-Guardian Eregos',
+
+    --Utgarde Pinnacle
+    'Svala Sorrowgrave', 'Gortok Palehoof', 'Skadi the Ruthless', 'King Ymiron',
+
+    --Forge of Souls
+    'Bronjahm', 'Devourer of Souls',
+
+    --Pit of Saron
+    'Ick', 'Krick', 'Forgemaster Garfrost', 'ScourgeLord Tyrannus',
+
+    --Halls of Reflection
+    'Falric', 'Marwyn',
+
+    --Trial of the Champion
+    'Eadric the Pure', 'Argent Confessor Paletress', 'The Black Knight',
+
 };
 
 BossFrame.animation = CreateFrame("Frame")
