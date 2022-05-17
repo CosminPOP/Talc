@@ -1052,7 +1052,7 @@
                     <Color r="0.24" g="0.45" b="0.84"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                            <Offset x="2" y="-5"/>
+                            <Offset x="2" y="-4"/>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
                             <Offset x="-2" y="-25"/>
@@ -3148,7 +3148,7 @@
 
             <Frame name="$parentRaiderDetailsFrame" hidden="true">
                 <Size>
-                    <AbsDimension x="225" y="335"/>
+                    <AbsDimension x="225" y="340"/>
                 </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
@@ -3157,7 +3157,7 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
                           edgeFile="Interface\addons\Talc\images\border-maw"
                           tile="false">
                     <EdgeSize>
@@ -3171,6 +3171,31 @@
                     </BackgroundInsets>
                 </Backdrop>
                 <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\grad1">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                                    <Offset x="2" y="-4"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="-2" y="-24"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentBG1" file="Interface\addons\Talc\images\grad2" tile="true">
+                            <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                                    <Offset x="2" y="-24"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                                    <Offset x="-2" y="4"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+
+                    </Layer>
                     <Layer level="OVERLAY">
                         <FontString name="$parentTitle" inherits="GameFontHighlight" text="Raiders details">
                             <Anchors>
@@ -3184,23 +3209,6 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Frame name="$parentTitleBackground" hidden="false" framestrata="BACKGROUND">
-                        <Size>
-                            <AbsDimension x="218" y="22"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOP">
-                                <Offset>
-                                    <AbsDimension x="0" y="-3"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Backdrop bgFile="Interface\addons\Talc\images\grad1"
-                                  tile="false">
-                            <Color r="0.24" g="0.45" b="0.84"/>
-                        </Backdrop>
-                    </Frame>
-
                     <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
                         <Size>
                             <AbsDimension x="22" y="22"/>
@@ -3226,7 +3234,7 @@
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="6" y="-30"/>
+                                    <AbsDimension x="6" y="-25"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3243,7 +3251,7 @@
                         <Anchors>
                             <Anchor point="TOPRIGHT">
                                 <Offset>
-                                    <AbsDimension x="-6" y="-30"/>
+                                    <AbsDimension x="-6" y="-25"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3254,7 +3262,6 @@
                         </Scripts>
                     </Button>
 
-
                     <Frame name="$parentInspectGearFrame">
                         <Size>
                             <AbsDimension x="207" y="223"/>
@@ -3262,10 +3269,23 @@
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="8" y="-80"/>
+                                    <AbsDimension x="8" y="-100"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentNameClassGS" inherits="GameFontNormal" text="Er">
+                                    <Anchors>
+                                        <Anchor point="TOP">
+                                            <Offset>
+                                                <AbsDimension x="0" y="45"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
                         <Frames>
                             <PlayerModel name="$parentModelFrame">
                                 <Size>
@@ -3465,15 +3485,14 @@
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="8" y="-80"/>
+                                    <AbsDimension x="8" y="-25"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
                         <Frames>
-                            <ScrollFrame name="$parentScrollFrame" hidden="true"
-                                         inherits="FauxScrollFrameTemplate">
+                            <ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
                                 <Size>
-                                    <AbsDimension x="190" y="235"/>
+                                    <AbsDimension x="190" y="255"/>
                                 </Size>
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
@@ -3484,7 +3503,7 @@
                                 </Anchors>
                                 <Scripts>
                                     <OnVerticalScroll>
-                                        FauxScrollFrame_OnVerticalScroll(22, Talc_LootHistory_Update);
+                                        FauxScrollFrame_OnVerticalScroll(self, offset, 38, Talc_LootHistory_Update);
                                     </OnVerticalScroll>
                                 </Scripts>
                             </ScrollFrame>

@@ -521,6 +521,20 @@ function Talc_Utils:init()
 
     end
 
+    core.clearScrollbarTexture = function(frame)
+        _G[frame:GetName() .. 'ScrollUpButton']:SetNormalTexture(nil)
+        _G[frame:GetName() .. 'ScrollUpButton']:SetDisabledTexture(nil)
+        _G[frame:GetName() .. 'ScrollUpButton']:SetPushedTexture(nil)
+        _G[frame:GetName() .. 'ScrollUpButton']:SetHighlightTexture(nil)
+
+        _G[frame:GetName() .. 'ScrollDownButton']:SetNormalTexture(nil)
+        _G[frame:GetName() .. 'ScrollDownButton']:SetDisabledTexture(nil)
+        _G[frame:GetName() .. 'ScrollDownButton']:SetPushedTexture(nil)
+        _G[frame:GetName() .. 'ScrollDownButton']:SetHighlightTexture(nil)
+
+        _G[frame:GetName() .. 'ThumbTexture']:SetTexture(nil)
+    end
+
 end
 
 function talc_print(a)

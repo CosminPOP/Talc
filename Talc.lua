@@ -4,9 +4,6 @@ TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
 TALC.me = UnitName('player')
 
--- todo fix player details loot history
--- todo fix scrollbars texture
-
 local core, db, tokenRewards
 local init = false
 

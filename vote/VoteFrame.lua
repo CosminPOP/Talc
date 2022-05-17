@@ -147,11 +147,11 @@ function TalcFrame:ResetVars()
     TalcVoteFrameDoneVotingCheck:Hide();
     TalcVoteFrameContestantScrollListFrame:Hide()
 
-    TalcVoteFrameContestantScrollListFrameScrollBar:SetAlpha(0)
-
-    TalcVoteFrameWelcomeItemsScrollFrameScrollBar:SetAlpha(0)
-    TalcVoteFrameWelcomeItemHistoryScrollFrameScrollBar:SetAlpha(0)
-    TalcVoteFrameWelcomePlayerHistoryScrollFrameScrollBar:SetAlpha(0)
+    core.clearScrollbarTexture(TalcVoteFrameContestantScrollListFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomeItemsScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomeItemHistoryScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomePlayerHistoryScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrameScrollBar)
 
     TalcVoteFrameTradableItemsFrame:Hide()
 
@@ -753,7 +753,7 @@ function TalcFrame:SetCurrentVotedItem(id)
     if core.find(votedItemType, 'Junk', 1, true) then
         votedItemType = 'Token'
 
-        if tokenRewards[itemID].rewards then
+        if tokenRewards[itemID] and tokenRewards[itemID].rewards then
             GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
             GameTooltip:SetHyperlink(itemLink)
             for i = 1, 20 do
@@ -1014,67 +1014,6 @@ function TalcFrame:ReceiveDrag()
 
     ClearCursor()
 
-end
-
-function TalcFrame:LootHistoryUpdate()
-    local itemOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame);
-
-    local id = self.HistoryId
-
-    self.selectedPlayer[TalcFrame.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
-
-    local totalItems = 0
-
-    local historyPlayerName = _G['TalcVoteFrameContestantFrame' .. id].name
-    for _, item in next, db['VOTE_LOOT_HISTORY'] do
-        if historyPlayerName == item.player then
-            totalItems = totalItems + 1
-        end
-    end
-
-    for index in next, self.lootHistoryFrames do
-        self.lootHistoryFrames[index]:Hide()
-    end
-
-    if totalItems > 0 then
-
-        local index = 0
-        for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-            if historyPlayerName == item['player'] then
-
-                index = index + 1
-
-                if index > itemOffset and index <= itemOffset + 11 then
-
-                    if not self.lootHistoryFrames[index] then
-                        self.lootHistoryFrames[index] = CreateFrame('Frame', 'HistoryItem' .. index, TalcVoteFrameRaiderDetailsFrame, 'Talc_HistoryItemTemplate')
-                    end
-
-                    self.lootHistoryFrames[index]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrame, "TOPLEFT", 10, -8 - 22 * (index - itemOffset) - 50)
-                    self.lootHistoryFrames[index]:Show()
-
-                    local today = ''
-                    if date("%d/%m") == date("%d/%m", lootTime) then
-                        today = core.classColors['mage'].colorStr
-                    end
-
-                    local _, _, itemLink = core.find(item['item'], "(item:%d+:%d+:%d+:%d+)");
-                    local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
-
-                    _G['HistoryItem' .. index .. 'Date']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", lootTime))
-                    _G['HistoryItem' .. index .. 'Item']:SetNormalTexture(tex)
-                    _G['HistoryItem' .. index .. 'Item']:SetPushedTexture(tex)
-                    core.addButtonOnEnterTooltip(_G['HistoryItem' .. index .. 'Item'], item['item'])
-                    _G['HistoryItem' .. index .. 'ItemName']:SetText(item['item'])
-                end
-            end
-        end
-    end
-
-    TalcVoteFrameRaiderDetailsFrame:Show()
-
-    -- ScrollFrame update
-    FauxScrollFrame_Update(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, totalItems, 11, 22);
 end
 
 function TalcFrame:RaiderDetailsClose()
@@ -2562,6 +2501,12 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         TalcVoteFrameRaiderDetailsFrameTab1:SetText('|rGear')
         TalcVoteFrameRaiderDetailsFrameTab2:SetText('|cff696969Loot History')
 
+        TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
+                core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
+                core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
+                "|rGearscore: 2323"
+        )
+
         TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Show()
         TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Hide()
 
@@ -2577,14 +2522,90 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Hide()
         TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Show()
 
-        for index in next, self.lootHistoryFrames do
-            self.lootHistoryFrames[index]:Hide()
+        for _, frame in next, self.lootHistoryFrames do
+            frame:Hide()
         end
 
         self:LootHistoryUpdate()
     end
 
     TalcVoteFrameRaiderDetailsFrame:Show()
+end
+
+
+function Talc_LootHistory_Update()
+    TalcFrame:LootHistoryUpdate()
+end
+
+function TalcFrame:LootHistoryUpdate()
+
+    local itemOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame);
+
+    local id = self.HistoryId
+
+    self.selectedPlayer[TalcFrame.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
+
+    local totalItems = 0
+
+    local historyPlayerName = _G['TalcVoteFrameContestantFrame' .. id].name
+    for _, item in next, db['VOTE_LOOT_HISTORY'] do
+        if historyPlayerName == item.player then
+            totalItems = totalItems + 1
+        end
+    end
+
+    for index in next, self.lootHistoryFrames do
+        self.lootHistoryFrames[index]:Hide()
+    end
+
+    if totalItems > 0 then
+
+        local index = 0
+        for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+            if historyPlayerName == item['player'] then
+
+                index = index + 1
+
+                if index > itemOffset and index <= itemOffset + 7 then
+
+                    if not self.lootHistoryFrames[index] then
+                        self.lootHistoryFrames[index] = CreateFrame('Button', 'HistoryItem' .. index, TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, 'Talc_WelcomeItemTemplate')
+                    end
+
+                    local frame = 'HistoryItem' .. index
+
+                    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, "TOPLEFT", 5, 37 - 39 * (index - itemOffset) - 30)
+                    _G[frame]:Show()
+                    _G[frame]:SetWidth(190)
+
+                    local today = ''
+                    if date("%d/%m") == date("%d/%m", lootTime) then
+                        today = core.classColors['mage'].colorStr
+                    end
+
+                    local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
+                    local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+
+                    _G[frame .. 'Name']:SetWidth(165)
+                    _G[frame .. 'Name']:SetText(item.item)
+                    _G[frame .. 'PlayerName']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+                    _G[frame .. 'Date']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", lootTime))
+
+                    if not tex then
+                        core.cacheItem(core.int(core.split(':', itemLink)[2]))
+                        return
+                    end
+
+                    _G[frame .. 'Icon']:SetTexture(tex)
+                    core.addButtonOnEnterTooltip(_G[frame], item.item)
+
+                end
+            end
+        end
+    end
+
+    -- ScrollFrame update
+    FauxScrollFrame_Update(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, totalItems, 7, 38);
 end
 
 function TalcFrame:SendTestItems()
@@ -3439,13 +3460,14 @@ function TalcFrame:WelcomePlayerClick(name)
         if not self.playerHistoryFrames[index] then
             self.playerHistoryFrames[index] = CreateFrame('Button', 'PlayerHistoryFrame' .. index, TalcVoteFrameWelcomePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
         end
-        local frame = 'PlayerHistoryFrame' .. index
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
 
+        local frame = 'PlayerHistoryFrame' .. index
+
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
         _G[frame]:SetID(index)
+
         _G[frame .. 'Name']:SetText(item.item)
         _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
-
         _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text .. " " ..
                 (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
 
