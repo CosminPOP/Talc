@@ -135,7 +135,6 @@ function TalcFrame:ResetVars()
 
     TalcVoteFrameCurrentVotedItemButton:Hide()
     TalcVoteFrameVotedItemName:Hide()
-    TalcVoteFrameVotedItemType:Hide()
 
     for i = 1, #self.itemRewardsFrames do
         self.itemRewardsFrames[i]:Hide()
@@ -354,7 +353,6 @@ function TalcFrame:ShowWelcomeItems()
         _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text .. " " ..
                 (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
 
-
         local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
         _G[frame .. 'Icon']:SetTexture(tex)
         core.addButtonOnEnterTooltip(_G[frame], item.item)
@@ -386,7 +384,6 @@ function TalcFrame:Resizing()
     TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMLEFT', TalcVoteFrame, "BOTTOMLEFT", 4, 4)
     TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 28)
 end
-
 
 function TalcFrame:Resized()
 
@@ -694,12 +691,13 @@ function TalcFrame:SetCurrentVotedItem(id)
 
     TalcVoteFrameCurrentVotedItemButton:Show()
     TalcVoteFrameVotedItemName:Show()
-    TalcVoteFrameVotedItemType:Show()
 
     for index, frame in next, self.VotedItemsFrames do
         if index == id then
+            _G[frame:GetName() .. 'Button']:SetSize(44, 44)
             _G[frame:GetName() .. 'Backdrop']:Show()
         else
+            _G[frame:GetName() .. 'Button']:SetSize(38, 38)
             _G[frame:GetName() .. 'Backdrop']:Hide()
         end
     end
@@ -715,43 +713,17 @@ function TalcFrame:SetCurrentVotedItem(id)
     local itemID = core.split(':', itemLink)
     itemID = core.int(itemID[2])
     local _, _, q, iLevel, _, _, t2, _, equip_slot = GetItemInfo(itemLink)
-    local votedItemType = ''
 
-    if t2 then
-        if not core.find(core.lower(t2), 'misc', 1, true)
-                and not core.find(core.lower(t2), 'shields', 1, true) then
-            votedItemType = votedItemType .. t2
+    if core.find(t2, 'Quest', 1, true) then
+            if tokenRewards[itemID] and tokenRewards[itemID].rewards then
+            local _, _, qq, il = GetItemInfo(tokenRewards[itemID].rewards[1])
+            iLevel = il
+            q = qq
         end
     end
 
-    if equip_slot then
-        votedItemType = core.getEquipSlot(equip_slot) .. " " .. votedItemType
-    end
-
-    if core.find(votedItemType, 'Relic', 1, true) then
-
-        if t2 == 'Idols' then
-            votedItemType = "Druid" .. votedItemType
-        end
-        if t2 == 'Librams' then
-            votedItemType = "Paladin" .. votedItemType
-        end
-        if t2 == 'Sigils' then
-            votedItemType = "Deathknight" .. votedItemType
-        end
-        if t2 == 'Totems' then
-            votedItemType = "Shaman" .. votedItemType
-        end
-        votedItemType = core.gsub(votedItemType, "Relic", "")
-        votedItemType = core.sub(votedItemType, 1, core.len(votedItemType) - 1)
-    end
-
-    if core.find(votedItemType, 'Cloak Cloth', 1, true) then
-        votedItemType = 'Cloak'
-    end
-
-    if core.find(votedItemType, 'Junk', 1, true) then
-        votedItemType = 'Token'
+    if core.find(t2, 'Junk', 1, true) then
+        -- Token
 
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
             GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
@@ -759,7 +731,6 @@ function TalcFrame:SetCurrentVotedItem(id)
             for i = 1, 20 do
                 if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
                     if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
-                        votedItemType = votedItemType .. " for " .. core.gsub(_G["GameTooltipTextLeft" .. i]:GetText(), 'Classes: ', '')
                         local _, _, qq, il = GetItemInfo(tokenRewards[itemID].rewards[1])
                         iLevel = il
                         q = qq
@@ -771,16 +742,11 @@ function TalcFrame:SetCurrentVotedItem(id)
         end
     end
 
-    votedItemType = core.fixClassColorsInStr(votedItemType)
 
     TalcVoteFrameCurrentVotedItemButtonItemLevel:SetText(ITEM_QUALITY_COLORS[q].hex .. iLevel)
 
-    if core.find(votedItemType, 'Quest', 1, true) or core.find(votedItemType, 'Token', 1, true) then
-        votedItemType = core.trim(votedItemType) .. ' awards:'
-    end
-
-    for i = 1, #self.itemRewardsFrames do
-        self.itemRewardsFrames[i]:Hide()
+    for _, frame in next, self.itemRewardsFrames do
+        frame:Hide()
     end
 
     local showDe = true
@@ -788,17 +754,17 @@ function TalcFrame:SetCurrentVotedItem(id)
     if tokenRewards[itemID] and tokenRewards[itemID].rewards then
         showDe = false
         if not self.itemRewardsFrames[1] then
-            self.itemRewardsFrames[1] = CreateFrame("Button", "TALCItemReward1", TalcVoteFrame, 'UIPanelButtonTemplate2')
+            self.itemRewardsFrames[1] = CreateFrame("Button", "TALCItemReward1", TalcVoteFrame, 'Talc_CLVotedButton')
         end
 
-        _G["TALCItemReward1"]:SetPoint("TOPLEFT", TalcVoteFrameVotedItemType, "TOPRIGHT", 5, 8)
+        _G["TALCItemReward1"]:SetPoint("TOPLEFT", TalcVoteFrameCurrentVotedItemButton, "BOTTOMRIGHT", 3, 25)
 
         for i, rewardID in next, tokenRewards[itemID].rewards do
             local _, il, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
             if il then
 
                 if not self.itemRewardsFrames[i] then
-                    self.itemRewardsFrames[i] = CreateFrame("Button", "TALCItemReward" .. i, TalcVoteFrame, 'UIPanelButtonTemplate2')
+                    self.itemRewardsFrames[i] = CreateFrame("Button", "TALCItemReward" .. i, TalcVoteFrame, 'Talc_CLVotedButton')
                 end
                 local frame = "TALCItemReward" .. i
                 if i > 1 then
@@ -812,13 +778,37 @@ function TalcFrame:SetCurrentVotedItem(id)
                 _G[frame]:SetPushedTexture(tex)
                 _G[frame]:Show()
 
+                GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                GameTooltip:SetHyperlink(il)
+
+                for j = 5, 15 do
+                    local classFound = false
+                    if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
+                        local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
+
+                        _G[frame .. "Border"]:Hide()
+
+                        for class, data in next, core.classColors do
+                            if itemText == "Classes: " .. core.ucFirst(class) then
+                                _G[frame .. "Border"]:Show()
+                                _G[frame .. "Border"]:SetVertexColor(data.r, data.g, data.b)
+                                classFound = true
+                                break
+                            end
+                        end
+                    end
+                    if classFound then
+                        break
+                    end
+                end
+
+                GameTooltip:Hide()
+
                 core.addButtonOnEnterTooltip(_G[frame], il)
 
             end
         end
     end
-
-    TalcVoteFrameVotedItemType:SetText(votedItemType)
 
     if showDe then
         TalcVoteFrameMLToEnchanter:Show()
@@ -838,17 +828,17 @@ function TalcFrame:DoneVoting()
 end
 
 function TalcFrame:GetPlayerInfo(playerIndexOrName)
-    --returns itemIndex, name, need, votes, ci1, ci2, ci3, roll, k, gearscore
+    --returns itemIndex, name, need, votes, ci1, ci2, ci3, ci4, roll, k, gearscore
     if core.type(playerIndexOrName) == 'string' then
         for k, player in next, self.currentPlayersList do
-            if player['name'] == playerIndexOrName then
-                return player['itemIndex'], player['name'], player['need'], player['votes'], player['ci1'], player['ci2'], player['ci3'], player['roll'], k, player['gearscore']
+            if player.name == playerIndexOrName then
+                return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, k, player.gearscore
             end
         end
     end
     local player = self.currentPlayersList[playerIndexOrName]
     if player then
-        return player['itemIndex'], player['name'], player['need'], player['votes'], player['ci1'], player['ci2'], player['ci3'], player['roll'], playerIndexOrName, player['gearscore']
+        return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, playerIndexOrName, player.gearscore
     else
         return false
     end
@@ -1119,7 +1109,8 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame .. 'Need']:SetPoint("LEFT", _G[frame], core.floor(165 * ratio) - 5, 0)
                 _G[frame .. 'ReplacesItem1']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5, -2)
                 _G[frame .. 'ReplacesItem2']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21, -2)
-                _G[frame .. 'ReplacesItem3']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 22 + 20, -2)
+                _G[frame .. 'ReplacesItem3']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21 + 21, -2)
+                _G[frame .. 'ReplacesItem4']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21 + 21 + 21, -2)
                 _G[frame .. 'Roll']:SetPoint("LEFT", _G[frame], core.floor(285 * ratio) - 5, 0)
                 _G[frame .. 'RollPass']:SetPoint("LEFT", _G[frame], core.floor(285 * ratio), 0)
                 _G[frame .. 'RollWinner']:SetPoint("LEFT", _G[frame], core.floor(270 * ratio), -2)
@@ -1130,10 +1121,11 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame]:Show()
 
                 local currentItem = {}
-                local _, name, need, votes, cv1, cv2, cv3, roll, _, gearscore = self:GetPlayerInfo(index);
-                currentItem[1] = cv1
-                currentItem[2] = cv2
-                currentItem[3] = cv3
+                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore = self:GetPlayerInfo(index);
+                currentItem[1] = ci1
+                currentItem[2] = ci2
+                currentItem[3] = ci3
+                currentItem[4] = ci4
 
                 _G[frame].name = name;
                 _G[frame].need = need;
@@ -1262,7 +1254,7 @@ function TalcFrame:VoteFrameListUpdate()
                     _G[frame .. 'VoteButton']:Hide();
                 end
 
-                for i = 1, 3 do
+                for i = 1, 4 do
                     if currentItem[i] ~= "0" then
                         local _, _, itemLink = core.find(currentItem[i], "(item:%d+:%d+:%d+:%d+)");
                         local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
@@ -1592,7 +1584,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if  not item[5] then
+        if not item[5] then
             talc_error('bad loot syntax')
             talc_error(t)
             return
@@ -1646,7 +1638,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
             local needEx = core.split('=', t)
 
-            if not needEx[2] or not needEx[3] or not needEx[4] or not needEx[5] or not needEx[6] then
+            if not needEx[7] then
                 talc_error('bad need syntax')
                 talc_error(t)
                 return false
@@ -1678,9 +1670,10 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 ci1 = needEx[3],
                 ci2 = needEx[4],
                 ci3 = needEx[5],
+                ci4 = needEx[6],
                 votes = 0,
                 roll = 0,
-                gearscore = core.int(needEx[6])
+                gearscore = core.int(needEx[7])
             })
 
             self.itemVotes[core.int(needEx[2])] = {}
@@ -1700,6 +1693,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                     self.playersWhoWantItems[index].ci1 = needEx[3]
                     self.playersWhoWantItems[index].ci2 = needEx[4]
                     self.playersWhoWantItems[index].ci3 = needEx[5]
+                    self.playersWhoWantItems[index].ci4 = needEx[6]
                     break
                 end
             end
@@ -1979,7 +1973,7 @@ function TalcFrame:CalculateVotes()
     if self.CurrentVotedItem ~= nil then
         for n, _ in next, self.itemVotes[self.CurrentVotedItem] do
             if self:GetPlayerInfo(n) then
-                local _, _, _, _, _, _, _, _, pIndex = TalcFrame:GetPlayerInfo(n)
+                local _, _, _, _, _, _, _, _, _, pIndex = TalcFrame:GetPlayerInfo(n)
                 for _, vote in next, self.itemVotes[self.CurrentVotedItem][n] do
                     if vote == '+' then
                         self.currentPlayersList[pIndex].votes = self.currentPlayersList[pIndex].votes + 1
@@ -2285,7 +2279,7 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
     if #self.bagItems > 0 then
         local _, _, need = TalcFrame:GetPlayerInfo(playerName);
 
-        core.asend("playerWon#" .. playerName .. "#" .. self.VotedItemsFrames[cvi].link .. "#" .. cvi ..'#' .. need)
+        core.asend("playerWon#" .. playerName .. "#" .. self.VotedItemsFrames[cvi].link .. "#" .. cvi .. '#' .. need)
 
         if db['VOTE_SCREENSHOT_LOOT'] then
             Screenshot()
@@ -2331,7 +2325,7 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
 
         if foundItemIndexInLootFrame then
 
-            local index, _, need, _, _, _, _, _ = TalcFrame:GetPlayerInfo(GetMasterLootCandidate(unitIndex));
+            local index, _, need = TalcFrame:GetPlayerInfo(GetMasterLootCandidate(unitIndex));
 
             core.asend("playerWon#" .. GetMasterLootCandidate(unitIndex) .. "#" .. link .. "#" .. cvi .. "#" .. need)
 
@@ -2503,8 +2497,8 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
-                core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
-                "|rGearscore: 2323"
+                        core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
+                        "|rGearscore: 2323"
         )
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Show()
@@ -2531,7 +2525,6 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
     TalcVoteFrameRaiderDetailsFrame:Show()
 end
-
 
 function Talc_LootHistory_Update()
     TalcFrame:LootHistoryUpdate()
@@ -2611,7 +2604,8 @@ end
 function TalcFrame:SendTestItems()
 
     local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r";
-    local testItem2 = "\124cffa335ee\124Hitem:40612:0:0:0:0:0:0:0:0\124h[LEATHER BELT LVL 18]\124h\124r"
+    local testItem2 = "\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r"
+    local testItem3 = "\124cffa335ee\124Hitem:40614:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
 
     local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
     local lootName1, _, quality1, _, _, _, _, _, _, lootIcon1 = GetItemInfo(itemLink1)
@@ -2619,56 +2613,33 @@ function TalcFrame:SendTestItems()
     local _, _, itemLink2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
     local lootName2, _, quality2, _, _, _, _, _, _, lootIcon2 = GetItemInfo(itemLink2)
 
-    if quality1 and lootIcon1 and quality2 and lootIcon2 then
+    local _, _, itemLink3 = core.find(testItem3, "(item:%d+:%d+:%d+:%d+)");
+    local lootName3, _, quality3, _, _, _, _, _, _, lootIcon3 = GetItemInfo(itemLink3)
 
-        SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
-        TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
+    SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
+    TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
 
-        core.SetDynTTN(2)
-        core.SetDynTTV(2)
-        self.LootCountdown.countDownFrom = db['VOTE_TTN']
+    core.SetDynTTN(3)
+    core.SetDynTTV(3)
+    self.LootCountdown.countDownFrom = db['VOTE_TTN']
 
-        self:SendTimersAndButtons()
+    self:SendTimersAndButtons()
 
-        self:SendReset()
+    self:SendReset()
 
-        self.LootCountdown:Show()
-        core.asend('countdownframe=show')
+    self.LootCountdown:Show()
+    core.asend('countdownframe=show')
 
-        core.bsend("ALERT", "preloadInVoteFrame=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-        core.bsend("ALERT", "preloadInVoteFrame=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+    core.bsend("ALERT", "preloadInVoteFrame=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+    core.bsend("ALERT", "preloadInVoteFrame=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+    core.bsend("ALERT", "preloadInVoteFrame=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
 
-        local buttons = ''
-        if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
-            buttons = buttons .. 'b'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['MS'] then
-            buttons = buttons .. 'm'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['OS'] then
-            buttons = buttons .. 'o'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
-            buttons = buttons .. 'x'
-        end
+    core.bsend("ALERT", "loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+    core.bsend("ALERT", "loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+    core.bsend("ALERT", "loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
+    core.bsend("ALERT", "doneSending=3=items")
 
-        core.bsend("ALERT", "loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-        core.bsend("ALERT", "loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-        core.bsend("ALERT", "doneSending=2=items")
-
-        TalcVoteFrameMLToWinner:Disable()
-    else
-
-        local _, _, link1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
-        GameTooltip:SetHyperlink(link1)
-        GameTooltip:Hide()
-
-        local _, _, link2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
-        GameTooltip:SetHyperlink(link2)
-        GameTooltip:Hide()
-
-        talc_error(testItem1 .. ' or ' .. testItem2 .. ' was not seen before, try again...')
-    end
+    TalcVoteFrameMLToWinner:Disable()
 end
 
 function TalcFrame:queryWho()
@@ -3179,6 +3150,7 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
                                     ci1 = '0',
                                     ci2 = '0',
                                     ci3 = '0',
+                                    ci4 = '0',
                                     votes = 0,
                                     roll = 0
                                 })

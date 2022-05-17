@@ -18,6 +18,25 @@
                 </Offset>
             </Anchor>
         </Anchors>
+        <Layers>
+            <Layer level="OVERLAY">
+                <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" hidden="true"
+                         >
+                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625" />
+                    <Color r="1" g="0" b="0" a="1"/>
+                    <Size>
+                        <AbsDimension x="24" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
     </Button>
 
     <Button name="Talc_ButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
@@ -218,43 +237,10 @@
         </Size>
         <Frames>
             <Button name="$parentButton" inherits="UIPanelButtonTemplate">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="38" y="38"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </NormalTexture>
-                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"
-                               alphaMode="ADD">
-                    <Size>
-                        <AbsDimension x="35" y="35"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </PushedTexture>
-                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
-                    <Size>
-                        <AbsDimension x="35" y="35"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </HighlightTexture>
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"/>
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"  setAllPoints="true"
+                               alphaMode="ADD"/>
+                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"  setAllPoints="true"/>
                 <Size x="38" y="38"/>
                 <Anchors>
                     <Anchor point="CENTER">
@@ -286,7 +272,7 @@
                 </Scripts>
             </Button>
             <Frame name="$parentBackdrop" framestrata="HIGH" hidden="true">
-                <Size x="44" y="44"/>
+                <Size x="48" y="48"/>
                 <Anchors>
                     <Anchor point="CENTER">
                         <Offset>
@@ -536,7 +522,7 @@
 
 
             <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <NormalTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -548,7 +534,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <PushedTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -577,7 +563,7 @@
                 </Scripts>
             </Button>
             <Button name="$parentReplacesItem2" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <NormalTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -589,7 +575,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <PushedTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -618,7 +604,7 @@
                 </Scripts>
             </Button>
             <Button name="$parentReplacesItem3" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <NormalTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -630,7 +616,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <PushedTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -659,7 +645,7 @@
                 </Scripts>
             </Button>
             <Button name="$parentReplacesItem4" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <NormalTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -671,7 +657,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <PushedTexture file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
@@ -1246,16 +1232,6 @@
                         <Anchor point="TOPLEFT">
                             <Offset>
                                 <AbsDimension x="65" y="-30"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
-                <FontString name="$parentVotedItemType" hidden="false" inherits="GameFontHighlight"
-                            text="[voted item type]">
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="65" y="-67"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
