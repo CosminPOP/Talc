@@ -48,12 +48,16 @@ function NeedFrame:addItem(data)
     _G[frame]:Show()
     _G[frame .. 'BISButton']:SetID(index);
     _G[frame .. 'BISButton']:Hide()
+
     _G[frame .. 'MSUpgradeButton']:SetID(index);
     _G[frame .. 'MSUpgradeButton']:Hide()
+
     _G[frame .. 'OSButton']:SetID(index);
     _G[frame .. 'OSButton']:Hide()
+
     _G[frame .. 'XMOGButton']:SetID(index);
     _G[frame .. 'XMOGButton']:Hide()
+
     _G[frame .. 'PassButton']:SetID(index);
     _G[frame .. 'PassButton']:Show()
 
@@ -174,7 +178,6 @@ function NeedFrame:addItem(data)
                             local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
                             if core.find(itemText, "Classes:", 1, true) then
                                 if core.find(core.lower(itemText), class, 1, true) then
-                                    showReward = true
                                     rewardIndex = rewardIndex + 1
                                     _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
 
@@ -188,6 +191,14 @@ function NeedFrame:addItem(data)
                             end
                         end
                     end
+                else
+                    rewardIndex = rewardIndex + 1
+                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
+
+                    core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL)
+                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
+                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
+                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
                 end
 
                 GameTooltip:Hide()
@@ -347,10 +358,10 @@ function NeedFrame:NeedClick(id, need)
         return false
     end
 
-    if id < 0 then
+    if id < 0 then --test items
         self:fadeOutFrame(id)
         return
-    end --test items
+    end
 
     local gearscore = 0
     for i = 0, 19 do
@@ -360,24 +371,11 @@ function NeedFrame:NeedClick(id, need)
         end
     end
 
-    local myItem1 = "0"
-    local myItem2 = "0"
-    local myItem3 = "0"
+    local myItem = {'0', '0', '0', '0'}
 
     local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
     local itemID = core.int(core.split(':', itemLink)[2])
-    local name, _, _, _, _, _, _, _, equip_slot = GetItemInfo(itemLink)
-    if equip_slot then
-        --talc_debug('player need equip_slot frame : ' .. equip_slot) --todo check this
-    else
-        talc_debug(' nu am gasit item slot wtffff : ' .. itemLink)
-
-        core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "= " .. gearscore)
-        _G['NewItemTooltip' .. id]:Hide()
-        self:fadeOutFrame(id, need)
-
-        return
-    end
+    local name, _, _, _, _, _, t1, _, equip_slot = GetItemInfo(itemLink)
 
     if need ~= 'pass' and need ~= 'autopass' then
         for i = 1, 19 do
@@ -387,14 +385,14 @@ function NeedFrame:NeedClick(id, need)
 
                 if itemSlot then
                     if core.equipSlots[equip_slot] == core.equipSlots[itemSlot] then
-                        if myItem1 == "0" then
-                            myItem1 = eqItemLink
+                        if myItem[1] == '0' then
+                            myItem[1] = eqItemLink
                         else
-                            myItem2 = eqItemLink
+                            myItem[2] = eqItemLink
                         end
                     end
                 else
-                    talc_debug('cant get inventory item ' .. i)
+                    talc_debug('cant get inventory item ' .. i) -- shouldnt really get here
                 end
             end
         end
@@ -403,7 +401,37 @@ function NeedFrame:NeedClick(id, need)
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
             local _, _, _, _, _, _, _, _, r_equip_slot = GetItemInfo(tokenRewards[itemID].rewards[1])
             local _, _, eqItemLink = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[r_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
-            myItem1 = eqItemLink
+            myItem[1] = eqItemLink
+
+            if t1 == "Quest" then
+                local ringsSet = false
+                local trinketsSet = false
+
+                local rewardIndex = 0
+                local itemSet = {}
+                for i, rewardID in next, tokenRewards[itemID].rewards do
+                    local _, _, _, _, _, _, _, _, q_equip_slot = GetItemInfo(rewardID)
+                    if q_equip_slot == 'INVTYPE_FINGER' then
+                        if not ringsSet then
+                            local _, _, ring1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER0'].id), "(item:%d+:%d+:%d+:%d+)");
+                            rewardIndex = rewardIndex + 1
+                            myItem[rewardIndex] = ring1Link
+                            local _, _, ring2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER1'].id), "(item:%d+:%d+:%d+:%d+)");
+                            rewardIndex = rewardIndex + 1
+                            myItem[rewardIndex] = ring2Link
+                            ringsSet = true
+                        end
+                    elseif q_equip_slot == 'INVTYPE_TRINKET' then --todo
+                    else
+                        if not itemSet[core.equipSlotsDetails[q_equip_slot].id] then
+                            local _, _, eqIL = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[q_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
+                            rewardIndex = rewardIndex + 1
+                            myItem[rewardIndex] = eqIL
+                            itemSet[core.equipSlotsDetails[q_equip_slot].id] = true
+                        end
+                    end
+                end
+            end
         end
 
         --mh/oh fix
@@ -412,29 +440,19 @@ function NeedFrame:NeedClick(id, need)
             --mh
             if GetInventoryItemLink('player', 16) then
                 local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 16), "(item:%d+:%d+:%d+:%d+)");
-                myItem1 = eqItemLink
+                myItem[1] = eqItemLink
             end
             --oh
             if GetInventoryItemLink('player', 17) then
                 local _, _, eqItemLink = core.find(GetInventoryItemLink('player', 17), "(item:%d+:%d+:%d+:%d+)");
-                myItem2 = eqItemLink
+                myItem[2] = eqItemLink
             end
         end
 
-        if name == "The Phylactery of Kel'Thuzad" then
-            if GetInventoryItemLink('player', 13) then
-                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 13), "(item:%d+:%d+:%d+:%d+)");
-                myItem1 = eqItemLink
-            end
-            if GetInventoryItemLink('player', 14) then
-                local _, _, eqItemLink = string.find(GetInventoryItemLink('player', 14), "(item:%d+:%d+:%d+:%d+)");
-                myItem2 = eqItemLink
-            end
-        end
     end
 
-    core.asend(need .. "=" .. id .. "=" .. myItem1 .. "=" .. myItem2 .. "=" .. myItem3 .. "=" .. gearscore)
-    _G['NewItemTooltip' .. id]:Hide()
+    core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore)
+
     self:fadeOutFrame(id, need)
 end
 
