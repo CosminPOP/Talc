@@ -146,6 +146,56 @@ BossFrame.Bosses = {
     'Emeriss', 'Lethon', 'Taerar', 'Ysondre',
 
 
+    --TBC
+
+    --Hellfire Ramparts
+    'Watchkeeper Gargolmar', 'Omor the Unscarred', 'Vazruden', 'Nazan',
+
+    --The Blood Furnace
+    'The Maker', 'Broggok', 'Keli\'dan the Breaker',
+
+    --The Slave Pens
+    'Mennu the Betrayer', 'Rokmar the Crackler', 'Quagmirran',
+
+    --The Underbog
+    'Hungarfen', 'Ghaz\'an', 'Swamplord Musel\'ek', 'The Black Stalker',
+
+    --Mana-Tombs
+    'Pandemonius', 'Tavarok', 'Nexus-Prince Shaffar', 'Yor',
+
+    --Auchenai Crypts
+    'Shirrak the Dead Watcher', 'Exarch Maladaar',
+
+    --Old Hillsbrad Foothills
+    'Lieutenant Drake', 'Captain Skarloc', 'Epoch Hunter',
+
+    --Sethekk Halls
+    'Darkweaver Syth', 'Anzu', 'Talon King Ikiss',
+
+    --The Steamvault
+    'Hydromancer Thespia', 'Mekgineer Steamrigger', 'Warlord Kalithresh',
+
+    --Shadow Labyrinth
+    'Ambassador Hellmaw', 'Blackheart the Inciter', 'Grandmaster Vorpil', 'Murmur',
+
+    --The Shattered Halls
+    'Grand Warlock Nethekurse', 'Blood Guard Porung', 'Warbringer O\'mrogg', 'Warchief Kargath Bladefist',
+
+    --The Black Morass
+    'Chrono Lord Deja', 'Temporus', 'Aeonus',
+
+    --The Botanica
+    'Commander Sarannis', 'High Botanist Freywinn', 'Thorngrin the Tender', 'Laj', 'Warp Splinter',
+
+    --The Mechanar
+    'Mechano-Lord Capacitus', 'Nethermancer Sepethrea', 'Pathaleon the Calculator',
+
+    --The Arcatraz
+    'Zereketh the Unbound', 'Wrath-Scryer Soccothrates', 'Dalliah the Doomsayer', 'Harbinger Skyriss',
+
+    --Magister\'s Terrace
+    'Selin Fireheart', 'Vexallus', 'Priestess Delrissa', 'Kael\'thas Sunstrider',
+
 
     -- WOTLK
 
@@ -153,7 +203,7 @@ BossFrame.Bosses = {
     'Prince Keleseth', 'Skarvald the Constructor', 'Dalronn the Controller', 'Ingvar the Plunderer',
 
     --The Nexus
-    'Commander Kolurg', 'Commander Stoutbeard', 'Grand Magus Telestra',  'Anomalus', 'Ormorok the Tree-Shaper', 'Keristasza',
+    'Commander Kolurg', 'Commander Stoutbeard', 'Grand Magus Telestra', 'Anomalus', 'Ormorok the Tree-Shaper', 'Keristasza',
 
     --Ajzol-Nerub
     'Krik\'thir the Gatewatcher', 'Hadronox', 'Anub\'arak',
