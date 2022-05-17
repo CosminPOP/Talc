@@ -16,34 +16,6 @@ function NeedFrame:init()
     talc_print('NeedFrame Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
 end
 
-function NeedFrame:cacheItem(data)
-    local item = core.split("=", data)
-
-    local index = core.int(item[2])
-    local link = item[5]
-
-    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
-    local itemID = core.int(core.split(':', itemLink)[2])
-
-    GetItemInfo(itemLink) -- should cache it here
-    _G['NewItemTooltip' .. index]:SetHyperlink(itemLink) -- or here
-    _G['NewItemTooltip' .. index]:Hide()
-
-    -- cache rewards
-    if tokenRewards[itemID] then
-        for i = 15, 1, -1 do
-            if tokenRewards[itemID][15 - i + 1] then
-                local _, iL = GetItemInfo();
-                local _, _, shortLink = core.find(iL, "(item:%d+:%d+:%d+:%d+)")
-                GetItemInfo(shortLink) -- should cache it here
-                _G['NewItemTooltip' .. i]:SetHyperlink(shortLink) -- or here
-                _G['NewItemTooltip' .. i]:Hide()
-            end
-        end
-    end
-
-end
-
 function NeedFrame:addItem(data)
     local item = core.split("=", data)
 
@@ -332,8 +304,9 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
             return
         end
 
-        if core.find(msg, 'preSend=', 1, true) then
-            self:cacheItem(msg)
+        if core.find(msg, 'cacheItem=', 1, true) then
+            local item = core.split("=", msg)
+            core.cacheItem(item[2])
             return
         end
 
