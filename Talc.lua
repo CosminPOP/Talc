@@ -4,11 +4,12 @@ TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
 TALC.me = UnitName('player')
 
--- todo better current voted item indicator
 -- todo check if classes are needed in tokens.lua
 -- todo fix player details loot history
+-- todo fix scrollbars texture
+-- todo remove fonts, they exist in the game
 
-local core, db
+local core, db, tokenRewards
 local init = false
 
 TALC:SetScript("OnEvent", function(__, event, ...)
@@ -22,6 +23,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             core = TALC
             db = TALC_DB
+            tokenRewards = TALC_TOKENS
+
+            for id in next, tokenRewards do
+                core.cacheItem(id)
+            end
 
             if not db then
                 db = {}
@@ -163,6 +169,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             print("TALC INIt")
 
             init = true
+            return
         end
 
         if init then
@@ -173,10 +180,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 NeedFrame:handleSync(...)
                 WinFrame:handleSync(...)
                 RollFrame:handleSync(...)
+                return
             end
 
             if event == "RAID_ROSTER_UPDATE" then
-                if core.isRL(core.me) then
+                if core.isRL() then
 
                     if db['VOTE_AUTO_ASSIST'] then
                         for i = 0, GetNumRaidMembers() do
@@ -204,7 +212,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     TalcVoteFrameRLExtraFrame:Hide()
 
                 end
-                if not core.canVote(core.me) then
+                if not core.canVote() then
                     TalcVoteFrame:Hide()
                 end
             end
@@ -215,7 +223,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
                 if (core.find(arg1, "The following players are AFK", 1, true) or
                         core.find(arg1, "No players are AFK", 1, true) or
-                        core.find(arg1, "is not ready", 1, true)) and core.isRL(core.me) then
+                        core.find(arg1, "is not ready", 1, true)) and core.isRL() then
                     SendChatMessage(arg1, "RAID")
                 end
                 if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
@@ -241,84 +249,41 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     end
                 end
             end
+
             if event == "LOOT_OPENED" then
                 TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
                 TalcVoteFrameRLExtraFrameDragLoot:Disable()
                 if not db['VOTE_ENABLED'] then
                     return
                 end
-                if core.isRL(core.me) then
+                if core.isRL() then
 
                     local lootMethod = GetLootMethod()
                     if lootMethod == 'master' then
 
-                        local blueOrEpic = false
-
                         db['VOTE_TTN'] = core.SetDynTTN(GetNumLootItems())
+
+                        local blueOrEpic = false
 
                         for id = 0, GetNumLootItems() do
                             if GetLootSlotInfo(id) and GetLootSlotLink(id) then
-                                local _, lootName = GetLootSlotInfo(id)
-
                                 local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
                                 local _, _, quality = GetItemInfo(itemLink)
-                                if quality >= 3 and lootName ~= 'Elementium Ore' and lootName ~= 'Nexus Crystal' then
-
-                                    if lootName ~= 'Alabaster Idol' and
-                                            lootName ~= 'Jasper Idol' and
-                                            lootName ~= 'Word of Thawing' then
-
-                                        blueOrEpic = true
-
-                                    end
+                                local itemID = core.int(core.split(':', itemLink)[2])
+                                if quality >= 3 then
+                                    blueOrEpic = true
+                                    core.asend("cacheItem=" .. itemID)
                                 end
-                                --auto ML sand
-                                --if lootName == 'Hourglass Sand' then
-                                --    local collectorIndex = -1
-                                --    for j = 1, 40 do
-                                --        if GetMasterLootCandidate(j) == TWLC_SAND_COLLECTOR then
-                                --            talc_debug('found: sand candidate' .. GetMasterLootCandidate(j) .. ' ==  ' .. TWLC_SAND_COLLECTOR)
-                                --            collectorIndex = j
-                                --            break
-                                --        end
-                                --    end
-                                --    if collectorIndex ~= -1 then
-                                --        GiveMasterLoot(id, collectorIndex)
-                                --    else
-                                --        twprint('Sand collector ' .. TWLC_SAND_COLLECTOR .. ' not in raid and auto ml sand is ON. Ignoring.')
-                                --    end
-                                --end
                             end
                         end
 
-                        if not blueOrEpic then
-                            return false
-                        end
-
-                        TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
-                        TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
-                        TalcFrame.sentReset = false
-                        if core.me ~= 'Er' then
-                            -- dont show for me, ill show it from erui addon
-                            TalcFrame:showWindow()
-                        end
-
-                        --pre send items for never seen
-                        for id = 0, GetNumLootItems() do
-                            if GetLootSlotInfo(id) and GetLootSlotLink(id) then
-                                local lootIcon, lootName = GetLootSlotInfo(id)
-
-                                local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
-                                local itemID, _, quality = GetItemInfo(itemLink)
-                                if quality >= 3 then
-
-                                    if not TalcFrame.itemsToPreSend[itemID] then
-                                        TalcFrame.itemsToPreSend[itemID] = true
-
-                                        --send to all
-                                        core.asend("preSend=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
-                                    end
-                                end
+                        if blueOrEpic then
+                            TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
+                            TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
+                            TalcFrame.sentReset = false
+                            if core.me ~= 'Er' then
+                                -- dont show for me, ill show it from erui addon
+                                TalcFrame:showWindow()
                             end
                         end
 
@@ -327,8 +292,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     end
                 end
             end
+
             if event == "LOOT_SLOT_CLEARED" then
             end
+
             if event == "LOOT_CLOSED" then
                 TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
                 TalcVoteFrameRLExtraFrameDragLoot:Enable()
@@ -364,8 +331,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 return
             end
         end
-
-
     end
 end)
 
@@ -375,7 +340,7 @@ TALC:RegisterEvent("LOOT_SLOT_CLEARED")
 TALC:RegisterEvent("LOOT_CLOSED")
 TALC:RegisterEvent("RAID_ROSTER_UPDATE")
 TALC:RegisterEvent("CHAT_MSG_SYSTEM")
-TALC:RegisterEvent("PLAYER_TARGET_CHANGED") --for bosses
+TALC:RegisterEvent("PLAYER_TARGET_CHANGED")
 TALC:RegisterEvent("CHAT_MSG_ADDON")
 TALC:RegisterEvent("CHAT_MSG_LOOT")
 TALC:RegisterEvent("COMBAT_LOG_EVENT")
@@ -386,7 +351,7 @@ SlashCmdList["TALC"] = function(cmd)
         if core.sub(cmd, 1, 3) == 'set' then
             local setEx = core.split(' ', cmd)
             if setEx[2] and setEx[3] then
-                if core.isRL(core.me) then
+                if core.isRL() then
                     if setEx[2] == 'enchanter' then
                         if not setEx[3] then
                             talc_print('Incorrect syntax. Use /talc set enchanter [name]')
@@ -405,19 +370,7 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('/talc set enchanter [name] (current value: ' .. db['VOTE_ENCHANTER'] .. ')')
             end
         end
-        if cmd == 'debug' then
-            db['_DEBUG'] = not db['_DEBUG']
-            if db['_DEBUG'] then
-                talc_print('Debug ENABLED')
-            else
-                talc_print('Debug DISABLED')
-            end
-            return
-        end
-        if cmd == 'who' then
-            TalcFrame:queryWho()
-            return
-        end
+
         if core.sub(cmd, 1, 6) == 'search' then
             local cmdEx = core.split(' ', cmd)
 
@@ -425,7 +378,7 @@ SlashCmdList["TALC"] = function(cmd)
 
                 local numItems = 0
                 for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-                    if core.lower(cmdEx[2]) == core.lower(item['player']) then
+                    if core.lower(cmdEx[2]) == core.lower(item.player) then
                         numItems = numItems + 1
                     end
                 end
@@ -433,8 +386,8 @@ SlashCmdList["TALC"] = function(cmd)
                 if numItems > 0 then
                     talc_print('Listing ' .. cmdEx[2] .. '\'s loot history:')
                     for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-                        if core.lower(cmdEx[2]) == core.lower(item['player']) then
-                            talc_print(item['item'] .. ' - ' .. date("%d/%m", lootTime))
+                        if core.lower(cmdEx[2]) == core.lower(item.player) then
+                            talc_print(item.item .. ' - ' .. date("%d/%m", lootTime))
                         end
                     end
                 else
@@ -442,8 +395,8 @@ SlashCmdList["TALC"] = function(cmd)
                 end
 
                 for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-                    if core.find(core.lower(item['item']), core.lower(cmdEx[2])) then
-                        talc_print(item['player'] .. " - " .. item['item'] .. " " .. date("%d/%m", lootTime))
+                    if core.find(core.lower(item.item), core.lower(cmdEx[2])) then
+                        talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", lootTime))
                     end
                 end
 
@@ -451,7 +404,7 @@ SlashCmdList["TALC"] = function(cmd)
                     numItems = 0
                     for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                         if date("%d/%m", lootTime) == cmdEx[2] then
-                            talc_print(item['player'] .. " - " .. item['item'] .. " " .. date("%d/%m", lootTime))
+                            talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", lootTime))
                             numItems = numItems + 1
                         end
                     end
@@ -462,6 +415,7 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('Search syntax: /talc search [Playername/Item]')
             end
         end
+
         if core.sub(cmd, 1, 5) == 'scale' then
             local scaleEx = core.split(' ', cmd)
             if not scaleEx[1] or not scaleEx[2] or not core.int(scaleEx[2]) then
@@ -479,6 +433,7 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('Set scale syntax: |cfffff569/talc scale [scale from 0.5 to 2]')
             end
         end
+
         if core.sub(cmd, 1, 5) == 'alpha' then
             local alphaEx = core.split(' ', msg)
             if not alphaEx[1] or not alphaEx[2] or not core.int(alphaEx[2]) then
@@ -503,14 +458,13 @@ SlashCmdList["TALC"] = function(cmd)
             db['NEED_SCALE'] = 1
             return
         end
-        if cmd == 'who' then
 
+        if cmd == 'who' then
             if not UnitInRaid('player') then
                 talc_print('You are not in a raid.')
                 return false
             end
-
-            NeedFrame:queryWho()
+            TalcFrame:queryWho()
             return
         end
     end
