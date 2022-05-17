@@ -500,7 +500,6 @@ function Talc_Utils:init()
     end
 
     core.cacheItem = function(id)
-        talc_debug("cache call " .. id)
         if not id or not core.int(id) then
             talc_debug("cache item call with null or not int " .. id .. " " .. type(linkOrID))
         end
