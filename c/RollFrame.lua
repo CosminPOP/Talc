@@ -193,9 +193,9 @@ RollFrame.countdown:SetScript("OnUpdate", function()
             this:Show()
         elseif this.T > this.timeToRoll + plus then
 
-            for index in next, RollFrame.frames.itemFrames do
-                if RollFrame.frames.itemFrames[index]:IsVisible() then
-                    PlayerRollItemButton_OnClick(this:GetID(), 'roll');
+            for index, frame in next, RollFrame.frames.itemFrames do
+                if frame:IsVisible() then
+                    RollFrame:PickRoll(frame:GetID(), 'roll');
                 end
             end
 
@@ -339,15 +339,14 @@ RollFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
                 else
                     if frame:IsVisible() then
                         talc_debug('auto roll because it ended')
-                        Talc_RollItemButtonOnClick(id, 'roll');
+                        RollFrame:PickRoll(id, 'roll');
                     else
                         talc_debug('timer ended and frame is invisible, should not roll')
                     end
-                    this.ids[id] = false
                     this.ids[id] = nil
 
 
-                    if RollFrame.watchRolls == true then --and enabled global var
+                    if RollFrame.watchRolls == true then
 
                         local maxRoll = 0
                         for _, roll in next, RollFrame.rolls do
@@ -394,7 +393,6 @@ RollFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
                 if frame:GetAlpha() > 0 then
                     frame:SetAlpha(frame:GetAlpha() - 0.15)
                 else
-                    this.ids[id] = false
                     this.ids[id] = nil
                     frame:Hide()
                 end
