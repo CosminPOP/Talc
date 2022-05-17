@@ -189,7 +189,7 @@
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="318" y="-40"/>
+                            <AbsDimension x="255" y="-40"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -242,9 +242,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentBISButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="355" y="-40"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -297,9 +297,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentMSUpgradeButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="392" y="-40"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -352,9 +352,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentOSButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="392" y="-40"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -407,9 +407,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentXMOGButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="392" y="-40"/>
+                            <AbsDimension x="5" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>

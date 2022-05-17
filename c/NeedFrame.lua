@@ -3,7 +3,6 @@ local _G = _G
 NeedFrame = CreateFrame("Frame")
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
-NeedFrame.execs = 0
 
 function NeedFrame:init()
     core = TALC
@@ -24,13 +23,24 @@ function NeedFrame:cacheItem(data)
     local link = item[5]
 
     local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
-
-    _G['NewItemTooltip' .. index]:SetHyperlink(itemLink)
-    _G['NewItemTooltip' .. index]:Show()
+    local itemID = core.int(core.split(':', itemLink)[2])
 
     GetItemInfo(itemLink) -- should cache it here
     _G['NewItemTooltip' .. index]:SetHyperlink(itemLink) -- or here
     _G['NewItemTooltip' .. index]:Hide()
+
+    -- cache rewards
+    if tokenRewards[itemID] then
+        for i = 15, 1, -1 do
+            if tokenRewards[itemID][15 - i + 1] then
+                local _, iL = GetItemInfo();
+                local _, _, shortLink = core.find(iL, "(item:%d+:%d+:%d+:%d+)")
+                GetItemInfo(shortLink) -- should cache it here
+                _G['NewItemTooltip' .. i]:SetHyperlink(shortLink) -- or here
+                _G['NewItemTooltip' .. i]:Hide()
+            end
+        end
+    end
 
 end
 
@@ -39,8 +49,6 @@ function NeedFrame:addItem(data)
 
     self.countdown.timeToNeed = db['VOTE_TTN']
     self.countdown.C = self.countdown.timeToNeed
-
-    self.execs = self.execs + 1
 
     local index = core.int(item[2])
     local texture = item[3]
@@ -60,110 +68,69 @@ function NeedFrame:addItem(data)
         return false
     end
 
-    local buttons = 'mo'
-    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['BIS'] and 'b' or '')
-    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['MS'] and 'm' or '')
-    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['OS'] and 'o' or '')
-    buttons = buttons .. (db['VOTE_CONFIG']['NeedButtons']['XMOG'] and 'x' or '')
-
-    --hide xmog button for necks, rings, trinkets
-    if itemSlot and core.find(buttons, 'x', 1, true) then
-        if itemSlot == 'INVTYPE_NECK' or itemSlot == 'INVTYPE_FINGER' or itemSlot == 'INVTYPE_TRINKET' or itemSlot == 'INVTYPE_RELIC' then
-            buttons = core.gsub(buttons, 'x', '')
-        end
-    end
-
-    self.execs = 0
-
     if not self.itemFrames[index] then
         self.itemFrames[index] = CreateFrame("Frame", "NeedFrame" .. index, TalcNeedFrame, "TalcNeedFrameItemTemplate")
     end
+    local frame = "NeedFrame" .. index
 
-    _G["NeedFrame" .. index]:Hide()
+    _G[frame]:Show()
+    _G[frame .. 'BISButton']:SetID(index);
+    _G[frame .. 'BISButton']:Hide()
+    _G[frame .. 'MSUpgradeButton']:SetID(index);
+    _G[frame .. 'MSUpgradeButton']:Hide()
+    _G[frame .. 'OSButton']:SetID(index);
+    _G[frame .. 'OSButton']:Hide()
+    _G[frame .. 'XMOGButton']:SetID(index);
+    _G[frame .. 'XMOGButton']:Hide()
+    _G[frame .. 'PassButton']:SetID(index);
+    _G[frame .. 'PassButton']:Show()
 
-    local backdrop = {
+    if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
+        _G[frame .. 'BISButton']:Show()
+    end
+    if db['VOTE_CONFIG']['NeedButtons']['MS'] then
+        _G[frame .. 'MSUpgradeButton']:Show()
+    end
+    if db['VOTE_CONFIG']['NeedButtons']['OS'] then
+        _G[frame .. 'OSButton']:Show()
+    end
+    if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
+        _G[frame .. 'XMOGButton']:Show()
+    end
+
+    --hide xmog button for necks, rings, trinkets
+    if itemSlot and db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
+        if itemSlot == 'INVTYPE_NECK' or itemSlot == 'INVTYPE_FINGER' or itemSlot == 'INVTYPE_TRINKET' or itemSlot == 'INVTYPE_RELIC' then
+            _G[frame .. 'XMOGButton']:Hide()
+        end
+    end
+
+    _G[frame .. 'BgImage']:SetBackdrop({
         bgFile = "Interface\\Addons\\Talc\\images\\need\\need_" .. quality,
         tile = false,
-    }
+    })
 
-    _G['NeedFrame' .. index .. 'BgImage']:SetBackdrop(backdrop)
+    _G[frame]:SetAlpha(0)
 
-    _G['NeedFrame' .. index .. 'QuestRewardsReward1']:Hide()
-    _G['NeedFrame' .. index .. 'QuestRewardsReward2']:Hide()
-    _G['NeedFrame' .. index .. 'QuestRewardsReward3']:Hide()
-    _G['NeedFrame' .. index .. 'QuestRewardsReward4']:Hide()
-
-    self.itemFrames[index]:Show()
-    self.itemFrames[index]:SetAlpha(0)
-
-    self.itemFrames[index]:ClearAllPoints()
+    _G[frame]:ClearAllPoints()
     if index < 0 then
         --test items
-        self.itemFrames[index]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index * -1))
+        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index * -1))
     else
-        self.itemFrames[index]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index))
+        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index))
     end
-    self.itemFrames[index].link = link
+    _G[frame].link = link
 
-    _G['NeedFrame' .. index .. 'ItemIcon']:SetNormalTexture(texture);
-    _G['NeedFrame' .. index .. 'ItemIcon']:SetPushedTexture(texture);
-    _G['NeedFrame' .. index .. 'ItemIconItemName']:SetText(link);
-    _G['NeedFrame' .. index .. 'ItemIconItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
+    _G[frame .. 'ItemIcon']:SetNormalTexture(texture);
+    _G[frame .. 'ItemIcon']:SetPushedTexture(texture);
+    _G[frame .. 'ItemIconItemName']:SetText(link);
+    _G[frame .. 'ItemIconItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
 
-    _G['NeedFrame' .. index .. 'BISButton']:SetID(index);
-    _G['NeedFrame' .. index .. 'MSUpgradeButton']:SetID(index);
-    _G['NeedFrame' .. index .. 'OSButton']:SetID(index);
-    _G['NeedFrame' .. index .. 'XMOGButton']:SetID(index);
-    _G['NeedFrame' .. index .. 'PassButton']:SetID(index);
+    _G[frame .. 'TimeLeftBar']:SetBackdropColor(ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b, .76)
 
-    local buttonIndex = -1
+    core.addButtonOnEnterTooltip(_G[frame .. 'ItemIcon'], link, nil, true)
 
-    _G['NeedFrame' .. index .. 'BISButton']:Hide()
-    _G['NeedFrame' .. index .. 'MSUpgradeButton']:Hide()
-    _G['NeedFrame' .. index .. 'OSButton']:Hide()
-    _G['NeedFrame' .. index .. 'XMOGButton']:Hide()
-
-    local m = 38
-    if core.len(buttons) == 2 then
-        m = 38 * 2
-    end
-
-    if core.len(buttons) == 3 then
-        m = 38 + 38 / 3
-    end
-
-    if core.find(buttons, 'b', 1, true) then
-        buttonIndex = buttonIndex + 1
-        _G['NeedFrame' .. index .. 'BISButton']:Show()
-        _G['NeedFrame' .. index .. 'BISButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
-    end
-    if core.find(buttons, 'm', 1, true) then
-        buttonIndex = buttonIndex + 1
-        _G['NeedFrame' .. index .. 'MSUpgradeButton']:Show()
-        _G['NeedFrame' .. index .. 'MSUpgradeButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
-    end
-    if core.find(buttons, 'o', 1, true) then
-        buttonIndex = buttonIndex + 1
-        _G['NeedFrame' .. index .. 'OSButton']:Show()
-        _G['NeedFrame' .. index .. 'OSButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
-    end
-    if core.find(buttons, 'x', 1, true) then
-        buttonIndex = buttonIndex + 1
-        _G['NeedFrame' .. index .. 'XMOGButton']:Show()
-        _G['NeedFrame' .. index .. 'XMOGButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
-    end
-
-    buttonIndex = buttonIndex + 1
-    _G['NeedFrame' .. index .. 'PassButton']:Show()
-    _G['NeedFrame' .. index .. 'PassButton']:SetPoint('TOPLEFT', 318 - 64 + buttonIndex * m, -40)
-
-    local r, g, b = GetItemQualityColor(quality)
-
-    _G['NeedFrame' .. index .. 'TimeLeftBar']:SetBackdropColor(r, g, b, .76)
-
-    core.addButtonOnEnterTooltip(_G['NeedFrame' .. index .. 'ItemIcon'], link, nil, true)
-
-    _G['NeedFrame' .. index .. 'QuestRewards']:Hide()
+    _G[frame .. 'QuestRewards']:Hide()
 
     local _, class = UnitClass('player')
     class = core.lower(class)
@@ -177,7 +144,6 @@ function NeedFrame:addItem(data)
         if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
             if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
                 classes = _G["GameTooltipTextLeft" .. i]:GetText()
-                print(classes)
                 if core.find(core.lower(classes), class, 1, true) then
                     forMe = true
                 end
@@ -188,7 +154,7 @@ function NeedFrame:addItem(data)
     GameTooltip:Hide()
 
     if not forMe and classes ~= "" then
-        SetDesaturation(_G['NeedFrame' .. index .. 'ItemIcon']:GetNormalTexture(), 1)
+        SetDesaturation(_G[frame .. 'ItemIcon']:GetNormalTexture(), 1)
     end
 
     local hasRewards = false
@@ -217,55 +183,45 @@ function NeedFrame:addItem(data)
             end
         end
 
+        GameTooltip:Hide()
+
         if hasRewardsForMe or not foundClasses then
-            _G['NeedFrame' .. index .. 'QuestRewards']:Show()
-            local rewardSpot = 0
+            _G[frame .. 'QuestRewards']:Show()
+            local rewardIndex = 0
             for i, rewardID in next, tokenRewards[itemID].rewards do
 
-                if i < 5 then
+                local _, rewardLink, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
+                local _, _, rewardIL = core.find(rewardLink, "(item:%d+:%d+:%d+:%d+)");
 
-                    local set, il, frame = self:SetQuestRewardLink(rewardID, _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i])
+                GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                GameTooltip:SetHyperlink(rewardIL)
 
-                    if not set then
-                        talc_debug(' quest reward ' .. i .. ' name or quality not found for data :' .. rewardID)
-                        talc_debug(' going to delay add item ')
-                        self.delayAddItem.data[index] = data
-                        self.delayAddItem:Show()
-                        return false
-                    end
+                if foundClasses then
+                    for j = 1, 20 do
+                        if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
+                            local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
+                            if core.find(itemText, "Classes:", 1, true) then
+                                if core.find(core.lower(itemText), class, 1, true) then
+                                    showReward = true
+                                    rewardIndex = rewardIndex + 1
+                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
 
-                    GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
-                    GameTooltip:SetHyperlink(il)
+                                    core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL)
+                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
+                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
+                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
 
-                    local showReward = false
-
-                    if foundClasses then
-                        for j = 1, 20 do
-                            if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
-                                local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
-                                if core.find(itemText, "Classes:", 1, true) then
-                                    if core.find(core.lower(itemText), class, 1, true) then
-                                        showReward = true
-                                        rewardSpot = rewardSpot + 1
-                                        frame:SetPoint("TOPLEFT", 20 + 23 * (rewardSpot - 1) , -32)
-                                        break
-                                    end
+                                    break
                                 end
                             end
                         end
-                    else
-                        showReward = true
                     end
-
-                    if not showReward then
-                        _G['NeedFrame' .. index .. 'QuestRewardsReward' .. i]:Hide()
-                    end
-
                 end
+
+                GameTooltip:Hide()
+
             end
         end
-
-        GameTooltip:Hide()
     end
 
     self:fadeInFrame(index)
@@ -409,23 +365,6 @@ function NeedFrame:ScaleWindow(dir)
     db['NEED_SCALE'] = TalcNeedFrame:GetScale()
 
     talc_print('Frame re-scaled. Type |cfffff569/talc |cff69ccf0need resetscale |rif the frame is offscreen')
-end
-
-function NeedFrame:SetQuestRewardLink(id, frame)
-
-    local _, link, _, _, _, _, _, _, _, tex = GetItemInfo(id)
-    if link then
-        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
-        core.addButtonOnEnterTooltip(frame, link)
-        frame:SetNormalTexture(tex)
-        frame:SetPushedTexture(tex)
-        frame:Show()
-        return true, itemLink, frame
-    else
-        GameTooltip:SetHyperlink(id)
-        GameTooltip:Hide()
-        return false, false, frame
-    end
 end
 
 function NeedFrame:NeedClick(id, need)
@@ -604,7 +543,6 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
     end
 end)
 
-
 NeedFrame.fadeInAnimationFrame = CreateFrame("Frame")
 NeedFrame.fadeInAnimationFrame:Hide()
 NeedFrame.fadeInAnimationFrame.ids = {}
@@ -670,7 +608,6 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
         end
     end
 end)
-
 
 NeedFrame.delayAddItem = CreateFrame("Frame")
 NeedFrame.delayAddItem:Hide()
