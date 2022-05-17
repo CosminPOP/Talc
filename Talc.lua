@@ -6,7 +6,6 @@ TALC.me = UnitName('player')
 
 -- todo fix player details loot history
 -- todo fix scrollbars texture
--- todo remove fonts, they exist in the game
 
 local core, db, tokenRewards
 local init = false
