@@ -34,6 +34,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 db['_DEBUG'] = false
             end
 
+            if db['PLAYER_CLASS_CACHE'] == nil then
+                db['PLAYER_CLASS_CACHE'] = {}
+            end
+
             if db['WIN_THRESHOLD'] == nil then
                 db['WIN_THRESHOLD'] = 3
             end

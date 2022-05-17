@@ -415,11 +415,15 @@ function Talc_Utils:init()
         if not name then
             name = core.me
         end
+        if db['PLAYER_CLASS_CACHE'][name] then
+            return db['PLAYER_CLASS_CACHE'][name]
+        end
         for i = 0, GetNumRaidMembers() do
             if GetRaidRosterInfo(i) then
                 local n = GetRaidRosterInfo(i);
                 if name == n then
                     local _, unitClass = UnitClass('raid' .. i) --standard
+                    db['PLAYER_CLASS_CACHE'][name] = core.lower(unitClass)
                     return core.lower(unitClass)
                 end
             end
