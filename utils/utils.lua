@@ -1,4 +1,4 @@
-local core, db
+local core, db, tokenRewards
 local _G = _G
 
 Talc_Utils = CreateFrame("Frame")
@@ -6,6 +6,7 @@ Talc_Utils = CreateFrame("Frame")
 function Talc_Utils:init()
     core = TALC
     db = TALC_DB
+    tokenRewards = TALC_TOKENS
 
     core.type = type
     core.floor = math.floor
@@ -494,6 +495,28 @@ function Talc_Utils:init()
         end
     end
 
+    core.cacheItem = function(id)
+        talc_debug("cache call " .. id)
+        if not id or not core.int(id) then
+            talc_debug("cache item call with null or not int " .. id .. " " .. type(linkOrID))
+        end
+
+        if GetItemInfo(id) then
+            -- cache rewards
+            if tokenRewards[id] and tokenRewards[id].rewards then
+                for _, rewardID in next, tokenRewards[id].rewards do
+                    core.cacheItem(rewardID)
+                end
+            end
+        else
+            talc_debug(" + " .. id .. " needs cache")
+            local item = "item:" .. id .. ":0:0:0"
+            local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
+            GameTooltip:SetHyperlink(itemLink)
+        end
+
+    end
+
 end
 
 function talc_print(a)
@@ -514,11 +537,11 @@ function talc_debug(a)
     end
     if core.type(a) == 'boolean' then
         if a then
-            talc_print('|cff0070de[DEBUG:' .. time() .. ']|cffffffff[true]')
+            talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 5, 20) .. ']|cffffffff[true]')
         else
-            talc_print('|cff0070de[DEBUG:' .. time() .. ']|cffffffff[false]')
+            talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 5, 20) .. ']|cffffffff[false]')
         end
         return true
     end
-    talc_print('|cff0070de[DEBUG:' .. time() .. ']|cffffffff[' .. a .. ']')
+    talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 7, 20) .. ']|cffffffff[' .. a .. ']')
 end
