@@ -186,11 +186,12 @@ function TalcFrame:ResetVars()
 
     self:HideVotingElements()
 
-    self:ShowWelcomeScreen()
-    --self:HideWelcomeScreen()
+    --self:ShowWelcomeScreen()
+    self:HideWelcomeScreen()
 
     self:HideSettingsScreen()
 
+    self:ShowWishlistScreen()
 end
 
 function TalcFrame:ShowSettingsScreen(a)
@@ -368,6 +369,155 @@ function TalcFrame:ShowWelcomeItems()
     end
 
     TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+end
+
+function TalcFrame:ShowWishlistScreen()
+    TalcVoteFrameWishlistFrame:Show()
+    TalcVoteFrameWishlistFrameItemEditBox:SetText("[Full Item Name] / ID / URL")
+
+    self:WishlistUpdate()
+end
+
+function TalcFrame:HideWishlistScreen()
+
+end
+
+TalcFrame.delayAddToWishlist = CreateFrame("Frame")
+TalcFrame.delayAddToWishlist:Hide()
+TalcFrame.delayAddToWishlist.item = 0
+TalcFrame.delayAddToWishlist:SetScript("OnShow", function()
+    this.startTime = GetTime();
+end)
+TalcFrame.delayAddToWishlist:SetScript("OnUpdate", function()
+    local plus = 1
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
+    if gt >= st then
+        TalcFrame:AddToWishlist(this.item)
+        this:Hide()
+    end
+end)
+
+function TalcFrame:TryToAddToWishlist(nameOrID)
+
+    if core.len(nameOrID) == 0 then
+        return
+    end
+
+    TalcVoteFrameWishlistFrameAdd:Disable()
+    TalcVoteFrameWishlistFrameItemEditBox:ClearFocus()
+
+    if not core.int(nameOrID) then
+        local fromURL, _, urlID = core.find(nameOrID, "(%d+)")
+        if fromURL then
+            nameOrID = core.int(urlID)
+        else
+            local fromBracket = core.gsub(nameOrID, "[%[%]]", "")
+            nameOrID = fromBracket
+        end
+    end
+
+    if GetItemInfo(nameOrID) then
+        TalcVoteFrameWishlistFrameItemEditBox:SetText("")
+        local _, itemLink = GetItemInfo(nameOrID)
+        self:AddToWishlist(itemLink, true)
+    else
+        core.cacheItem(nameOrID)
+        TalcFrame.delayAddToWishlist.item = nameOrID
+        TalcFrame.delayAddToWishlist:Show()
+    end
+end
+
+function TalcFrame:AddToWishlist(itemLink, direct)
+
+    if direct then
+        for i = 1, 16 do
+            if db['NEED_WISHLIST'][i] == nil then
+                db['NEED_WISHLIST'][i] = itemLink
+                break
+            end
+        end
+        TalcFrame:ShowWishlistScreen()
+        return
+    end
+
+    if not GetItemInfo(itemLink) then
+        talc_print(core.classColors['hunter'].colorStr .. "[" .. itemLink .. "] |rnot seen. Try using ID or URL.")
+        talc_print(core.classColors['hunter'].colorStr .. "[" .. itemLink .. "] |rwas added to the Wishlist without icon or link and will be updated when seen.")
+    end
+
+    self:AddToWishlist(itemLink, true)
+end
+
+function TalcFrame:RemoveFromWishlist(id)
+    if id == #db['NEED_WISHLIST'] then
+        db['NEED_WISHLIST'][id] = nil
+    else
+        for i = id, #db['NEED_WISHLIST'] - 1 do
+            db['NEED_WISHLIST'][i] = db['NEED_WISHLIST'][i + 1]
+        end
+        db['NEED_WISHLIST'][#db['NEED_WISHLIST']] = nil
+    end
+    TalcFrame:WishlistUpdate()
+end
+
+TalcFrame.wishlistItemsFrames = {}
+
+function TalcFrame:WishlistUpdate()
+
+    talc_debug(db['NEED_WISHLIST'])
+
+    -- try to update item if its not a linkString
+    for _, itemLink in next, db['NEED_WISHLIST'] do
+        if not core.find(itemLink, "(item:%d+:%d+:%d+:%d+)") then
+            if GetItemInfo(itemLink) then
+                local _, link = GetItemInfo(itemLink)
+                print(itemLink .. " found and updated")
+                itemLink = link
+            end
+        end
+    end
+
+    for _, frame in next, self.wishlistItemsFrames do
+        frame:Hide()
+    end
+
+    TalcVoteFrameWishlistFrameDescription:SetText("You can add up to 16 items to your Wishlist.")
+    TalcVoteFrameWishlistFrameAdd:Enable()
+    if #db['NEED_WISHLIST'] > 0 then
+        TalcVoteFrameWishlistFrameDescription:SetText(TalcVoteFrameWishlistFrameDescription:GetText() .. "Your list has " .. #db['NEED_WISHLIST'] .. " item(s).")
+        if #db['NEED_WISHLIST'] == 16 then
+            TalcVoteFrameWishlistFrameAdd:Disable()
+        end
+    else
+        TalcVoteFrameWishlistFrameDescription:SetText(TalcVoteFrameWishlistFrameDescription:GetText() .. "Your current list is empty.")
+        return
+    end
+
+    for index, itemLink in next, db['NEED_WISHLIST'] do
+        if not self.wishlistItemsFrames[index] then
+            self.wishlistItemsFrames[index] = CreateFrame("Frame", "TalcWishlistItem" .. index, TalcVoteFrameWishlistFrame, "Talc_WishlistItemTemplate")
+        end
+
+        local frame = "TalcWishlistItem" .. index
+
+        _G[frame]:SetPoint('TOPLEFT', TalcVoteFrameWishlistFrame, 5, -60 - 30 * index)
+        _G[frame .. 'ItemButtonName']:SetText(itemLink)
+
+        _G[frame .. 'ItemButtonIcon']:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
+        core.remButtonOnEnterTooltip(_G[frame .. 'ItemButton'])
+
+        _G[frame .. 'RemoveButton']:SetID(index)
+
+        local _, _, q, iLevel, _, _, t2, _, equip_slot, tex = GetItemInfo(itemLink)
+        if tex then
+            _G[frame .. 'ItemButtonIcon']:SetTexture(tex)
+            core.addButtonOnEnterTooltip(_G[frame .. 'ItemButton'], itemLink, nil, true)
+        end
+
+        _G[frame]:Show()
+
+    end
 end
 
 function TalcFrame:SetTitle(to)
@@ -715,9 +865,9 @@ function TalcFrame:SetCurrentVotedItem(id)
     local _, _, q, iLevel, _, _, t2, _, equip_slot = GetItemInfo(itemLink)
 
     if core.find(t2, 'Quest', 1, true) then
-            if tokenRewards[itemID] and tokenRewards[itemID].rewards then
-            local _, _, qq, il = GetItemInfo(tokenRewards[itemID].rewards[1])
-            iLevel = il
+        if tokenRewards[itemID] and tokenRewards[itemID].rewards then
+            local _, _, qq, level = GetItemInfo(tokenRewards[itemID].rewards[1])
+            iLevel = level
             q = qq
         end
     end
@@ -731,8 +881,8 @@ function TalcFrame:SetCurrentVotedItem(id)
             for i = 1, 20 do
                 if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
                     if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
-                        local _, _, qq, il = GetItemInfo(tokenRewards[itemID].rewards[1])
-                        iLevel = il
+                        local _, _, qq, level = GetItemInfo(tokenRewards[itemID].rewards[1])
+                        iLevel = level
                         q = qq
                         break
                     end
@@ -741,7 +891,6 @@ function TalcFrame:SetCurrentVotedItem(id)
             GameTooltip:Hide()
         end
     end
-
 
     TalcVoteFrameCurrentVotedItemButtonItemLevel:SetText(ITEM_QUALITY_COLORS[q].hex .. iLevel)
 
@@ -1673,7 +1822,8 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 ci4 = needEx[6],
                 votes = 0,
                 roll = 0,
-                gearscore = core.int(needEx[7])
+                gearscore = core.int(needEx[7]),
+                inWishlist = needEx[8] == '1'
             })
 
             self.itemVotes[core.int(needEx[2])] = {}
@@ -1687,6 +1837,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 self.pickResponses[core.int(needEx[2])] = 1
             end
 
+            -- todo this might not be needed anymore
             for index, player in next, self.playersWhoWantItems do
                 if player.name == sender and player.itemIndex == core.int(needEx[2]) then
                     self.playersWhoWantItems[index].need = needEx[1]
