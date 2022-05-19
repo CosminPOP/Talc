@@ -45,20 +45,14 @@ function NeedFrame:addItem(data)
     end
     local frame = "NeedFrame" .. index
 
-    _G[frame]:Show()
-    _G[frame .. 'BISButton']:SetID(index);
+    _G[frame]:SetID(index)
+    _G[frame].need = 'autopass'
+    _G[frame].elapsed = 0
+
     _G[frame .. 'BISButton']:Hide()
-
-    _G[frame .. 'MSUpgradeButton']:SetID(index);
     _G[frame .. 'MSUpgradeButton']:Hide()
-
-    _G[frame .. 'OSButton']:SetID(index);
     _G[frame .. 'OSButton']:Hide()
-
-    _G[frame .. 'XMOGButton']:SetID(index);
     _G[frame .. 'XMOGButton']:Hide()
-
-    _G[frame .. 'PassButton']:SetID(index);
     _G[frame .. 'PassButton']:Show()
 
     if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
@@ -81,12 +75,9 @@ function NeedFrame:addItem(data)
         end
     end
 
-    _G[frame .. 'BgImage']:SetBackdrop({
-        bgFile = "Interface\\Addons\\Talc\\images\\need\\need_" .. quality,
-        tile = false,
-    })
+    _G[frame .. 'Background']:SetTexture("Interface\\Addons\\Talc\\images\\need\\need_" .. quality)
 
-    _G[frame]:SetAlpha(0)
+    --_G[frame]:SetAlpha(0)
 
     _G[frame]:ClearAllPoints()
     if index < 0 then
@@ -102,7 +93,7 @@ function NeedFrame:addItem(data)
     _G[frame .. 'ItemIconItemName']:SetText(link);
     _G[frame .. 'ItemIconItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
 
-    _G[frame .. 'TimeLeftBar']:SetBackdropColor(ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b, .76)
+    _G[frame .. 'TimeLeftBar']:SetVertexColor(ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b, .76)
 
     _G[frame].inWishlist = false
     for _, wishItem in next, db['NEED_WISHLIST'] do
@@ -216,7 +207,7 @@ function NeedFrame:addItem(data)
         end
     end
 
-    self:fadeInFrame(index)
+    self:fadeInFrame(_G[frame])
 end
 
 function NeedFrame:SendGear(to)
@@ -242,16 +233,69 @@ function NeedFrame:SendGear(to)
     core.wsend("NORMAL", "sending=gear=end", to)
 end
 
-function NeedFrame:fadeInFrame(id)
-    self.fadeInAnimationFrame.ids[id] = true
-    self.fadeInAnimationFrame:Show()
+function NeedFrame:fadeInFrame(frame)
+    frame:Show();
+    frame.animIn:Stop();
+    frame.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
+    frame.animIn:Play();
+
+    frame.glow.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
+    frame.glow.animIn:Play();
+
+    frame.shine.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
+    frame.shine.animIn:Play();
+
+    -- wishlist pulse
+    if frame.inWishlist then
+        frame.glow.wishPulse:Play();
+    end
 end
 
-function NeedFrame:fadeOutFrame(id, need)
-    self.fadeOutAnimationFrame.ids[id] = true
-    self.fadeOutAnimationFrame.need[id] = need
-    self.fadeOutAnimationFrame:Show()
+function NeedFrame:animInFinished()
+    local frame = this:GetRegionParent()
+    print(frame:GetName())
+
+    _G[frame:GetName() .. "TimeLeftBar"].countdown:Stop();
+    _G[frame:GetName() .. "TimeLeftBar"].countdown.animIn:SetStartDelay(0);
+    _G[frame:GetName() .. "TimeLeftBar"].countdown.countdown:SetDuration(db['VOTE_TTN']);
+    _G[frame:GetName() .. "TimeLeftBar"].countdown:Play();
 end
+
+function NeedFrame:fadeOutFrame(frame)
+    -- can reach here from need click too
+    _G[frame:GetName() .. "TimeLeftBar"].countdown:Stop();
+
+    frame.animOut:Stop();
+    frame.animOut.animOut:SetStartDelay(0);
+    frame.animOut:Play();
+end
+
+function NeedFrame:animOutFinished()
+    local frame = this:GetRegionParent()
+    print(frame:GetName() .. " finished")
+    frame:Hide();
+    if frame.need == 'autopass' then
+        NeedFrame:NeedClick(nil, frame)
+        print("auto pass click")
+    else
+        if db['NEED_FRAME_COLLAPSE'] then
+            NeedFrame:repositionFrames()
+        end
+    end
+end
+
+
+function NeedFrame:countdownFinished()
+    local frame = this:GetRegionParent():GetParent()
+    NeedFrame:fadeOutFrame(frame)
+end
+
+function NeedFrame:SetCountdownWidth()
+    local frame = this:GetRegionParent():GetParent()
+    frame.elapsed = frame.elapsed + core.int(arg1)
+    this:GetRegionParent():SetWidth(260 - frame.elapsed * 260 / db['VOTE_TTN'])
+end
+
 
 function NeedFrame:showAnchor()
     TalcNeedFrame:Show()
@@ -279,17 +323,19 @@ end
 
 function NeedFrame:ResetVars()
 
-    self:hideAnchor()
+    --self:hideAnchor()
+    self:showAnchor()
 
-    for index, _ in next, self.itemFrames do
-        self.itemFrames[index]:Hide()
+    for _, frame in next, self.itemFrames do
+        frame:Hide()
+        frame = nil
     end
 
     for i = 1, 15 do
         _G['NewItemTooltip' .. i]:Hide()
     end
 
-    TalcNeedFrame:Hide()
+    TalcNeedFrame:Show()
 
     self.countdown:Hide()
     self.countdown.T = 1
@@ -319,7 +365,7 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
             self:addItem(msg)
             if not TalcNeedFrame:IsVisible() then
                 TalcNeedFrame:Show()
-                self.countdown:Show()
+                --self.countdown:Show()
             end
             return
         end
@@ -360,17 +406,27 @@ function NeedFrame:ScaleWindow(dir)
     talc_print('Frame re-scaled. Type |cfffff569/talc |cff69ccf0need resetscale |rif the frame is offscreen')
 end
 
-function NeedFrame:NeedClick(id, need)
+function NeedFrame:NeedClick(need, f)
 
-    if need == 'autopass' then
-        self:fadeOutFrame(id)
-        return false
+    local frame = nil
+
+    if f then
+        frame = f
+    else
+        frame = this:GetParent()
     end
 
-    if id < 0 then
-        --test items
-        self:fadeOutFrame(id)
-        return
+    local id = frame:GetID()
+
+    if need then
+        frame.need = need
+    else
+        need = frame.need
+    end
+
+    if need == 'autopass' then
+        self:fadeOutFrame(frame)
+        return false
     end
 
     local gearscore = 0
@@ -402,7 +458,7 @@ function NeedFrame:NeedClick(id, need)
                         end
                     end
                 else
-                    talc_debug('cant get inventory item ' .. i) -- shouldnt really get here
+                    talc_debug('cant get inventory item ' .. i) -- shouldn't really get here cause player gear should be cached
                 end
             end
         end
@@ -465,7 +521,7 @@ function NeedFrame:NeedClick(id, need)
     local inWishlist = self.itemFrames[id].inWishlist and '1' or '0'
     core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore .. "=" .. inWishlist)
 
-    self:fadeOutFrame(id, need)
+    self:fadeOutFrame(frame)
 end
 
 function NeedFrame:Test()
@@ -485,169 +541,15 @@ function NeedFrame:Test()
         local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
 
         if name and tex then
-            self:addItem('loot=-' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
+            self:addItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
             if not TalcNeedFrame:IsVisible() then
                 TalcNeedFrame:Show()
-                self.countdown:Show()
+                --self.countdown:Show()
             end
         else
             talc_print('Caching items... please try again.')
             GameTooltip:SetHyperlink(itemLink)
             GameTooltip:Hide()
-        end
-    end
-end
-
-NeedFrame.countdown = CreateFrame("Frame")
-NeedFrame.countdown:Hide()
-NeedFrame.countdown.timeToNeed = 30 --default, will be gotten via addonMessage
-NeedFrame.countdown.T = 1
-NeedFrame.countdown.C = 30
-
-NeedFrame.countdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
-end)
-NeedFrame.countdown:SetScript("OnUpdate", function()
-    local plus = 0.03
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-    if gt >= st then
-        if this.T ~= this.timeToNeed + plus then
-
-            for index, frame in next, NeedFrame.itemFrames do
-                if core.floor(this.C - this.T + plus) < 0 then
-                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText("")
-                else
-                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText(core.ceil(this.C - this.T + plus) .. "s")
-                end
-
-                _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 260 / this.timeToNeed)
-
-                if frame.inWishlist then
-                    if _G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() >= 0.3 then
-                        frame.glowDir = -1
-                    end
-                    if _G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() <= 0.1 then
-                        frame.glowDir = 1
-                    end
-                    _G['NeedFrame' .. index .. 'GlowFrame']:SetAlpha(_G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() + frame.glowDir * 0.02)
-                end
-            end
-        end
-        this:Hide()
-        if this.T < this.C + plus then
-            --still tick
-            this.T = this.T + plus
-            this:Show()
-        elseif this.T > this.timeToNeed + plus then
-
-            -- hide frames and send auto pass
-            for index in next, NeedFrame.itemFrames do
-                if NeedFrame.itemFrames[index]:GetAlpha() == 1 then
-                    NeedFrame:NeedClick(index, 'autopass')
-                end
-            end
-            -- end hide frames
-
-            this:Hide()
-            this.T = 1
-
-        end
-    end
-end)
-
-NeedFrame.fadeInAnimationFrame = CreateFrame("Frame")
-NeedFrame.fadeInAnimationFrame:Hide()
-NeedFrame.fadeInAnimationFrame.ids = {}
-NeedFrame.fadeInAnimationFrame:SetScript("OnShow", function()
-    this.startTime = GetTime()
-end)
-NeedFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
-    if GetTime() >= this.startTime + 0.03 then
-
-        this.startTime = GetTime()
-
-        local atLeastOne = false
-        for id in next, this.ids do
-            if this.ids[id] then
-                atLeastOne = true
-                local frame = _G["NeedFrame" .. id]
-
-                local swooshAlpha = 1
-
-                _G["NeedFrame" .. id .. "BgImageSwoosh"]:SetPoint("TOPLEFT", 38 + 250 * frame:GetAlpha(), -26)
-
-                if frame:GetAlpha() <= 0.15 then
-                    swooshAlpha = frame:GetAlpha() * 4
-                elseif frame:GetAlpha() >= 0.80 then
-                    swooshAlpha = 1 - frame:GetAlpha()
-                end
-
-                _G["NeedFrame" .. id .. "BgImageSwoosh"]:SetAlpha(swooshAlpha)
-
-                if frame:GetAlpha() < 1 then
-                    frame:SetAlpha(frame:GetAlpha() + 0.1)
-
-                    _G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(1 - frame:GetAlpha())
-                else
-                    this.ids[id] = false
-                    this.ids[id] = nil
-                end
-                return
-            end
-        end
-        if not atLeastOne then
-            this:Hide()
-        end
-    end
-end)
-
-NeedFrame.fadeOutAnimationFrame = CreateFrame("Frame")
-NeedFrame.fadeOutAnimationFrame:Hide()
-NeedFrame.fadeOutAnimationFrame.ids = {}
-NeedFrame.fadeOutAnimationFrame.need = {}
-NeedFrame.fadeOutAnimationFrame:SetScript("OnShow", function()
-    this.startTime = GetTime()
-end)
-NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
-    if GetTime() >= this.startTime + 0.03 then
-
-        this.startTime = GetTime()
-
-        local atLeastOne = false
-        for id in next, this.ids do
-            if this.ids[id] then
-                atLeastOne = true
-                local frame = _G["NeedFrame" .. id]
-                if frame:GetAlpha() > 0 then
-                    frame:SetAlpha(frame:GetAlpha() - 0.15)
-                    --_G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(frame:GetAlpha() - 0.15)
-                else
-                    this.ids[id] = nil
-                    frame:Hide()
-
-                    if NeedFrame.countdown.T ~= 1 and db['NEED_FRAME_COLLAPSE'] then
-                        NeedFrame:repositionFrames()
-                    end
-                end
-            end
-        end
-        if not atLeastOne then
-            this:Hide()
-        end
-    end
-end)
-
-function NeedFrame:repositionFrames()
-    for index, frame in next, self.itemFrames do
-        if not frame:IsVisible() then
-            if index < #self.itemFrames then
-                for i = index + 1, #self.itemFrames do
-                    local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
-                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 100)
-                end
-                break
-            end
         end
     end
 end
@@ -661,8 +563,8 @@ NeedFrame.delayAddItem:SetScript("OnShow", function()
 end)
 NeedFrame.delayAddItem:SetScript("OnUpdate", function()
     local plus = 0.5
-    local gt = GetTime() * 1000 --22.123 -> 22123
-    local st = (this.startTime + plus) * 1000 -- (22.123 + 0.1) * 1000 =  22.223 * 1000 = 22223
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
     if gt >= st then
 
         local atLeastOne = false

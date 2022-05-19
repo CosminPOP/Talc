@@ -29,64 +29,111 @@
                 </Offset>
             </Anchor>
         </Anchors>
+        <Animations>
+            <AnimationGroup name="$parentAnimIn" parentKey="animIn">
+                <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                <Alpha change="1" duration="0.2" order="2">
+                    <Scripts>
+                        <OnFinished>
+                            NeedFrame:animInFinished()
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+            <AnimationGroup name="$parentAnimOut" parentKey="animOut">
+                <Alpha change="-1" duration="0.2" parentKey="animOut">
+                    <Scripts>
+                        <OnFinished>
+                            NeedFrame:animOutFinished()
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+        </Animations>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="">
+                    <Size>
+                        <AbsDimension x="512" y="128"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentGlow" file="Interface\addons\Talc\images\need\need_glow"
+                         alphaMode="ADD" alpha="0" parentKey="glow">
+                    <Size>
+                        <AbsDimension x="512" y="128"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup name="$parentAnimIn" parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Alpha change="-1" duration="0.5" order="2"/>
+                        </AnimationGroup>
+                        <AnimationGroup name="$parentWishlistGlow" parentKey="wishPulse" looping="REPEAT">
+                            <Alpha change="0.5" duration="0.5" order="1" parentKey="pulseIn"/>
+                            <Alpha change="-0.5" duration="0.5" order="2" parentKey="puseOut"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+                <Texture name="$parentShine" file="Interface\addons\Talc\images\need\need_swoosh"
+                         alphaMode="ADD" alpha="0" parentKey="shine">
+                    <Size>
+                        <AbsDimension x="256" y="126"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="100" y="-26"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup name="$parentAnimIn" parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Translation offsetX="140" offsetY="0" duration="0.85" order="2"/>
+                            <Alpha startDelay="0.35" change="-1" duration="0.5" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+                <Texture name="$parentTimeLeftBar" file="Interface\addons\Talc\images\grad1"
+                         alpha="0" parentKey="timeleft">
+                    <Size>
+                        <AbsDimension x="260" y="5"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="126" y="-93"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="countdown">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="30" order="2" parentKey="countdown">
+                                <Scripts>
+                                    <OnFinished>
+                                        NeedFrame:countdownFinished()
+                                    </OnFinished>
+                                    <OnUpdate>
+                                        NeedFrame:SetCountdownWidth()
+                                    </OnUpdate>
+                                </Scripts>
+                            </Alpha>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+        </Layers>
         <Frames>
-
-            <Frame name="$parentGlowFrame" framestrata="HIGH">
-                <Size>
-                    <AbsDimension x="512" y="128"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOP">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <Texture name="$parentGlow" file="Interface\addons\Talc\images\need\need_glow"
-                                 alphamode="ADD">
-                            <Size>
-                                <AbsDimension x="512" y="128"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="CENTER">
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-            </Frame>
-
-            <Frame name="$parentBgImage" framestrata="MEDIUM">
-                <Size>
-                    <AbsDimension x="512" y="128"/>
-                </Size>
-                <Layers>
-                    <Layer level="BORDER">
-                        <Texture name="$parentSwoosh" file="Interface\addons\Talc\images\need\need_swoosh"
-                                 alphamode="ADD">
-                            <Size>
-                                <AbsDimension x="256" y="128"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="50" y="-26"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-                <Anchors>
-                    <Anchor point="TOP">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
 
             <Button name="$parentItemIcon" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
@@ -211,22 +258,9 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-<!--                <Layers>-->
-<!--                    <Layer level="OVERLAY">-->
-<!--                        <FontString name="$parentName" inherits="GameFontNormal" text="BIS" hidden="false">-->
-<!--                            <Anchors>-->
-<!--                                <Anchor point="BOTTOM">-->
-<!--                                    <Offset>-->
-<!--                                        <AbsDimension x="0" y="-16"/>-->
-<!--                                    </Offset>-->
-<!--                                </Anchor>-->
-<!--                            </Anchors>-->
-<!--                        </FontString>-->
-<!--                    </Layer>-->
-<!--                </Layers>-->
                 <Scripts>
                     <OnClick>
-                        NeedFrame:NeedClick(this:GetID(), 'bis');
+                        NeedFrame:NeedClick('bis');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
@@ -276,7 +310,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame:NeedClick(this:GetID(), 'ms');
+                        NeedFrame:NeedClick('ms');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
@@ -326,7 +360,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame:NeedClick(this:GetID(), 'os');
+                        NeedFrame:NeedClick('os');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
@@ -376,7 +410,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame:NeedClick(this:GetID(), 'xmog');
+                        NeedFrame:NeedClick('xmog');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
@@ -426,7 +460,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        NeedFrame:NeedClick(this:GetID(), 'pass');
+                        NeedFrame:NeedClick('pass');
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
@@ -439,37 +473,39 @@
                 </Scripts>
             </Button>
 
-            <Frame name="$parentTimeLeftBar" framestrata="HIGH">
-                <Size>
-                    <AbsDimension x="260" y="6"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="127" y="-92"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
-                    <Color r="0" g="0.88" b="0.06" a="1"/>
-                </Backdrop>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentText" inherits="GameFontNormalSmall" text="" hidden="false">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="120" y="1"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-            </Frame>
+<!--            <Frame name="$parentTimeLeftBar" framestrata="HIGH" alpha="0">-->
+<!--                <Size>-->
+<!--                    <AbsDimension x="260" y="6"/>-->
+<!--                </Size>-->
+<!--                <Anchors>-->
+<!--                    <Anchor point="TOPLEFT">-->
+<!--                        <Offset>-->
+<!--                            <AbsDimension x="127" y="-92"/>-->
+<!--                        </Offset>-->
+<!--                    </Anchor>-->
+<!--                </Anchors>-->
+<!--                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">-->
+<!--                </Backdrop>-->
+<!--                <Animations>-->
+<!--                    -->
+<!--                </Animations>-->
+<!--                <Layers>-->
+<!--                    <Layer level="OVERLAY">-->
+<!--                        <FontString name="$parentText" inherits="GameFontNormalSmall" text="" hidden="false">-->
+<!--                            <Anchors>-->
+<!--                                <Anchor point="TOPLEFT">-->
+<!--                                    <Offset>-->
+<!--                                        <AbsDimension x="120" y="1"/>-->
+<!--                                    </Offset>-->
+<!--                                </Anchor>-->
+<!--                            </Anchors>-->
+<!--                        </FontString>-->
+<!--                    </Layer>-->
+<!--                </Layers>-->
+<!--            </Frame>-->
 
             <Frame name="$parentQuestRewards" framestrata="MEDIUM" hidden="true">
-                <Backdrop bgFile="Interface\Addons\Talc\images\quest-rewards">
+                <Backdrop bgFile="Interface\Addons\Talc\images\need\quest-rewards">
                 </Backdrop>
                 <Size>
                     <AbsDimension x="128" y="128"/>
@@ -725,10 +761,10 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
-                          tile="false">
-                    <Color a="0.5"/>
-                </Backdrop>
+<!--                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"-->
+<!--                          tile="false">-->
+<!--                    <Color a="0.5"/>-->
+<!--                </Backdrop>-->
             </Frame>
 
             <Button name="$parentTestPlacement" inherits="Talc_ButtonTemplate" text="Test 7 items">
