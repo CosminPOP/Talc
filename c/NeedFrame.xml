@@ -62,6 +62,23 @@
                 <Size>
                     <AbsDimension x="512" y="128"/>
                 </Size>
+                <Layers>
+                    <Layer level="BORDER">
+                        <Texture name="$parentSwoosh" file="Interface\addons\Talc\images\need\need_swoosh"
+                                 alphamode="ADD">
+                            <Size>
+                                <AbsDimension x="256" y="128"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="50" y="-26"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
                 <Anchors>
                     <Anchor point="TOP">
                         <Offset>
@@ -73,8 +90,9 @@
 
             <Button name="$parentItemIcon" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
                     <Size>
-                        <AbsDimension x="40" y="40"/>
+                        <AbsDimension x="44" y="44"/>
                     </Size>
                     <Anchors>
                         <Anchor point="CENTER">
@@ -84,7 +102,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="40" y="40"/>
                     </Size>
@@ -96,7 +114,7 @@
                         </Anchor>
                     </Anchors>
                 </PushedTexture>
-                <DisabledTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                <DisabledTexture name="$parentDisabledTexture" file="Interface\Icons\inv_staff_20">
                     <Size>
                         <AbsDimension x="40" y="40"/>
                     </Size>
@@ -110,12 +128,12 @@
                 </DisabledTexture>
                 <HighlightTexture inherits=""/>
                 <Size>
-                    <AbsDimension x="40" y="40"/>
+                    <AbsDimension x="39" y="39"/>
                 </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="60" y="-37"/>
+                            <AbsDimension x="138" y="-44"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -125,14 +143,14 @@
                                     hidden="false"
                                     justifyH="LEFT">
                             <Anchors>
-                                <Anchor point="LEFT">
+                                <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="50" y="-1"/>
+                                        <AbsDimension x="53" y="10"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
                             <Size>
-                                <AbsDimension x="135" y="37"/>
+                                <AbsDimension x="180" y="12"/>
                             </Size>
                         </FontString>
                         <FontString name="$parentItemLevel" inherits="NumberFontNormalSmall" text="215"
@@ -141,7 +159,7 @@
                             <Anchors>
                                 <Anchor point="BOTTOM">
                                     <Offset>
-                                        <AbsDimension x="0" y="-13"/>
+                                        <AbsDimension x="0" y="-18"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -189,27 +207,36 @@
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="255" y="-40"/>
+                            <AbsDimension x="193" y="-55"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="BIS" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
+<!--                <Layers>-->
+<!--                    <Layer level="OVERLAY">-->
+<!--                        <FontString name="$parentName" inherits="GameFontNormal" text="BIS" hidden="false">-->
+<!--                            <Anchors>-->
+<!--                                <Anchor point="BOTTOM">-->
+<!--                                    <Offset>-->
+<!--                                        <AbsDimension x="0" y="-16"/>-->
+<!--                                    </Offset>-->
+<!--                                </Anchor>-->
+<!--                            </Anchors>-->
+<!--                        </FontString>-->
+<!--                    </Layer>-->
+<!--                </Layers>-->
                 <Scripts>
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'bis');
                     </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('BIS', 1, 1, 1)
+<!--                        GameTooltip:AddLine('Best In Slot')-->
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
             </Button>
             <Button name="$parentMSUpgradeButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
@@ -248,19 +275,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="MS" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'ms');
@@ -303,19 +317,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="OS" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'os');
@@ -358,19 +359,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="XMOG" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'xmog');
@@ -409,23 +397,10 @@
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentXMOGButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="5" y="0"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="PASS" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'pass');
@@ -435,17 +410,17 @@
 
             <Frame name="$parentTimeLeftBar" framestrata="HIGH">
                 <Size>
-                    <AbsDimension x="190" y="8"/>
+                    <AbsDimension x="260" y="6"/>
                 </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="55" y="-88"/>
+                            <AbsDimension x="127" y="-92"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
-                    <Color r="0" g="0.88" b="0.06" a=".5"/>
+                    <Color r="0" g="0.88" b="0.06" a="1"/>
                 </Backdrop>
                 <Layers>
                     <Layer level="OVERLAY">
@@ -453,7 +428,7 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="5" y="1"/>
+                                        <AbsDimension x="120" y="1"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -471,7 +446,7 @@
                 <Anchors>
                     <Anchor point="RIGHT">
                         <Offset>
-                            <AbsDimension x="60" y="-30"/>
+                            <AbsDimension x="5" y="-30"/>
                         </Offset>
                     </Anchor>
                 </Anchors>

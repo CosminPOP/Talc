@@ -91,9 +91,9 @@ function NeedFrame:addItem(data)
     _G[frame]:ClearAllPoints()
     if index < 0 then
         --test items
-        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index * -1))
+        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index * -1))
     else
-        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (80 * index))
+        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index))
     end
     _G[frame].link = link
 
@@ -103,6 +103,15 @@ function NeedFrame:addItem(data)
     _G[frame .. 'ItemIconItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
 
     _G[frame .. 'TimeLeftBar']:SetBackdropColor(ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b, .76)
+
+    _G[frame].inWishlist = false
+    for _, wishItem in next, db['NEED_WISHLIST'] do
+        local wName = GetItemInfo(wishItem)
+        if wishItem == name or (wName and wName == name) then
+            _G[frame].inWishlist = true
+            break
+        end
+    end
 
     core.addButtonOnEnterTooltip(_G[frame .. 'ItemIcon'], link, nil, true)
 
@@ -358,7 +367,8 @@ function NeedFrame:NeedClick(id, need)
         return false
     end
 
-    if id < 0 then --test items
+    if id < 0 then
+        --test items
         self:fadeOutFrame(id)
         return
     end
@@ -371,7 +381,7 @@ function NeedFrame:NeedClick(id, need)
         end
     end
 
-    local myItem = {'0', '0', '0', '0'}
+    local myItem = { '0', '0', '0', '0' }
 
     local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
     local itemID = core.int(core.split(':', itemLink)[2])
@@ -421,7 +431,8 @@ function NeedFrame:NeedClick(id, need)
                             myItem[rewardIndex] = ring2Link
                             ringsSet = true
                         end
-                    elseif q_equip_slot == 'INVTYPE_TRINKET' then --todo
+                    elseif q_equip_slot == 'INVTYPE_TRINKET' then
+                        --todo
                     else
                         if not itemSet[core.equipSlotsDetails[q_equip_slot].id] then
                             local _, _, eqIL = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[q_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
@@ -451,7 +462,8 @@ function NeedFrame:NeedClick(id, need)
 
     end
 
-    core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore)
+    local inWishlist = self.itemFrames[id].inWishlist and '1' or '0'
+    core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore .. "=" .. inWishlist)
 
     self:fadeOutFrame(id, need)
 end
@@ -502,14 +514,24 @@ NeedFrame.countdown:SetScript("OnUpdate", function()
     if gt >= st then
         if this.T ~= this.timeToNeed + plus then
 
-            for index in next, NeedFrame.itemFrames do
+            for index, frame in next, NeedFrame.itemFrames do
                 if core.floor(this.C - this.T + plus) < 0 then
-                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText("CLOSED")
+                    _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText("")
                 else
                     _G['NeedFrame' .. index .. 'TimeLeftBarText']:SetText(core.ceil(this.C - this.T + plus) .. "s")
                 end
 
-                _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 190 / this.timeToNeed)
+                _G['NeedFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 260 / this.timeToNeed)
+
+                if frame.inWishlist then
+                    if _G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() >= 0.3 then
+                        frame.glowDir = -1
+                    end
+                    if _G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() <= 0.1 then
+                        frame.glowDir = 1
+                    end
+                    _G['NeedFrame' .. index .. 'GlowFrame']:SetAlpha(_G['NeedFrame' .. index .. 'GlowFrame']:GetAlpha() + frame.glowDir * 0.02)
+                end
             end
         end
         this:Hide()
@@ -550,6 +572,19 @@ NeedFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
             if this.ids[id] then
                 atLeastOne = true
                 local frame = _G["NeedFrame" .. id]
+
+                local swooshAlpha = 1
+
+                _G["NeedFrame" .. id .. "BgImageSwoosh"]:SetPoint("TOPLEFT", 38 + 250 * frame:GetAlpha(), -26)
+
+                if frame:GetAlpha() <= 0.15 then
+                    swooshAlpha = frame:GetAlpha() * 4
+                elseif frame:GetAlpha() >= 0.80 then
+                    swooshAlpha = 1 - frame:GetAlpha()
+                end
+
+                _G["NeedFrame" .. id .. "BgImageSwoosh"]:SetAlpha(swooshAlpha)
+
                 if frame:GetAlpha() < 1 then
                     frame:SetAlpha(frame:GetAlpha() + 0.1)
 
@@ -588,9 +623,12 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
                     frame:SetAlpha(frame:GetAlpha() - 0.15)
                     --_G["NeedFrame" .. id .. "GlowFrame"]:SetAlpha(frame:GetAlpha() - 0.15)
                 else
-                    this.ids[id] = false
                     this.ids[id] = nil
                     frame:Hide()
+
+                    if NeedFrame.countdown.T ~= 1 then
+                        NeedFrame:repositionFrames()
+                    end
                 end
             end
         end
@@ -599,6 +637,24 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
         end
     end
 end)
+
+function NeedFrame:repositionFrames()
+    local startIndex = 0
+    for index, frame in next, self.itemFrames do
+        if not frame:IsVisible() then
+            if index < #self.itemFrames then
+
+                for i = index + 1, #self.itemFrames do
+                    local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
+                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 80)
+                end
+
+                break
+            end
+        end
+    end
+
+end
 
 NeedFrame.delayAddItem = CreateFrame("Frame")
 NeedFrame.delayAddItem:Hide()
