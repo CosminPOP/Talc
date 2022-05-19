@@ -433,7 +433,18 @@ end
 function TalcFrame:AddToWishlist(itemLink, direct)
 
     if direct then
-        for i = 1, 16 do
+
+        for _, item in next, db['NEED_WISHLIST'] do
+            local _, _, link = core.find(itemLink, "(item:%d+:%d+:%d+:%d+)");
+            local name = GetItemInfo(link)
+            if item == itemLink or item == name then
+                talc_print(itemLink .. " is already in your Wishlist.")
+                TalcFrame:WishlistUpdate()
+                return
+            end
+        end
+
+        for i = 1, core.numWishlistItems do
             if db['NEED_WISHLIST'][i] == nil then
                 db['NEED_WISHLIST'][i] = itemLink
                 break
@@ -467,8 +478,6 @@ TalcFrame.wishlistItemsFrames = {}
 
 function TalcFrame:WishlistUpdate()
 
-    talc_debug(db['NEED_WISHLIST'])
-
     -- try to update item if its not a linkString
     for _, itemLink in next, db['NEED_WISHLIST'] do
         if not core.find(itemLink, "(item:%d+:%d+:%d+:%d+)") then
@@ -484,7 +493,7 @@ function TalcFrame:WishlistUpdate()
         frame:Hide()
     end
 
-    TalcVoteFrameWishlistFrameDescription:SetText("You can add up to 16 items to your Wishlist.")
+    TalcVoteFrameWishlistFrameDescription:SetText("You can add up to ".. core.numWishlistItems .." items to your Wishlist.")
     TalcVoteFrameWishlistFrameAdd:Enable()
     if #db['NEED_WISHLIST'] > 0 then
         TalcVoteFrameWishlistFrameDescription:SetText(TalcVoteFrameWishlistFrameDescription:GetText() .. "Your list has " .. #db['NEED_WISHLIST'] .. " item(s).")
@@ -979,17 +988,17 @@ function TalcFrame:DoneVoting()
 end
 
 function TalcFrame:GetPlayerInfo(playerIndexOrName)
-    --returns itemIndex, name, need, votes, ci1, ci2, ci3, ci4, roll, k, gearscore
+    --returns itemIndex, name, need, votes, ci1, ci2, ci3, ci4, roll, k, gearscore, inWishlist
     if core.type(playerIndexOrName) == 'string' then
         for k, player in next, self.currentPlayersList do
             if player.name == playerIndexOrName then
-                return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, k, player.gearscore
+                return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, k, player.gearscore, player.inWishlist
             end
         end
     end
     local player = self.currentPlayersList[playerIndexOrName]
     if player then
-        return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, playerIndexOrName, player.gearscore
+        return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, playerIndexOrName, player.gearscore, player.inWishlist
     else
         return false
     end
@@ -1269,7 +1278,7 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame]:Show()
 
                 local currentItem = {}
-                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore = self:GetPlayerInfo(index);
+                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore, inWishlist = self:GetPlayerInfo(index);
                 currentItem[1] = ci1
                 currentItem[2] = ci2
                 currentItem[3] = ci3
@@ -1285,8 +1294,13 @@ function TalcFrame:VoteFrameListUpdate()
 
                 _G[frame .. 'Name']:SetText(color.colorStr .. name)
                 _G[frame .. 'Need']:SetText(core.needs[need].colorStr .. core.needs[need].text)
+                _G[frame .. 'Wishlist']:Hide()
+                if inWishlist then
+                    _G[frame .. 'Wishlist']:Show()
+                end
                 _G[frame .. 'GearScore']:SetText(gearscore)
                 _G[frame .. 'RollPass']:Hide()
+
                 _G[frame .. 'Votes']:SetText(votes)
                 _G[frame .. 'VoteButton']:SetText('VOTE')
                 _G[frame .. 'VoteButtonCheck']:Hide()
