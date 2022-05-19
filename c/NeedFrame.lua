@@ -9,22 +9,14 @@ function NeedFrame:init()
     db = TALC_DB
     tokenRewards = TALC_TOKENS
 
-    TalcNeedFrame:SetScale(db['NEED_SCALE'])
-
     self:ResetVars()
-
-    talc_print('NeedFrame Loaded. Type |cfffff569/talc |cff69ccf0need |cffffffffto show the Anchor window.')
 end
 
 function NeedFrame:addItem(data)
     local item = core.split("=", data)
 
-    self.countdown.timeToNeed = db['VOTE_TTN']
-    self.countdown.C = self.countdown.timeToNeed
-
     local index = core.int(item[2])
     local texture = item[3]
-    --local name = item[4]
     local link = item[5]
 
     local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
@@ -48,6 +40,7 @@ function NeedFrame:addItem(data)
     _G[frame]:SetID(index)
     _G[frame].need = 'autopass'
     _G[frame].elapsed = 0
+    _G[frame].link = link
 
     _G[frame .. 'BISButton']:Hide()
     _G[frame .. 'MSUpgradeButton']:Hide()
@@ -77,16 +70,8 @@ function NeedFrame:addItem(data)
 
     _G[frame .. 'Background']:SetTexture("Interface\\Addons\\Talc\\images\\need\\need_" .. quality)
 
-    --_G[frame]:SetAlpha(0)
-
     _G[frame]:ClearAllPoints()
-    if index < 0 then
-        --test items
-        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index * -1))
-    else
-        _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index))
-    end
-    _G[frame].link = link
+    _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index))
 
     _G[frame .. 'ItemIcon']:SetNormalTexture(texture);
     _G[frame .. 'ItemIcon']:SetPushedTexture(texture);
@@ -284,7 +269,6 @@ function NeedFrame:animOutFinished()
     end
 end
 
-
 function NeedFrame:countdownFinished()
     local frame = this:GetRegionParent():GetParent()
     NeedFrame:fadeOutFrame(frame)
@@ -295,7 +279,6 @@ function NeedFrame:SetCountdownWidth()
     frame.elapsed = frame.elapsed + core.int(arg1)
     this:GetRegionParent():SetWidth(260 - frame.elapsed * 260 / db['VOTE_TTN'])
 end
-
 
 function NeedFrame:showAnchor()
     TalcNeedFrame:Show()
@@ -323,8 +306,7 @@ end
 
 function NeedFrame:ResetVars()
 
-    --self:hideAnchor()
-    self:showAnchor()
+    self:hideAnchor()
 
     for _, frame in next, self.itemFrames do
         frame:Hide()
@@ -335,12 +317,7 @@ function NeedFrame:ResetVars()
         _G['NewItemTooltip' .. i]:Hide()
     end
 
-    TalcNeedFrame:Show()
-
-    self.countdown:Hide()
-    self.countdown.T = 1
     self.numItems = 0
-
 end
 
 function NeedFrame:handleSync(arg1, msg, arg3, sender)
@@ -365,7 +342,6 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
             self:addItem(msg)
             if not TalcNeedFrame:IsVisible() then
                 TalcNeedFrame:Show()
-                --self.countdown:Show()
             end
             return
         end
@@ -411,9 +387,9 @@ function NeedFrame:NeedClick(need, f)
     local frame = nil
 
     if f then
-        frame = f
+        frame = f --coming from end countdown, autopass
     else
-        frame = this:GetParent()
+        frame = this:GetParent() --coming from click
     end
 
     local id = frame:GetID()
@@ -430,8 +406,8 @@ function NeedFrame:NeedClick(need, f)
     end
 
     local gearscore = 0
-    for i = 0, 19 do
-        if GetInventoryItemLink("player", i) then
+    for i = 0, 18 do
+        if GetInventoryItemLink("player", i) and i ~=4 then
             local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
             gearscore = gearscore + itemLevel
         end
@@ -441,7 +417,7 @@ function NeedFrame:NeedClick(need, f)
 
     local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
     local itemID = core.int(core.split(':', itemLink)[2])
-    local name, _, _, _, _, _, t1, _, equip_slot = GetItemInfo(itemLink)
+    local _, _, _, _, _, _, t1, _, equip_slot = GetItemInfo(itemLink)
 
     if need ~= 'pass' and need ~= 'autopass' then
         for i = 1, 19 do
@@ -544,7 +520,6 @@ function NeedFrame:Test()
             self:addItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
             if not TalcNeedFrame:IsVisible() then
                 TalcNeedFrame:Show()
-                --self.countdown:Show()
             end
         else
             talc_print('Caching items... please try again.')
@@ -582,5 +557,3 @@ NeedFrame.delayAddItem:SetScript("OnUpdate", function()
         end
     end
 end)
-
-
