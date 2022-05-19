@@ -216,7 +216,7 @@ function Talc_Utils:init()
         return iter
     end
 
-    core.addButtonOnEnterTooltip = function(frame, itemLink, custom, dressup)
+    core.addButtonOnEnterTooltip = function(frame, itemLink, custom, defaultClickEvents)
 
         if core.find(itemLink, "|", 1, true) then
             local ex = core.split("|", itemLink)
@@ -245,10 +245,15 @@ function Talc_Utils:init()
                 GameTooltip:Show();
             end)
 
-            if dressup then
+            if defaultClickEvents then
                 frame:SetScript("OnClick", function(self)
                     if IsControlKeyDown() then
                         DressUpItemLink(itemLink)
+                    end
+                    if IsShiftKeyDown() then
+                        if ChatFrame1EditBox:IsVisible() then
+                            ChatFrame1EditBox:Insert(itemLink);
+                        end
                     end
                 end)
             end
@@ -258,10 +263,15 @@ function Talc_Utils:init()
                 GameTooltip:SetHyperlink(itemLink);
                 GameTooltip:Show();
             end)
-            if dressup then
+            if defaultClickEvents then
                 frame:SetScript("OnClick", function(self)
                     if IsControlKeyDown() then
                         DressUpItemLink(itemLink)
+                    end
+                    if IsShiftKeyDown() then
+                        if ChatFrame1EditBox:IsVisible() then
+                            ChatFrame1EditBox:Insert(itemLink);
+                        end
                     end
                 end)
             end
@@ -274,6 +284,7 @@ function Talc_Utils:init()
     core.remButtonOnEnterTooltip = function(frame)
         frame:SetScript("OnEnter", nil)
         frame:SetScript("OnLeave", nil)
+        frame:SetScript("OnClick", nil)
     end
 
     core.ver = function(ver)
@@ -501,7 +512,8 @@ function Talc_Utils:init()
 
     core.cacheItem = function(id)
         if not id or not core.int(id) then
-            talc_debug("cache item call with null or not int " .. id .. " " .. type(linkOrID))
+            talc_debug("cache item call with null or not int " .. id .. " " .. core.type(id))
+            return
         end
 
         if GetItemInfo(id) then
@@ -559,6 +571,13 @@ function talc_debug(a)
             talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 5, 20) .. ']|cffffffff[false]')
         end
         return true
+    end
+    if core.type(a) == 'table' then
+        talc_debug("Dumping table:")
+        for i, d in next, a do
+            talc_debug(i .. ":" ..d)
+        end
+        return
     end
     talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 7, 20) .. ']|cffffffff[' .. a .. ']')
 end
