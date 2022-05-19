@@ -58,6 +58,12 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if db['NEED_SCALE'] == nil then
                 db['NEED_SCALE'] = 1
             end
+            if db['NEED_WISHLIST'] == nil then
+                db['NEED_WISHLIST'] = {}
+            end
+            if db['NEED_FRAME_COLLAPSE'] == nil then
+                db['NEED_FRAME_COLLAPSE'] = false
+            end
 
             if db['BOSS_FRAME_ENABLE'] == nil then
                 db['BOSS_FRAME_ENABLE'] = true
@@ -153,6 +159,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             TalcVoteFrameSettingsFrameRollTrombone:SetChecked(db['ROLL_TROMBONE'])
 
             TalcVoteFrameSettingsFrameBossEnable:SetChecked(db['BOSS_FRAME_ENABLE'])
+
+            TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(db['NEED_FRAME_COLLAPSE'])
 
             TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
 
