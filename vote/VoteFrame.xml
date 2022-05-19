@@ -231,6 +231,79 @@
         </Scripts>
     </Button>
 
+    <Frame name="Talc_WishlistItemTemplate" virtual="true">
+        <Size x="300" y="25"/>
+        <Frames>
+            <Button name="$parentItemButton" inherits="Talc_ButtonTemplate">
+                <NormalTexture />
+                <PushedTexture inherits=""/>
+                <HighlightTexture file="Interface\addons\Talc\images\grad1" alphaMode="ADD">
+                    <Color r="0.24" g="0.45" b="0.84" a="0.2"/>
+                    <Size x="275" y="25"/>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <Size x="250" y="24"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="0" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
+                            <Size x="24" y="24"/>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <FontString name="$parentName" inherits="GameFontNormal" text="Playername"
+                                    justifyH="LEFT">
+                            <Size x="250" y="14"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="30" y="-5"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Button>
+
+            <Button name="$parentRemoveButton" inherits="Talc_CloseButtonTemplate">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentItemButton" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="3" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:RemoveFromWishlist(this:GetID())
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+
+
     <Frame name="Talc_VotedItemTemplate" virtual="true">
         <Size>
             <AbsDimension x="44" y="44"/>
@@ -1240,250 +1313,7 @@
         </Layers>
         <Frames>
 
-            <Frame name="$parentWelcome" hidden="false">
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="10" y="-35"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="BOTTOMRIGHT">
-                        <Offset>
-                            <AbsDimension x="-10" y="10"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleUnderline">
-                            <Color r="0.24" g="0.45" b="0.84"/>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset x="0" y="-25"/>
-                                </Anchor>
-                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="0" y="-26"/>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentRecentItemsUnderline">
-                            <Color r="0.24" g="0.45" b="0.84"/>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset x="0" y="-75"/>
-                                </Anchor>
-                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="0" y="-76"/>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentTitle" inherits="GameFontHighlightLarge" text="Welcome">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-8"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                        <FontString name="$parentLCStatus" inherits="GameFontHighlight"
-                                    text="You are not part of Loot Council">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-35"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                        <FontString name="$parentRecentItems" inherits="GameFontHighlightLarge" text="Recent Items">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-58"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                        <FontString name="$parentNoRecentItems" inherits="GameFontHighlight" text="No Items recorded.">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-83"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Frames>
 
-                    <Button name="$parentOpenSettings" inherits="Talc_ButtonTemplate" text="Settings">
-                        <Size>
-                            <AbsDimension x="130" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPRIGHT">
-                                <Offset>
-                                    <AbsDimension x="-10" y="5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame:ShowSettingsScreen()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
-
-                    <Button name="$parentBackButton" inherits="UIPanelButtonTemplate">
-                        <NormalTexture inherits=""/>
-                        <HighlightTexture inherits=""/>
-                        <PushedTexture inherits=""/>
-                        <Size>
-                            <AbsDimension x="300" y="22"/>
-                        </Size>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <Texture file="Interface/moneyframe/arrow-left-up">
-                                    <Size>
-                                        <AbsDimension x="16" y="16"/>
-                                    </Size>
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="0" y="-3"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </Texture>
-                            </Layer>
-                            <Layer level="HIGHLIGHT">
-                                <Texture file="Interface/moneyframe/arrow-left-up" alphaMode="ADD">
-                                    <Size>
-                                        <AbsDimension x="16" y="16"/>
-                                    </Size>
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="0" y="-3"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </Texture>
-                            </Layer>
-                        </Layers>
-                        <Anchors>
-                            <Anchor point="LEFT" relativeTo="$parentRecentItems" relativePoint="LEFT">
-                                <Offset>
-                                    <AbsDimension x="-5" y="0"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame:WelcomeBack()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
-
-                    <ScrollFrame name="$parentItemsScrollFrame" inherits="UIPanelScrollFrameTemplate">
-                        <Anchors>
-                            <Anchor point="TOPLEFT">
-                                <Offset>
-                                    <AbsDimension x="5" y="-92"/>
-                                </Offset>
-                            </Anchor>
-                            <Anchor point="BOTTOMRIGHT">
-                                <Offset>
-                                    <AbsDimension x="8" y="-5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <ScrollChild>
-                            <Frame name="$parentChild">
-                                <Anchors>
-                                    <Anchor point="TOPLEFT">
-                                        <Offset>
-                                            <AbsDimension x="0" y="0"/>
-                                        </Offset>
-                                    </Anchor>
-                                </Anchors>
-                                <Size>
-                                    <AbsDimension x="181" y="351"/>
-                                </Size>
-                                <Frames>
-                                </Frames>
-                            </Frame>
-                        </ScrollChild>
-                    </ScrollFrame>
-
-                    <ScrollFrame name="$parentItemHistoryScrollFrame" inherits="UIPanelScrollFrameTemplate">
-                        <Anchors>
-                            <Anchor point="TOPLEFT">
-                                <Offset>
-                                    <AbsDimension x="5" y="-92"/>
-                                </Offset>
-                            </Anchor>
-                            <Anchor point="BOTTOMRIGHT">
-                                <Offset>
-                                    <AbsDimension x="8" y="-5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <ScrollChild>
-                            <Frame name="$parentChild">
-                                <Anchors>
-                                    <Anchor point="TOPLEFT">
-                                        <Offset>
-                                            <AbsDimension x="0" y="0"/>
-                                        </Offset>
-                                    </Anchor>
-                                </Anchors>
-                                <Size>
-                                    <AbsDimension x="181" y="351"/>
-                                </Size>
-                                <Frames>
-                                </Frames>
-                            </Frame>
-                        </ScrollChild>
-                    </ScrollFrame>
-
-                    <ScrollFrame name="$parentPlayerHistoryScrollFrame" inherits="UIPanelScrollFrameTemplate">
-                        <Anchors>
-                            <Anchor point="TOPLEFT">
-                                <Offset>
-                                    <AbsDimension x="5" y="-92"/>
-                                </Offset>
-                            </Anchor>
-                            <Anchor point="BOTTOMRIGHT">
-                                <Offset>
-                                    <AbsDimension x="8" y="-5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <ScrollChild>
-                            <Frame name="$parentChild">
-                                <Anchors>
-                                    <Anchor point="TOPLEFT">
-                                        <Offset>
-                                            <AbsDimension x="0" y="0"/>
-                                        </Offset>
-                                    </Anchor>
-                                </Anchors>
-                                <Size>
-                                    <AbsDimension x="181" y="351"/>
-                                </Size>
-                                <Frames>
-                                </Frames>
-                            </Frame>
-                        </ScrollChild>
-                    </ScrollFrame>
-
-                </Frames>
-            </Frame>
 
             <Button name="Talc_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
                     frameStrata="LOW">
@@ -2546,6 +2376,269 @@
                 </Frames>
             </Frame>
 
+            <Frame name="$parentWelcomeFrame" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-35"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleUnderline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-25"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-26"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentRecentItemsUnderline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-75"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-76"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontHighlightLarge" text="Welcome">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-8"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentLCStatus" inherits="GameFontHighlight"
+                                    text="You are not part of Loot Council">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-35"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentRecentItems" inherits="GameFontHighlightLarge" text="Recent Items">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-58"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentNoRecentItems" inherits="GameFontHighlight" text="No Items recorded.">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-83"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+
+                    <Button name="$parentOpenSettings" inherits="Talc_ButtonTemplate" text="Settings">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-4"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:ShowSettingsScreen()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentOpenWishlist" inherits="Talc_ButtonTemplate" text="Wishlist">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-54"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:ShowWishlistScreen()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentBackButton" inherits="UIPanelButtonTemplate">
+                        <NormalTexture inherits=""/>
+                        <HighlightTexture inherits=""/>
+                        <PushedTexture inherits=""/>
+                        <Size>
+                            <AbsDimension x="300" y="22"/>
+                        </Size>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <Texture file="Interface/moneyframe/arrow-left-up">
+                                    <Size>
+                                        <AbsDimension x="16" y="16"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="0" y="-3"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                            <Layer level="HIGHLIGHT">
+                                <Texture file="Interface/moneyframe/arrow-left-up" alphaMode="ADD">
+                                    <Size>
+                                        <AbsDimension x="16" y="16"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="0" y="-3"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeTo="$parentRecentItems" relativePoint="LEFT">
+                                <Offset>
+                                    <AbsDimension x="-5" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:WelcomeBack()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <ScrollFrame name="$parentItemsScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-92"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="$parentChild">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Size>
+                                    <AbsDimension x="181" y="351"/>
+                                </Size>
+                                <Frames>
+                                </Frames>
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+
+                    <ScrollFrame name="$parentItemHistoryScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-92"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="$parentChild">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Size>
+                                    <AbsDimension x="181" y="351"/>
+                                </Size>
+                                <Frames>
+                                </Frames>
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+
+                    <ScrollFrame name="$parentPlayerHistoryScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-92"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="$parentChild">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Size>
+                                    <AbsDimension x="181" y="351"/>
+                                </Size>
+                                <Frames>
+                                </Frames>
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+
+                </Frames>
+            </Frame>
+
             <Frame name="$parentSettingsFrame" hidden="false">
                 <Anchors>
                     <Anchor point="TOPLEFT">
@@ -3007,6 +3100,36 @@
                         </Scripts>
                     </CheckButton>
 
+                    <CheckButton name="$parentNeedFrameCollapse" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentNeedFrameLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Collapse">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting('NEED_FRAME_COLLAPSE', this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
                     <CheckButton name="$parentBossEnable" inherits="UICheckButtonTemplate">
                         <Size x="20" y="20"/>
                         <Anchors>
@@ -3112,7 +3235,7 @@
                         <Anchors>
                             <Anchor point="TOPLEFT" relativeTo="$parentNeedFrameLabel" relativePoint="BOTTOMLEFT">
                                 <Offset>
-                                    <AbsDimension x="0" y="-10"/>
+                                    <AbsDimension x="0" y="-30"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3142,7 +3265,7 @@
                         </Scripts>
                     </Button>
 
-                    <Button name="$parentCloseWindow" inherits="Talc_ButtonTemplate" text="Close Settings">
+                    <Button name="$parentCloseWindow" inherits="Talc_ButtonTemplate" text="Close">
                         <Size>
                             <AbsDimension x="130" y="20"/>
                         </Size>
@@ -3156,6 +3279,170 @@
                         <Scripts>
                             <OnClick>
                                 TalcFrame:HideSettingsScreen(true)
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                </Frames>
+            </Frame>
+
+            <Frame name="$parentWishlistFrame" hidden="false">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-35"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleUnderline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-25"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-26"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontHighlightLarge" text="Wishlist">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-9"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentDescription" inherits="GameFontHighlight"
+                                    text="You can define some items, LC will see them. Your current Wishlist is empty.">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-35"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                    </Layer>
+                </Layers>
+                <Frames>
+
+                    <EditBox name="$parentItemEditBox" enableMouse="true" letters="80">
+                        <Size x="205" y="32"/>
+                        <FontString inherits="ChatFontNormal"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-55"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="BACKGROUND">
+                                <Texture name="$parentLeft" file="Interface\addons\Talc\images\grad1">
+                                    <Color r="0.24" g="0.45" b="0.84" a="0.4"/>
+                                    <Size>
+                                        <AbsDimension x="8" y="20"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="-5" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="$parentRight" file="Interface\addons\Talc\images\grad1">
+                                    <Color r="0.24" g="0.45" b="0.84" a="0.4"/>
+                                    <Size>
+                                        <AbsDimension x="8" y="20"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="RIGHT">
+                                            <Offset>
+                                                <AbsDimension x="0" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </Texture>
+                                <Texture name="$parentMiddle" file="Interface\addons\Talc\images\grad1">
+                                    <Color r="0.24" g="0.45" b="0.84" a="0.4"/>
+                                    <Size>
+                                        <AbsDimension x="10" y="20"/>
+                                    </Size>
+                                    <Anchors>
+                                        <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+                                        <Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+
+                        <Scripts>
+                            <OnLoad>
+                                this:SetAutoFocus(false);
+                                this:SetTextInsets(0, 8, 0, 0);
+                            </OnLoad>
+                            <OnEscapePressed>
+                                this:ClearFocus(false);
+                            </OnEscapePressed>
+                            <OnEnterPressed>
+                                TalcFrame:TryToAddToWishlist(this:GetText());
+                                this:ClearFocus();
+                            </OnEnterPressed>
+                            <OnEditFocusLost>
+                                this:HighlightText(0, 0);
+                            </OnEditFocusLost>
+                            <OnEditFocusGained>
+                                this:HighlightText();
+                            </OnEditFocusGained>
+
+                        </Scripts>
+                    </EditBox>
+
+                    <Button name="$parentAdd" inherits="Talc_ButtonTemplate" text="Add">
+                        <Size>
+                            <AbsDimension x="80" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="LEFT" relativeTo="$parentItemEditBox" relativePoint="RIGHT">
+                                <Offset>
+                                    <AbsDimension x="10" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:TryToAddToWishlist(TalcVoteFrameWishlistFrameItemEditBox:GetText())
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentCloseWindow" inherits="Talc_ButtonTemplate" text="Close">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-10" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:HideWishlistScreen(true)
                             </OnClick>
                         </Scripts>
                     </Button>

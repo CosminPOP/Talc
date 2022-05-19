@@ -21,7 +21,6 @@ TalcFrame.currentMaxRoll = {}
 TalcFrame.numPlayersThatWant = 0
 TalcFrame.namePlayersThatWants = 0
 
-TalcFrame.waitResponses = {}
 TalcFrame.receivedResponses = 0
 TalcFrame.pickResponses = {}
 
@@ -74,6 +73,16 @@ end
 
 function TalcFrame:ResetVars()
 
+    self:HideVotingElements()
+
+    self:ShowWelcomeScreen()
+    --self:HideWelcomeScreen()
+
+    self:HideSettingsScreen()
+
+    --self:ShowWishlistScreen()
+    self:HideWishlistScreen()
+
     self.LootCountdown:Hide()
     self.VoteCountdown:Hide()
 
@@ -81,7 +90,6 @@ function TalcFrame:ResetVars()
     self.currentPlayersList = {}
     self.playersWhoWantItems = {}
 
-    self.waitResponses = {}
     self.pickResponses = {}
     self.receivedResponses = 0
 
@@ -147,9 +155,9 @@ function TalcFrame:ResetVars()
     TalcVoteFrameContestantScrollListFrame:Hide()
 
     core.clearScrollbarTexture(TalcVoteFrameContestantScrollListFrameScrollBar)
-    core.clearScrollbarTexture(TalcVoteFrameWelcomeItemsScrollFrameScrollBar)
-    core.clearScrollbarTexture(TalcVoteFrameWelcomeItemHistoryScrollFrameScrollBar)
-    core.clearScrollbarTexture(TalcVoteFrameWelcomePlayerHistoryScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomeFrameItemsScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomeFrameItemHistoryScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameScrollBar)
     core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrameScrollBar)
 
     TalcVoteFrameTradableItemsFrame:Hide()
@@ -184,14 +192,7 @@ function TalcFrame:ResetVars()
         TalcVoteFrameRLExtraFrame:Hide()
     end
 
-    self:HideVotingElements()
 
-    --self:ShowWelcomeScreen()
-    self:HideWelcomeScreen()
-
-    self:HideSettingsScreen()
-
-    self:ShowWishlistScreen()
 end
 
 function TalcFrame:ShowSettingsScreen(a)
@@ -213,7 +214,6 @@ function TalcFrame:ShowSettingsScreen(a)
         TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
     end
 end
-
 function TalcFrame:HideSettingsScreen(showWelcome)
     TalcVoteFrameSettingsFrame:Hide()
     if TalcFrame.closeVoteFrameFromSettings then
@@ -238,48 +238,29 @@ function TalcFrame:ShowWelcomeScreen()
                 allMembers = allMembers .. name .. ", "
             end
         end
-        TalcVoteFrameWelcomeLCStatus:SetText("You are part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
+        TalcVoteFrameWelcomeFrameLCStatus:SetText("You are part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
     else
         if GetGuildInfo('player') then
-            TalcVoteFrameWelcomeLCStatus:SetText("You are not part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
+            TalcVoteFrameWelcomeFrameLCStatus:SetText("You are not part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
         else
-            TalcVoteFrameWelcomeLCStatus:SetText("You are not part of a guild.")
+            TalcVoteFrameWelcomeFrameLCStatus:SetText("You are not part of a guild.")
         end
     end
 
     self:ShowWelcomeItems()
-    TalcVoteFrameWelcome:Show()
+    TalcVoteFrameWelcomeFrame:Show()
 
-    TalcVoteFrameWelcomeRecentItems:SetText('Recent Items')
+    TalcVoteFrameWelcomeFrameRecentItems:SetText('Recent Items')
 
-    TalcVoteFrameWelcomeBackButton:Hide()
+    TalcVoteFrameWelcomeFrameBackButton:Hide()
 
-    TalcVoteFrameWelcomeItemsScrollFrame:Show()
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:Show()
 
-    TalcVoteFrameWelcomeItemHistoryScrollFrame:Hide()
-    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Hide()
+    TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Hide()
+    TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Hide()
 end
-
 function TalcFrame:HideWelcomeScreen()
-    TalcVoteFrameWelcome:Hide()
-end
-
-function TalcFrame:HideVotingElements()
-    TalcVoteFrameTimeLeftBar:Hide()
-    TalcVoteFrameLabelsBackground:Hide()
-    TalcVoteFrameNameLabel:Hide()
-    TalcVoteFrameGearScoreLabel:Hide()
-    TalcVoteFramePickLabel:Hide()
-    TalcVoteFrameReplacesLabel:Hide()
-    TalcVoteFrameRollLabel:Hide()
-    TalcVoteFrameVotesLabel:Hide()
-    TalcVoteFrameContestantCount:Hide()
-    TalcVoteFrameTimeLeft:Hide()
-    TalcVoteFrameDoneVoting:Hide()
-
-    TalcVoteFrameWinnerStatus:Hide()
-    TalcVoteFrameMLToWinner:Hide()
-    TalcVoteFrameCLThatVotedList:Hide()
+    TalcVoteFrameWelcomeFrame:Hide()
 end
 
 function TalcFrame:ShowVotingElements()
@@ -304,6 +285,24 @@ function TalcFrame:ShowVotingElements()
 
     TalcVoteFrameCLThatVotedList:Show()
 end
+function TalcFrame:HideVotingElements()
+    TalcVoteFrameTimeLeftBar:Hide()
+    TalcVoteFrameLabelsBackground:Hide()
+    TalcVoteFrameNameLabel:Hide()
+    TalcVoteFrameGearScoreLabel:Hide()
+    TalcVoteFramePickLabel:Hide()
+    TalcVoteFrameReplacesLabel:Hide()
+    TalcVoteFrameRollLabel:Hide()
+    TalcVoteFrameVotesLabel:Hide()
+    TalcVoteFrameContestantCount:Hide()
+    TalcVoteFrameTimeLeft:Hide()
+    TalcVoteFrameDoneVoting:Hide()
+
+    TalcVoteFrameWinnerStatus:Hide()
+    TalcVoteFrameMLToWinner:Hide()
+    TalcVoteFrameCLThatVotedList:Hide()
+end
+
 
 function TalcFrame:ShowWelcomeItems()
     local index = 0
@@ -318,12 +317,12 @@ function TalcFrame:ShowWelcomeItems()
     end
 
     if totalItems == 0 then
-        TalcVoteFrameWelcomeNoRecentItems:Show()
+        TalcVoteFrameWelcomeFrameNoRecentItems:Show()
     else
-        TalcVoteFrameWelcomeNoRecentItems:Hide()
+        TalcVoteFrameWelcomeFrameNoRecentItems:Hide()
     end
 
-    local x = TalcVoteFrameWelcome:GetWidth()
+    local x = TalcVoteFrameWelcomeFrame:GetWidth()
     local numCols = core.floor(x / 185)
     local col, row = 1, 1
     local day = 0
@@ -339,15 +338,15 @@ function TalcFrame:ShowWelcomeItems()
         end
 
         if not self.welcomeItemsFrames[index] then
-            self.welcomeItemsFrames[index] = CreateFrame('Button', 'WelcomeItem' .. index, TalcVoteFrameWelcomeItemsScrollFrameChild, 'Talc_WelcomeItemTemplate')
+            self.welcomeItemsFrames[index] = CreateFrame('Button', 'WelcomeFrameItem' .. index, TalcVoteFrameWelcomeFrameItemsScrollFrameChild, 'Talc_WelcomeItemTemplate')
         end
 
         self.welcomeItemsFrames[index]:SetID(index)
         self.welcomeItemsFrames[index].playerName = item.player
         self.welcomeItemsFrames[index].itemName = item.item
 
-        local frame = 'WelcomeItem' .. index
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeItemsScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
+        local frame = 'WelcomeFrameItem' .. index
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFrameItemsScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
         _G[frame .. 'Name']:SetText(item.item)
         _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
 
@@ -368,18 +367,21 @@ function TalcFrame:ShowWelcomeItems()
         end
     end
 
-    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:SetVerticalScroll(0)
 end
 
 function TalcFrame:ShowWishlistScreen()
+    self:HideWelcomeScreen()
     TalcVoteFrameWishlistFrame:Show()
     TalcVoteFrameWishlistFrameItemEditBox:SetText("[Full Item Name] / ID / URL")
 
     self:WishlistUpdate()
 end
-
-function TalcFrame:HideWishlistScreen()
-
+function TalcFrame:HideWishlistScreen(showWelcome)
+    TalcVoteFrameWishlistFrame:Hide()
+    if showWelcome then
+        self:ShowWelcomeScreen()
+    end
 end
 
 TalcFrame.delayAddToWishlist = CreateFrame("Frame")
@@ -553,7 +555,7 @@ function TalcFrame:Resized()
 
     TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
 
-    if TalcVoteFrameWelcome:IsVisible() then
+    if TalcVoteFrameWelcomeFrame:IsVisible() then
         self:ShowWelcomeItems()
     end
 
@@ -1188,9 +1190,6 @@ function TalcFrame:VoteFrameListUpdate()
     if not self.pickResponses[self.CurrentVotedItem] then
         self.pickResponses[self.CurrentVotedItem] = 0
     end
-    if not self.waitResponses[self.CurrentVotedItem] then
-        self.waitResponses[self.CurrentVotedItem] = 0
-    end
 
     if self.pickResponses[self.CurrentVotedItem] == core.getNumOnlineRaidMembers() then
 
@@ -1399,7 +1398,7 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame .. 'ClassIcon']:SetTexture('Interface\\AddOns\\Talc\\images\\classes\\' .. class);
 
                 _G[frame .. 'VoteButton']:Show();
-                if need == 'pass' or need == 'autopass' or need == 'wait' then
+                if need == 'pass' or need == 'autopass' then
                     _G[frame .. 'VoteButton']:Hide();
                 end
 
@@ -1734,13 +1733,13 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         end
 
         if not item[5] then
-            talc_error('bad loot syntax')
+            talc_error('5bad loot syntax')
             talc_error(t)
             return
         end
 
         if not core.int(item[2]) then
-            talc_error('bad loot index')
+            talc_error('2bad loot index')
             talc_error(t)
             return
         end
@@ -1751,6 +1750,8 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         self:HideWelcomeScreen()
         self:HideSettingsScreen()
+        self:HideWishlistScreen()
+
         self:ShowVotingElements()
 
         return
@@ -1806,16 +1807,10 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 end
             end
 
-            if self.waitResponses[core.int(needEx[2])] then
-                self.waitResponses[core.int(needEx[2])] = self.waitResponses[core.int(needEx[2])] + 1
-            else
-                self.waitResponses[core.int(needEx[2])] = 1
-            end
-
             core.insert(self.playersWhoWantItems, {
                 itemIndex = core.int(needEx[2]),
                 name = sender,
-                need = 'wait',
+                need = needEx[1],
                 ci1 = needEx[3],
                 ci2 = needEx[4],
                 ci3 = needEx[5],
@@ -1830,23 +1825,9 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             self.itemVotes[core.int(needEx[2])][sender] = {}
 
             if self.pickResponses[core.int(needEx[2])] then
-                if self.pickResponses[core.int(needEx[2])] < self.waitResponses[core.int(needEx[2])] then
-                    self.pickResponses[core.int(needEx[2])] = self.pickResponses[core.int(needEx[2])] + 1
-                end
+                self.pickResponses[core.int(needEx[2])] = self.pickResponses[core.int(needEx[2])] + 1
             else
                 self.pickResponses[core.int(needEx[2])] = 1
-            end
-
-            -- todo this might not be needed anymore
-            for index, player in next, self.playersWhoWantItems do
-                if player.name == sender and player.itemIndex == core.int(needEx[2]) then
-                    self.playersWhoWantItems[index].need = needEx[1]
-                    self.playersWhoWantItems[index].ci1 = needEx[3]
-                    self.playersWhoWantItems[index].ci2 = needEx[4]
-                    self.playersWhoWantItems[index].ci3 = needEx[5]
-                    self.playersWhoWantItems[index].ci4 = needEx[6]
-                    break
-                end
             end
 
             self:VoteFrameListUpdate()
@@ -2071,12 +2052,6 @@ function TalcFrame:RefreshContestantsList()
     end
     for _, d in next, tempTable do
         if d.need == 'autopass' then
-            j = j + 1
-            self.playersWhoWantItems[j] = d
-        end
-    end
-    for _, d in next, tempTable do
-        if d.need == 'wait' then
             j = j + 1
             self.playersWhoWantItems[j] = d
         end
@@ -3485,12 +3460,12 @@ function TalcFrame:WelcomeItemClick(id)
 
     TalcFrame.itemHistoryIndex = id
 
-    TalcVoteFrameWelcomeBackButton:Show()
+    TalcVoteFrameWelcomeFrameBackButton:Show()
 
-    TalcVoteFrameWelcomeItemsScrollFrame:Hide()
-    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Hide()
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:Hide()
+    TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Hide()
 
-    TalcVoteFrameWelcomeItemHistoryScrollFrame:Show()
+    TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Show()
 
     local itemHistory = {}
 
@@ -3503,7 +3478,7 @@ function TalcFrame:WelcomeItemClick(id)
         end
     end
 
-    TalcVoteFrameWelcomeRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. numPlayers .. ')')
+    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. numPlayers .. ')')
 
     local index = 0
 
@@ -3516,11 +3491,11 @@ function TalcFrame:WelcomeItemClick(id)
         index = index + 1
 
         if not self.itemHistoryFrames[index] then
-            self.itemHistoryFrames[index] = CreateFrame('Button', 'ItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
+            self.itemHistoryFrames[index] = CreateFrame('Button', 'ItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
         end
         local frame = 'ItemHistoryPlayerFrame' .. index
 
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
         _G[frame .. 'Name']:SetText(core.classColors[item.class].colorStr .. item.player)
         _G[frame .. 'Pick']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
         _G[frame .. 'Date']:SetText((date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
@@ -3532,17 +3507,17 @@ function TalcFrame:WelcomeItemClick(id)
         _G[frame]:Show()
     end
 
-    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:SetVerticalScroll(0)
 end
 
 function TalcFrame:WelcomePlayerClick(name)
 
-    TalcVoteFrameWelcomeBackButton:Show()
+    TalcVoteFrameWelcomeFrameBackButton:Show()
 
-    TalcVoteFrameWelcomeItemsScrollFrame:Hide()
-    TalcVoteFrameWelcomeItemHistoryScrollFrame:Hide()
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:Hide()
+    TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Hide()
 
-    TalcVoteFrameWelcomePlayerHistoryScrollFrame:Show()
+    TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Show()
 
     local playerHistory = {}
 
@@ -3555,11 +3530,11 @@ function TalcFrame:WelcomePlayerClick(name)
         end
     end
 
-    TalcVoteFrameWelcomeRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
+    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
 
     local index = 0
 
-    local x = TalcVoteFrameWelcome:GetWidth()
+    local x = TalcVoteFrameWelcomeFrame:GetWidth()
     local numCols = core.floor(x / 185)
     local col, row = 1, 1
     local day = 0
@@ -3581,12 +3556,12 @@ function TalcFrame:WelcomePlayerClick(name)
         end
 
         if not self.playerHistoryFrames[index] then
-            self.playerHistoryFrames[index] = CreateFrame('Button', 'PlayerHistoryFrame' .. index, TalcVoteFrameWelcomePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
+            self.playerHistoryFrames[index] = CreateFrame('Button', 'PlayerHistoryFrame' .. index, TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
         end
 
         local frame = 'PlayerHistoryFrame' .. index
 
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
+        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 44 - 44 * row)
         _G[frame]:SetID(index)
 
         _G[frame .. 'Name']:SetText(item.item)
@@ -3610,14 +3585,14 @@ function TalcFrame:WelcomePlayerClick(name)
         end
     end
 
-    TalcVoteFrameWelcomeItemsScrollFrame:SetVerticalScroll(0)
+    TalcVoteFrameWelcomeFrameItemsScrollFrame:SetVerticalScroll(0)
 end
 
 function TalcFrame:WelcomeBack()
-    if TalcVoteFrameWelcomeItemHistoryScrollFrame:IsVisible() then
+    if TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:IsVisible() then
         TalcFrame:ShowWelcomeScreen()
     end
-    if TalcVoteFrameWelcomePlayerHistoryScrollFrame:IsVisible() then
+    if TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:IsVisible() then
         TalcFrame:WelcomeItemClick(TalcFrame.itemHistoryIndex)
     end
 end
