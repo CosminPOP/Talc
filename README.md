@@ -1,5 +1,6 @@
-# Talc (wotlk 3.3.5, eng)
-Thunder Ale Loot Council
+# Talc - Thunder Ale Loot Council
+For WoW 3.3.5 enGB/enUS
+
 
 Addon for loot.
 

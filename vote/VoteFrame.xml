@@ -303,7 +303,6 @@
         </Frames>
     </Frame>
 
-
     <Frame name="Talc_VotedItemTemplate" virtual="true">
         <Size>
             <AbsDimension x="44" y="44"/>
@@ -387,7 +386,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <Texture name="$parentStatusIconOnline" file="Interface\addons\Talc\images\statusicon-online">
+                <Texture name="$parentStatusIconOnline" file="Interface\friendsframe\statusicon-online">
                     <Size>
                         <AbsDimension x="16" y="16"/>
                     </Size>
@@ -399,7 +398,7 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <Texture name="$parentStatusIconOffline" file="Interface\addons\Talc\images\statusicon-offline">
+                <Texture name="$parentStatusIconOffline" file="Interface\friendsframe\statusicon-offline">
                     <Size>
                         <AbsDimension x="16" y="16"/>
                     </Size>
@@ -593,6 +592,32 @@
         </Layers>
         <Frames>
 
+            <Button name="$parentWishlist" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="interface/lootframe/toast-star">
+                    <Size>
+                        <AbsDimension x="20" y="20"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="200" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
 
             <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Icons\inv_staff_20">
@@ -1312,8 +1337,6 @@
             </Layer>
         </Layers>
         <Frames>
-
-
 
             <Button name="Talc_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
                     frameStrata="LOW">
