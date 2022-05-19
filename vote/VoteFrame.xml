@@ -21,8 +21,8 @@
         <Layers>
             <Layer level="OVERLAY">
                 <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" hidden="true"
-                         >
-                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625" />
+                >
+                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
                     <Color r="1" g="0" b="0" a="1"/>
                     <Size>
                         <AbsDimension x="24" y="24"/>
@@ -235,7 +235,7 @@
         <Size x="300" y="25"/>
         <Frames>
             <Button name="$parentItemButton" inherits="Talc_ButtonTemplate">
-                <NormalTexture />
+                <NormalTexture/>
                 <PushedTexture inherits=""/>
                 <HighlightTexture file="Interface\addons\Talc\images\grad1" alphaMode="ADD">
                     <Color r="0.24" g="0.45" b="0.84" a="0.2"/>
@@ -310,9 +310,9 @@
         <Frames>
             <Button name="$parentButton" inherits="UIPanelButtonTemplate">
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"/>
-                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"  setAllPoints="true"
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"
                                alphaMode="ADD"/>
-                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20"  setAllPoints="true"/>
+                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"/>
                 <Size x="38" y="38"/>
                 <Anchors>
                     <Anchor point="CENTER">
@@ -593,9 +593,9 @@
         <Frames>
 
             <Button name="$parentWishlist" inherits="UIPanelButtonTemplate">
-                <NormalTexture file="interface/lootframe/toast-star">
+                <NormalTexture file="interface\addons\Talc\images\star">
                     <Size>
-                        <AbsDimension x="20" y="20"/>
+                        <AbsDimension x="32" y="32"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT">
@@ -606,17 +606,38 @@
                     </Anchors>
                 </NormalTexture>
                 <PushedTexture inherits=""/>
-                <HighlightTexture inherits=""/>
+                <HighlightTexture file="interface\addons\Talc\images\star" alphaMode="ADD">
+                    <Size>
+                        <AbsDimension x="32" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
                 <Size>
-                    <AbsDimension x="20" y="20"/>
+                    <AbsDimension x="19" y="19"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPRIGHT" relativeTo="$parentNeed" relativePoint="TOPLEFT">
                         <Offset>
-                            <AbsDimension x="200" y="0"/>
+                            <AbsDimension x="-2" y="-2"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
+                <Scripts>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Item is on player\'s Wishlist', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
             </Button>
 
             <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
