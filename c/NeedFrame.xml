@@ -230,8 +230,7 @@
                     </OnClick>
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
-                        GameTooltip:AddLine('BIS', 1, 1, 1)
-<!--                        GameTooltip:AddLine('Best In Slot')-->
+                        GameTooltip:AddLine('Best In Slot', 1, 1, 1)
                         GameTooltip:Show()
                     </OnEnter>
                     <OnLeave>
@@ -279,6 +278,14 @@
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'ms');
                     </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Main Spec', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
             </Button>
             <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
@@ -321,6 +328,14 @@
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'os');
                     </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Off Spec', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
             </Button>
             <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
@@ -363,6 +378,14 @@
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'xmog');
                     </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Transmog', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
             </Button>
             <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
@@ -405,6 +428,14 @@
                     <OnClick>
                         NeedFrame:NeedClick(this:GetID(), 'pass');
                     </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Pass', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
                 </Scripts>
             </Button>
 
