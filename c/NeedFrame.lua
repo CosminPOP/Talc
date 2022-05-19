@@ -626,7 +626,7 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
                     this.ids[id] = nil
                     frame:Hide()
 
-                    if NeedFrame.countdown.T ~= 1 then
+                    if NeedFrame.countdown.T ~= 1 and db['NEED_FRAME_COLLAPSE'] then
                         NeedFrame:repositionFrames()
                     end
                 end
@@ -639,21 +639,17 @@ NeedFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
 end)
 
 function NeedFrame:repositionFrames()
-    local startIndex = 0
     for index, frame in next, self.itemFrames do
         if not frame:IsVisible() then
             if index < #self.itemFrames then
-
                 for i = index + 1, #self.itemFrames do
                     local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
-                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 80)
+                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 100)
                 end
-
                 break
             end
         end
     end
-
 end
 
 NeedFrame.delayAddItem = CreateFrame("Frame")
