@@ -8,12 +8,20 @@ WinFrame.xmog = false
 function WinFrame:handleSync(pre, msg, ch, sender)
     if core.find(msg, 'playerWon#') then
         local wonData = core.split('#', msg)
-        if wonData[5] then
-            if wonData[5] == 'xmog' and wonData[2] == core.me then
-                self.xmog = true
-            else
-                self.xmog = false
+        if wonData[5] and wonData[2] == core.me then
+
+            local _, _, itemLink = core.find(wonData[3], "(item:%d+:%d+:%d+:%d+)");
+            local name = GetItemInfo(itemLink)
+
+            for index, item in next, db['NEED_WISHLIST'] do
+                --print("checking " .. item .. " " .. linkString)
+                if item == wonData[3] or item == name then
+                    TalcFrame:RemoveFromWishlist(index)
+                    break
+                end
             end
+
+            self.xmog = wonData[5] == 'xmog'
         end
     end
 end
@@ -40,8 +48,7 @@ function WinFrame:init()
     db = TALC_DB
 
     self.animFrame:hideAnchor()
-
-    talc_print('WinFrame Loaded. Type |cfffff569/talc |cff69ccf0win |rto show the Anchor window.')
+    -- todo reset ?
 end
 
 function WinFrame:startItemAnimation()
@@ -280,7 +287,6 @@ function Talc_TestWinFrame()
 end
 
 function Talc_WinFrameClosePlacement()
-    talc_print('Anchor window closed. Type |cfffff569/talc |cff69ccf0win |rto show the Anchor window.')
     WinFrame.animFrame:hideAnchor()
 end
 
