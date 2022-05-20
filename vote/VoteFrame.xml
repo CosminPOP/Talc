@@ -157,6 +157,17 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
+
+                <FontString name="$parentRaidTitle" inherits="GameFontHighlight" text="Raid Title" justifyH="LEFT"
+                            hidden="true">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="20"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
             </Layer>
         </Layers>
         <Scripts>
@@ -248,7 +259,7 @@
                         </Anchor>
                     </Anchors>
                 </HighlightTexture>
-                <Size x="250" y="24"/>
+                <Size x="275" y="24"/>
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
@@ -270,7 +281,7 @@
                         </Texture>
                         <FontString name="$parentName" inherits="GameFontNormal" text="Playername"
                                     justifyH="LEFT">
-                            <Size x="250" y="14"/>
+                            <Size x="200" y="14"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
@@ -281,6 +292,22 @@
                         </FontString>
                     </Layer>
                 </Layers>
+            </Button>
+
+            <Button name="$parentAddButton" inherits="Talc_ButtonTemplate" text="Add" hidden="true">
+                <Size x="50" y="24"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="25" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:TryToAddToWishlist(this:GetID())
+                    </OnClick>
+                </Scripts>
             </Button>
 
             <Button name="$parentRemoveButton" inherits="Talc_CloseButtonTemplate">
@@ -1192,6 +1219,23 @@
                 <AbsInset left="5" right="5" top="5" bottom="5"/>
             </BackgroundInsets>
         </Backdrop>
+        <Animations>
+            <AnimationGroup parentKey="animIn">
+                <Alpha change="-1" duration="0" order="1"/>
+                <Alpha change="1" duration="0.1" order="2"/>
+                <!--                <Translation offsetX="0" offsetY="-10" duration="0.2" order="2"/>-->
+            </AnimationGroup>
+            <AnimationGroup parentKey="animOut">
+                <Alpha change="1" duration="0" order="1"/>
+                <Alpha change="-1" duration="0.1" order="2">
+                    <Scripts>
+                        <OnFinished>
+                            self:GetRegionParent():Hide();
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+        </Animations>
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\grad1">
@@ -2513,7 +2557,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowSettingsScreen()
+                                TalcFrame:ShowScreen('Settings')
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2531,7 +2575,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowWishlistScreen()
+                                TalcFrame:ShowScreen("Wishlist")
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2681,9 +2725,14 @@
                     </ScrollFrame>
 
                 </Frames>
+                <Scripts>
+                    <OnShow>
+                        TalcFrame:WelcomeFrame_OnShow()
+                    </OnShow>
+                </Scripts>
             </Frame>
 
-            <Frame name="$parentSettingsFrame" hidden="false">
+            <Frame name="$parentSettingsFrame" hidden="true">
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
@@ -3322,15 +3371,20 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:HideSettingsScreen(true)
+                                TalcFrame:ShowScreen("Welcome")
                             </OnClick>
                         </Scripts>
                     </Button>
 
                 </Frames>
+                <Scripts>
+                    <OnShow>
+                        TalcFrame:SettingsFrame_OnShow()
+                    </OnShow>
+                </Scripts>
             </Frame>
 
-            <Frame name="$parentWishlistFrame" hidden="false">
+            <Frame name="$parentWishlistFrame" hidden="true">
                 <Anchors>
                     <Anchor point="TOPLEFT">
                         <Offset>
@@ -3432,7 +3486,6 @@
                                 </Texture>
                             </Layer>
                         </Layers>
-
                         <Scripts>
                             <OnLoad>
                                 this:SetAutoFocus(false);
@@ -3486,12 +3539,35 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:HideWishlistScreen(true)
+                                TalcFrame:ShowScreen("Welcome")
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentResultsBack" inherits="Talc_ButtonTemplate" text="Back" hidden="true">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-10" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:WishlistResultsBack()
                             </OnClick>
                         </Scripts>
                     </Button>
 
                 </Frames>
+                <Scripts>
+                    <OnShow>
+                        TalcFrame:WishlistFrame_OnShow()
+                    </OnShow>
+                </Scripts>
             </Frame>
 
             <Frame name="$parentRaiderDetailsFrame" hidden="true">
