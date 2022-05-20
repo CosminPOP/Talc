@@ -3,6 +3,11 @@ TALC = CreateFrame("Frame")
 TALC.channel = 'TALC'
 TALC.addonVer = '3.0.0.0'
 TALC.me = UnitName('player')
+TALC.numWishlistItems = 8
+TALC.maxRecentItems = 100
+TALC.maxItemHistoryPlayers = 20
+
+-- todo add attendance (saved on boss death) ?
 
 local core, db, tokenRewards
 local init = false
@@ -35,13 +40,17 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 db['PLAYER_CLASS_CACHE'] = {}
             end
 
+            if db['ATTENDANCE_DATA'] == nil then
+                db['ATTENDANCE_DATA'] = {}
+            end
+
             if db['WIN_THRESHOLD'] == nil then
                 db['WIN_THRESHOLD'] = "00345"
             end
-            if db['WIN_ENABLE_SOUND']  == nil then
+            if db['WIN_ENABLE_SOUND'] == nil then
                 db['WIN_ENABLE_SOUND'] = true
             end
-            if db['WIN_VOLUME']  == nil then
+            if db['WIN_VOLUME'] == nil then
                 db['WIN_VOLUME'] = 'low'
             end
 
@@ -117,6 +126,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 }
             end
 
+            TalcNeedFrame:SetScale(db['NEED_SCALE'])
+
             TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['BIS']);
             TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['MS']);
             TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['OS']);
@@ -124,7 +135,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(db['VOTE_AUTO_ASSIST']);
             TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(db['VOTE_SCREENSHOT_LOOT']);
-
 
             TalcVoteFrameSettingsFrameWinEnableSound:SetChecked(db['WIN_ENABLE_SOUND'])
             if db['WIN_ENABLE_SOUND'] then
@@ -307,11 +317,23 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "COMBAT_LOG_EVENT" then
-                if arg2 == 'UNIT_DIED' and db['BOSS_FRAME_ENABLE'] then
-                    for _, boss in next, BossFrame.Bosses do
-                        if arg7 == boss then
-                            BossFrame:StartBossAnimation(boss)
-                            return
+                if arg2 == 'UNIT_DIED' then
+
+                    if UnitInRaid('player') and (MiniMapInstanceDifficultyText:GetText() == '10' or MiniMapInstanceDifficultyText:GetText() == '25') then
+                        for _, boss in next, BossFrame.Bosses do
+                            if arg7 == boss then
+                                BossFrame:SaveAttendance(boss)
+                                return
+                            end
+                        end
+                    end
+
+                    if db['BOSS_FRAME_ENABLE'] then
+                        for _, boss in next, BossFrame.Bosses do
+                            if arg7 == boss then
+                                BossFrame:StartBossAnimation(boss)
+                                return
+                            end
                         end
                     end
                 end
@@ -363,9 +385,8 @@ SlashCmdList["TALC"] = function(cmd)
                             return
                         end
                         db['VOTE_ENCHANTER'] = setEx[3]
-                        local deClassColor = core.classColors[core.getPlayerClass(db['VOTE_DESENCHANTER'])].colorStr
-                        talc_print('Enchanter set to ' .. deClassColor .. db['VOTE_DESENCHANTER'])
-                        TalcVoteFrameMLToEnchanter:Show()
+                        local deClassColor = core.classColors[core.getPlayerClass(db['VOTE_ENCHANTER'])].colorStr
+                        talc_print('Enchanter set to ' .. deClassColor .. db['VOTE_ENCHANTER'])
                     end
                 else
                     talc_print('You are not the raid leader.')
