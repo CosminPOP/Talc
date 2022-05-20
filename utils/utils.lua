@@ -91,6 +91,7 @@ function Talc_Utils:init()
         ["pass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[1].hex, text = 'pass' },
         ["autopass"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[0].hex, text = 'auto pass' },
         ["wait"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[1].hex, text = 'Waiting pick...' },
+        ["de"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "|cfff58cba", text = 'Disenchant' },
     }
 
     core.equipSlotsDetails = {
@@ -463,6 +464,7 @@ function Talc_Utils:init()
             talc_print('You are not the raid leader.')
             return
         end
+        -- todo limit VOTE_ROSTER to 10
         for name, _ in next, db['VOTE_ROSTER'] do
             if name == newName then
                 talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |ralready exists.')
@@ -546,6 +548,27 @@ function Talc_Utils:init()
         _G[frame:GetName() .. 'ThumbTexture']:SetTexture(nil)
     end
 
+    core.instanceInfo = function()
+        local name, instanceType, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo();
+
+        if instanceType == "party" then
+            return false --Cant save attendance in 5mans.
+        end
+        local isHeroic = false;
+        if instanceType == "raid" and not (difficulty == 1 and maxPlayers == 5) then
+            if instanceType == "raid" then
+                if isDynamicInstance then
+                    isHeroic = playerDifficulty == 1
+                elseif difficulty > 2 then
+                    isHeroic = true
+                end
+            end
+        else
+            print(" some other err message ")
+            return false
+        end
+        return name, maxPlayers, isHeroic, name .. " " .. maxPlayers .. (isHeroic and '+' or '')
+    end
 end
 
 function talc_print(a)
@@ -573,11 +596,23 @@ function talc_debug(a)
         return true
     end
     if core.type(a) == 'table' then
-        talc_debug("Dumping table:")
-        for i, d in next, a do
-            talc_debug(i .. ":" ..d)
-        end
+        talc_dump(a)
         return
     end
     talc_print('|cff0070de[DEBUG:' .. core.sub(time(), 7, 20) .. ']|cffffffff[' .. a .. ']')
+end
+
+function talc_dump(tbl, indent)
+    if not indent then indent = 0 end
+    for k, v in pairs(tbl) do
+        local formatting = string.rep("  ", indent) .. k .. ": "
+        if type(v) == "table" then
+            print(formatting)
+            talc_dump(v, indent+1)
+        elseif type(v) == 'boolean' then
+            print(formatting .. tostring(v))
+        else
+            print(formatting .. v)
+        end
+    end
 end
