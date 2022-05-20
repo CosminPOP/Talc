@@ -29,16 +29,16 @@ end
 function WinFrame:handleLoot(arg1)
     --receive
     if core.find(arg1, 'You receive loot', 1, true) then
-        local recEx = core.split('loot', arg1)
+        local recEx = core.split(' loot:', arg1)
         if recEx[1] then
-            self:addWonItem(recEx[2], recEx[1] .. 'loot:')
+            self:addWonItem(recEx[2], recEx[1])
         end
     end
     --create
     if core.find(arg1, 'You create', 1, true) then
-        local recEx = core.split('create:', arg1)
+        local recEx = core.split(' create:', arg1)
         if recEx[1] then
-            self:addWonItem(recEx[2], recEx[1] .. 'create:')
+            self:addWonItem(recEx[2], recEx[1])
         end
     end
 end
