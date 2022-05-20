@@ -46,10 +46,7 @@ function RollFrame:init()
     core = TALC
     db = TALC_DB
 
-    self:hideAnchor()
     self:ResetVars()
-
-    talc_print('RollFrame Loaded. Type |cfffff569/talc |cff69ccf0roll |rto show the Anchor window.')
 end
 
 function RollFrame:showAnchor()
@@ -95,8 +92,10 @@ end
 
 function RollFrame:ResetVars()
 
-    for index in next, self.frames.itemFrames do
-        self.frames.itemFrames[index]:Hide()
+    self:hideAnchor()
+
+    for _, frame in next, self.frames.itemFrames do
+        frame:Hide()
     end
 
     self.frames.freeSpots = {}
