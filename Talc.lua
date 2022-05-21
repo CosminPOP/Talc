@@ -40,6 +40,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 db['PLAYER_CLASS_CACHE'] = {}
             end
 
+            if db['ITEM_LOCATION_CACHE'] == nil then
+                db['ITEM_LOCATION_CACHE'] = {}
+            end
+
             if db['ATTENDANCE_DATA'] == nil then
                 db['ATTENDANCE_DATA'] = {}
             end
@@ -355,6 +359,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_LOOT' then
                 WinFrame:handleLoot(arg1)
+                TalcFrame:SaveItemLocation(arg1)
                 return
             end
         end

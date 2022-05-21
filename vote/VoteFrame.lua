@@ -2573,6 +2573,17 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
         return
     end
 
+    local item = self.VotedItemsFrames[cvi].link
+
+    local _, _, _, raid = core.instanceInfo()
+    if not raid then
+        if db['ITEM_LOCATION_CACHE'][self.VotedItemsFrames[cvi].itemID] then
+            raid = db['ITEM_LOCATION_CACHE'][self.VotedItemsFrames[cvi].itemID]
+        else
+            raid = "Unknown"
+        end
+    end
+
     -- todo maybe better bagitem detection
     if #self.bagItems > 0 then
         local _, _, need = TalcFrame:GetPlayerInfo(playerName);
@@ -3791,3 +3802,37 @@ function TalcFrame:WelcomeBack()
         TalcFrame:WelcomeItemClick(TalcFrame.itemHistoryIndex)
     end
 end
+
+function TalcFrame:SaveItemLocation(lootText)
+
+    local _, _, _, raidString = core.instanceInfo()
+    if not raidString then
+        return
+    end
+
+    local _, _, itemLink = core.find(lootText, "(item:%d+:%d+:%d+:%d+)");
+    if itemLink then
+
+        local _, _, q = GetItemInfo(itemLink)
+
+        if q and q >= 3 then
+            local itemID = core.int(core.split(':', itemLink)[2])
+            db['ITEM_LOCATION_CACHE'][itemID] = raidString
+            print("saved " .. itemID .. " to " .. raidString)
+        end
+    end
+
+end
+
+--[[
+todo add sounds maybe
+
+PlaySound("igQuestListOpen");
+PlaySound("igQuestListClose");
+
+PlaySound("igMainMenuOptionCheckBoxOn");
+PlaySound("igMainMenuOptionCheckBoxOff");
+
+PlaySound("igCharacterInfoTab");
+PlaySound("igMainMenuClose");
+]]--
