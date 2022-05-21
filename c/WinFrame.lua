@@ -5,8 +5,8 @@ WinFrame = CreateFrame("Frame")
 
 WinFrame.xmog = false
 
-function WinFrame:handleSync(pre, msg, ch, sender)
-    if core.find(msg, 'playerWon#') then
+function WinFrame:handleSync(_, msg, _, sender)
+    if core.find(msg, 'playerWon#') and core.isRL(sender) then
         local wonData = core.split('#', msg)
         if wonData[5] and wonData[2] == core.me then
 
@@ -14,7 +14,6 @@ function WinFrame:handleSync(pre, msg, ch, sender)
             local name = GetItemInfo(itemLink)
 
             for index, item in next, db['NEED_WISHLIST'] do
-                --print("checking " .. item .. " " .. linkString)
                 if item == wonData[3] or item == name then
                     TalcFrame:RemoveFromWishlist(index)
                     break
@@ -48,7 +47,6 @@ function WinFrame:init()
     db = TALC_DB
 
     self.animFrame:hideAnchor()
-    -- todo reset ?
 end
 
 function WinFrame:startItemAnimation()
@@ -141,8 +139,8 @@ end)
 
 WinFrame.delayAddWonItem:SetScript("OnUpdate", function()
     local plus = 0.2
-    local gt = GetTime() * 1000 --22.123 -> 22123
-    local st = (this.startTime + plus) * 1000 -- (22.123 + 0.1) * 1000 =  22.223 * 1000 = 22223
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
     if gt >= st then
 
         local atLeastOne = false
