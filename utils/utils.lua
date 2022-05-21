@@ -19,7 +19,8 @@ function Talc_Utils:init()
     core.upper = string.upper
     core.find = string.find
     core.format = string.format
-    core.string = tostring
+    core.byte = string.byte
+    core.tostring = tostring
     core.len = string.len
     core.gsub = string.gsub
     core.pairs = pairs
@@ -164,7 +165,7 @@ function Talc_Utils:init()
 
     core.getEquipSlot = function(j)
         for k, v in next, core.equipSlots do
-            if k == core.string(j) then
+            if k == core.tostring(j) then
                 return v
             end
         end
@@ -236,9 +237,9 @@ function Talc_Utils:init()
                     GameTooltip:AddLine('-------AWARD HISTORY --------')
                     local _, _, il = core.find(itemLink, "(item:%d+:%d+:%d+:%d+)");
                     local name = GetItemInfo(il)
-                    for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                    for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                         if core.find(core.lower(item['item']), core.lower(name)) then
-                            GameTooltip:AddLine('|r' .. date("%d/%m", lootTime) .. " " .. core.classColors[core.getPlayerClass(item['player'])].colorStr .. item['player'])
+                            GameTooltip:AddLine('|r' .. date("%d/%m", item.timestamp) .. " " .. core.classColors[core.getPlayerClass(item.player)].colorStr .. item.player)
                         end
                     end
                 end
@@ -568,6 +569,78 @@ function Talc_Utils:init()
             return false
         end
         return name, maxPlayers, isHeroic, name .. " " .. maxPlayers .. (isHeroic and '+' or '')
+    end
+
+    core.saveAttendance = function(boss)
+        local name, maxPlayers, isHeroic, raidString = core.instanceInfo()
+
+        local att = db['ATTENDANCE_DATA']
+        if not att[raidString] then
+            att[raidString] = {}
+        end
+        if not att[raidString][boss] then
+            att[raidString][boss] = {}
+        end
+
+        att[raidString][boss] = {
+            timestamp = time(),
+            date_dm = date("%d/%m", time()),
+            players = {}
+        }
+
+        for i = 0, GetNumRaidMembers() do
+            if GetRaidRosterInfo(i) then
+                local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
+                if z ~= 'Offline' then
+                    core.insert(att[raidString][boss].players, n)
+                end
+
+            end
+        end
+
+        talc_dump(db['ATTENDANCE_DATA'])
+    end
+
+    core.getAttendance = function(name)
+        local att = {}
+
+        for raid, raidData in next, db['ATTENDANCE_DATA'] do
+            att[raid] = {
+                kills = 0,
+                bosses = {}
+            }
+            for boss, bossData in next, raidData do
+                att[raid].bosses[boss] = {
+                    kills = 0,
+                    dates = {}
+                }
+                for _, player in next, bossData.players do
+                    if player == name then
+                        att[raid].kills = att[raid].kills + 1
+                        att[raid].bosses[boss].kills = att[raid].bosses[boss].kills + 1
+                        core.insert(att[raid].bosses[boss].dates, bossData.timestamp)
+                    end
+                end
+            end
+        end
+        return att
+    end
+
+    core.byteSum = function(str)
+        local sum = 0
+        for i = 1, #str do
+            sum = sum + core.byte(core.sub(str, i, i))
+        end
+        return sum
+    end
+
+    core.shash = function(str)
+        local uptimeDec = core.tostring(GetTime()):match("%.(%d+)")
+        local h = core.int(time() * 1000 + core.int(uptimeDec))
+        if str then
+            h = h + random(core.byteSum(str)) + random(time())
+        end
+        return h
     end
 end
 
