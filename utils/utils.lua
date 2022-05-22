@@ -334,7 +334,12 @@ function Talc_Utils:init()
         if not name then
             name = core.me
         end
-        return db['VOTE_ROSTER'][name] ~= nil
+        for _, n in next, db['VOTE_ROSTER'] do
+            if n == name then
+                return true
+            end
+        end
+        return false
     end
 
     core.isRL = function(name)
@@ -445,47 +450,51 @@ function Talc_Utils:init()
     end
 
     core.syncRoster = function()
-        local index = 0
+        if not core.isRL() then
+            return
+        end
+
         core.bsend("BULK", "syncRoster=start")
-        for name, _ in next, db['VOTE_ROSTER'] do
-            index = index + 1
+        for _, name in next, db['VOTE_ROSTER'] do
             core.bsend("BULK", "syncRoster=" .. name)
         end
         core.bsend("BULK", "syncRoster=end")
 
-        TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. index .. ')')
-
-        if core.isRL(core.me) then
-            TalcFrame.RLFrame:CheckAssists()
-        end
+        TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. #db['VOTE_ROSTER'] .. ')')
     end
 
-    core.addToRoster = function(newName)
-        if not core.isRL(core.me) then
+    core.addToRoster = function(newName, checkbox)
+        if not core.isRL() then
             talc_print('You are not the raid leader.')
             return
         end
-        -- todo limit VOTE_ROSTER to 10
-        for name, _ in next, db['VOTE_ROSTER'] do
+
+        if #db['VOTE_ROSTER'] == core.maxLC then
+            talc_print("You can have a maximum of " .. core.maxLC .. " Officers.")
+            checkbox:SetChecked(false)
+            return
+        end
+
+        for _, name in next, db['VOTE_ROSTER'] do
             if name == newName then
                 talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |ralready exists.')
-                return false
+                return
             end
         end
-        db['VOTE_ROSTER'][newName] = false
+        core.insert(db['VOTE_ROSTER'], newName)
         talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |radded to TALC Roster')
         PromoteToAssistant(newName)
         core.syncRoster()
     end
 
     core.remFromRoster = function(newName)
-        if not core.isRL(core.me) then
+        if not core.isRL() then
             talc_print('You are not the raid leader.')
             return
         end
-        for name, _ in next, db['VOTE_ROSTER'] do
+        for index, name in next, db['VOTE_ROSTER'] do
             if name == newName then
-                db['VOTE_ROSTER'][newName] = nil
+                db['VOTE_ROSTER'][index] = nil
                 talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |rremoved from TALC Roster')
                 core.syncRoster()
                 return

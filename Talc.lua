@@ -6,6 +6,7 @@ TALC.me = UnitName('player')
 TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100
 TALC.maxItemHistoryPlayers = 20
+TALC.maxLC = 3
 
 -- todo add attendance (saved on boss death) ?
 
@@ -416,26 +417,26 @@ SlashCmdList["TALC"] = function(cmd)
 
                 if numItems > 0 then
                     talc_print('Listing ' .. cmdEx[2] .. '\'s loot history:')
-                    for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                    for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                         if core.lower(cmdEx[2]) == core.lower(item.player) then
-                            talc_print(item.item .. ' - ' .. date("%d/%m", lootTime))
+                            talc_print(item.item .. ' - ' .. date("%d/%m", item.timestamp))
                         end
                     end
                 else
                     talc_print('- no recorded items -')
                 end
 
-                for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                     if core.find(core.lower(item.item), core.lower(cmdEx[2])) then
-                        talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", lootTime))
+                        talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", item.timestamp))
                     end
                 end
 
                 if core.find(cmdEx[2], '/', 1, true) then
                     numItems = 0
-                    for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                    for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                         if date("%d/%m", lootTime) == cmdEx[2] then
-                            talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", lootTime))
+                            talc_print(item.player .. " - " .. item.item .. " " .. date("%d/%m", item.timestamp))
                             numItems = numItems + 1
                         end
                     end
