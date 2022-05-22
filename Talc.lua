@@ -47,6 +47,16 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 db['ATTENDANCE_DATA'] = {}
             end
 
+            if db['ATTENDANCE_TRACKING'] == nil then
+                db['ATTENDANCE_TRACKING'] = {
+                    enabled = false,
+                    started = false,
+                    bossKills = false,
+                    periodic = false,
+                    period = 1 * 60
+                }
+            end
+
             if db['WIN_THRESHOLD'] == nil then
                 db['WIN_THRESHOLD'] = "00345"
             end
@@ -142,13 +152,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             TalcVoteFrameSettingsFrameWinEnableSound:SetChecked(db['WIN_ENABLE_SOUND'])
             if db['WIN_ENABLE_SOUND'] then
                 TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
-                TalcVoteFrameSettingsFrameWinSoundLow:Enable()
             else
                 TalcVoteFrameSettingsFrameWinSoundHigh:Disable()
-                TalcVoteFrameSettingsFrameWinSoundLow:Disable()
             end
             TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(db['WIN_VOLUME'] == 'high')
-            TalcVoteFrameSettingsFrameWinSoundLow:SetChecked(db['WIN_VOLUME'] == 'low')
 
             TalcVoteFrameSettingsFrameWinCommon:SetChecked(core.find(db['WIN_THRESHOLD'], '1', 1, true))
             TalcVoteFrameSettingsFrameWinUncommon:SetChecked(core.find(db['WIN_THRESHOLD'], '2', 1, true))
@@ -159,21 +166,30 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             TalcVoteFrameSettingsFrameRollEnableSound:SetChecked(db['ROLL_ENABLE_SOUND'])
             if db['ROLL_ENABLE_SOUND'] then
                 TalcVoteFrameSettingsFrameRollSoundHigh:Enable()
-                TalcVoteFrameSettingsFrameRollSoundLow:Enable()
                 TalcVoteFrameSettingsFrameRollTrombone:Enable()
             else
                 TalcVoteFrameSettingsFrameRollSoundHigh:Disable()
-                TalcVoteFrameSettingsFrameRollSoundLow:Disable()
                 TalcVoteFrameSettingsFrameRollTrombone:Disable()
             end
             TalcVoteFrameSettingsFrameRollSoundHigh:SetChecked(db['ROLL_VOLUME'] == 'high')
-            TalcVoteFrameSettingsFrameRollSoundLow:SetChecked(db['ROLL_VOLUME'] == 'low')
 
             TalcVoteFrameSettingsFrameRollTrombone:SetChecked(db['ROLL_TROMBONE'])
 
             TalcVoteFrameSettingsFrameBossEnable:SetChecked(db['BOSS_FRAME_ENABLE'])
 
             TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(db['NEED_FRAME_COLLAPSE'])
+
+
+            TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(db['ATTENDANCE_TRACKING'].enabled)
+            TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(db['ATTENDANCE_TRACKING'].bossKills)
+            TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(db['ATTENDANCE_TRACKING'].periodic)
+            if db['ATTENDANCE_TRACKING'].enabled then
+                TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
+                TalcVoteFrameSettingsFrameAttendanceTime:Enable()
+            else
+                TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
+                TalcVoteFrameSettingsFrameAttendanceTime:Disable()
+            end
 
             TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
 
@@ -187,6 +203,23 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             print("TALC INIt")
 
             init = true
+            return
+        end
+
+        if event == "PLAYER_ENTERING_WORLD" and db['ATTENDANCE_TRACKING'].enabled then
+            if core.instanceInfo() then
+                if db['ATTENDANCE_TRACKING'].started then
+                    TalcFrame.AttendanceTracker:Start()
+                else
+                    TalcVoteAttendanceQueryStart:Show()
+                end
+            else
+                if db['ATTENDANCE_TRACKING'].started then
+                    TalcVoteAttendanceQueryStop:Show()
+                else
+                    TalcFrame.AttendanceTracker:Stop()
+                end
+            end
             return
         end
 
@@ -372,6 +405,7 @@ TALC:RegisterEvent("PLAYER_TARGET_CHANGED")
 TALC:RegisterEvent("CHAT_MSG_ADDON")
 TALC:RegisterEvent("CHAT_MSG_LOOT")
 TALC:RegisterEvent("COMBAT_LOG_EVENT")
+TALC:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 SLASH_TALC1 = "/talc"
 SlashCmdList["TALC"] = function(cmd)
