@@ -24,6 +24,7 @@ function Talc_Utils:init()
     core.len = string.len
     core.gsub = string.gsub
     core.pairs = pairs
+    core.ipairs = ipairs
     core.sort = table.sort
     core.insert = table.insert
 
@@ -174,27 +175,6 @@ function Talc_Utils:init()
 
     core.trim = function(s)
         return core.gsub(s, "^%s*(.-)%s*$", "%1")
-    end
-
-    core.pairsByKeys = function(t)
-        local a = {}
-        for n in core.pairs(t) do
-            core.insert(a, n)
-        end
-        core.sort(a, function(a, b)
-            return a < b
-        end)
-        local i = 0 -- iterator variable
-        local iter = function()
-            -- iterator function
-            i = i + 1
-            if a[i] == nil then
-                return nil
-            else
-                return a[i], t[a[i]]
-            end
-        end
-        return iter
     end
 
     core.pairsByKeysReverse = function(t)
@@ -581,7 +561,7 @@ function Talc_Utils:init()
     end
 
     core.saveAttendance = function(boss)
-        local name, maxPlayers, isHeroic, raidString = core.instanceInfo()
+        local _, _, _, raidString = core.instanceInfo()
 
         local att = db['ATTENDANCE_DATA']
         if not att[raidString] then
@@ -651,12 +631,53 @@ function Talc_Utils:init()
         end
         return h
     end
+
+    core.sortTableBy = function(t, by, dir)
+        local a = {}
+        if not dir then
+            dir = 1
+        end
+        -- collect timestamps
+        for _, d in core.pairs(t) do
+            core.insert(a, d[by])
+        end
+        -- sort timestamps
+        core.sort(a, function(a, b)
+            if dir == 1 then
+                return a > b
+            else
+                return a < b
+            end
+        end)
+        local i = 0 -- iterator variable
+        local iter = function()
+            -- iterator function
+            i = i + 1
+            if a[i] == nil then
+                return nil
+            else
+                -- return record where timestamp is a[i]
+                for n, d in core.pairs(t) do
+                    if d[by] == a[i] then
+                        return n, d
+                    end
+                end
+                return nil
+            end
+        end
+        return iter
+    end
+
+    core.sortedLootHistory = function()
+        local t = db['VOTE_LOOT_HISTORY']
+        return core.sortTableBy(t, 'timestamp')
+    end
 end
 
 function talc_print(a)
     if a == nil then
         talc_error(time() .. '|r attempt to print a nil value.')
-        return false
+        return
     end
     print("|cff69ccf0[TALC] |r" .. a)
 end

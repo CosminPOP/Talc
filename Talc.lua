@@ -338,6 +338,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                         end
                     end
                 end
+                return
             end
 
             --if event == 'PLAYER_TARGET_CHANGED' then

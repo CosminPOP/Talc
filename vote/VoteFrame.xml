@@ -78,13 +78,6 @@
         <Size>
             <AbsDimension x="24" y="24"/>
         </Size>
-        <Anchors>
-            <Anchor point="LEFT">
-                <Offset>
-                    <AbsDimension x="0" y="0"/>
-                </Offset>
-            </Anchor>
-        </Anchors>
         <Layers>
             <Layer level="OVERLAY">
                 <FontString name="$parentItemLevel" text="123" inherits="NumberFontNormalSmall">
@@ -1304,7 +1297,6 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-
                 <Texture name="$parentTimeLeftBar" file="Interface\addons\Talc\images\grad1">
                     <Size>
                         <AbsDimension x="180" y="24"/>
@@ -1316,19 +1308,6 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-
-                <Texture name="$parentTimeLeftBarBG" file="Interface\addons\Talc\images\grad2">
-                    <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
-                    <Size>
-                        <AbsDimension x="180" y="24"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="BOTTOMRIGHT">
-                            <Offset x="-4" y="4"/>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
-
                 <Texture name="$parentBG1" file="Interface\addons\Talc\images\grad2" tile="true">
                     <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
                     <Anchors>
@@ -1340,10 +1319,9 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-
             </Layer>
             <Layer level="BORDER">
-                <Texture file="Interface\addons\Talc\images\grad1" name="$parentLabelsBackground">
+                <Texture name="$parentLabelsBackground" file="Interface\addons\Talc\images\grad1">
                     <Color r="0.24" g="0.45" b="0.84"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
@@ -1351,6 +1329,17 @@
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
                             <Offset x="-5" y="-108"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentTimeLeftBarBG" file="Interface\addons\Talc\images\grad2">
+                    <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
+                    <Size>
+                        <AbsDimension x="180" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT">
+                            <Offset x="-4" y="4"/>
                         </Anchor>
                     </Anchors>
                 </Texture>
@@ -1365,7 +1354,6 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-
                 <FontString name="$parentNameLabel" inherits="GameFontHighlight" text="Name">
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -1420,7 +1408,6 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-
                 <FontString name="$parentContestantCount" inherits="GameFontHighlight" text="2222" hidden="false">
                     <Anchors>
                         <Anchor point="BOTTOMLEFT">
@@ -1430,7 +1417,6 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-
                 <FontString name="$parentTimeLeft" inherits="GameFontHighlight" text="22:22" hidden="false">
                     <Anchors>
                         <Anchor point="BOTTOM">
@@ -1440,7 +1426,6 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-
                 <FontString name="$parentVotedItemName" hidden="false" inherits="GameFontNormalLarge"
                             text="[voted item name]" justifyH="LEFT">
                     <Size>
@@ -2164,23 +2149,6 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button name="$parentTab3" inherits="Talc_ButtonTemplate" text="Unused yet">
-                        <Size>
-                            <AbsDimension x="95" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="LEFT" relativeTo="$parentTab2" relativePoint="RIGHT">
-                                <Offset>
-                                    <AbsDimension x="1" y="0"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame.RLFrame:ChangeTab(3);
-                            </OnClick>
-                        </Scripts>
-                    </Button>
 
                     <Frame name="$parentTab1Contents">
                         <Layers>
@@ -2495,26 +2463,6 @@
                             </CheckButton>
                         </Frames>
                     </Frame>
-
-                    <Frame name="$parentTab3Contents">
-                        <Layers>
-                            <Layer level="OVERLAY">
-                            </Layer>
-                        </Layers>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                <Offset x="2" y="-24"/>
-                            </Anchor>
-                            <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
-                                <Offset x="-2" y="5"/>
-                            </Anchor>
-                        </Anchors>
-                        <Frames>
-
-
-                        </Frames>
-                    </Frame>
-
 
                 </Frames>
             </Frame>
@@ -3942,30 +3890,31 @@
                                 </Anchors>
                             </Button>
 
-                            <Button name="$parentMainHandSlot" inherits="Talc_InspectGearButtonTemplate">
-                                <Anchors>
-                                    <Anchor point="TOPLEFT">
-                                        <Offset>
-                                            <AbsDimension x="60" y="-196"/>
-                                        </Offset>
-                                    </Anchor>
-                                </Anchors>
-                            </Button>
                             <Button name="$parentSecondaryHandSlot" inherits="Talc_InspectGearButtonTemplate">
                                 <Anchors>
-                                    <Anchor point="TOPLEFT" relativeTo="$parentMainHandSlot" relativePoint="TOPRIGHT">
+                                    <Anchor point="BOTTOM">
                                         <Offset>
-                                            <AbsDimension x="5" y="0"/>
+                                            <AbsDimension x="0" y="0"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
                             </Button>
+
+                            <Button name="$parentMainHandSlot" inherits="Talc_InspectGearButtonTemplate">
+                                <Anchors>
+                                    <Anchor point="TOPRIGHT" relativeTo="$parentSecondaryHandSlot" relativePoint="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="-4" y=""/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                            </Button>
+
                             <Button name="$parentRangedSlot" inherits="Talc_InspectGearButtonTemplate">
                                 <Anchors>
-                                    <Anchor point="TOPLEFT" relativeTo="$parentSecondaryHandSlot"
-                                            relativePoint="TOPRIGHT">
+                                    <Anchor point="TOPLEFT" relativeTo="$parentSecondaryHandSlot" relativePoint="TOPRIGHT">
                                         <Offset>
-                                            <AbsDimension x="5" y="0"/>
+                                            <AbsDimension x="4" y="0"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -3973,7 +3922,7 @@
                         </Frames>
                     </Frame>
 
-                    <Frame name="$parentLootHistoryFrame">
+                    <Frame name="$parentLootHistoryFrame" hidden="true">
                         <Size>
                             <AbsDimension x="207" y="223"/>
                         </Size>

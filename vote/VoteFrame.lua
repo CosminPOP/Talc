@@ -270,13 +270,7 @@ function TalcFrame:WelcomeFrame_OnShow()
         db['VOTE_ROSTER_GUILD_NAME'] = GetGuildInfo('player')
     end
 
-    if db['VOTE_ROSTER'][core.me] ~= nil then
-        local allMembers = ''
-        for name in next, db['VOTE_ROSTER'] do
-            if name ~= core.me then
-                allMembers = allMembers .. name .. ", "
-            end
-        end
+    if core.canVote() then
         TalcVoteFrameWelcomeFrameLCStatus:SetText("You are part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
     else
         if GetGuildInfo('player') then
@@ -430,8 +424,8 @@ function TalcFrame:TryToAddToWishlist(nameOrID)
         if core.int(nameOrID) then
             -- cache and add
             core.cacheItem(nameOrID)
-            TalcFrame.delayAddToWishlist.id = nameOrID
-            TalcFrame.delayAddToWishlist:Show()
+            self.delayAddToWishlist.id = nameOrID
+            self.delayAddToWishlist:Show()
             return
         end
 
@@ -446,9 +440,9 @@ function TalcFrame:TryToAddToWishlist(nameOrID)
             local maxResults = maxCols * maxRows
             local col, row = 1, 1
 
-            for _, data in pairs(AtlasLoot_Data) do
-                for _, v in ipairs(data) do
-                    if type(v[2]) == "number" and v[2] > 0 then
+            for _, data in core.pairs(AtlasLoot_Data) do
+                for _, v in core.ipairs(data) do
+                    if core.type(v[2]) == "number" and v[2] > 0 then
                         local itemName = GetItemInfo(v[2]);
                         if not itemName then
                             itemName = core.gsub(v[4], "=q%d=", "")
@@ -934,10 +928,11 @@ end
 function TalcFrame:addVotedItem(index, texture, link)
 
     self.itemVotes[index] = {}
-
     self.doneVoting[index] = false
-
     self.selectedPlayer[index] = ''
+
+    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+    local itemID = core.int(core.split(':', itemLink)[2])
 
     if not self.VotedItemsFrames[index] then
         self.VotedItemsFrames[index] = CreateFrame("Frame", "VotedItem" .. index,
@@ -952,6 +947,7 @@ function TalcFrame:addVotedItem(index, texture, link)
 
     _G[frame]:Show()
     _G[frame].link = link
+    _G[frame].itemID = itemID
     _G[frame].texture = texture
     _G[frame].awardedTo = ''
     _G[frame].rolled = false
@@ -1502,14 +1498,6 @@ function TalcFrame:VoteFrameListUpdate()
                 else
                     _G[frame .. 'VoteButtonCheck']:Hide()
                     _G[frame .. 'VoteButton']:SetText('VOTE')
-                end
-
-                local lastItem = ''
-                for lootTime, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-                    if item.player == name then
-                        lastItem = item.item .. '(' .. date("%d/%m", lootTime) .. ')'
-                        break
-                    end
                 end
 
                 _G[frame .. 'RollWinner']:Hide()
@@ -2859,17 +2847,14 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
             end
         end
 
-        TalcVoteFrameRaiderDetailsFrameTab1:SetText('|rGear')
-        TalcVoteFrameRaiderDetailsFrameTab2:SetText('|cff696969Loot History')
+        local _, _, _, _, _, _, _, _, _, _, gearScore = self:GetPlayerInfo(playerName)
+
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
                         core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
-                        "|rGearscore: 2323"
+                        "|rGearscore: " .. gearScore
         )
-
-        TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Show()
-        TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Hide()
 
         for index in next, self.lootHistoryFrames do
             self.lootHistoryFrames[index]:Hide()
@@ -2890,6 +2875,8 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         end
 
         self:LootHistoryUpdate()
+
+        TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame:Show()
     end
 
     if tab == 3 then
@@ -3015,11 +3002,11 @@ function TalcFrame:LootHistoryUpdate()
 
     local id = self.HistoryId
 
-    self.selectedPlayer[TalcFrame.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
-
-    local totalItems = 0
+    self.selectedPlayer[self.CurrentVotedItem] = _G['TalcVoteFrameContestantFrame' .. id].name
 
     local historyPlayerName = _G['TalcVoteFrameContestantFrame' .. id].name
+
+    local totalItems = 0
     for _, item in next, db['VOTE_LOOT_HISTORY'] do
         if historyPlayerName == item.player then
             totalItems = totalItems + 1
@@ -3054,9 +3041,6 @@ function TalcFrame:LootHistoryUpdate()
                     if date("%d/%m") == date("%d/%m", item.timestamp) then
                         today = core.classColors['mage'].colorStr
                     end
-
-                    local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
-                    local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
 
                     _G[frame .. 'Name']:SetWidth(165)
                     _G[frame .. 'Name']:SetText(item.item)
@@ -3136,8 +3120,8 @@ function TalcFrame:queryWho()
 
     core.asend("versionQuery=")
 
-    TalcFrame.withAddon = {}
-    TalcFrame.withAddonFrames = {}
+    self.withAddon = {}
+    self.withAddonFrames = {}
 
     TalcVoteFrameWhoTitle:SetText('TALC v' .. core.addonVer)
 
@@ -3189,7 +3173,7 @@ end
 
 function TalcFrame:updateWithAddon()
 
-    TalcFrame.withAddonFrames = {}
+    self.withAddonFrames = {}
 
     local row, col = 1, 1
 
@@ -3338,7 +3322,7 @@ function TalcFrame.tradableItemsCheck:ItemClick(id)
 
         local link = self.items[id].itemLink
         local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
-        local itemID = core.split(':', itemLink)
+        local itemID = core.split(':', itemLink)[2]
 
         core.insert(TalcFrame.bagItems, {
             preloaded = false,
@@ -3384,9 +3368,12 @@ function TalcFrame.RLFrame:CheckAssists()
         end
     end
     --getcls
-    if db['VOTE_ROSTER'] then
-        for clName in next, db['VOTE_ROSTER'] do
-            assistsAndCL[clName] = false
+    for _, name in next, db['VOTE_ROSTER'] do
+        local add = true
+        for _, aac in next, assistsAndCLs do
+            if aac.name == name then
+                add = false
+            end
         end
         if add then
             core.insert(assistsAndCLs, {
@@ -3851,6 +3838,7 @@ function TalcFrame:WelcomeItemClick(id)
         frame:Hide()
     end
 
+    -- todo check this ordering
     for timestamp, item in core.pairsByKeysReverse(itemHistory) do
 
         index = index + 1
@@ -3910,6 +3898,7 @@ function TalcFrame:WelcomePlayerClick(name)
     local raid = ''
     local offset = 0
 
+    -- todo check this ordering
     for timestamp, item in core.pairsByKeysReverse(playerHistory) do
         index = index + 1
 
