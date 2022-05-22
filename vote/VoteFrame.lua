@@ -62,6 +62,10 @@ TalcFrame.itemRewardsFrames = {}
 
 TalcFrame.wishlistItemsFrames = {}
 
+TalcFrame.itemHistoryIndex = 0
+TalcFrame.itemHistoryFrames = {}
+TalcFrame.playerHistoryFrames = {}
+
 function TalcFrame:init()
 
     db = TALC_DB
@@ -3789,10 +3793,6 @@ function Talc_BuildMinimapMenu()
     UIDropDownMenu_AddButton(close);
 end
 
-TalcFrame.itemHistoryIndex = 0
-TalcFrame.itemHistoryFrames = {}
-TalcFrame.playerHistoryFrames = {}
-
 function TalcFrame:WelcomeItemClick(id)
 
     TalcFrame.itemHistoryIndex = id
@@ -3805,28 +3805,19 @@ function TalcFrame:WelcomeItemClick(id)
     TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Show()
 
     local itemHistory = {}
-
-    -- item history
-    local numPlayers = 0
     for _, item in next, db['VOTE_LOOT_HISTORY'] do
         if item.item == self.welcomeItemsFrames[id].itemName then
-            itemHistory[item.timestamp] = item
-            numPlayers = numPlayers + 1
+            core.insert(itemHistory, item)
         end
     end
 
-    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. numPlayers .. ')')
-
-    local index = 0
+    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. core.n(itemHistory) .. ')')
 
     for _, frame in next, self.itemHistoryFrames do
         frame:Hide()
     end
 
-    -- todo check this ordering
-    for timestamp, item in core.pairsByKeysReverse(itemHistory) do
-
-        index = index + 1
+    for index, item in core.sortTableBy(itemHistory, 'timestamp') do
 
         if not self.itemHistoryFrames[index] then
             self.itemHistoryFrames[index] = CreateFrame('Button', 'ItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
@@ -3836,7 +3827,7 @@ function TalcFrame:WelcomeItemClick(id)
         _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
         _G[frame .. 'Name']:SetText(core.classColors[item.class].colorStr .. item.player)
         _G[frame .. 'Pick']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
-        _G[frame .. 'Date']:SetText((date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
+        _G[frame .. 'Date']:SetText((date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", item.timestamp))
 
         _G[frame .. 'Icon']:SetTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. item.class)
 
@@ -3859,41 +3850,35 @@ function TalcFrame:WelcomePlayerClick(name)
     TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Hide()
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Show()
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame.name = name
-    local playerHistory = {}
 
-    -- item history
-    local numItems = 0
-    for _, item in next, db['VOTE_LOOT_HISTORY'] do
+    local playerHistory = {}
+        for _, item in next, db['VOTE_LOOT_HISTORY'] do
         if item.player == name then
-            playerHistory[item.timestamp] = item
-            numItems = numItems + 1
+            core.insert(playerHistory, item)
         end
     end
 
     if core.sub(name, core.len(name), core.len(name)) == 's' then
-        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\' Loot History (' .. numItems .. ')')
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\' Loot History (' .. core.n(playerHistory) .. ')')
     else
-        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. core.n(playerHistory) .. ')')
     end
 
     for _, frame in next, self.playerHistoryFrames do
         frame:Hide()
     end
 
-    local index = 0
     local x = TalcVoteFrameWelcomeFrame:GetWidth()
     local numCols = core.floor(x / 185)
     local col, row = 1, 1
     local raid = ''
     local offset = 0
 
-    -- todo check this ordering
-    for timestamp, item in core.pairsByKeysReverse(playerHistory) do
-        index = index + 1
+    for index, item in core.sortTableBy(playerHistory, 'timestamp') do
 
         local title = false
-        if raid ~= (item.raid .. ", " .. (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)) then
-            raid = item.raid .. ", " .. (date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)
+        if raid ~= (item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)) then
+            raid = item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)
             title = true
             offset = offset + 1
             if col ~= 1 then
