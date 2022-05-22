@@ -8,8 +8,6 @@ TALC.maxRecentItems = 100
 TALC.maxItemHistoryPlayers = 20
 TALC.maxLC = 3
 
--- todo add attendance (saved on boss death) ?
-
 local core, db, tokenRewards
 local init = false
 
@@ -241,6 +239,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
                 RollFrame:handleSystem(arg1)
 
+                -- todo check how this looks for non cl/leader
                 if (core.find(arg1, "The following players are AFK", 1, true) or
                         core.find(arg1, "No players are AFK", 1, true) or
                         core.find(arg1, "is not ready", 1, true)) and core.isRL() then
@@ -249,7 +248,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
                     local r = core.split(" ", arg1)
 
-                    if not r[2] or not r[3] then
+                    if not r[3] then
                         talc_error('bad roll syntax')
                         talc_error(arg1)
                         return false
@@ -258,6 +257,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     local name = r[1]
                     local roll = core.int(r[3])
 
+                    -- todo revisit this logic
                     --check if name is in playersWhoWantItems with vote == -2
                     for pwIndex, pwPlayer in next, TalcFrame.playersWhoWantItems do
                         if pwPlayer['name'] == name and pwPlayer['roll'] == -2 then
@@ -303,7 +303,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             TalcFrame.sentReset = false
                             if core.me ~= 'Er' then
                                 -- dont show for me, ill show it from erui addon
-                                TalcFrame:showWindow()
+                                TalcFrame:ShowWindow()
                             end
                         end
 

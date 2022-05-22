@@ -66,6 +66,13 @@ function Talc_Utils:init()
         ["deathknight"] = { r = 0.77, g = 0.12, b = 0.23, colorStr = "|cffC41F3B" },
     }
 
+    core.n = function(table)
+        local n = 0
+        for _ in next, table do
+            n = n + 1
+        end
+        return n
+    end
     core.ucFirst = function(str)
         return core.upper(core.sub(str, 1, 1)) .. core.sub(str, 2, core.len(str))
     end
@@ -440,7 +447,7 @@ function Talc_Utils:init()
         end
         core.bsend("BULK", "syncRoster=end")
 
-        TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. #db['VOTE_ROSTER'] .. ')')
+        TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
     end
 
     core.addToRoster = function(newName, checkbox)
@@ -449,7 +456,7 @@ function Talc_Utils:init()
             return
         end
 
-        if #db['VOTE_ROSTER'] == core.maxLC then
+        if core.n(db['VOTE_ROSTER']) == core.maxLC then
             talc_print("You can have a maximum of " .. core.maxLC .. " Officers.")
             checkbox:SetChecked(false)
             return

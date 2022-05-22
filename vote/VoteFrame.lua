@@ -251,14 +251,9 @@ function TalcFrame:SettingsFrame_OnShow()
         return
     end
 
-    local totalItems = 0
-    for _ in next, db['VOTE_LOOT_HISTORY'] do
-        totalItems = totalItems + 1
-    end
+    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History (' .. core.n(db['VOTE_LOOT_HISTORY']) .. ')');
 
-    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History (' .. totalItems .. ')');
-
-    if totalItems > 0 then
+    if core.n(db['VOTE_LOOT_HISTORY']) > 0 then
         TalcVoteFrameSettingsFramePurgeLootHistory:Enable()
     else
         TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
@@ -282,7 +277,7 @@ function TalcFrame:WelcomeFrame_OnShow()
 
     self:ShowWelcomeItems()
 
-    TalcVoteFrameWelcomeFrameOpenWishlist:SetText("Wishlist (" .. #db['NEED_WISHLIST'] .. "/" .. core.numWishlistItems .. ")")
+    TalcVoteFrameWelcomeFrameOpenWishlist:SetText("Wishlist (" .. core.n(db['NEED_WISHLIST']) .. "/" .. core.numWishlistItems .. ")")
 
     TalcVoteFrameWelcomeFrameRecentItems:SetText('Recent Items')
     TalcVoteFrameWelcomeFrameBackButton:Hide()
@@ -397,7 +392,7 @@ function TalcFrame:TryToAddToWishlist(nameOrID)
     nameOrID = core.trim(nameOrID)
 
     -- empty query or wishlist full
-    if core.len(nameOrID) == 0 or nameOrId == 0 or #db['NEED_WISHLIST'] == core.numWishlistItems then
+    if core.len(nameOrID) == 0 or nameOrId == 0 or core.n(db['NEED_WISHLIST']) == core.numWishlistItems then
         self:WishlistUpdate()
         return
     end
@@ -462,21 +457,21 @@ function TalcFrame:TryToAddToWishlist(nameOrID)
                             end
                         end
                     end
-                    if #results == maxResults then
+                    if core.n(results) == maxResults then
                         break
                     end
                 end
-                if #results == maxResults then
+                if core.n(results) == maxResults then
                     break
                 end
             end
 
-            if #results == 0 then
+            if core.n(results) == 0 then
                 -- no results, do nothing
                 talc_print("Nothing found.")
                 self:WishlistUpdate()
                 return
-            elseif #results == 1 then
+            elseif core.n(results) == 1 then
                 -- one result, add the id
                 nameOrID = results[1].id
                 self:TryToAddToWishlist(nameOrID)
@@ -576,13 +571,13 @@ function TalcFrame:AddToWishlist(itemLink, direct)
 end
 
 function TalcFrame:RemoveFromWishlist(id)
-    if id == #db['NEED_WISHLIST'] then
+    if id == core.n(db['NEED_WISHLIST']) then
         db['NEED_WISHLIST'][id] = nil
     else
-        for i = id, #db['NEED_WISHLIST'] - 1 do
+        for i = id, core.n(db['NEED_WISHLIST']) - 1 do
             db['NEED_WISHLIST'][i] = db['NEED_WISHLIST'][i + 1]
         end
-        db['NEED_WISHLIST'][#db['NEED_WISHLIST']] = nil
+        db['NEED_WISHLIST'][core.n(db['NEED_WISHLIST'])] = nil
     end
     TalcFrame:WishlistUpdate()
 end
@@ -606,9 +601,9 @@ function TalcFrame:WishlistUpdate()
 
     TalcVoteFrameWishlistFrameCloseWindow:Show()
 
-    if #db['NEED_WISHLIST'] > 0 then
-        TalcVoteFrameWishlistFrameDescription:SetText(TalcVoteFrameWishlistFrameDescription:GetText() .. "Your list has " .. #db['NEED_WISHLIST'] .. " item(s).")
-        if #db['NEED_WISHLIST'] == core.numWishlistItems then
+    if core.n(db['NEED_WISHLIST']) > 0 then
+        TalcVoteFrameWishlistFrameDescription:SetText(TalcVoteFrameWishlistFrameDescription:GetText() .. "Your list has " .. core.n(db['NEED_WISHLIST']) .. " item(s).")
+        if core.n(db['NEED_WISHLIST']) == core.numWishlistItems then
             TalcVoteFrameWishlistFrameAdd:Disable()
         end
     else
@@ -737,8 +732,7 @@ function TalcFrame:ToggleMainWindow()
         if not core.canVote() and not core.isRL() then
             return false
         end
-        TalcVoteFrame:Show()
-        TalcVoteFrame.animIn:Play()
+        self:ShowWindow()
     end
 end
 
@@ -759,9 +753,10 @@ function TalcFrame:SendCloseWindow()
     core.asend("voteframe=close")
 end
 
-function TalcFrame:showWindow()
+function TalcFrame:ShowWindow()
     if not TalcVoteFrame:IsVisible() then
         TalcVoteFrame:Show()
+        TalcVoteFrame.animIn:Play()
     end
 end
 
@@ -1269,10 +1264,10 @@ function TalcFrame:ReceiveDrag()
 
     else
         -- load and broadcast logic
-        if #self.bagItems > 0 then
+        if core.n(self.bagItems) > 0 then
 
-            core.SetDynTTN(#self.bagItems)
-            core.SetDynTTV(#self.bagItems)
+            core.SetDynTTN(core.n(self.bagItems))
+            core.SetDynTTV(core.n(self.bagItems))
             self.LootCountdown.countDownFrom = db['VOTE_TTN']
 
             self:SendTimersAndButtons()
@@ -1303,8 +1298,8 @@ function TalcFrame:ReceiveDrag()
         end
     end
 
-    if #self.bagItems > 0 then
-        TalcVoteFrameRLExtraFrameDragLoot:SetText("Send " .. #self.bagItems .. " Item(s)")
+    if core.n(self.bagItems) > 0 then
+        TalcVoteFrameRLExtraFrameDragLoot:SetText("Send " .. core.n(self.bagItems) .. " Item(s)")
     end
 
     ClearCursor()
@@ -1862,7 +1857,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             self:CloseWindow()
         end
         if command[2] == "show" then
-            self:showWindow()
+            self:ShowWindow()
         end
         return
     end
@@ -1945,8 +1940,9 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 return false
             end
 
-            if #self.playersWhoWantItems > 0 then
-                for i = 1, #self.playersWhoWantItems do
+            -- double need protection
+            if core.n(self.playersWhoWantItems) > 0 then
+                for i = 1, core.n(self.playersWhoWantItems) do
                     if self.playersWhoWantItems[i].itemIndex == core.int(needEx[2]) and
                             self.playersWhoWantItems[i].name == sender then
                         return
@@ -2028,7 +2024,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         local hash, player, item, index, pick, raid
 
-        hash = wonData[2]
+        hash = core.int(wonData[2])
         player = wonData[3]
         item = wonData[4]
         index = core.int(wonData[5])
@@ -2153,7 +2149,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         else
             local hash, timestamp, player, class, item, pick, raid
 
-            hash = lh[2]
+            hash = core.int(lh[2])
             timestamp = lh[3]
             player = lh[4]
             class = lh[5]
@@ -2242,8 +2238,8 @@ function TalcFrame:RefreshContestantsList()
     end
     -- sort
     self.currentPlayersList = {}
-    for i = 1, #self.contestantsFrames do
-        _G['TalcVoteFrameContestantFrame' .. i]:Hide();
+    for _, frame in next, self.contestantsFrames do
+        frame:Hide()
     end
     for pIndex, data in next, self.playersWhoWantItems do
         if data.itemIndex == self.CurrentVotedItem then
@@ -2572,12 +2568,9 @@ function TalcFrame:ContestantOnEnter()
 end
 
 function TalcFrame:ContestantOnLeave()
-    for i = 1, #self.contestantsFrames do
-        local r, g, b = _G['TalcVoteFrameContestantFrame' .. i]:GetBackdropColor()
-        if self.selectedPlayer[self.CurrentVotedItem] ~= _G['TalcVoteFrameContestantFrame' .. i].name then
-            _G['TalcVoteFrameContestantFrame' .. i]:SetBackdropColor(r, g, b, 0.5)
-        end
-    end
+    local frame = _G['TalcVoteFrameContestantFrame' .. this:GetID()]
+    local r, g, b = frame:GetBackdropColor()
+    frame:SetBackdropColor(r, g, b, 0.5)
 end
 
 function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
@@ -2599,7 +2592,7 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
     end
 
     -- todo maybe better bagitem detection
-    if #self.bagItems > 0 then
+    if core.n(self.bagItems) > 0 then
         local _, _, need = TalcFrame:GetPlayerInfo(playerName);
 
         if disenchant then
@@ -2831,7 +2824,7 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
             end
         end
 
-        if #self.inspectPlayerGear[playerName] == 0 then
+        if core.n(self.inspectPlayerGear[playerName]) == 0 then
             core.wsend("ALERT", "sendgear=", playerName)
         else
             TalcFrame:RaiderDetailsShowGear()
@@ -2848,7 +2841,6 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         end
 
         local _, _, _, _, _, _, _, _, _, _, gearScore = self:GetPlayerInfo(playerName)
-
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
@@ -3258,8 +3250,8 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
 
         local items = TalcFrame:GetTradableItems()
 
-        if #this.items > 0 then
-            if #this.items > #items then
+        if core.n(this.items) > 0 then
+            if core.n(this.items) > core.n(items) then
                 for _, j in next, this.items do
                     local found = false
                     for _, l in next, items do
@@ -3305,9 +3297,9 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
             end
         end
 
-        TalcVoteFrameTradableItemsFrame:SetHeight(40 + #this.items * 21)
+        TalcVoteFrameTradableItemsFrame:SetHeight(40 + core.n(this.items) * 21)
 
-        if #this.items > 0 then
+        if core.n(this.items) > 0 then
             TalcVoteFrameTradableItemsFrame:Show()
         else
             TalcVoteFrameTradableItemsFrame:Hide()
@@ -3384,11 +3376,11 @@ function TalcFrame.RLFrame:CheckAssists()
         end
     end
 
-    for i = 1, #self.assistFrames, 1 do
-        self.assistFrames[i]:Hide()
+    for _, frame in next, self.assistFrames do
+        frame:Hide()
     end
 
-    TalcVoteFrameRLWindowFrame:SetHeight(110 + #assistsAndCLs * 25)
+    TalcVoteFrameRLWindowFrame:SetHeight(110 + core.n(assistsAndCLs) * 25)
 
     for index, names in next, assistsAndCLs do
         if not self.assistFrames[index] then
@@ -3427,7 +3419,7 @@ function TalcFrame.RLFrame:CheckAssists()
         end
     end
 
-    TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. #db['VOTE_ROSTER'] .. ')')
+    TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
 end
 
 function TalcFrame.RLFrame:SaveLootButton(button, value)
@@ -3493,33 +3485,26 @@ function TalcFrame.RLFrame:ChangeTab(tab)
 
     _G['TalcVoteFrameRLWindowFrameTab' .. tab .. 'Contents']:Show()
 
+    for _, frame in next, self.assistFrames do
+        frame:Hide()
+    end
+
     if tab == 1 then
         TalcVoteFrameRLWindowFrameTab1:SetText(FONT_COLOR_CODE_CLOSE .. 'Officers')
         TalcVoteFrameRLWindowFrameTab2:SetText('|cff696969Loot')
         --TalcVoteFrameRLWindowFrameTab3:SetText('|cff696969Unused')
 
-        for i = 1, #self.assistFrames, 1 do
-            self.assistFrames[i]:Hide()
-        end
         self:CheckAssists()
     end
     if tab == 2 then
         TalcVoteFrameRLWindowFrameTab1:SetText('|cff696969Officers')
         TalcVoteFrameRLWindowFrameTab2:SetText(FONT_COLOR_CODE_CLOSE .. 'Loot')
         --TalcVoteFrameRLWindowFrameTab3:SetText('|cff696969Unused')
-
-        for i = 1, #self.assistFrames, 1 do
-            self.assistFrames[i]:Hide()
-        end
     end
     --if tab == 3 then
     --    TalcVoteFrameRLWindowFrameTab1:SetText('|cff696969Officers')
     --    TalcVoteFrameRLWindowFrameTab2:SetText('|cff696969Loot')
     --    TalcVoteFrameRLWindowFrameTab3:SetText(FONT_COLOR_CODE_CLOSE .. 'Unused')
-    --
-    --    for i = 1, #self.assistFrames, 1 do
-    --        self.assistFrames[i]:Hide()
-    --    end
     --end
 end
 
@@ -3610,10 +3595,10 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
                     local n, _, _, _, _, _, z = GetRaidRosterInfo(raidi);
                     if z ~= 'Offline' then
 
-                        for index, _ in next, TalcFrame.VotedItemsFrames do
+                        for index in next, TalcFrame.VotedItemsFrames do
                             local picked = false
-                            for i = 1, #TalcFrame.playersWhoWantItems do
-                                if TalcFrame.playersWhoWantItems[i].itemIndex == index and TalcFrame.playersWhoWantItems[i].name == n then
+                            for _, player in next, TalcFrame.playersWhoWantItems do
+                                if player.itemIndex == index and player.name == n then
                                     picked = true
                                     break
                                 end
@@ -3648,7 +3633,7 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
             end
 
             TalcFrame.VoteCountdown.votingOpen = true
-            TalcFrame:showWindow()
+            TalcFrame:ShowWindow()
 
             TalcFrame:VoteFrameListUpdate()
 
