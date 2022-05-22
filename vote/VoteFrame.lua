@@ -3435,16 +3435,13 @@ function TalcFrame.RLFrame:SaveSetting(key, value)
     if key == 'WIN_ENABLE_SOUND' then
         if value then
             TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
-            TalcVoteFrameSettingsFrameWinSoundLow:Enable()
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. db['WIN_VOLUME'] .. ".ogg");
         else
             TalcVoteFrameSettingsFrameWinSoundHigh:Disable()
-            TalcVoteFrameSettingsFrameWinSoundLow:Disable()
         end
     elseif key == 'WIN_VOLUME' then
-        if value == 'high' then
-            TalcVoteFrameSettingsFrameWinSoundLow:SetChecked(false)
-        else
-            TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(false)
+        if db['WIN_ENABLE_SOUND'] then
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. value .. ".ogg");
         end
         db[key] = value
         return
@@ -3460,21 +3457,28 @@ function TalcFrame.RLFrame:SaveSetting(key, value)
     elseif key == 'ROLL_ENABLE_SOUND' then
         if value then
             TalcVoteFrameSettingsFrameRollSoundHigh:Enable()
-            TalcVoteFrameSettingsFrameRollSoundLow:Enable()
             TalcVoteFrameSettingsFrameRollTrombone:Enable()
         else
             TalcVoteFrameSettingsFrameRollSoundHigh:Disable()
-            TalcVoteFrameSettingsFrameRollSoundLow:Disable()
             TalcVoteFrameSettingsFrameRollTrombone:Disable()
         end
+        if value then
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. db['ROLL_VOLUME'] .. ".ogg");
+        end
     elseif key == 'ROLL_VOLUME' then
-        if value == 'high' then
-            TalcVoteFrameSettingsFrameRollSoundLow:SetChecked(false)
-        else
-            TalcVoteFrameSettingsFrameRollSoundHigh:SetChecked(false)
+        if db['ROLL_ENABLE_SOUND'] then
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. value .. ".ogg");
         end
         db[key] = value
         return
+    elseif key == 'ROLL_TROMBONE' then
+        if value then
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\sadtrombone.ogg")
+        end
+    elseif key == 'BOSS_FRAME_ENABLE' then
+        if value then
+            BossFrame:StartBossAnimation("Raid Boss")
+        end
     end
 
     db[key] = value == 1;

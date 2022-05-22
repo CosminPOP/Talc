@@ -2814,9 +2814,9 @@
                         <FontString name="$parentBossFrameLabel" inherits="GameFontHighlight"
                                     text="Boss Defeated Frame">
                             <Anchors>
-                                <Anchor point="TOPLEFT">
+                                <Anchor point="TOPLEFT" relativeTo="$parentRollFrameLabel" relativePoint="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="520" y="-40"/>
+                                        <AbsDimension x="0" y="-130"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -2870,7 +2870,7 @@
                         <Layers>
                             <Layer level="OVERLAY">
                                 <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="High">
+                                            text="High Volume">
                                     <Anchors>
                                         <Anchor point="LEFT">
                                             <Offset>
@@ -2884,37 +2884,6 @@
                         <Scripts>
                             <OnClick>
                                 TalcFrame.RLFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
-                            </OnClick>
-                        </Scripts>
-                    </CheckButton>
-                    <CheckButton name="$parentWinSoundLow" inherits="UICheckButtonTemplate">
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="LEFT" relativeTo="$parentWinSoundHigh" relativePoint="RIGHT">
-                                <Offset>
-                                    <AbsDimension x="40" y="0"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="Low">
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="20" y="0"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </FontString>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'low' or 'high')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3118,7 +3087,7 @@
                         <Layers>
                             <Layer level="OVERLAY">
                                 <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="High">
+                                            text="High Volume">
                                     <Anchors>
                                         <Anchor point="LEFT">
                                             <Offset>
@@ -3132,37 +3101,6 @@
                         <Scripts>
                             <OnClick>
                                 TalcFrame.RLFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
-                            </OnClick>
-                        </Scripts>
-                    </CheckButton>
-                    <CheckButton name="$parentRollSoundLow" inherits="UICheckButtonTemplate">
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="LEFT" relativeTo="$parentRollSoundHigh" relativePoint="RIGHT">
-                                <Offset>
-                                    <AbsDimension x="40" y="0"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="Low">
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="20" y="0"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </FontString>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'low' or 'high')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
