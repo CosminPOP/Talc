@@ -2811,6 +2811,18 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
+
+                        <FontString name="$parentAttendanceLabel" inherits="GameFontHighlight"
+                                    text="Attendance Tracking">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="520" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
                         <FontString name="$parentBossFrameLabel" inherits="GameFontHighlight"
                                     text="Boss Defeated Frame">
                             <Anchors>
@@ -3196,6 +3208,97 @@
                             </OnClick>
                         </Scripts>
                     </CheckButton>
+
+                    <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Track Attendance">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentAttendanceBossKills" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceTrack" relativePoint="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Track Boss Kills">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
+                    <CheckButton name="$parentAttendanceTime" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceBossKills" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Track Time">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())
+                            </OnClick>
+                        </Scripts>
+                    </CheckButton>
+
 
                     <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">
                         <Size>
@@ -3843,7 +3946,8 @@
 
                             <Button name="$parentMainHandSlot" inherits="Talc_InspectGearButtonTemplate">
                                 <Anchors>
-                                    <Anchor point="TOPRIGHT" relativeTo="$parentSecondaryHandSlot" relativePoint="TOPLEFT">
+                                    <Anchor point="TOPRIGHT" relativeTo="$parentSecondaryHandSlot"
+                                            relativePoint="TOPLEFT">
                                         <Offset>
                                             <AbsDimension x="-4" y=""/>
                                         </Offset>
@@ -3853,7 +3957,8 @@
 
                             <Button name="$parentRangedSlot" inherits="Talc_InspectGearButtonTemplate">
                                 <Anchors>
-                                    <Anchor point="TOPLEFT" relativeTo="$parentSecondaryHandSlot" relativePoint="TOPRIGHT">
+                                    <Anchor point="TOPLEFT" relativeTo="$parentSecondaryHandSlot"
+                                            relativePoint="TOPRIGHT">
                                         <Offset>
                                             <AbsDimension x="4" y="0"/>
                                         </Offset>
@@ -3908,10 +4013,7 @@
                         </Anchors>
                         <Frames>
 
-                            <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
-                                <Size>
-                                    <AbsDimension x="255" y="284"/>
-                                </Size>
+                            <Frame name="$parentTitleFrame" inherits="Talc_AttendanceLineTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
@@ -3919,10 +4021,23 @@
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
+                            </Frame>
+
+                            <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                                <Size>
+                                    <AbsDimension x="255" y="259"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="4" y="-68"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
                                 <ScrollChild>
                                     <Frame name="$parentChild">
                                         <Size>
-                                            <AbsDimension x="255" y="284"/>
+                                            <AbsDimension x="255" y="259"/>
                                         </Size>
                                         <Anchors>
                                             <Anchor point="TOPLEFT">
@@ -4186,6 +4301,266 @@
                 <Scripts>
                     <OnClick>
                         TalcFrame:announceWithoutAddon()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="TalcVoteAttendanceQueryStart" hidden="true" toplevel="true" parent="UIParent"
+           movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="240" y="60"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
+                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  tile="false">
+            <EdgeSize>
+                <AbsValue val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="1"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="5" right="5" top="5" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
+                    <Color r="0.24" g="0.45" b="0.84"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-4"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                            <Offset x="-2" y="-24"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-24"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset x="-2" y="5"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" text="Start tracking attendance ?" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-8"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-4"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+
+            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">
+                <Size>
+                    <AbsDimension x="90" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        this:GetParent():Hide()
+                        TalcFrame.AttendanceTracker:Start()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">
+                <Size>
+                    <AbsDimension x="90" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        this:GetParent():Hide()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+                this:SetMovable(1);
+                this:SetUserPlaced(true);
+            </OnLoad>
+            <OnDragStart>
+                this:StartMoving();
+                this.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                this:StopMovingOrSizing();
+                this.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="TalcVoteAttendanceQueryStop" hidden="true" toplevel="true" parent="UIParent"
+           movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="240" y="60"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="0"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
+                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  tile="false">
+            <EdgeSize>
+                <AbsValue val="16"/>
+            </EdgeSize>
+            <TileSize>
+                <AbsValue val="1"/>
+            </TileSize>
+            <BackgroundInsets>
+                <AbsInset left="5" right="5" top="5" bottom="5"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
+                    <Color r="0.24" g="0.45" b="0.84"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-4"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                            <Offset x="-2" y="-24"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                            <Offset x="2" y="-24"/>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset x="-2" y="5"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parentTitle" text="Stop tracking attendance ?" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-8"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-4"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Button>
+
+            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">
+                <Size>
+                    <AbsDimension x="90" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        this:GetParent():Hide()
+                        TalcFrame.AttendanceTracker:Stop()
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">
+                <Size>
+                    <AbsDimension x="90" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        this:GetParent():Hide()
                     </OnClick>
                 </Scripts>
             </Button>
