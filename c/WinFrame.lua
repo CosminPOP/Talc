@@ -53,7 +53,7 @@ function WinFrame:startItemAnimation()
     if db['WIN_ENABLE_SOUND'] then
         PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. db['WIN_VOLUME'] .. ".ogg");
     end
-    if #self.animFrame.wonItems > 0 then
+    if core.n(self.animFrame.wonItems) > 0 then
         self.animFrame.showLootWindow = true
     end
     if not self.animFrame:IsVisible() then
@@ -83,15 +83,15 @@ function WinFrame:addWonItem(linkString, winText)
     local _, _, _, color = GetItemQualityColor(quality)
 
     local wonIndex = 0
-    for i = 1, #self.animFrame.wonItems, 1 do
-        if not self.animFrame.wonItems[i].active then
-            wonIndex = i
+    for index, frame in next, self.animFrame.wonItems do
+        if not frame.active then
+            wonIndex = index
             break
         end
     end
 
     if wonIndex == 0 then
-        wonIndex = #self.animFrame.wonItems + 1
+        wonIndex = core.n(self.animFrame.wonItems) + 1
     end
 
     if not self.animFrame.wonItems[wonIndex] then
