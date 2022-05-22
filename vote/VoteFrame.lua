@@ -340,9 +340,9 @@ function TalcFrame:ShowWelcomeItems()
             _G[frame .. 'RaidTitle']:Show()
         end
 
-        _G[frame .. 'Name']:SetText(item.item)
-        _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
-        _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+        _G[frame .. 'TopText']:SetText(item.item)
+        _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+        _G[frame .. 'BottomText']:SetText(core.classColors[item.class].colorStr .. item.player)
 
         local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
         _G[frame .. 'Icon']:SetTexture(tex)
@@ -3917,9 +3917,9 @@ function TalcFrame:WelcomePlayerClick(name)
             _G[frame .. 'RaidTitle']:Show()
         end
 
-        _G[frame .. 'Name']:SetText(item.item)
-        _G[frame .. 'PlayerName']:SetText("")
-        _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+        _G[frame .. 'TopText']:SetText(item.item)
+        _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+        _G[frame .. 'BottomText']:SetText("")
 
         _G[frame].name = item.player
 

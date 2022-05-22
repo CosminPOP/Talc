@@ -121,35 +121,6 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parentName" inherits="GameFontNormal" text="Item Name Long Long Long Long Long "
-                            justifyH="LEFT">
-                    <Size x="130" y="14"/>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="37" y="2"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
-                <FontString name="$parentPlayerName" inherits="GameFontNormal" text="Player Name" justifyH="LEFT">
-                    <Anchors>
-                        <Anchor point="LEFT">
-                            <Offset>
-                                <AbsDimension x="37" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
-                <FontString name="$parentDate" inherits="GameFontNormal" text="Bis" justifyH="LEFT">
-                    <Anchors>
-                        <Anchor point="BOTTOMLEFT">
-                            <Offset>
-                                <AbsDimension x="37" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
 
                 <FontString name="$parentRaidTitle" inherits="GameFontHighlight" text="Raid Title" justifyH="LEFT"
                             hidden="true">
@@ -161,6 +132,38 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
+
+                <FontString name="$parentTopText" inherits="GameFontNormal" text="Item Name Long Long Long Long Long "
+                            justifyH="LEFT">
+                    <Size x="130" y="14"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="37" y="2"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentMiddleText" inherits="GameFontNormal" text="Player Name" justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="37" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentBottomText" inherits="GameFontNormal" text="Bis" justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="37" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+
             </Layer>
         </Layers>
         <Scripts>
