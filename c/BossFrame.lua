@@ -41,7 +41,6 @@ BossFrame.Bosses = {
     'Blind Hunter', 'Earthcaller Halmgar',
 
     --Scarlet Monastery – 26-45
-
     'Herod',
     'Interrogator Vishas', 'Bloodmage Thalnos', 'Azshir the Sleepless', 'Fallen Champion', 'Ironspire',
     'Houndmaster Loksey', 'Arcanist Doan',
@@ -51,7 +50,6 @@ BossFrame.Bosses = {
     'Mordresh Fire Eye', 'Ragglesnout', 'Tuten\'kash', 'Glutton', 'Amnennar the Coldbringer', 'Plaguemaw the Rotting',
 
     --Uldaman – 35-45
-
     'Revelosh', 'Ironaya', 'Obsidian Sentinel', 'Ancient Stone Keeper',
     'Grimlok', 'Archaedas', 'Galgann Firehammer', 'Baelog', 'Olaf', 'Eric "The Swift"',
 
@@ -93,7 +91,6 @@ BossFrame.Bosses = {
     'Lord Valthalak',
 
     --Dire Maul – 55-60
-
     'Guard Mol\'dar', 'Stomper Kreeg', 'Guard Fengus', 'Guard Slip\'kik', 'Captain Kromcrush', 'Cho\'Rush the Observer', 'King Gordok',
     'Pusilin', 'Zevrim Thornhoof', 'Hydrospawn', 'Lethtendris', 'Alzzin the Wildshaper',
     'Tendris Warpwood', 'Illyanna Ravenoak', 'Magister Kalendris', 'Immol\'thar', 'Prince Tortheldrin',
@@ -108,7 +105,6 @@ BossFrame.Bosses = {
     'Stratholme Courier', 'The Unforgiven', 'Cannon Master Wiley', 'Grand Crusader Dathrohan', 'Timmy the Cruel',
     'Archivist Galford', 'Malor the Zealous', 'Hearthsinger Forresten', 'Skul', 'Postmaster Malown',
     'Magistrate Barthilas', 'Ramstein the Gorger', 'Nerub\'enkan', 'Maleki the Pallid', 'Baroness Anastari', 'Baron Rivendare', 'Stonespire',
-
 
     --Zul'Gurub
     'High Priestess Jeklik', 'High Priest Venoxis', 'High Priestess Mar\'li', 'High Priest Thekal',
@@ -132,19 +128,6 @@ BossFrame.Bosses = {
     --The Temple of Ahn'Qiraj
     'The Prophet Skeram', 'Lord Kri', 'Princess Yauj', 'Vem', 'Battleguard Sartura', 'Fankriss the Unyielding',
     'Viscidus', 'Princess Huhuran', 'Emperor Vek\'lor', 'Emperor Vek\'nilash', 'Ouro', 'C\'Thun',
-
-    --Naxxramas
-    'Anub\'Rekhan', 'Grand Widow Faerlina', 'Maexxna',
-    'Noth the Plaguebringer', 'Heigan the Unclean', 'Loatheb',
-    'Instructor Razuvious', 'Gothik the Harvester',
-    'Thane Korth\'azz', 'Lady Blaumeux', 'Sir Zeliek',
-    'Patchwerk', 'Grobbulus', 'Gluth', 'Thaddius',
-    'Sapphiron', 'Kel\'Thuzad',
-
-    --WORLD BOSSES
-    'Azuregos', 'Lord Kazzak', 'Teremus the Devourer',
-    'Emeriss', 'Lethon', 'Taerar', 'Ysondre',
-
 
     --TBC
 
@@ -247,6 +230,16 @@ BossFrame.Bosses = {
     --Trial of the Champion
     'Eadric the Pure', 'Argent Confessor Paletress', 'The Black Knight',
 
+    -- WOTLK Raids
+
+    --Naxxramas
+    'Anub\'Rekhan', 'Grand Widow Faerlina', 'Maexxna',
+    'Noth the Plaguebringer', 'Heigan the Unclean', 'Loatheb',
+    'Instructor Razuvious', 'Gothik the Harvester',
+    'Thane Korth\'azz', 'Lady Blaumeux', 'Sir Zeliek',
+    'Patchwerk', 'Grobbulus', 'Gluth', 'Thaddius',
+    'Sapphiron', 'Kel\'Thuzad',
+
 };
 
 BossFrame.animation = CreateFrame("Frame")
@@ -297,9 +290,9 @@ BossFrame.animation:SetScript("OnUpdate", function()
             end
 
             if BossFrame.animation.frameIndex > 119 then
-                TalcBossFrameBackground:SetAlpha(frame:GetAlpha() - 0.03)
-                TalcBossFrameBossName:SetAlpha(frame:GetAlpha())
-                TalcBossFrameHasBeenDefeated:SetAlpha(frame:GetAlpha())
+                TalcBossFrameBackground:SetAlpha(TalcBossFrameBackground:GetAlpha() - 0.03)
+                TalcBossFrameBossName:SetAlpha(TalcBossFrameBackground:GetAlpha())
+                TalcBossFrameHasBeenDefeated:SetAlpha(TalcBossFrameBackground:GetAlpha())
             end
 
             if BossFrame.animation.frameIndex >= 150 then
