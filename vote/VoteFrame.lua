@@ -3870,7 +3870,11 @@ function TalcFrame:WelcomePlayerClick(name)
         end
     end
 
-    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
+    if core.sub(name, core.len(name), core.len(name)) == 's' then
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\' Loot History (' .. numItems .. ')')
+    else
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. numItems .. ')')
+    end
 
     for _, frame in next, self.playerHistoryFrames do
         frame:Hide()
@@ -3914,7 +3918,7 @@ function TalcFrame:WelcomePlayerClick(name)
         end
 
         _G[frame .. 'Name']:SetText(item.item)
-        _G[frame .. 'PlayerName']:SetText(core.classColors[item.class].colorStr .. item.player)
+        _G[frame .. 'PlayerName']:SetText("")
         _G[frame .. 'Date']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
 
         _G[frame].name = item.player
