@@ -3035,9 +3035,9 @@ function TalcFrame:LootHistoryUpdate()
                     end
 
                     _G[frame .. 'Name']:SetWidth(165)
-                    _G[frame .. 'Name']:SetText(item.item)
-                    _G[frame .. 'PlayerName']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
-                    _G[frame .. 'Date']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", item.timestamp))
+                    _G[frame .. 'TopText']:SetText(item.item)
+                    _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+                    _G[frame .. 'BottomText']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", item.timestamp))
 
                     local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
                     local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
