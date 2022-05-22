@@ -2884,15 +2884,21 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Hide()
         TalcVoteFrameRaiderDetailsFrameAttendanceFrame:Show()
 
-        local index = 0
         for _, frame in next, self.attendanceFrames do
             frame:Hide()
         end
 
-        for raid, raidData in next, core.getAttendance(playerName) do
+        local att = db['ATTENDANCE_DATA'][playerName]
+
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameIcon:Hide()
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameLeft:SetText("|cffffffffTotal attendance points")
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameRight:SetText("|cffffffff".. att.points)
+
+        local index = 0
+        for raidString, raidData in next, att.raids do
             index = index + 1
 
-            local code = core.byteSum(raid)
+            local code = raidString:gsub( "%W", "" )
 
             if not self.attendanceFrames[code] then
                 self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -2905,34 +2911,34 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
             _G["TALCAttendanceFrame" .. code]:Show()
             local tex = ''
-            if core.find(raid, 'Naxx', 1, true) then
-                if core.find(raid, '10', 1, true) then
+            if core.find(raidString, 'Naxx', 1, true) then
+                if core.find(raidString, '10', 1, true) then
                     tex = 'interface\\icons\\Achievement_Dungeon_Naxxramas_10man'
                 end
-                if core.find(raid, '25', 1, true) then
+                if core.find(raidString, '25', 1, true) then
                     tex = 'interface\\icons\\Achievement_Dungeon_Naxxramas_heroic'
                 end
             end
-            if core.find(raid, 'Obsidian', 1, true) then
+            if core.find(raidString, 'Obsidian', 1, true) then
                 tex = 'interface\\icons\\Achievement_Boss_Sartharion_01'
             end
-            if core.find(raid, 'Eternity', 1, true) then
-                if core.find(raid, '10', 1, true) then
+            if core.find(raidString, 'Eternity', 1, true) then
+                if core.find(raidString, '10', 1, true) then
                     tex = 'interface\\icons\\Achievement_Dungeon_NexusRaid_10man'
                 end
-                if core.find(raid, '25', 1, true) then
+                if core.find(raidString, '25', 1, true) then
                     tex = 'interface\\icons\\Achievement_Dungeon_NexusRaid_25man'
                 end
             end
 
             _G["TALCAttendanceFrame" .. code .. "Icon"]:SetTexture(tex)
             _G["TALCAttendanceFrame" .. code .. "Icon"]:Show()
-            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText(raid)
-            _G["TALCAttendanceFrame" .. code .. "Right"]:SetText(raidData.kills)
+            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText(raidString)
+            _G["TALCAttendanceFrame" .. code .. "Right"]:SetText(raidData.points)
 
             if self.expandedAttendanceFrames[code] then
                 for boss, bossData in next, raidData.bosses do
-                    code = code * 10 + string.byte(boss)
+                    code = raidString:gsub( "%W", "" ) .. boss:gsub( "%W", "" )
                     index = index + 1
                     if not self.attendanceFrames[code] then
                         self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -2954,7 +2960,7 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
                     if self.expandedAttendanceFrames[code] then
                         for _, timestamp in next, bossData.dates do
-                            code = code * 10 + string.byte(timestamp)
+                            code = raidString:gsub( "%W", "" ) .. boss:gsub( "%W", "" ) .. timestamp
                             index = index + 1
                             if not self.attendanceFrames[code] then
                                 self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -2968,6 +2974,8 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
                             _G["TALCAttendanceFrame" .. code .. "Left"]:SetPoint("LEFT", 40, 0) --26
                             _G["TALCAttendanceFrame" .. code .. "Left"]:SetText("   " .. date("%d/%m %H:%M", timestamp))
                             _G["TALCAttendanceFrame" .. code .. "Right"]:SetText("")
+
+                            core.remButtonOnEnterTooltip(_G["TALCAttendanceFrame" .. code])
                         end
                     end
                 end
@@ -3432,6 +3440,20 @@ end
 
 function TalcFrame.RLFrame:SaveSetting(key, value)
 
+    if core.type(key) == 'table' then
+        db[key[1]][key[2]] = value == 1
+        if key[1] == 'ATTENDANCE_TRACKING' and key[2] == 'enabled' then
+            if db[key[1]][key[2]] then
+                TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
+                TalcVoteFrameSettingsFrameAttendanceTime:Enable()
+            else
+                TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
+                TalcVoteFrameSettingsFrameAttendanceTime:Disable()
+            end
+        end
+        return
+    end
+
     if key == 'WIN_ENABLE_SOUND' then
         if value then
             TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
@@ -3650,6 +3672,39 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
         end
     end
 end)
+
+TalcFrame.AttendanceTracker = CreateFrame("Frame")
+TalcFrame.AttendanceTracker:Hide()
+TalcFrame.AttendanceTracker:SetScript("OnShow", function()
+    this.startTime = GetTime();
+    talc_print("Attendance tracker started.")
+    db['ATTENDANCE_TRACKING'].started = true
+end)
+TalcFrame.AttendanceTracker:SetScript("OnHide", function()
+    talc_print("Attendance tracker stopped.")
+    db['ATTENDANCE_TRACKING'].started = false
+end)
+TalcFrame.AttendanceTracker:SetScript("OnUpdate", function()
+    local plus = 3 --db['ATTENDANCE_TRACKING'].period
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
+    if gt >= st then
+        this.startTime = GetTime();
+        talc_print("attendance tick")
+    end
+end)
+
+function TalcFrame.AttendanceTracker:Start()
+    if not TalcFrame.AttendanceTracker:IsVisible() then
+        TalcFrame.AttendanceTracker:Show()
+    end
+end
+
+function TalcFrame.AttendanceTracker:Stop()
+    print("stop pressed")
+    TalcFrame.AttendanceTracker:Hide()
+end
+
 
 function TalcFrame:ShowMinimapDropdown()
     local TALCMinimapMenuFrame = CreateFrame('Frame', 'TALCMinimapMenuFrame', UIParent, 'UIDropDownMenuTemplate')
@@ -3961,6 +4016,10 @@ function TalcFrame:SaveItemLocation(lootText)
         end
     end
 
+end
+
+function save_att(b)
+    core.saveAttendance(b)
 end
 
 --[[
