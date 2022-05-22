@@ -248,7 +248,7 @@ function Talc_Utils:init()
             end
         else
             frame:SetScript("OnEnter", function(self)
-                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", (this:GetWidth() ), -(this:GetHeight() / 4));
+                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", (this:GetWidth()), -(this:GetHeight() / 4));
                 GameTooltip:SetHyperlink(itemLink);
                 GameTooltip:Show();
             end)
@@ -561,65 +561,61 @@ function Talc_Utils:init()
                 end
             end
         else
-            print(" some other err message ")
             return false
         end
         return name, maxPlayers, isHeroic, name .. " " .. maxPlayers .. (isHeroic and '+' or '')
     end
 
     core.saveAttendance = function(boss)
+
+        if not core.instanceInfo() then
+            print("cant save attendance outside")
+            return
+        end
+
         local _, _, _, raidString = core.instanceInfo()
 
-        local att = db['ATTENDANCE_DATA']
-        if not att[raidString] then
-            att[raidString] = {}
-        end
-        if not att[raidString][boss] then
-            att[raidString][boss] = {}
-        end
+        local tickPoints = 1
+        local bossPoints = tickPoints * 10
 
-        att[raidString][boss] = {
-            timestamp = time(),
-            date_dm = date("%d/%m", time()),
-            players = {}
-        }
+        local att = db['ATTENDANCE_DATA']
 
         for i = 0, GetNumRaidMembers() do
             if GetRaidRosterInfo(i) then
                 local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
                 if z ~= 'Offline' then
-                    core.insert(att[raidString][boss].players, n)
-                end
 
-            end
-        end
+                    if not att[n] then
+                        att[n] = {
+                            points = tickPoints + (boss and bossPoints or 0),
+                            raids = {}
+                        }
+                    else
+                        att[n].points = att[n].points + tickPoints + (boss and bossPoints or 0)
+                    end
+                    if not att[n].raids[raidString] then
+                        att[n].raids[raidString] = {
+                            points = tickPoints + (boss and bossPoints or 0),
+                            bosses = {}
+                        }
+                    else
+                        att[n].raids[raidString].points = att[n].raids[raidString].points + tickPoints + (boss and bossPoints or 0)
+                    end
 
-        talc_dump(db['ATTENDANCE_DATA'])
-    end
-
-    core.getAttendance = function(name)
-        local att = {}
-
-        for raid, raidData in next, db['ATTENDANCE_DATA'] do
-            att[raid] = {
-                kills = 0,
-                bosses = {}
-            }
-            for boss, bossData in next, raidData do
-                att[raid].bosses[boss] = {
-                    kills = 0,
-                    dates = {}
-                }
-                for _, player in next, bossData.players do
-                    if player == name then
-                        att[raid].kills = att[raid].kills + 1
-                        att[raid].bosses[boss].kills = att[raid].bosses[boss].kills + 1
-                        core.insert(att[raid].bosses[boss].dates, bossData.timestamp)
+                    if boss then
+                        if not att[n].raids[raidString].bosses[boss] then
+                            att[n].raids[raidString].bosses[boss] = {
+                                kills = tickPoints * 10,
+                                dates = {time()}
+                            }
+                        else
+                            att[n].raids[raidString].bosses[boss].kills = att[n].raids[raidString].bosses[boss].kills + bossPoints
+                            core.insert(att[n].raids[raidString].bosses[boss].dates, time())
+                        end
                     end
                 end
             end
         end
-        return att
     end
 
     core.byteSum = function(str)
@@ -713,12 +709,14 @@ function talc_debug(a)
 end
 
 function talc_dump(tbl, indent)
-    if not indent then indent = 0 end
+    if not indent then
+        indent = 0
+    end
     for k, v in pairs(tbl) do
         local formatting = string.rep("  ", indent) .. k .. ": "
         if type(v) == "table" then
             print(formatting)
-            talc_dump(v, indent+1)
+            talc_dump(v, indent + 1)
         elseif type(v) == 'boolean' then
             print(formatting .. tostring(v))
         else
