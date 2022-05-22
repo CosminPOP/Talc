@@ -180,6 +180,7 @@ function TalcFrame:ResetVars()
     core.clearScrollbarTexture(TalcVoteFrameWelcomeFrameItemHistoryScrollFrameScrollBar)
     core.clearScrollbarTexture(TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameScrollBar)
     core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameScrollBar)
 
 end
 
@@ -2813,16 +2814,24 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
     TalcVoteFrameRLWindowFrame:Hide()
 
+    if not playerName then
+        if self.selectedPlayer[self.CurrentVotedItem] then
+            playerName = self.selectedPlayer[self.CurrentVotedItem]
+        else
+            talc_debug("no player name")
+            return
+        end
+    end
+
     if tab == 1 then
 
-        if not playerName then
-            if self.selectedPlayer[self.CurrentVotedItem] then
-                playerName = self.selectedPlayer[self.CurrentVotedItem]
-            else
-                talc_debug("no player name")
-                return
-            end
-        end
+        TalcVoteFrameRaiderDetailsFrameTab1:SetText('|rGear')
+        TalcVoteFrameRaiderDetailsFrameTab2:SetText('|cff696969Loot History')
+        TalcVoteFrameRaiderDetailsFrameTab3:SetText('|cff696969Attendance')
+
+        TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Show()
+        TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Hide()
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrame:Hide()
 
         for _, d in next, core.equipSlotsDetails do
             local frame = _G['Character' .. d.slot .. 'SlotIconTexture']
@@ -2870,9 +2879,11 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
     if tab == 2 then
         TalcVoteFrameRaiderDetailsFrameTab1:SetText('|cff696969Gear')
         TalcVoteFrameRaiderDetailsFrameTab2:SetText('|rLoot History')
+        TalcVoteFrameRaiderDetailsFrameTab3:SetText('|cff696969Attendance')
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Hide()
         TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Show()
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrame:Hide()
 
         for _, frame in next, self.lootHistoryFrames do
             frame:Hide()
@@ -2881,7 +2892,117 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
         self:LootHistoryUpdate()
     end
 
+    if tab == 3 then
+        TalcVoteFrameRaiderDetailsFrameTab1:SetText('|cff696969Gear')
+        TalcVoteFrameRaiderDetailsFrameTab2:SetText('|cff696969Loot History')
+        TalcVoteFrameRaiderDetailsFrameTab3:SetText('|rAttendance')
+
+        TalcVoteFrameRaiderDetailsFrameInspectGearFrame:Hide()
+        TalcVoteFrameRaiderDetailsFrameLootHistoryFrame:Hide()
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrame:Show()
+
+        local index = 0
+        for _, frame in next, self.attendanceFrames do
+            frame:Hide()
+        end
+
+        for raid, raidData in next, core.getAttendance(playerName) do
+            index = index + 1
+
+            local code = core.byteSum(raid)
+
+            if not self.attendanceFrames[code] then
+                self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
+                self.attendanceFrames[code].code = code
+                self.expandedAttendanceFrames[code] = false
+            end
+
+            _G["TALCAttendanceFrame" .. code]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 0, 24 - 24 * index)
+            _G["TALCAttendanceFrame" .. code].playerName = playerName
+
+            _G["TALCAttendanceFrame" .. code]:Show()
+            local tex = ''
+            if core.find(raid, 'Naxx', 1, true) then
+                if core.find(raid, '10', 1, true) then
+                    tex = 'interface\\icons\\Achievement_Dungeon_Naxxramas_10man'
+                end
+                if core.find(raid, '25', 1, true) then
+                    tex = 'interface\\icons\\Achievement_Dungeon_Naxxramas_heroic'
+                end
+            end
+            if core.find(raid, 'Obsidian', 1, true) then
+                tex = 'interface\\icons\\Achievement_Boss_Sartharion_01'
+            end
+            if core.find(raid, 'Eternity', 1, true) then
+                if core.find(raid, '10', 1, true) then
+                    tex = 'interface\\icons\\Achievement_Dungeon_NexusRaid_10man'
+                end
+                if core.find(raid, '25', 1, true) then
+                    tex = 'interface\\icons\\Achievement_Dungeon_NexusRaid_25man'
+                end
+            end
+
+            _G["TALCAttendanceFrame" .. code .. "Icon"]:SetTexture(tex)
+            _G["TALCAttendanceFrame" .. code .. "Icon"]:Show()
+            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText(raid)
+            _G["TALCAttendanceFrame" .. code .. "Right"]:SetText(raidData.kills)
+
+            if self.expandedAttendanceFrames[code] then
+                for boss, bossData in next, raidData.bosses do
+                    code = code * 10 + string.byte(boss)
+                    index = index + 1
+                    if not self.attendanceFrames[code] then
+                        self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
+                        self.attendanceFrames[code].code = code
+                        self.expandedAttendanceFrames[code] = false
+                    end
+
+                    _G["TALCAttendanceFrame" .. code]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 0, 24 - 24 * index)
+                    _G["TALCAttendanceFrame" .. code].playerName = playerName
+                    _G["TALCAttendanceFrame" .. code]:Show()
+                    _G["TALCAttendanceFrame" .. code .. "Icon"]:Show()
+                    _G["TALCAttendanceFrame" .. code .. "Icon"]:SetPoint("LEFT", 24, 0)
+                    _G["TALCAttendanceFrame" .. code .. "Icon"]:SetSize(16, 16)
+                    _G["TALCAttendanceFrame" .. code .. "Icon"]:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-Skull")
+
+                    _G["TALCAttendanceFrame" .. code .. "Left"]:SetPoint("LEFT", 40, 0) --26
+                    _G["TALCAttendanceFrame" .. code .. "Left"]:SetText(boss)
+                    _G["TALCAttendanceFrame" .. code .. "Right"]:SetText(bossData.kills)
+
+                    if self.expandedAttendanceFrames[code] then
+                        for _, timestamp in next, bossData.dates do
+                            code = code * 10 + string.byte(timestamp)
+                            index = index + 1
+                            if not self.attendanceFrames[code] then
+                                self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
+                                self.attendanceFrames[code].code = code
+                                self.expandedAttendanceFrames[code] = false
+                            end
+
+                            _G["TALCAttendanceFrame" .. code]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 0, 24 - 24 * index)
+                            _G["TALCAttendanceFrame" .. code]:Show()
+                            _G["TALCAttendanceFrame" .. code .. "Icon"]:Hide()
+                            _G["TALCAttendanceFrame" .. code .. "Left"]:SetPoint("LEFT", 40, 0) --26
+                            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText("   " .. date("%d/%m %H:%M", timestamp))
+                            _G["TALCAttendanceFrame" .. code .. "Right"]:SetText("")
+                        end
+                    end
+                end
+            end
+        end
+    end
+
     TalcVoteFrameRaiderDetailsFrame:Show()
+end
+
+TalcFrame.attendanceFrames = {}
+TalcFrame.expandedAttendanceFrames = {}
+
+function TalcFrame:ExpandAttendanceFrame()
+    if this.playerName then
+        self.expandedAttendanceFrames[this.code] = not self.expandedAttendanceFrames[this.code]
+        self:RaiderDetailsChangeTab(3, this.playerName)
+    end
 end
 
 function Talc_LootHistory_Update()

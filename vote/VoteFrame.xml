@@ -242,6 +242,61 @@
         </Scripts>
     </Button>
 
+    <Button name="Talc_AttendanceLineTemplate" virtual="true" inherits="Talc_ButtonTemplate">
+        <NormalTexture inherits=""/>
+        <PushedTexture inherits=""/>
+        <Size x="255" y="24"/>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="0" y="-80"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <FontString name="$parentLeft" inherits="GameFontNormal" text="Raidname probably 25"
+                            justifyH="LEFT">
+                    <Size x="200" y="14"/>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="26" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentRight" inherits="GameFontNormal" text="21" justifyH="RIGHT">
+                    <Size x="60" y="14"/>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-3" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick>
+                TalcFrame:ExpandAttendanceFrame()
+            </OnClick>
+        </Scripts>
+    </Button>
+
     <Frame name="Talc_WishlistItemTemplate" virtual="true">
         <Size x="300" y="25"/>
         <Frames>
@@ -3572,7 +3627,7 @@
 
             <Frame name="$parentRaiderDetailsFrame" hidden="true">
                 <Size>
-                    <AbsDimension x="225" y="340"/>
+                    <AbsDimension x="270" y="340"/>
                 </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
@@ -3618,7 +3673,6 @@
                                 </Anchor>
                             </Anchors>
                         </Texture>
-
                     </Layer>
                     <Layer level="OVERLAY">
                         <FontString name="$parentTitle" inherits="GameFontHighlight" text="Raiders details">
@@ -3653,12 +3707,12 @@
 
                     <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Gear">
                         <Size>
-                            <AbsDimension x="105" y="20"/>
+                            <AbsDimension x="86" y="20"/>
                         </Size>
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="6" y="-25"/>
+                                    <AbsDimension x="5" y="-25"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3670,12 +3724,12 @@
                     </Button>
                     <Button name="$parentTab2" inherits="Talc_ButtonTemplate" text="Loot History">
                         <Size>
-                            <AbsDimension x="105" y="20"/>
+                            <AbsDimension x="86" y="20"/>
                         </Size>
                         <Anchors>
-                            <Anchor point="TOPRIGHT">
+                            <Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT">
                                 <Offset>
-                                    <AbsDimension x="-6" y="-25"/>
+                                    <AbsDimension x="1" y="0"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3685,15 +3739,32 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-
-                    <Frame name="$parentInspectGearFrame">
+                    <Button name="$parentTab3" inherits="Talc_ButtonTemplate" text="Attendance">
                         <Size>
-                            <AbsDimension x="207" y="223"/>
+                            <AbsDimension x="86" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentTab2" relativePoint="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="1" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame:RaiderDetailsChangeTab(3);
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Frame name="$parentInspectGearFrame" hidden="true">
+                        <Size>
+                            <AbsDimension x="260" y="223"/>
                         </Size>
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="8" y="-100"/>
+                                    <AbsDimension x="5" y="-100"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3713,12 +3784,12 @@
                         <Frames>
                             <PlayerModel name="$parentModelFrame">
                                 <Size>
-                                    <AbsDimension x="207" y="223"/>
+                                    <AbsDimension x="260" y="223"/>
                                 </Size>
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
-                                            <AbsDimension x="-4" y="20"/>
+                                            <AbsDimension x="0" y="20"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -3729,7 +3800,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="0"/>
+                                            <AbsDimension x="5" y="0"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -3800,9 +3871,9 @@
 
                             <Button name="$parentHandsSlot" inherits="Talc_InspectGearButtonTemplate">
                                 <Anchors>
-                                    <Anchor point="TOPLEFT">
+                                    <Anchor point="TOPRIGHT">
                                         <Offset>
-                                            <AbsDimension x="180" y="0"/>
+                                            <AbsDimension x="-5" y="0"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -3931,6 +4002,52 @@
                                     </OnVerticalScroll>
                                 </Scripts>
                             </ScrollFrame>
+                        </Frames>
+                    </Frame>
+
+                    <Frame name="$parentAttendanceFrame" hidden="true">
+                        <Size>
+                            <AbsDimension x="260" y="315"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Frames>
+
+                            <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                                <Size>
+                                    <AbsDimension x="255" y="284"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="4" y="-44"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <ScrollChild>
+                                    <Frame name="$parentChild">
+                                        <Size>
+                                            <AbsDimension x="255" y="284"/>
+                                        </Size>
+                                        <Anchors>
+                                            <Anchor point="TOPLEFT">
+                                                <Offset>
+                                                    <AbsDimension x="0" y="0"/>
+                                                </Offset>
+                                            </Anchor>
+                                        </Anchors>
+                                        <Frames>
+
+                                        </Frames>
+                                    </Frame>
+                                </ScrollChild>
+                            </ScrollFrame>
+
                         </Frames>
                     </Frame>
 

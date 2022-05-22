@@ -322,23 +322,19 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "COMBAT_LOG_EVENT" then
-                if arg2 == 'UNIT_DIED' then
+                -- todo better logic here
+                if arg2 == 'UNIT_DIED' and (UnitInRaid('player') and (MiniMapInstanceDifficultyText:GetText() == '10' or MiniMapInstanceDifficultyText:GetText() == '25')) then
+                    print(arg7)
+                    for _, boss in next, BossFrame.Bosses do
+                        if arg7 == boss then
 
-                    if UnitInRaid('player') and (MiniMapInstanceDifficultyText:GetText() == '10' or MiniMapInstanceDifficultyText:GetText() == '25') then
-                        for _, boss in next, BossFrame.Bosses do
-                            if arg7 == boss then
-                                BossFrame:SaveAttendance(boss)
-                                return
+                            if UnitInRaid('player') and (MiniMapInstanceDifficultyText:GetText() == '10' or MiniMapInstanceDifficultyText:GetText() == '25') then
+                                core.saveAttendance(boss)
                             end
-                        end
-                    end
-
-                    if db['BOSS_FRAME_ENABLE'] then
-                        for _, boss in next, BossFrame.Bosses do
-                            if arg7 == boss then
+                            if db['BOSS_FRAME_ENABLE'] then
                                 BossFrame:StartBossAnimation(boss)
-                                return
                             end
+                            return
                         end
                     end
                 end
