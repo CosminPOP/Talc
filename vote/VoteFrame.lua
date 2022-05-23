@@ -1826,7 +1826,7 @@ function TalcFrame:MLToWinner_OnClick()
                     for pwIndex, pwPlayer in next, self.playersWhoWantItems do
                         if pwPlayer.name == tieName and pwPlayer.itemIndex == self.CurrentVotedItem then
                             self.playersWhoWantItems[pwIndex].roll = -2
-                            --send to officers
+                            --send -2 to officers
                             core.asend("playerRoll:" .. pwIndex .. ":-2:" .. self.CurrentVotedItem)
                             --send to raiders
                             core.asend('rollFor=' .. self.CurrentVotedItem .. '=' .. tex .. '=' .. name .. '=' .. linkString .. '=' .. tieName)
