@@ -1495,7 +1495,7 @@
                     </OnLeave>
                     <OnMouseUp>
                         if arg1 == "LeftButton" then
-                        TalcFrame:ToggleMainWindow()
+                        TalcFrame:ToggleMainWindow_OnClick()
                         else
                         TalcFrame:ShowMinimapDropdown()
                         end
