@@ -2159,6 +2159,9 @@ function TalcFrame:VoteFrameListUpdate()
 
                 local frame = 'TalcVoteFrameContestantFrame' .. index
 
+                if not _G[frame].officerVotedFrames then
+                    _G[frame].officerVotedFrames = {}
+                end
                 _G[frame]:ClearAllPoints()
                 _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameContestantScrollListFrame, 0, 23 - 24 * (index - offset))
                 _G[frame]:SetPoint("TOPRIGHT", TalcVoteFrameContestantScrollListFrame, 0, 23 - 24 * (index - offset))
@@ -2268,35 +2271,50 @@ function TalcFrame:VoteFrameListUpdate()
                     _G[frame .. 'WinnerIcon']:Show()
                 end
 
-                --hide all CL icons / tooltip buttons
-                for w = 1, 10 do
-                    _G[frame .. 'CLVote' .. w]:Hide()
+                for _, f in next, _G[frame].officerVotedFrames do
+                    f:Hide()
                 end
+
                 if self.itemVotes[self.CurrentVotedItem][name] then
                     local w = 0
                     for voter, vote in next, self.itemVotes[self.CurrentVotedItem][name] do
                         if vote == '+' then
                             w = w + 1
+
+                            if not _G[frame].officerVotedFrames[w] then
+                                _G[frame].officerVotedFrames[w] = CreateFrame("Button", "TalcOfficerVotedFrameI" .. self.CurrentVotedItem .."P" .. index .. "W" .. w, _G[frame], 'Talc_CLVotedButton')
+                            end
+
+                            local oFrame = "TalcOfficerVotedFrameI" .. self.CurrentVotedItem .."P" .. index .. "W" .. w
+
                             local voterClass = core.getPlayerClass(voter)
-                            local texture = "Interface\\AddOns\\Talc\\images\\classes\\" .. voterClass
+                            local locked = self.clDoneVotingItem[voter] and self.clDoneVotingItem[voter][self.CurrentVotedItem]
 
-                            _G[frame .. 'CLVote' .. w]:SetNormalTexture(texture)
-                            _G[frame .. 'CLVote' .. w]:SetID(w)
-                            _G[frame .. 'CLVote' .. w]:Show()
+                            _G[oFrame]:ClearAllPoints()
+                            _G[oFrame]:SetSize(20, 20)
 
-                            -- add tooltips
-                            local tooltipNames = {}
-                            tooltipNames[w] = voter;
+                            if w == 1 then
+                                _G[oFrame]:SetPoint("LEFT", _G[frame .. 'Votes'], "LEFT",  15, 0)
+                            else
+                                _G[oFrame]:SetPoint("LEFT", _G["TalcOfficerVotedFrameI" .. self.CurrentVotedItem .."P" .. index .. "W" .. (w - 1)], "RIGHT",  1, 0)
+                            end
 
-                            local CLIconButton = _G[frame .. 'CLVote' .. w]
 
-                            CLIconButton:SetScript("OnEnter", function(self)
+                            _G[oFrame]:SetNormalTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. voterClass)
+                            _G[oFrame]:SetHighlightTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. voterClass)
+                            _G[oFrame]:SetPushedTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. voterClass)
+                            _G[oFrame]:Show()
+                            _G[oFrame]:SetAlpha(locked and 1 or 0.5)
+
+                            local voterText = voter .. (locked and " |rDONE" or "")
+
+                            _G[oFrame]:SetScript("OnEnter", function(self)
                                 GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
-                                GameTooltip:AddLine(core.classColors[core.getPlayerClass(tooltipNames[this:GetID()])].colorStr .. tooltipNames[this:GetID()])
+                                GameTooltip:AddLine(core.classColors[voterClass].colorStr .. voterText)
                                 GameTooltip:Show();
                             end)
 
-                            CLIconButton:SetScript("OnLeave", function(self)
+                            _G[oFrame]:SetScript("OnLeave", function(self)
                                 GameTooltip:Hide();
                             end)
                         end
