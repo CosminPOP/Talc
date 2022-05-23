@@ -168,7 +168,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:WelcomeItemClick(this:GetID())
+                TalcFrame:WelcomeItem_OnClick(this:GetID())
             </OnClick>
         </Scripts>
     </Button>
@@ -233,7 +233,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:WelcomePlayerClick(this.name)
+                TalcFrame:WelcomePlayer_OnClick(this.name)
             </OnClick>
         </Scripts>
     </Button>
@@ -288,7 +288,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:ExpandAttendanceFrame()
+                TalcFrame:ExpandAttendanceFrame_OnClick()
             </OnClick>
         </Scripts>
     </Button>
@@ -356,7 +356,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:TryToAddToWishlist(this:GetID())
+                        TalcFrame:TryToAddToWishlist_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -374,7 +374,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:RemoveFromWishlist(this:GetID())
+                        TalcFrame:RemoveFromWishlist_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -417,7 +417,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:VotedItemButton(this:GetID())
+                        TalcFrame:VotedItemButton_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -507,7 +507,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:SetAssist(this:GetID(), this:GetChecked())
+                        TalcFrame:SetAssist_OnClick(this:GetID(), this:GetChecked())
                     </OnClick>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -529,7 +529,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:SetCL(this:GetID(), this:GetChecked())
+                        TalcFrame:SetCL_OnClick(this:GetID(), this:GetChecked())
                     </OnClick>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -754,10 +754,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
             </Button>
             <Button name="$parentReplacesItem2" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Icons\inv_staff_20">
@@ -795,10 +791,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
             </Button>
             <Button name="$parentReplacesItem3" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Icons\inv_staff_20">
@@ -836,10 +828,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
             </Button>
             <Button name="$parentReplacesItem4" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Icons\inv_staff_20">
@@ -877,10 +865,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
             </Button>
 
             <Button name="$parentVoteButton" inherits="Talc_ButtonTemplate" text="VOTE">
@@ -909,13 +893,13 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:VoteButton(this:GetID());
+                        TalcFrame:VoteButton_OnClick(this:GetID());
                     </OnClick>
                     <OnEnter>
-                        TalcFrame:ContestantOnEnter(this:GetID())
+                        TalcFrame:Contestant_OnEnter(this:GetID())
                     </OnEnter>
                     <OnLeave>
-                        TalcFrame:ContestantOnLeave(this:GetID())
+                        TalcFrame:Contestant_OnLeave(this:GetID())
                     </OnLeave>
                 </Scripts>
             </Button>
@@ -1236,7 +1220,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame.tradableItemsCheck:ItemClick(this:GetParent():GetID())
+                        TalcFrame.tradableItemsCheck:Item_OnClick(this:GetParent():GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1530,8 +1514,6 @@
                         TalcVoteFrame:StopMovingOrSizing()
                         TalcFrame:Resized()
                     </OnMouseUp>
-                    <OnClick>
-                    </OnClick>
                 </Scripts>
             </Button>
 
@@ -1561,7 +1543,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:MLToWinner();
+                        TalcFrame:MLToWinner_OnClick();
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1617,7 +1599,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:MLToEnchanter()
+                        TalcFrame:MLToEnchanter_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1679,7 +1661,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:ToggleMainWindow()
+                        TalcFrame:ToggleMainWindow_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1761,10 +1743,6 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Scripts>
-                    <OnClick>
-                    </OnClick>
-                </Scripts>
             </Button>
 
             <ScrollFrame name="$parentContestantScrollListFrame" inherits="FauxScrollFrameTemplate">
@@ -1820,9 +1798,8 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:DoneVoting();
+                        TalcFrame:DoneVoting_OnClick();
                     </OnClick>
-
                 </Scripts>
             </Button>
 
@@ -1908,7 +1885,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:BroadcastLoot();
+                                TalcFrame:BroadcastLoot_OnClick();
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -1927,7 +1904,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ResetClose();
+                                TalcFrame:ResetClose_OnClick();
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -1946,7 +1923,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ToggleRLOptions();
+                                TalcFrame:ToggleRLOptions_OnClick();
                                 PlaySound("igMainMenuOptionCheckBoxOn");
                             </OnClick>
                         </Scripts>
@@ -1992,26 +1969,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SendTestItems()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
-
-                    <Button name="TestNeedFrameButton2" framstrata="HIGH" inherits="Talc_ButtonTemplate"
-                            text="Fill Test Data" hidden="true">
-                        <Size>
-                            <AbsDimension x="180" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="RIGHT" relativeTo="TestNeedFrameButton" relativePoint="LEFT">
-                                <Offset>
-                                    <AbsDimension x="-10" y="0"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame_FillTestData()
+                                TalcFrame:SendTestItems_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2030,7 +1988,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:queryWho()
+                                TalcFrame:QueryWho_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2112,13 +2070,13 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                HideUIPanel(TalcVoteFrameRLWindowFrame)
+                                HideUIPanel(TalcVoteFrameRLWindowFrame);
                                 PlaySound("igMainMenuOptionCheckBoxOn");
                             </OnClick>
                         </Scripts>
                     </Button>
 
-                    <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Officers">
+                    <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Officers" id="1">
                         <Size>
                             <AbsDimension x="95" y="20"/>
                         </Size>
@@ -2131,11 +2089,11 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:ChangeTab(1);
+                                TalcFrame.RLFrame:ChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button name="$parentTab2" inherits="Talc_ButtonTemplate" text="Loot">
+                    <Button name="$parentTab2" inherits="Talc_ButtonTemplate" text="Loot" id="2">
                         <Size>
                             <AbsDimension x="95" y="20"/>
                         </Size>
@@ -2148,7 +2106,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:ChangeTab(2);
+                                TalcFrame.RLFrame:ChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2221,7 +2179,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveSetting('VOTE_AUTO_ASSIST', this:GetChecked())
+                                        TalcFrame:SaveSetting('VOTE_AUTO_ASSIST', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -2455,7 +2413,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveSetting('VOTE_SCREENSHOT_LOOT', this:GetChecked())
+                                        TalcFrame:SaveSetting('VOTE_SCREENSHOT_LOOT', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -2632,7 +2590,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:WelcomeBack()
+                                TalcFrame:WelcomeFrameBackButton_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2863,7 +2821,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_ENABLE_SOUND', this:GetChecked())
+                                TalcFrame:SaveSetting('WIN_ENABLE_SOUND', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -2895,7 +2853,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
+                                TalcFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -2927,7 +2885,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '1' or '0')
+                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '1' or '0')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -2958,7 +2916,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '2' or '0')
+                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '2' or '0')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -2989,7 +2947,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '3' or '0')
+                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '3' or '0')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3020,7 +2978,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '4' or '0')
+                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '4' or '0')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3051,7 +3009,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '5' or '0')
+                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '5' or '0')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3081,7 +3039,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('ROLL_ENABLE_SOUND', this:GetChecked())
+                                TalcFrame:SaveSetting('ROLL_ENABLE_SOUND', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3112,7 +3070,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
+                                TalcFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3144,7 +3102,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('ROLL_TROMBONE', this:GetChecked())
+                                TalcFrame:SaveSetting('ROLL_TROMBONE', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3174,7 +3132,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('NEED_FRAME_COLLAPSE', this:GetChecked())
+                                TalcFrame:SaveSetting('NEED_FRAME_COLLAPSE', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3204,7 +3162,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('BOSS_FRAME_ENABLE', this:GetChecked())
+                                TalcFrame:SaveSetting('BOSS_FRAME_ENABLE', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3234,7 +3192,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
+                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3264,7 +3222,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())
+                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3294,7 +3252,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())
+                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3327,7 +3285,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:SaveSetting('_DEBUG', this:GetChecked())
+                                TalcFrame:SaveSetting('_DEBUG', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3400,7 +3358,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:PurgeLootHistory()
+                                TalcFrame:PurgeLootHistory_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3568,7 +3526,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:TryToAddToWishlist(TalcVoteFrameWishlistFrameItemEditBox:GetText())
+                                TalcFrame:TryToAddToWishlist_OnClick(TalcVoteFrameWishlistFrameItemEditBox:GetText())
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3604,7 +3562,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:WishlistResultsBack()
+                                TalcFrame:WishlistFrameResultsBackButton_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3697,7 +3655,7 @@
                         </Scripts>
                     </Button>
 
-                    <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Gear">
+                    <Button name="$parentTab1" inherits="Talc_ButtonTemplate" text="Gear" id="1">
                         <Size>
                             <AbsDimension x="86" y="20"/>
                         </Size>
@@ -3710,11 +3668,11 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsChangeTab(1);
+                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button name="$parentTab2" inherits="Talc_ButtonTemplate" text="Loot History">
+                    <Button name="$parentTab2" inherits="Talc_ButtonTemplate" text="Loot History" id="2">
                         <Size>
                             <AbsDimension x="86" y="20"/>
                         </Size>
@@ -3727,11 +3685,11 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsChangeTab(2);
+                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
-                    <Button name="$parentTab3" inherits="Talc_ButtonTemplate" text="Attendance">
+                    <Button name="$parentTab3" inherits="Talc_ButtonTemplate" text="Attendance" id="3">
                         <Size>
                             <AbsDimension x="86" y="20"/>
                         </Size>
@@ -3744,7 +3702,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsChangeTab(3);
+                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -4264,7 +4222,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:announceOlderAddon()
+                        TalcFrame:AnnounceOlderAddon_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4282,7 +4240,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:queryWho();
+                        TalcFrame:QueryWho_OnClick();
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4300,7 +4258,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:announceWithoutAddon()
+                        TalcFrame:AnnounceWithoutAddon_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4432,7 +4390,7 @@
                 this.startTime = GetTime();
             </OnShow>
             <OnUpdate>
-                Talc_QueryWindow_OnUpdate()
+                Talc_AttendanceQueryWindow_OnUpdate()
             </OnUpdate>
             <OnDragStart>
                 this:StartMoving();
@@ -4554,7 +4512,7 @@
                 this.timeout = 15;
             </OnShow>
             <OnUpdate>
-                Talc_QueryWindow_OnUpdate()
+                Talc_AttendanceQueryWindow_OnUpdate()
             </OnUpdate>
             <OnDragStart>
                 this:StartMoving();
