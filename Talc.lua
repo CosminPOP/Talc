@@ -179,7 +179,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(db['NEED_FRAME_COLLAPSE'])
 
-
             TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(db['ATTENDANCE_TRACKING'].enabled)
             TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(db['ATTENDANCE_TRACKING'].bossKills)
             TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(db['ATTENDANCE_TRACKING'].periodic)
@@ -282,29 +281,35 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                         core.find(arg1, "is not ready", 1, true)) and core.isRaidLeader() then
                     SendChatMessage(arg1, "RAID")
                 end
+
+                -- player roll stuff
                 if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
                     local r = core.split(" ", arg1)
 
                     if not r[3] then
                         talc_error('bad roll syntax')
                         talc_error(arg1)
-                        return false
+                        return
                     end
 
                     local name = r[1]
                     local roll = core.int(r[3])
 
-                    -- todo revisit this logic
-                    --check if name is in playersWhoWantItems with vote == -2
+
                     for pwIndex, pwPlayer in next, TalcFrame.playersWhoWantItems do
-                        if pwPlayer['name'] == name and pwPlayer['roll'] == -2 then
-                            TalcFrame.playersWhoWantItems[pwIndex]['roll'] = roll
+                        --check if name is in playersWhoWantItems with vote == -2
+                        if pwPlayer.name == name and pwPlayer.roll == -2 then
+                            -- set roll details
+                            TalcFrame.playersWhoWantItems[pwIndex].roll = roll
+                            TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].rolled = true
+                            -- send it to officers
                             core.asend("playerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
                             TalcFrame:VoteFrameListUpdate()
                             break
                         end
                     end
                 end
+                return
             end
 
             if event == "LOOT_OPENED" then
