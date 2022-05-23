@@ -4385,19 +4385,6 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
-                <Size>
-                    <AbsDimension x="22" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT">
-                        <Offset>
-                            <AbsDimension x="-5" y="-4"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Button>
-
             <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">
                 <Size>
                     <AbsDimension x="90" y="20"/>
@@ -4416,7 +4403,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">
                 <Size>
                     <AbsDimension x="90" y="20"/>
@@ -4434,7 +4420,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-
         </Frames>
         <Scripts>
             <OnLoad>
@@ -4442,6 +4427,13 @@
                 this:SetMovable(1);
                 this:SetUserPlaced(true);
             </OnLoad>
+            <OnShow>
+                this.timeout = 15;
+                this.startTime = GetTime();
+            </OnShow>
+            <OnUpdate>
+                Talc_QueryWindow_OnUpdate()
+            </OnUpdate>
             <OnDragStart>
                 this:StartMoving();
                 this.isMoving = true;
@@ -4515,19 +4507,6 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
-                <Size>
-                    <AbsDimension x="22" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT">
-                        <Offset>
-                            <AbsDimension x="-5" y="-4"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Button>
-
             <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">
                 <Size>
                     <AbsDimension x="90" y="20"/>
@@ -4546,7 +4525,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-
             <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">
                 <Size>
                     <AbsDimension x="90" y="20"/>
@@ -4564,7 +4542,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-
         </Frames>
         <Scripts>
             <OnLoad>
@@ -4572,6 +4549,13 @@
                 this:SetMovable(1);
                 this:SetUserPlaced(true);
             </OnLoad>
+            <OnShow>
+                this.startTime = GetTime();
+                this.timeout = 15;
+            </OnShow>
+            <OnUpdate>
+                Talc_QueryWindow_OnUpdate()
+            </OnUpdate>
             <OnDragStart>
                 this:StartMoving();
                 this.isMoving = true;
