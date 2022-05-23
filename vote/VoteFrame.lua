@@ -729,10 +729,14 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             totalItems = totalItems + 1
         end
 
-        if core.isRL(sender) and sender == core.me and t == 'loot_history_sync;end' then
-            talc_print('History Sync complete.')
-            TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
-            TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
+        if t == 'loot_history_sync;end' and core.isRL(sender) then
+            if sender == core.me then
+                talc_print('History Sync complete.')
+                TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
+                TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
+            else
+                self:WelcomeFrame_OnShow()
+            end
         end
 
         local lh = core.split(";", t)
