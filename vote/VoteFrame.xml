@@ -3372,7 +3372,7 @@
                                 this:ClearFocus(false);
                             </OnEscapePressed>
                             <OnEnterPressed>
-                                TalcFrame:TryToAddToWishlist(this:GetText());
+                                TalcFrame:TryToAddToWishlist_OnClick(this:GetText());
                                 this:ClearFocus();
                             </OnEnterPressed>
                             <OnEditFocusLost>
