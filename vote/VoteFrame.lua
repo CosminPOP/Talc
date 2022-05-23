@@ -1811,6 +1811,7 @@ end
 
 function TalcFrame:MLToWinner_OnClick()
 
+    -- check if its a tie
     if self.voteTiePlayers ~= '' then
         self.VotedItemsFrames[self.CurrentVotedItem].rolled = true
         local players = core.split(' ', self.voteTiePlayers)
@@ -1838,6 +1839,7 @@ function TalcFrame:MLToWinner_OnClick()
         TalcVoteFrameMLToWinner:Disable();
         self:VoteFrameListUpdate()
     else
+        -- no tie, award player
         self:AwardPlayer(self.currentItemWinner, self.CurrentVotedItem)
     end
 end
@@ -1932,7 +1934,6 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
         end
     end
 
-    -- todo maybe better bagitem detection
     if core.n(self.bagItems) > 0 then
         local _, _, need = TalcFrame:GetPlayerInfo(playerName);
 
@@ -2184,7 +2185,6 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame .. 'RollWinner']:SetPoint("LEFT", _G[frame], core.floor(270 * ratio), -2)
                 _G[frame .. 'Votes']:SetPoint("LEFT", _G[frame], core.floor(406 * ratio) - 5, 0)
                 _G[frame .. 'VoteButton']:SetPoint("TOPLEFT", _G[frame], core.floor(380 * ratio) - 80, -2)
-                _G[frame .. 'CLVote1']:SetPoint("TOPLEFT", _G[frame], core.floor(470 * ratio) - 80, -1)
 
                 _G[frame]:Show()
 
@@ -2944,6 +2944,7 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
 
             TalcFrame.VoteCountdown.votingOpen = true
             TalcFrame:ShowWindow()
+            TalcFrame:ShowScreen("Voting")
 
             TalcFrame:VoteFrameListUpdate()
 
