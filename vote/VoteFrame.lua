@@ -2892,13 +2892,13 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
         TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameIcon:Hide()
         TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameLeft:SetText("|cffffffffTotal attendance points")
-        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameRight:SetText("|cffffffff".. att.points)
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameRight:SetText("|cffffffff" .. att.points)
 
         local index = 0
         for raidString, raidData in next, att.raids do
             index = index + 1
 
-            local code = raidString:gsub( "%W", "" )
+            local code = raidString:gsub("%W", "")
 
             if not self.attendanceFrames[code] then
                 self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -2938,7 +2938,7 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
             if self.expandedAttendanceFrames[code] then
                 for boss, bossData in next, raidData.bosses do
-                    code = raidString:gsub( "%W", "" ) .. boss:gsub( "%W", "" )
+                    code = raidString:gsub("%W", "") .. boss:gsub("%W", "")
                     index = index + 1
                     if not self.attendanceFrames[code] then
                         self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -2960,7 +2960,7 @@ function TalcFrame:RaiderDetailsChangeTab(tab, playerName)
 
                     if self.expandedAttendanceFrames[code] then
                         for _, timestamp in next, bossData.dates do
-                            code = raidString:gsub( "%W", "" ) .. boss:gsub( "%W", "" ) .. timestamp
+                            code = raidString:gsub("%W", "") .. boss:gsub("%W", "") .. timestamp
                             index = index + 1
                             if not self.attendanceFrames[code] then
                                 self.attendanceFrames[code] = CreateFrame("Button", "TALCAttendanceFrame" .. code, TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameChild, 'Talc_AttendanceLineTemplate')
@@ -3705,6 +3705,17 @@ function TalcFrame.AttendanceTracker:Stop()
     TalcFrame.AttendanceTracker:Hide()
 end
 
+function Talc_QueryWindow_OnUpdate()
+    if GetTime() * 1000 >= (this.startTime + 1) * 1000 then
+        if this.timeout > 0 then
+            this.startTime = GetTime();
+            this.timeout = this.timeout - 1
+            _G[this:GetName() .. "No"]:SetText("No (" .. this.timeout .. ")")
+        else
+            this:Hide()
+        end
+    end
+end
 
 function TalcFrame:ShowMinimapDropdown()
     local TALCMinimapMenuFrame = CreateFrame('Frame', 'TALCMinimapMenuFrame', UIParent, 'UIDropDownMenuTemplate')
@@ -3911,7 +3922,7 @@ function TalcFrame:WelcomePlayerClick(name)
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame.name = name
 
     local playerHistory = {}
-        for _, item in next, db['VOTE_LOOT_HISTORY'] do
+    for _, item in next, db['VOTE_LOOT_HISTORY'] do
         if item.player == name then
             core.insert(playerHistory, item)
         end
