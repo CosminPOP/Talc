@@ -612,6 +612,16 @@ function Talc_Utils:init()
         end
     end
 
+    core.getAttendance = function(player)
+        if not db['ATTENDANCE_DATA'][player] then
+            db['ATTENDANCE_DATA'][player] = {
+                points = 0,
+                raids = {}
+            }
+        end
+        return db['ATTENDANCE_DATA'][player]
+    end
+
     core.byteSum = function(str)
         local sum = 0
         for i = 1, #str do
