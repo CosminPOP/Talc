@@ -82,6 +82,9 @@ TalcFrame.wishlistSearchItemsFrames = {}
 TalcFrame.attendanceFrames = {}
 TalcFrame.expandedAttendanceFrames = {}
 
+TalcFrame.assistFrames = {}
+TalcFrame.currentTab = 1
+
 ----------------------------------------------------
 --- Init
 ----------------------------------------------------
@@ -2932,10 +2935,6 @@ end)
 --- Raid Leader's Options
 ----------------------------------------------------
 
-TalcFrame.RLFrame = CreateFrame("Frame")
-TalcFrame.RLFrame.assistFrames = {}
-TalcFrame.RLFrame.currentTab = 1
-
 function TalcFrame:ToggleRLOptions_OnClick()
 
     if TalcVoteFrameRLWindowFrame:IsVisible() then
@@ -2952,15 +2951,15 @@ function TalcFrame:ToggleRLOptions_OnClick()
 
         TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
         ShowUIPanel(TalcVoteFrameRLWindowFrame)
-        self.RLFrame:ChangeTab_OnClick(1)
+        self:RLFrameChangeTab_OnClick(1)
     end
 end
 
 function TalcFrame:SetCL_OnClick(id, to)
     if to then
-        core.addToRoster(self.RLFrame.assistFrames[id].name, this)
+        core.addToRoster(self.assistFrames[id].name, this)
     else
-        core.remFromRoster(self.RLFrame.assistFrames[id].name)
+        core.remFromRoster(self.assistFrames[id].name)
     end
 end
 
@@ -2968,7 +2967,7 @@ function TalcFrame:SetAssist_OnClick(id, to)
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
             local n = GetRaidRosterInfo(i);
-            if n == self.RLFrame.assistFrames[id].name then
+            if n == self.assistFrames[id].name then
                 if to then
                     talc_debug('promote ')
                     PromoteToAssistant(n)
@@ -3010,7 +3009,7 @@ function TalcFrame:SyncLootHistory()
     talc_print('History Sync finished. Sent ' .. totalItems .. ' entries.')
 end
 
-function TalcFrame.RLFrame:CheckAssists()
+function TalcFrame:CheckAssists()
 
     local assistsAndCLs = {}
 
@@ -3096,11 +3095,11 @@ function TalcFrame.RLFrame:CheckAssists()
     TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
 end
 
-function TalcFrame.RLFrame:SaveLootButton(button, value)
+function TalcFrame:SaveLootButton(button, value)
     db['VOTE_CONFIG']['NeedButtons'][button] = value;
 end
 
-function TalcFrame.RLFrame:ChangeTab_OnClick(tab)
+function TalcFrame:RLFrameChangeTab_OnClick(tab)
 
     TalcVoteFrameRaiderDetailsFrame:Hide()
     _G['TalcVoteFrameRLWindowFrameTab1Contents']:Hide()

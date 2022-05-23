@@ -2089,7 +2089,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:ChangeTab_OnClick(this:GetID());
+                                TalcFrame:RLFrameChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2106,7 +2106,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame.RLFrame:ChangeTab_OnClick(this:GetID());
+                                TalcFrame:RLFrameChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2251,7 +2251,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveLootButton('BIS', this:GetChecked())
+                                        TalcFrame:SaveLootButton('BIS', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -2286,7 +2286,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveLootButton('MS', this:GetChecked())
+                                        TalcFrame:SaveLootButton('MS', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -2321,7 +2321,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveLootButton('OS', this:GetChecked())
+                                        TalcFrame:SaveLootButton('OS', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -2356,7 +2356,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame.RLFrame:SaveLootButton('XMOG', this:GetChecked())
+                                        TalcFrame:SaveLootButton('XMOG', this:GetChecked())
                                     </OnClick>
                                 </Scripts>
                                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
