@@ -2286,6 +2286,14 @@
                     </Frame>
 
                 </Frames>
+                <Scripts>
+                    <OnShow>
+                        PlaySound("igMainMenuOptionCheckBoxOn");
+                    </OnShow>
+                    <OnHider>
+                        PlaySound("igMainMenuOptionCheckBoxOff");
+                    </OnHider>
+                </Scripts>
             </Frame>
 
             <Frame name="$parentWelcomeFrame" hidden="true">
@@ -3245,7 +3253,11 @@
                 <Scripts>
                     <OnShow>
                         TalcFrame:SettingsFrame_OnShow()
+                        PlaySound("igMainMenuOptionCheckBoxOn");
                     </OnShow>
+                    <OnHide>
+                        PlaySound("igMainMenuOptionCheckBoxOff");
+                    </OnHide>
                 </Scripts>
             </Frame>
 
@@ -3430,8 +3442,12 @@
                 </Frames>
                 <Scripts>
                     <OnShow>
-                        TalcFrame:WishlistFrame_OnShow()
+                        TalcFrame:WishlistFrame_OnShow();
+                        PlaySound("igMainMenuOptionCheckBoxOn");
                     </OnShow>
+                    <OnHide>
+                        PlaySound("igMainMenuOptionCheckBoxOff");
+                    </OnHide>
                 </Scripts>
             </Frame>
 
@@ -3875,6 +3891,14 @@
                     </Frame>
 
                 </Frames>
+                <Scripts>
+                    <OnShow>
+                        PlaySound("igMainMenuOptionCheckBoxOn");
+                    </OnShow>
+                    <OnHide>
+                        PlaySound("igMainMenuOptionCheckBoxOff");
+                    </OnHide>
+                </Scripts>
             </Frame>
 
             <Frame name="TalcVoteFrameTradableItemsFrame" hidden="true" parent="UIParent" movable="true"
@@ -4249,6 +4273,9 @@
                 this.timeout = 15;
                 this.startTime = GetTime();
             </OnShow>
+            <OnHide>
+                PlaySound("igMainMenuOptionCheckBoxOff");
+            </OnHide>
             <OnUpdate>
                 Talc_AttendanceQueryWindow_OnUpdate()
             </OnUpdate>
@@ -4371,6 +4398,9 @@
                 this.startTime = GetTime();
                 this.timeout = 15;
             </OnShow>
+            <OnHide>
+                PlaySound("igMainMenuOptionCheckBoxOff");
+            </OnHide>
             <OnUpdate>
                 Talc_AttendanceQueryWindow_OnUpdate()
             </OnUpdate>

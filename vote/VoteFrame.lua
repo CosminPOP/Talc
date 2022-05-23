@@ -4112,8 +4112,6 @@ function TalcFrame:SendTestItems_OnClick()
 end
 
 --[[
-todo add sounds maybe
-
 PlaySound("igQuestListOpen");
 PlaySound("igQuestListClose");
 
