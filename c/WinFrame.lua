@@ -6,7 +6,7 @@ WinFrame = CreateFrame("Frame")
 WinFrame.xmog = false
 
 function WinFrame:handleSync(_, msg, _, sender)
-    if core.find(msg, 'playerWon#') and core.isRL(sender) then
+    if core.find(msg, 'playerWon#') and core.isRaidLeader(sender) then
         local wonData = core.split('#', msg)
         if wonData[5] and wonData[2] == core.me then
 

@@ -317,7 +317,7 @@ function Talc_Utils:init()
         db['VOTE_TTV'] = t
     end
 
-    core.isCL = function(name)
+    core.isOfficer = function(name)
         if not name then
             name = core.me
         end
@@ -329,7 +329,7 @@ function Talc_Utils:init()
         return false
     end
 
-    core.isRL = function(name)
+    core.isRaidLeader = function(name)
         if not name then
             name = core.me
         end
@@ -347,7 +347,7 @@ function Talc_Utils:init()
         return false
     end
 
-    core.isAssist = function(name)
+    core.isAssistant = function(name)
         if not name then
             name = core.me
         end
@@ -365,24 +365,18 @@ function Talc_Utils:init()
         return false
     end
 
-    core.isRLorAssist = function(name)
+    core.isRaidLeaderOrAssistant = function(name)
         if not name then
             name = core.me
         end
-        return core.isAssist(name) or core.isRL(name)
+        return core.isAssistant(name) or core.isRaidLeader(name)
     end
 
     core.canVote = function(name)
         if not name then
             name = core.me
         end
-        if not core.isRLorAssist(name) then
-            return false
-        end
-        if not core.isCL(name) then
-            return false
-        end
-        return true
+        return core.isRaidLeaderOrAssistant(name) and core.isOfficer(name)
     end
 
     core.onlineInRaid = function(name)
@@ -437,7 +431,7 @@ function Talc_Utils:init()
     end
 
     core.syncRoster = function()
-        if not core.isRL() then
+        if not core.isRaidLeader() then
             return
         end
 
@@ -451,7 +445,7 @@ function Talc_Utils:init()
     end
 
     core.addToRoster = function(newName, checkbox)
-        if not core.isRL() then
+        if not core.isRaidLeader() then
             talc_print('You are not the raid leader.')
             return
         end
@@ -475,7 +469,7 @@ function Talc_Utils:init()
     end
 
     core.remFromRoster = function(newName)
-        if not core.isRL() then
+        if not core.isRaidLeader() then
             talc_print('You are not the raid leader.')
             return
         end

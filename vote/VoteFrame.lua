@@ -180,7 +180,7 @@ function TalcFrame:ResetVars()
     TalcVoteFrameRLExtraFrameDragLoot:SetText("Drag Loot")
     TalcVoteFrameRLExtraFrameDragLoot:Enable()
 
-    if core.isRL() then
+    if core.isRaidLeader() then
         TalcVoteFrameRLExtraFrame:Show()
 
         TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
@@ -222,7 +222,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if not core.canVote() then
             return false
         end
-        if not core.isRL(sender) then
+        if not core.isRaidLeader(sender) then
             return false
         end
 
@@ -236,7 +236,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.find(t, 'doneSending=', 1, true) and core.canVote() then
-        if not core.isRL(sender) then
+        if not core.isRaidLeader(sender) then
             return false
         end
         local nrItems = core.split('=', t)
@@ -251,7 +251,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.sub(t, 1, 11) == 'CLreceived=' then
-        if not core.isRL() then
+        if not core.isRaidLeader() then
             return
         end
 
@@ -290,7 +290,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'playerRoll:', 1, true) then
 
-        if not core.isRL(sender) or sender == core.me then
+        if not core.isRaidLeader(sender) or sender == core.me then
             return
         end
         if not core.canVote() then
@@ -316,7 +316,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'changePickTo@', 1, true) then
 
-        if not core.isRL(sender) or sender == core.me then
+        if not core.isRaidLeader(sender) or sender == core.me then
             return
         end
         if not core.canVote() then
@@ -458,7 +458,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if not core.isRL(sender) or not core.canVote() then
+        if not core.isRaidLeader(sender) or not core.canVote() then
             return
         end
 
@@ -486,7 +486,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         local itemID = core.split(':', itemLink)
         core.cacheItem(core.int(itemID[2]))
 
-        if not core.isRL(sender) or not core.canVote() then
+        if not core.isRaidLeader(sender) or not core.canVote() then
             return
         end
 
@@ -513,7 +513,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.find(t, 'countdownframe=', 1, true) then
 
-        if not core.isRL(sender) or not core.canVote() then
+        if not core.isRaidLeader(sender) or not core.canVote() then
             return
         end
 
@@ -594,7 +594,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     -- roster sync
     if core.find(t, 'syncRoster=', 1, true) then
-        if not core.isRL(sender) then
+        if not core.isRaidLeader(sender) then
             return
         end
         if sender == core.me and t == 'syncRoster=end' then
@@ -661,7 +661,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     if core.find(t, 'Timers:ttn', 1, true) then
-        if not core.isRL(sender) then
+        if not core.isRaidLeader(sender) then
             return
         end
 
@@ -710,7 +710,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             if core.len(n[4]) < 7 then
                 n[4] = '0.' .. n[4]
             end
-            if core.isRLorAssist(sender) then
+            if core.isRaidLeaderOrAssistant(sender) then
                 star = '*'
             end
             self.peopleWithAddon = self.peopleWithAddon .. star ..
@@ -729,7 +729,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             totalItems = totalItems + 1
         end
 
-        if t == 'loot_history_sync;end' and core.isRL(sender) then
+        if t == 'loot_history_sync;end' and core.isRaidLeader(sender) then
             if sender == core.me then
                 talc_print('History Sync complete.')
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
@@ -747,7 +747,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Syncing (' .. percent .. '%)')
         end
 
-        if not core.isRL(sender) or sender == core.me then
+        if not core.isRaidLeader(sender) or sender == core.me then
             return
         end
 
@@ -876,7 +876,7 @@ function TalcFrame:ToggleMainWindow_OnClick()
     if TalcVoteFrame:IsVisible() then
         self:CloseWindow()
     else
-        if not core.canVote() and not core.isRL() then
+        if not core.canVote() and not core.isRaidLeader() then
             return false
         end
         self:ShowWindow()
@@ -1435,7 +1435,7 @@ TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameTimeLeft:SetText('')
     TalcVoteFrameDoneVoting:Show()
 
-    if core.isRL() then
+    if core.isRaidLeader() then
         TalcVoteFrameMLToWinner:Show()
     else
         TalcVoteFrameWinnerStatus:Show()
@@ -2391,7 +2391,7 @@ end
 
 function TalcFrame:ShowContestantDropdownMenu(id)
 
-    if not core.isRL() then
+    if not core.isRaidLeader() then
         return
     end
 
@@ -2647,10 +2647,10 @@ end
 function TalcFrame:VotedItemButton_OnClick(id)
 
     TalcVoteFrameMLToWinner:Hide()
-    if core.isRL() then
+    if core.isRaidLeader() then
         TalcVoteFrameMLToWinner:Show()
     end
-    if core.canVote() and not core.isRL() then
+    if core.canVote() and not core.isRaidLeader() then
         TalcVoteFrameWinnerStatus:Show()
     end
 
@@ -2811,7 +2811,7 @@ function TalcFrame:ChangePlayerPickTo(playerName, newPick, itemIndex)
             break
         end
     end
-    if core.isRL() then
+    if core.isRaidLeader() then
         core.asend("changePickTo@" .. playerName .. "@" .. newPick .. "@" .. itemIndex)
     end
 
@@ -3066,7 +3066,7 @@ function TalcFrame:CheckAssists()
         if add then
             core.insert(assistsAndCLs, {
                 name = name,
-                assist = core.isAssist(name),
+                assist = core.isAssistant(name),
                 cl = true
             })
         end

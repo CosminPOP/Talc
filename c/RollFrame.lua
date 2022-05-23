@@ -7,7 +7,7 @@ RollFrame.watchRolls = false
 RollFrame.rolls = {}
 
 function RollFrame:handleSync(pre, msg, ch, sender)
-    if core.isRL(sender) then
+    if core.isRaidLeader(sender) then
         if core.find(msg, 'rollFor=', 1, true) then
             local rfEx = core.split('=', msg)
             if rfEx[6] then
@@ -30,11 +30,13 @@ function RollFrame:handleSync(pre, msg, ch, sender)
 end
 
 function RollFrame:handleSystem(arg1)
-    if not self.watchRolls then return false end
+    if not self.watchRolls then
+        return false
+    end
 
     if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
-        local r = core.split(" " , arg1)
-        if not r[2] or not r[3] then
+        local r = core.split(" ", arg1)
+        if not r[3] then
             return false
         end
         self.rolls[r[1]] = core.int(r[3])
@@ -260,7 +262,8 @@ function RollFrame.frames:addRolledItem(data)
     self.itemFrames[index]:SetAlpha(0)
 
     self.itemFrames[index]:ClearAllPoints()
-    if index == 0 then --test button
+    if index == 0 then
+        --test button
         self.itemFrames[index]:SetPoint("TOP", TalcRollFrame, "TOP", 0, 40 + (80 * 1))
     else
         self.itemFrames[index]:SetPoint("TOP", TalcRollFrame, "TOP", 0, 40 + (80 * self:firstFree(index)))
@@ -344,12 +347,13 @@ RollFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
                     end
                     this.ids[id] = nil
 
-
                     if RollFrame.watchRolls == true then
 
                         local maxRoll = 0
                         for _, roll in next, RollFrame.rolls do
-                            if maxRoll < roll then maxRoll = roll end
+                            if maxRoll < roll then
+                                maxRoll = roll
+                            end
                         end
 
                         talc_debug(' maxroll = ' .. maxRoll)
@@ -369,7 +373,6 @@ RollFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
         end
     end
 end)
-
 
 RollFrame.fadeOutAnimationFrame = CreateFrame("Frame")
 RollFrame.fadeOutAnimationFrame:Hide()

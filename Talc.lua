@@ -235,13 +235,13 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "RAID_ROSTER_UPDATE" then
-                if core.isRL() then
+                if core.isRaidLeader() then
 
                     if db['VOTE_AUTO_ASSIST'] then
                         for i = 0, GetNumRaidMembers() do
                             if GetRaidRosterInfo(i) then
                                 local n, r = GetRaidRosterInfo(i);
-                                if core.isCL(n) and r == 0 and n ~= core.me then
+                                if core.isOfficer(n) and r == 0 and n ~= core.me then
                                     TalcFrame.assistTriggers = TalcFrame.assistTriggers + 1
                                     PromoteToAssistant(n)
                                     talc_print(core.classColors[core.getPlayerClass(n)].colorStr .. n .. ' |rauto promoted.')
@@ -272,10 +272,14 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
                 RollFrame:handleSystem(arg1)
 
-                -- todo check how this looks for non cl/leader
-                if (core.find(arg1, "The following players are AFK", 1, true) or
-                        core.find(arg1, "No players are AFK", 1, true) or
-                        core.find(arg1, "is not ready", 1, true)) and core.isRL() then
+                if not core.isRaidLeader() then
+                    return
+                end
+
+                -- ready check stuff
+                if (core.find(arg1, "The following players are Away:", 1, true) or
+                        core.find(arg1, "No players are Away", 1, true) or
+                        core.find(arg1, "is not ready", 1, true)) and core.isRaidLeader() then
                     SendChatMessage(arg1, "RAID")
                 end
                 if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
@@ -309,7 +313,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 if not db['VOTE_ENABLED'] then
                     return
                 end
-                if core.isRL() then
+                if core.isRaidLeader() then
 
                     local lootMethod = GetLootMethod()
                     if lootMethod == 'master' then
@@ -413,7 +417,7 @@ SlashCmdList["TALC"] = function(cmd)
         if core.sub(cmd, 1, 3) == 'set' then
             local setEx = core.split(' ', cmd)
             if setEx[2] and setEx[3] then
-                if core.isRL() then
+                if core.isRaidLeader() then
                     if setEx[2] == 'enchanter' then
                         if not setEx[3] then
                             talc_print('Incorrect syntax. Use /talc set enchanter [name]')

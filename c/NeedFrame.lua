@@ -324,7 +324,7 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
 
     if core.find(msg, 'needframe=', 1, true) then
         local command = core.split('=', msg)
-        if command[2] == "reset" and core.isRL(sender) then
+        if command[2] == "reset" and core.isRaidLeader(sender) then
             self:ResetVars()
             return
         end
@@ -336,7 +336,7 @@ function NeedFrame:handleSync(arg1, msg, arg3, sender)
         return
     end
 
-    if core.isRL(sender) then
+    if core.isRaidLeader(sender) then
         if core.find(msg, 'loot=', 1, true) then
             self.numItems = self.numItems + 1
             self:addItem(msg)
