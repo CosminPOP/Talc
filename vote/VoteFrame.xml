@@ -1068,13 +1068,13 @@
         </Frames>
         <Scripts>
             <OnEnter>
-                TalcFrame:ContestantOnEnter(this:GetID())
+                TalcFrame:Contestant_OnEnter(this:GetID())
             </OnEnter>
             <OnLeave>
-                TalcFrame:ContestantOnLeave(this:GetID())
+                TalcFrame:Contestant_OnLeave(this:GetID())
             </OnLeave>
             <OnMouseUp>
-                TalcFrame:ContestantClick(this:GetID())
+                TalcFrame:Contestant_OnClick(this:GetID())
             </OnMouseUp>
         </Scripts>
     </Frame>
