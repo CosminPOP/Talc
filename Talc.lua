@@ -258,7 +258,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     end
                     TalcVoteFrameRLExtraFrame:Show()
 
-                    TalcFrame.RLFrame:CheckAssists()
+                    TalcFrame:CheckAssists()
                 else
                     TalcVoteFrameRLExtraFrame:Hide()
 
