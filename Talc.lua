@@ -7,6 +7,7 @@ TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100
 TALC.maxItemHistoryPlayers = 20
 TALC.maxLC = 3
+TALC.periodicSyncMaxItems = 200
 
 local core, db, tokenRewards
 local init = false
@@ -214,6 +215,9 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 end
             else
                 if db['ATTENDANCE_TRACKING'].started then
+                    if not TalcFrame.AttendanceTracker:IsVisible() then
+                        TalcFrame.AttendanceTracker:Show()
+                    end
                     TalcVoteAttendanceQueryStop:Show()
                 else
                     TalcFrame.AttendanceTracker:Stop()
@@ -262,8 +266,20 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     TalcVoteFrameRLExtraFrame:Hide()
 
                 end
-                if not core.canVote() then
-                    TalcVoteFrame:Hide()
+
+                -- 2x 10m = 30/week
+                -- 4x 25m = 60/week
+                -- 4680 / year naxx
+                -- 4600 / 60m =
+                if UnitInRaid('player') then
+                    TalcFrame.periodicSync.plus = core.floor(3600 / core.min(core.periodicSyncMaxItems, core.n(db['VOTE_LOOT_HISTORY'])))
+
+                    -- restart sync with new plus
+                    TalcFrame.periodicSync:Hide()
+                    TalcFrame.periodicSync:Show()
+
+                else
+                    TalcFrame.periodicSync:Hide()
                 end
             end
 
