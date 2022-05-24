@@ -159,9 +159,6 @@ function TalcFrame:ResetVars()
     TalcVoteFrameMLToEnchanter:Hide()
     TalcVoteFrameWinnerStatusNrOfVotes:SetText()
 
-    TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
-    TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
-
     TalcVoteFrameCurrentVotedItemButton:Hide()
     TalcVoteFrameVotedItemName:Hide()
 
@@ -2780,85 +2777,68 @@ end
 
 TalcFrame.VoteCountdown = CreateFrame("Frame")
 TalcFrame.VoteCountdown:Hide()
-TalcFrame.VoteCountdown.currentTime = 1
+TalcFrame.VoteCountdown.currentTime = 0
 TalcFrame.VoteCountdown.votingOpen = false
 TalcFrame.VoteCountdown:SetScript("OnShow", function()
     this.startTime = GetTime();
+    TalcVoteFrameTimeLeftBar:SetMinMaxValues(0, this.countDownFrom)
+    this.currentTime = this.countDownFrom
+
+    TalcVoteFrameTimeLeftBar.currentTime = this.currentTime
+    TalcVoteFrameTimeLeftBar.countDownFrom = this.countDownFrom
+    TalcVoteFrameTimeLeftBar.pleaseVote = true
 end)
 TalcFrame.VoteCountdown:SetScript("OnUpdate", function()
     local plus = 0.03
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        if this.currentTime ~= this.countDownFrom + plus then
 
-            if this.countDownFrom - this.currentTime >= 0 then
-                TalcVoteFrameTimeLeft:Show()
+        this.currentTime = this.currentTime - plus
 
-                if TalcFrame.doneVoting[TalcFrame.CurrentVotedItem] == true then
-                    TalcVoteFrameTimeLeft:SetText('')
-                else
-                    TalcVoteFrameTimeLeft:SetText('Please VOTE ! ' .. core.SecondsToClock(core.floor((this.countDownFrom - this.currentTime))))
-                end
+        TalcVoteFrameTimeLeftBar.currentTime = this.currentTime
+        TalcVoteFrameTimeLeftBar:SetValue(this.currentTime)
 
-                local w = core.floor(((this.countDownFrom - this.currentTime) / this.countDownFrom) * 1000) / 1000
-
-                TalcVoteFrameTimeLeftBarBG:SetWidth((TalcVoteFrame:GetWidth() - 8) - (TalcVoteFrame:GetWidth() - 8) * w)
-            end
-
+        if this.currentTime <= 0 then
+            TalcVoteFrameTimeLeft:Show()
+            TalcVoteFrameTimeLeft:SetText('')
+            TalcVoteFrameMLToWinner:Enable()
             this:Hide()
-            if this.currentTime < this.countDownFrom + plus then
-                this.currentTime = this.currentTime + plus
-                this:Show()
-            elseif this.currentTime > this.countDownFrom + plus then
-                this:Hide()
-                this.currentTime = 1
-
-                TalcVoteFrameTimeLeft:Show()
-                TalcVoteFrameTimeLeft:SetText('')
-                TalcVoteFrameMLToWinner:Enable()
-            end
         end
+
+        this.startTime = GetTime();
     end
 end)
 
 TalcFrame.LootCountdown = CreateFrame("Frame")
 TalcFrame.LootCountdown:Hide()
-TalcFrame.LootCountdown.currentTime = 1
+TalcFrame.LootCountdown.currentTime = 0
 TalcFrame.LootCountdown:SetScript("OnShow", function()
     this.startTime = GetTime();
+    TalcVoteFrameTimeLeftBar:SetMinMaxValues(0, this.countDownFrom)
+    this.currentTime = this.countDownFrom
+
+    TalcVoteFrameTimeLeftBar.currentTime = this.currentTime
+    TalcVoteFrameTimeLeftBar.countDownFrom = this.countDownFrom
+    TalcVoteFrameTimeLeftBar.pleaseVote = false
 end)
 TalcFrame.LootCountdown:SetScript("OnUpdate", function()
     local plus = 0.03
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        if this.currentTime ~= this.countDownFrom + plus then
 
-            if core.floor(this.countDownFrom - this.currentTime) >= 1 then
-                TalcVoteFrameTimeLeft:Show()
-            else
-                TalcVoteFrameTimeLeft:Hide()
-            end
+        this.currentTime = this.currentTime - plus
 
-            TalcVoteFrameTimeLeft:SetText(core.SecondsToClock(core.floor(this.countDownFrom - this.currentTime)))
+        TalcVoteFrameTimeLeftBar.currentTime = this.currentTime
+        TalcVoteFrameTimeLeftBar:SetValue(this.currentTime)
 
-            local w = core.floor(((this.countDownFrom - this.currentTime) / this.countDownFrom) * 1000) / 1000
-
-            TalcVoteFrameTimeLeftBarBG:SetWidth((TalcVoteFrame:GetWidth() - 8) - (TalcVoteFrame:GetWidth() - 8) * w)
-        end
-
-        this:Hide()
-
-        if this.currentTime < this.countDownFrom + plus then
-            this.currentTime = this.currentTime + plus
-            this:Show()
-        elseif this.currentTime > this.countDownFrom + plus then
-
+        if this.currentTime <= 0 then
             this:Hide()
-            this.currentTime = 1
 
             TalcVoteFrameMLToWinner:Enable()
+
+            TalcFrame.VoteCountdown.votingOpen = true
 
             for raidi = 0, GetNumRaidMembers() do
                 if GetRaidRosterInfo(raidi) then
@@ -2880,10 +2860,7 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
                                     itemIndex = index,
                                     name = n,
                                     need = 'autopass',
-                                    ci1 = '0',
-                                    ci2 = '0',
-                                    ci3 = '0',
-                                    ci4 = '0',
+                                    ci1 = '0', ci2 = '0', ci3 = '0', ci4 = '0',
                                     votes = 0,
                                     roll = 0
                                 })
@@ -2902,15 +2879,15 @@ TalcFrame.LootCountdown:SetScript("OnUpdate", function()
                 end
             end
 
-            TalcFrame.VoteCountdown.votingOpen = true
             TalcFrame:ShowWindow()
             TalcFrame:ShowScreen("Voting")
-
             TalcFrame:VoteFrameListUpdate()
-
             TalcFrame.VoteCountdown:Show()
 
         end
+
+        this.startTime = GetTime()
+
     end
 end)
 
@@ -4007,15 +3984,15 @@ end
 
 function TalcFrame:Resizing()
     --TalcVoteFrame:SetAlpha(0.8)
-    TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
-    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMLEFT', TalcVoteFrame, "BOTTOMLEFT", 4, 4)
-    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 28)
+    --TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
+    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMLEFT', TalcVoteFrame, "BOTTOMLEFT", 4, 4)
+    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 28)
 end
 
 function TalcFrame:Resized()
 
-    TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
-    TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 4)
+    --TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
+    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 4)
 
     local ratio = TalcVoteFrame:GetWidth() / 600;
     TalcVoteFrameNameLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(8 * ratio), -92)
@@ -4025,8 +4002,8 @@ function TalcFrame:Resized()
     TalcVoteFrameRollLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(285 * ratio), -92)
     TalcVoteFrameVotesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(406 * ratio), -92)
 
-    TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
-    TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
+    --TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
+    --TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
 
     TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
 
@@ -4158,3 +4135,22 @@ PlaySound("igMainMenuOptionCheckBoxOff");
 PlaySound("igCharacterInfoTab");
 PlaySound("igMainMenuClose");
 ]]--
+
+function TALCTimeLeftBar_OnUpdate()
+    if this:GetValue() == 0 then
+        _G[this:GetName() .. 'Spark']:Hide();
+        TalcVoteFrameTimeLeft:Hide()
+    else
+        _G[this:GetName() .. 'Spark']:Show();
+        TalcVoteFrameTimeLeft:Show()
+    end
+
+    if this.pleaseVote then
+        TalcVoteFrameTimeLeft:SetText('Please VOTE ! ' .. core.SecondsToClock(this:GetValue()));
+    else
+        TalcVoteFrameTimeLeft:SetText(core.SecondsToClock(this:GetValue()));
+    end
+
+    _G[this:GetName() .. 'Spark']:SetPoint("CENTER", this, "LEFT",
+            this.currentTime * this:GetWidth() / this.countDownFrom, 0);
+end
