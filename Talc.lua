@@ -9,7 +9,7 @@ TALC.maxItemHistoryPlayers = 20
 TALC.maxLC = 3
 TALC.periodicSyncMaxItems = 200
 
-local core, db, tokenRewards
+local core, db, tokenRewards, assistTriggers
 local init = false
 
 TALC:SetScript("OnEvent", function(__, event, ...)
@@ -245,11 +245,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             if GetRaidRosterInfo(i) then
                                 local n, r = GetRaidRosterInfo(i);
                                 if core.isOfficer(n) and r == 0 and n ~= core.me then
-                                    TalcFrame.assistTriggers = TalcFrame.assistTriggers + 1
+                                    assistTriggers = assistTriggers + 1
                                     PromoteToAssistant(n)
                                     talc_print(core.classColors[core.getPlayerClass(n)].colorStr .. n .. ' |rauto promoted.')
 
-                                    if TalcFrame.assistTriggers > 100 then
+                                    if assistTriggers > 100 then
                                         talc_error('Autoassist trigger error (>100). Autoassist disabled.')
                                         db['VOTE_AUTO_ASSIST'] = false
                                     end

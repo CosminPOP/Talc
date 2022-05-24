@@ -27,14 +27,12 @@ TalcFrame.namePlayersThatWants = 0
 TalcFrame.receivedResponses = 0
 TalcFrame.pickResponses = {}
 
-TalcFrame.lootHistoryMinRarity = 3
 TalcFrame.selectedPlayer = {}
 
 TalcFrame.lootHistoryFrames = {}
-TalcFrame.peopleWithAddon = ''
 
 TalcFrame.doneVoting = {} --self / item
-TalcFrame.clDoneVotingItem = {}
+TalcFrame.OfficerDoneVotingItem = {}
 TalcFrame.OfficerVoted = {}
 
 TalcFrame.sentReset = false
@@ -42,9 +40,6 @@ TalcFrame.sentReset = false
 TalcFrame.numItems = 0
 
 TalcFrame.OfficerVotedFrames = {}
-TalcFrame.RaidBuffs = {}
-
-TalcFrame.assistTriggers = 0
 
 TalcFrame.HistoryId = 0
 
@@ -82,7 +77,6 @@ TalcFrame.attendanceFrames = {}
 TalcFrame.expandedAttendanceFrames = {}
 
 TalcFrame.assistFrames = {}
-TalcFrame.currentTab = 1
 
 ----------------------------------------------------
 --- Init
@@ -127,7 +121,7 @@ function TalcFrame:ResetVars()
     self.inspectPlayerGear = {}
 
     self.doneVoting = {}
-    self.clDoneVotingItem = {}
+    self.OfficerDoneVotingItem = {}
 
     self.numItems = 0
     self.assistTriggers = 0
@@ -418,10 +412,10 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if not self.clDoneVotingItem[sender] then
-            self.clDoneVotingItem[sender] = {}
+        if not self.OfficerDoneVotingItem[sender] then
+            self.OfficerDoneVotingItem[sender] = {}
         end
-        self.clDoneVotingItem[sender][core.int(itemEx[2])] = true
+        self.OfficerDoneVotingItem[sender][core.int(itemEx[2])] = true
 
         self:VoteFrameListUpdate()
         return
@@ -704,40 +698,6 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'withAddonVF=', 1, true) then
-        local n = core.split("=", t)
-
-        if not n[4] then
-            talc_error('bad withAddonVF syntax')
-            talc_error(t)
-            return false
-        end
-
-        if n[2] == core.me then
-            --i[2] = who requested the who
-            local verColor = ""
-            if core.ver(n[4]) == core.ver(core.addonVer) then
-                verColor = core.classColors['hunter'].colorStr
-            end
-            if core.ver(n[4]) < core.ver(core.addonVer) then
-                verColor = '|cffff222a'
-            end
-            local star = ' '
-            if core.len(n[4]) < 7 then
-                n[4] = '0.' .. n[4]
-            end
-            if core.isRaidLeaderOrAssistant(sender) then
-                star = '*'
-            end
-            self.peopleWithAddon = self.peopleWithAddon .. star ..
-                    core.classColors[core.getPlayerClass(sender)].colorStr ..
-                    sender .. ' ' .. verColor .. n[4] .. '\n'
-            TalcVoteFrameWhoTitle:SetText('TALC With Addon')
-            TalcVoteFrameWhoText:SetText(self.peopleWithAddon)
-        end
-        return
-    end
-
     -- includes periodic_loot_history_sync too
     if core.find(t, 'loot_history_sync;', 1, true) then
 
@@ -877,6 +837,7 @@ function Talc_BuildMinimapMenu()
     menu_settings.isTitle = false
     menu_settings.justifyH = 'LEFT'
     menu_settings.func = function()
+        TalcFrame:ShowWindow()
         TalcFrame:ShowScreen("Settings")
     end
     UIDropDownMenu_AddButton(menu_settings);
@@ -1801,8 +1762,8 @@ function TalcFrame:UpdateOfficerVotesNum()
     for officer, voted in next, self.OfficerVoted[self.CurrentVotedItem] do
         if not voted then
             --check if he clicked done voting for this itme
-            if self.clDoneVotingItem[officer] then
-                for itemIndex, doneVoting in next, self.clDoneVotingItem[officer] do
+            if self.OfficerDoneVotingItem[officer] then
+                for itemIndex, doneVoting in next, self.OfficerDoneVotingItem[officer] do
                     if itemIndex == self.CurrentVotedItem and doneVoting then
                         nr = nr + 1
                     end
@@ -2101,8 +2062,8 @@ function TalcFrame:UpdateOfficerVotedIcons()
         --done voting
         if not voted then
             --check if he clicked done voting for this itme
-            if self.clDoneVotingItem[officer] then
-                for itemIndex, doneVoting in next, self.clDoneVotingItem[officer] do
+            if self.OfficerDoneVotingItem[officer] then
+                for itemIndex, doneVoting in next, self.OfficerDoneVotingItem[officer] do
                     if itemIndex == self.CurrentVotedItem and doneVoting then
                         frame:SetAlpha(1)
                     end
@@ -2313,7 +2274,7 @@ function TalcFrame:VoteFrameListUpdate()
                             local oFrame = "TALCOfficerVotedFrameI" .. self.CurrentVotedItem .. "P" .. index .. "W" .. w
 
                             local voterClass = core.getPlayerClass(voter)
-                            local locked = self.clDoneVotingItem[voter] and self.clDoneVotingItem[voter][self.CurrentVotedItem]
+                            local locked = self.OfficerDoneVotingItem[voter] and self.OfficerDoneVotingItem[voter][self.CurrentVotedItem]
 
                             _G[oFrame]:ClearAllPoints()
                             _G[oFrame]:SetSize(20, 20)
