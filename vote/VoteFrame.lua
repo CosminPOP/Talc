@@ -165,6 +165,7 @@ function TalcFrame:ResetVars()
     TalcVoteFrameCurrentVotedItemButton:Hide()
     TalcVoteFrameVotedItemName:Hide()
 
+    TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
 
     TalcVoteFrameDoneVoting:Disable();
@@ -510,6 +511,16 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         self:ShowScreen("Voting")
 
+        if core.n(self.bagItems) > 0 then
+            TalcVoteFrameRLExtraFrameDragLoot:Enable()
+            TalcVoteFrameRLExtraFrameDragLoot:SetText("Send " .. core.n(self.bagItems) .. " Item(s)")
+            TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
+        else
+            TalcVoteFrameRLExtraFrameDragLoot:Disable()
+            TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Send Loot (' .. db['VOTE_TTN'] .. 's)')
+            TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
+        end
+
         return
     end
 
@@ -599,8 +610,6 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
         if sender == core.me and t == 'syncRoster=end' then
-            TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Send Loot (' .. db['VOTE_TTN'] .. 's)')
-            TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
             return
         end
         if sender == core.me then
@@ -951,7 +960,7 @@ function TalcFrame:LootHistoryUpdate()
 
                     local frame = 'TALCHistoryItem' .. index
 
-                    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, "TOPLEFT", 5, 37 - 39 * (index - itemOffset) - 30)
+                    _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, "TOPLEFT", 5, 37 - 39 * (index - itemOffset))
                     _G[frame]:Show()
                     _G[frame]:SetWidth(190)
 
@@ -2291,7 +2300,7 @@ function TalcFrame:VoteFrameListUpdate()
                             _G[oFrame]:Show()
                             _G[oFrame]:SetAlpha(locked and 1 or 0.5)
 
-                            local voterText = voter .. (locked and " |rDONE" or "")
+                            local voterText = voter .. (locked and core.classColors['hunter'].colorStr .. "\nDone Voting" or core.classColors['rogue'].colorStr .. "\nNot Final")
 
                             _G[oFrame]:SetScript("OnEnter", function(self)
                                 GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
@@ -2361,9 +2370,9 @@ end
 
 function TalcFrame:updateVotedItemsFrames()
     for index, _ in next, self.VotedItemsFrames do
-        _G['VotedItem' .. index .. 'ButtonCheck']:Hide()
+        _G['TALCVotedItem' .. index .. 'ButtonCheck']:Hide()
         if self.VotedItemsFrames[index].awardedTo ~= '' then
-            _G['VotedItem' .. index .. 'ButtonCheck']:Show()
+            _G['TALCVotedItem' .. index .. 'ButtonCheck']:Show()
         end
     end
 
@@ -2411,6 +2420,9 @@ function TalcFrame:ReceiveDrag()
 
             self:GetTradableItems()
 
+            TalcVoteFrameRLExtraFrameDragLoot:Disable()
+            TalcVoteFrameRLExtraFrameDragLoot:SetText('Waiting sync...')
+
             core.insert(self.bagItems, {
                 preloaded = false,
                 id = id,
@@ -2434,6 +2446,8 @@ function TalcFrame:ReceiveDrag()
             core.SetDynTTN(core.n(self.bagItems))
             core.SetDynTTV(core.n(self.bagItems))
             self.LootCountdown.countDownFrom = db['VOTE_TTN']
+
+            core.syncRoster()
 
             self:SendTimersAndButtons()
 
@@ -2461,10 +2475,6 @@ function TalcFrame:ReceiveDrag()
 
             return
         end
-    end
-
-    if core.n(self.bagItems) > 0 then
-        TalcVoteFrameRLExtraFrameDragLoot:SetText("Send " .. core.n(self.bagItems) .. " Item(s)")
     end
 
     ClearCursor()
@@ -2499,23 +2509,6 @@ function TalcFrame:BroadcastLoot_OnClick()
         self.LootCountdown.countDownFrom = db['VOTE_TTN']
 
         self:SendTimersAndButtons()
-
-        -- send button configuration to CLs
-        local buttons = ''
-        if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
-            buttons = buttons .. 'b'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['MS'] then
-            buttons = buttons .. 'm'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['OS'] then
-            buttons = buttons .. 'o'
-        end
-        if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
-            buttons = buttons .. 'x'
-        end
-
-        core.asend('NeedButtons=' .. buttons)
 
         self:SendReset()
 
@@ -2553,19 +2546,6 @@ function TalcFrame:BroadcastLoot_OnClick()
             local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
             local _, _, quality = GetItemInfo(itemLink)
             if quality >= 0 then
-                local buttons = ''
-                if db['VOTE_CONFIG']['NeedButtons']['BIS'] then
-                    buttons = buttons .. 'b'
-                end
-                if db['VOTE_CONFIG']['NeedButtons']['MS'] then
-                    buttons = buttons .. 'm'
-                end
-                if db['VOTE_CONFIG']['NeedButtons']['OS'] then
-                    buttons = buttons .. 'o'
-                end
-                if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
-                    buttons = buttons .. 'x'
-                end
                 --send to c
                 core.bsend("ALERT", "loot=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
                 numLootItems = numLootItems + 1
