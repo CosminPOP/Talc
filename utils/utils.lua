@@ -439,11 +439,11 @@ function Talc_Utils:init()
             return
         end
 
-        core.bsend("BULK", "syncRoster=start")
+        core.bsend("ALERT", "syncRoster=start")
         for _, name in next, db['VOTE_ROSTER'] do
-            core.bsend("BULK", "syncRoster=" .. name)
+            core.bsend("ALERT", "syncRoster=" .. name)
         end
-        core.bsend("BULK", "syncRoster=end")
+        core.bsend("ALERT", "syncRoster=end")
 
         TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
     end
