@@ -1,5 +1,6 @@
 local db, core, tokenRewards
 local _G = _G
+
 NeedFrame = CreateFrame("Frame")
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
@@ -238,8 +239,6 @@ end
 
 function NeedFrame:animInFinished()
     local frame = this:GetRegionParent()
-    print(frame:GetName())
-
     _G[frame:GetName() .. "TimeLeftBar"].countdown:Stop();
     _G[frame:GetName() .. "TimeLeftBar"].countdown.animIn:SetStartDelay(0);
     _G[frame:GetName() .. "TimeLeftBar"].countdown.countdown:SetDuration(db['VOTE_TTN']);
@@ -257,11 +256,10 @@ end
 
 function NeedFrame:animOutFinished()
     local frame = this:GetRegionParent()
-    print(frame:GetName() .. " finished")
     frame:Hide();
     if frame.need == 'autopass' then
         NeedFrame:NeedClick(nil, frame)
-        print("auto pass click")
+        talc_debug("auto pass click")
     else
         if db['NEED_FRAME_COLLAPSE'] then
             NeedFrame:repositionFrames()
@@ -464,7 +462,15 @@ function NeedFrame:NeedClick(need, f)
                             ringsSet = true
                         end
                     elseif q_equip_slot == 'INVTYPE_TRINKET' then
-                        --todo
+                        if not trinketsSet then
+                            local _, _, trinket1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET0'].id), "(item:%d+:%d+:%d+:%d+)");
+                            rewardIndex = rewardIndex + 1
+                            myItem[rewardIndex] = trinket1Link
+                            local _, _, trinket2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET1'].id), "(item:%d+:%d+:%d+:%d+)");
+                            rewardIndex = rewardIndex + 1
+                            myItem[rewardIndex] = trinket2Link
+                            trinketsSet = true
+                        end
                     else
                         if not itemSet[core.equipSlotsDetails[q_equip_slot].id] then
                             local _, _, eqIL = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[q_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
