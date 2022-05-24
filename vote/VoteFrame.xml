@@ -415,7 +415,8 @@
                 <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"/>
                 <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"
                                alphaMode="ADD"/>
-                <HighlightTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"/>
+                <HighlightTexture name="$parentHighlightTexture" file="Interface\Icons\inv_staff_20" setAllPoints="true"
+                alphaMode="ADD"/>
                 <Size x="38" y="38"/>
                 <Anchors>
                     <Anchor point="CENTER">
@@ -3854,19 +3855,19 @@
 
                     <Frame name="$parentLootHistoryFrame" hidden="true">
                         <Size>
-                            <AbsDimension x="207" y="223"/>
+                            <AbsDimension x="260" y="277"/>
                         </Size>
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
-                                    <AbsDimension x="8" y="-25"/>
+                                    <AbsDimension x="8" y="-50"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
                         <Frames>
                             <ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
                                 <Size>
-                                    <AbsDimension x="190" y="255"/>
+                                    <AbsDimension x="260" y="277"/>
                                 </Size>
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
