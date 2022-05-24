@@ -12,6 +12,7 @@ function Talc_Utils:init()
     core.floor = math.floor
     core.ceil = math.ceil
     core.max = math.max
+    core.min = math.min
     core.rep = string.rep
     core.sub = string.sub
     core.int = tonumber
@@ -563,7 +564,7 @@ function Talc_Utils:init()
     core.saveAttendance = function(boss)
 
         if not core.instanceInfo() then
-            print("cant save attendance outside")
+            talc_debug("cant save attendance outside")
             return
         end
 

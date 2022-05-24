@@ -174,7 +174,6 @@
                     </Anchors>
                 </FontString>
 
-
             </Layer>
         </Layers>
         <Scripts>
@@ -2401,13 +2400,49 @@
                         <Anchors>
                             <Anchor point="TOPRIGHT">
                                 <Offset>
-                                    <AbsDimension x="0" y="-54"/>
+                                    <AbsDimension x="-135" y="-4"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
                         <Scripts>
                             <OnClick>
                                 TalcFrame:ShowScreen("Wishlist")
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentAttendanceStopButton" inherits="Talc_ButtonTemplate" text="Stop Tracking Attendance">
+                        <Size>
+                            <AbsDimension x="180" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-54"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.AttendanceTracker:Stop()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentAttendanceStartButton" inherits="Talc_ButtonTemplate" text="Start Tracking Attendance">
+                        <Size>
+                            <AbsDimension x="180" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-54"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                TalcFrame.AttendanceTracker:Start()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2596,7 +2631,7 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="0" y="-9"/>
+                                        <AbsDimension x="0" y="-8"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -3293,7 +3328,7 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="0" y="-9"/>
+                                        <AbsDimension x="0" y="-8"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -3505,7 +3540,7 @@
                             <Anchors>
                                 <Anchor point="TOP">
                                     <Offset>
-                                        <AbsDimension x="0" y="-9"/>
+                                        <AbsDimension x="0" y="-8"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
