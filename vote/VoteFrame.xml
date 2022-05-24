@@ -4,7 +4,7 @@
 
     <!--Templates-->
 
-    <Button name="Talc_CLVotedButton" inherits="UIPanelButtonTemplate" text="" virtual="true">
+    <Button name="Talc_SmallIconButtonTemplate" inherits="UIPanelButtonTemplate" text="" virtual="true">
         <NormalTexture file="Interface\AddOns\Talc\images\classes\rogue"/>
         <PushedTexture file="Interface\AddOns\Talc\images\classes\rogue"/>
         <HighlightTexture file="Interface\AddOns\Talc\images\classes\rogue" alphaMode="Add"/>
@@ -133,7 +133,7 @@
             </Layer>
             <Layer level="OVERLAY">
 
-                <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" hidden="false">
+                <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" hidden="true">
                     <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
                     <Color r="1" g="0" b="0" a="1"/>
                     <Size>
@@ -467,7 +467,7 @@
         </Frames>
     </Frame>
 
-    <Frame name="Talc_CLFrameTemplate" virtual="true" enableMouse="true">
+    <Frame name="Talc_OfficerFrameTemplate" virtual="true" enableMouse="true">
         <Size>
             <AbsDimension x="292" y="24"/>
         </Size>
@@ -554,7 +554,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:SetCL_OnClick(this:GetID(), this:GetChecked())
+                        TalcFrame:SetOfficer_OnClick(this:GetID(), this:GetChecked())
                     </OnClick>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -566,7 +566,7 @@
         </Frames>
     </Frame>
 
-    <Frame name="Talc_ContestantFrame" virtual="true" hidden="false">
+    <Frame name="Talc_ContestantFrameTemplate" virtual="true" hidden="false">
         <Size>
             <AbsDimension x="590" y="23"/>
         </Size>
@@ -1507,7 +1507,7 @@
                 </Layers>
             </Button>
 
-            <Frame name="$parentCLThatVotedList">
+            <Frame name="$parentOfficersThatVotedList">
                 <Size>
                     <AbsDimension x="200" y="24"/>
                 </Size>
