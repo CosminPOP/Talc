@@ -133,6 +133,21 @@
             </Layer>
             <Layer level="OVERLAY">
 
+                <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" hidden="false">
+                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
+                    <Color r="1" g="0" b="0" a="1"/>
+                    <Size>
+                        <AbsDimension x="37" y="37"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER" relativeTo="$parentIcon">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
                 <FontString name="$parentRaidTitle" inherits="GameFontHighlight" text="Raid Title" justifyH="LEFT"
                             hidden="true">
                     <Anchors>

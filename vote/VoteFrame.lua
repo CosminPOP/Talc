@@ -792,6 +792,10 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 pick = lh[7]
                 raid = lh[8]
 
+                local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
+                local itemID = core.int(core.split(':', itemLink)[2])
+                core.cacheItem(itemID)
+
                 if not db['VOTE_LOOT_HISTORY'][hash] then
                     db['VOTE_LOOT_HISTORY'][hash] = {
                         timestamp = timestamp,
@@ -3085,7 +3089,6 @@ TalcFrame.periodicSync:SetScript("OnUpdate", function()
         for shash, item in core.sortedLootHistory() do
             i = i + 1
             if i == this.index then
-                talc_debug("sending " .. i .. "/" .. core.n(db['VOTE_LOOT_HISTORY']))
                 core.bsendg("BULK", "periodic_loot_history_sync;" .. shash .. ";"
                         .. item.timestamp .. ";"
                         .. item.player .. ";"
@@ -3357,8 +3360,16 @@ function TalcFrame:ShowWelcomeItems()
         _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
         _G[frame .. 'BottomText']:SetText(core.classColors[item.class].colorStr .. item.player)
 
-        local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
+        local _, _, q, _, _, _, _, _, _, tex = GetItemInfo(item.item)
         _G[frame .. 'Icon']:SetTexture(tex)
+
+        _G[frame .. 'Border']:Hide()
+        if item.player == core.me then
+            local color = ITEM_QUALITY_COLORS[q]
+            _G[frame .. 'Border']:SetVertexColor(color.r, color.g, color.b, 1)
+            _G[frame .. 'Border']:Show()
+        end
+
         core.addButtonOnEnterTooltip(_G[frame], item.item)
 
         _G[frame]:Show()
@@ -3590,7 +3601,7 @@ function TalcFrame:TryToAddToWishlist_OnClick(nameOrID)
 
             nameOrID = core.lower(nameOrID);
             local results = {};
-            local maxCols = core.floor((TalcVoteFrame:GetWidth() - 10) / 300)
+            local maxCols = core.floor((TalcVoteFrame:GetWidth() - 10) / 345)
             local maxRows = core.floor((TalcVoteFrame:GetHeight() - 180) / 30)
             local maxResults = maxCols * maxRows
             local col, row = 1, 1
@@ -3687,7 +3698,8 @@ function TalcFrame:TryToAddToWishlist_OnClick(nameOrID)
                 return
             end
         else
-            talc_print("Nothing found.")
+            talc_print("Nothing found. Please install Atlas Loot to allow TALC to search for items.")
+            self:WishlistUpdate()
         end
     end
 end
