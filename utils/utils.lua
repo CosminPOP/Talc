@@ -49,6 +49,9 @@ function Talc_Utils:init()
     core.bsend = function(prio, msg)
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "RAID")
     end
+    core.bsendg = function(prio, msg)
+        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "GUILD")
+    end
 
     core.wsend = function(prio, msg, to)
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "WHISPER", to)

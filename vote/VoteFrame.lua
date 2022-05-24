@@ -95,6 +95,13 @@ function TalcFrame:init()
     core = TALC
     tokenRewards = TALC_TOKENS
 
+    -- start syncing item history with guild every x seconds
+    -- 2x 10m = 30/week
+    -- 4x 25m = 60/week
+    -- 4680 / year naxx
+    TalcFrame.periodicSync.plus = 30 -- core.floor(3600 / core.min(core.periodicSyncMaxItems, core.n(db['VOTE_LOOT_HISTORY'])))
+    TalcFrame.periodicSync:Show()
+
     self:ResetVars()
 end
 
@@ -216,7 +223,9 @@ end
 ----------------------------------------------------
 
 function TalcFrame:handleSync(pre, t, ch, sender)
-    talc_debug(sender .. ' says: ' .. t)
+    if not core.find(t, 'periodic', 1, true) then
+        talc_debug(sender .. ' says: ' .. t)
+    end
 
     if core.find(t, 'boss&', 1, true) then
         if not core.canVote() then
@@ -731,6 +740,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
+    -- includes periodic_loot_history_sync too
     if core.find(t, 'loot_history_sync;', 1, true) then
 
         if not core.isRaidLeader(sender) then
@@ -759,7 +769,10 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
             else
-                self:WelcomeFrame_OnShow()
+                -- update welcome items if visible
+                if TalcVoteFrameWelcomeFrame:IsVisible() then
+                    self:WelcomeFrame_OnShow()
+                end
             end
             talc_debug('loot history synced.')
         else
@@ -772,7 +785,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                 local hash, timestamp, player, class, item, pick, raid
 
                 hash = core.int(lh[2])
-                timestamp = lh[3]
+                timestamp = core.int(lh[3])
                 player = lh[4]
                 class = lh[5]
                 item = lh[6]
@@ -789,44 +802,13 @@ function TalcFrame:handleSync(pre, t, ch, sender)
                         raid = raid
                     }
                 end
+
+                -- update welcome items if visible
+                if TalcVoteFrameWelcomeFrame:IsVisible() then
+                    self:WelcomeFrame_OnShow()
+                end
+
             end
-        end
-        return
-    end
-
-    if core.find(t, 'periodic_loot_history_sync;', 1, true) then
-
-        if sender == core.me then
-            return
-        end
-
-        local lh = core.split(";", t)
-
-        if not lh[8] then
-            talc_error('bad periodic_loot_history_sync syntax')
-            talc_error(t)
-            return false
-        end
-
-        local hash, timestamp, player, class, item, pick, raid
-
-        hash = core.int(lh[2])
-        timestamp = lh[3]
-        player = lh[4]
-        class = lh[5]
-        item = lh[6]
-        pick = lh[7]
-        raid = lh[8]
-
-        if not db['VOTE_LOOT_HISTORY'][hash] then
-            db['VOTE_LOOT_HISTORY'][hash] = {
-                timestamp = timestamp,
-                player = player,
-                class = class,
-                item = item,
-                pick = pick,
-                raid = raid
-            }
         end
         return
     end
@@ -3104,7 +3086,7 @@ TalcFrame.periodicSync:SetScript("OnUpdate", function()
             i = i + 1
             if i == this.index then
                 talc_debug("sending " .. i .. "/" .. core.n(db['VOTE_LOOT_HISTORY']))
-                core.bsend("BULK", "periodic_loot_history_sync;" .. shash .. ";"
+                core.bsendg("BULK", "periodic_loot_history_sync;" .. shash .. ";"
                         .. item.timestamp .. ";"
                         .. item.player .. ";"
                         .. item.class .. ";"

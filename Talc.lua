@@ -266,21 +266,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     TalcVoteFrameRLExtraFrame:Hide()
 
                 end
-
-                -- 2x 10m = 30/week
-                -- 4x 25m = 60/week
-                -- 4680 / year naxx
-                -- 4600 / 60m =
-                if UnitInRaid('player') then
-                    TalcFrame.periodicSync.plus = core.floor(3600 / core.min(core.periodicSyncMaxItems, core.n(db['VOTE_LOOT_HISTORY'])))
-
-                    -- restart sync with new plus
-                    TalcFrame.periodicSync:Hide()
-                    TalcFrame.periodicSync:Show()
-
-                else
-                    TalcFrame.periodicSync:Hide()
-                end
             end
 
             if event == "CHAT_MSG_SYSTEM" then
