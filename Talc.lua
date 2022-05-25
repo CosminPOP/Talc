@@ -262,6 +262,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     TalcVoteFrameRLExtraFrame:Show()
 
                     TalcFrame:CheckAssists()
+                    core.syncRoster("BULK")
                 else
                     TalcVoteFrameRLExtraFrame:Hide()
 
