@@ -1281,7 +1281,7 @@
                         </Texture>
                     </Layer>
                     <Layer level="ARTWORK">
-                        <FontString name="TalcVoteFrameContestantCount" inherits="GameFontHighlight" text="2222" hidden="false">
+                        <FontString name="$parentTextLeft" inherits="GameFontHighlight" text="" hidden="false">
                             <Anchors>
                                 <Anchor point="BOTTOMLEFT">
                                     <Offset>
@@ -1290,7 +1290,7 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
-                        <FontString name="TalcVoteFrameTimeLeft" inherits="GameFontHighlight" text="22:22" hidden="false">
+                        <FontString name="$parentTextCenter" inherits="GameFontHighlight" text="" hidden="true">
                             <Anchors>
                                 <Anchor point="BOTTOM">
                                     <Offset>
@@ -1318,7 +1318,7 @@
                         this.countDownFrom = 0;
                     </OnLoad>
                     <OnUpdate>
-                        TALCTimeLeftBar_OnUpdate();
+                        TalcFrame:TimeLeftBar_OnUpdate()
                     </OnUpdate>
                 </Scripts>
                 <BarTexture file="Interface\addons\Talc\images\grad1">

@@ -151,7 +151,6 @@ function TalcFrame:ResetVars()
     TalcVoteFrame:SetScale(db['VOTE_SCALE'])
 
     TalcVoteFrameVotesLabel:SetText('Votes');
-    TalcVoteFrameContestantCount:SetText()
     TalcVoteFrameWinnerStatus:Hide()
 
     TalcVoteFrameMLToWinner:Disable()
@@ -244,8 +243,8 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             talc_error(t)
             return false
         end
-        TalcVoteFrameContestantCount:SetText('Loot sent. Waiting picks...')
-        core.asend("CLreceived=" .. self.numItems .. "=items")
+        TalcVoteFrameTimeLeftBarTextLeft:SetText('Loot sent. Waiting picks...')
+        core.asend("CLreceived=" .. self.numItems .. "=items") --todo rename CL
         return
     end
 
@@ -1403,8 +1402,6 @@ TalcVoteFrameVotingFrame:SetScript("OnHide", function()
     TalcVoteFrameReplacesLabel:Hide()
     TalcVoteFrameRollLabel:Hide()
     TalcVoteFrameVotesLabel:Hide()
-    TalcVoteFrameContestantCount:Hide()
-    TalcVoteFrameTimeLeft:Hide()
     TalcVoteFrameDoneVoting:Hide()
 
     TalcVoteFrameWinnerStatus:Hide()
@@ -1420,9 +1417,6 @@ TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameReplacesLabel:Show()
     TalcVoteFrameRollLabel:Show()
     TalcVoteFrameVotesLabel:Show()
-    TalcVoteFrameContestantCount:Show()
-    TalcVoteFrameTimeLeft:Show()
-    TalcVoteFrameTimeLeft:SetText('')
     TalcVoteFrameDoneVoting:Show()
 
     if core.isRaidLeader() then
@@ -2116,11 +2110,11 @@ function TalcFrame:VoteFrameListUpdate()
             end
         end
 
-        TalcVoteFrameContestantCount:SetText('Everyone(' .. self.pickResponses[self.CurrentVotedItem]
+        TalcVoteFrameTimeLeftBarTextLeft:SetText('Everyone(' .. self.pickResponses[self.CurrentVotedItem]
                 .. ') has picked(' .. pass .. ' passes).')
         self.VotedItemsFrames[self.CurrentVotedItem].pickedByEveryone = true
     else
-        TalcVoteFrameContestantCount:SetText('Waiting picks ' ..
+        TalcVoteFrameTimeLeftBarTextLeft:SetText('Waiting picks ' ..
                 self.pickResponses[self.CurrentVotedItem] .. '/' ..
                 core.getNumOnlineRaidMembers())
         self.VotedItemsFrames[self.CurrentVotedItem].pickedByEveryone = false
@@ -2775,6 +2769,28 @@ function TalcFrame:ChangePlayerPickTo(playerName, newPick, itemIndex)
     self:VoteFrameListUpdate()
 end
 
+
+function TalcFrame:TimeLeftBar_OnUpdate()
+    if this:GetValue() <= 0 then
+        _G[this:GetName() .. 'Spark']:Hide();
+        TalcVoteFrameTimeLeftBarTextCenter:Hide()
+    else
+        _G[this:GetName() .. 'Spark']:Show();
+        TalcVoteFrameTimeLeftBarTextCenter:Show()
+    end
+
+    if this.pleaseVote then
+        TalcVoteFrameTimeLeftBarTextCenter:SetText('Please VOTE ! ' .. core.SecondsToClock(this:GetValue()));
+    else
+        TalcVoteFrameTimeLeftBarTextCenter:SetText(core.SecondsToClock(this:GetValue()));
+    end
+
+    _G[this:GetName() .. 'Spark']:SetPoint("CENTER", this, "LEFT",
+            this.currentTime * this:GetWidth() / this.countDownFrom, 0);
+end
+
+
+
 TalcFrame.VoteCountdown = CreateFrame("Frame")
 TalcFrame.VoteCountdown:Hide()
 TalcFrame.VoteCountdown.currentTime = 0
@@ -2800,8 +2816,6 @@ TalcFrame.VoteCountdown:SetScript("OnUpdate", function()
         TalcVoteFrameTimeLeftBar:SetValue(this.currentTime)
 
         if this.currentTime <= 0 then
-            TalcVoteFrameTimeLeft:Show()
-            TalcVoteFrameTimeLeft:SetText('')
             TalcVoteFrameMLToWinner:Enable()
             this:Hide()
         end
@@ -3984,15 +3998,9 @@ end
 
 function TalcFrame:Resizing()
     --TalcVoteFrame:SetAlpha(0.8)
-    --TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
-    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMLEFT', TalcVoteFrame, "BOTTOMLEFT", 4, 4)
-    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 28)
 end
 
 function TalcFrame:Resized()
-
-    --TalcVoteFrameTimeLeftBarBG:ClearAllPoints()
-    --TalcVoteFrameTimeLeftBarBG:SetPoint('BOTTOMRIGHT', TalcVoteFrame, "BOTTOMRIGHT", -4, 4)
 
     local ratio = TalcVoteFrame:GetWidth() / 600;
     TalcVoteFrameNameLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(8 * ratio), -92)
@@ -4001,9 +4009,6 @@ function TalcFrame:Resized()
     TalcVoteFrameReplacesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(225 * ratio), -92)
     TalcVoteFrameRollLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(285 * ratio), -92)
     TalcVoteFrameVotesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(406 * ratio), -92)
-
-    --TalcVoteFrameTimeLeftBar:SetWidth(TalcVoteFrame:GetWidth() - 8)
-    --TalcVoteFrameTimeLeftBarBG:SetWidth(TalcVoteFrame:GetWidth() - 8)
 
     TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
 
@@ -4136,21 +4141,3 @@ PlaySound("igCharacterInfoTab");
 PlaySound("igMainMenuClose");
 ]]--
 
-function TALCTimeLeftBar_OnUpdate()
-    if this:GetValue() == 0 then
-        _G[this:GetName() .. 'Spark']:Hide();
-        TalcVoteFrameTimeLeft:Hide()
-    else
-        _G[this:GetName() .. 'Spark']:Show();
-        TalcVoteFrameTimeLeft:Show()
-    end
-
-    if this.pleaseVote then
-        TalcVoteFrameTimeLeft:SetText('Please VOTE ! ' .. core.SecondsToClock(this:GetValue()));
-    else
-        TalcVoteFrameTimeLeft:SetText(core.SecondsToClock(this:GetValue()));
-    end
-
-    _G[this:GetName() .. 'Spark']:SetPoint("CENTER", this, "LEFT",
-            this.currentTime * this:GetWidth() / this.countDownFrom, 0);
-end
