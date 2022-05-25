@@ -414,16 +414,20 @@ function Talc_Utils:init()
         return 'priest'
     end
 
-    core.syncRoster = function()
+    core.syncRoster = function(prio)
         if not core.isRaidLeader() then
             return
         end
 
-        core.bsend("ALERT", "syncRoster=start")
-        for _, name in next, db['VOTE_ROSTER'] do
-            core.bsend("ALERT", "syncRoster=" .. name)
+        if not prio then
+            prio = "ALERT"
         end
-        core.bsend("ALERT", "syncRoster=end")
+
+        core.bsend(prio, "SyncRoster=Start")
+        for _, name in next, db['VOTE_ROSTER'] do
+            core.bsend(prio, "SyncRoster=" .. name)
+        end
+        core.bsend(prio, "SyncRoster=End")
 
         TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
     end
