@@ -9,7 +9,8 @@ TALC.maxItemHistoryPlayers = 20
 TALC.maxLC = 3
 TALC.periodicSyncMaxItems = 200
 
-local core, db, tokenRewards, assistTriggers
+local core, db, tokenRewards
+local assistTriggers = 0
 local init = false
 
 TALC:SetScript("OnEvent", function(__, event, ...)
@@ -51,10 +52,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if db['ATTENDANCE_TRACKING'] == nil then
                 db['ATTENDANCE_TRACKING'] = {
                     enabled = false,
-                    started = false,
-                    bossKills = false,
-                    periodic = false,
-                    period = 1 * 60
                 }
             end
 
@@ -181,15 +178,15 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(db['NEED_FRAME_COLLAPSE'])
 
             TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(db['ATTENDANCE_TRACKING'].enabled)
-            TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(db['ATTENDANCE_TRACKING'].bossKills)
-            TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(db['ATTENDANCE_TRACKING'].periodic)
-            if db['ATTENDANCE_TRACKING'].enabled then
-                TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
-                TalcVoteFrameSettingsFrameAttendanceTime:Enable()
-            else
-                TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
-                TalcVoteFrameSettingsFrameAttendanceTime:Disable()
-            end
+            --TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(db['ATTENDANCE_TRACKING'].bossKills)
+            --TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(db['ATTENDANCE_TRACKING'].periodic)
+            --if db['ATTENDANCE_TRACKING'].enabled then
+            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
+            --    TalcVoteFrameSettingsFrameAttendanceTime:Enable()
+            --else
+            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
+            --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
+            --end
 
             TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
 
@@ -206,25 +203,25 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             return
         end
 
-        if event == "PLAYER_ENTERING_WORLD" and db['ATTENDANCE_TRACKING'].enabled then
-            if core.instanceInfo() then
-                if db['ATTENDANCE_TRACKING'].started then
-                    TalcFrame.AttendanceTracker:Start()
-                else
-                    TalcVoteAttendanceQueryStart:Show()
-                end
-            else
-                if db['ATTENDANCE_TRACKING'].started then
-                    if not TalcFrame.AttendanceTracker:IsVisible() then
-                        TalcFrame.AttendanceTracker:Show()
-                    end
-                    TalcVoteAttendanceQueryStop:Show()
-                else
-                    TalcFrame.AttendanceTracker:Stop()
-                end
-            end
-            return
-        end
+        --if event == "PLAYER_ENTERING_WORLD" and db['ATTENDANCE_TRACKING'].enabled then
+        --    if core.instanceInfo() then
+        --        if db['ATTENDANCE_TRACKING'].started then
+        --            TalcFrame.AttendanceTracker:Start()
+        --        else
+        --            TalcVoteAttendanceQueryStart:Show()
+        --        end
+        --    else
+        --        if db['ATTENDANCE_TRACKING'].started then
+        --            if not TalcFrame.AttendanceTracker:IsVisible() then
+        --                TalcFrame.AttendanceTracker:Show()
+        --            end
+        --            TalcVoteAttendanceQueryStop:Show()
+        --        else
+        --            TalcFrame.AttendanceTracker:Stop()
+        --        end
+        --    end
+        --    return
+        --end
 
         if init then
 
