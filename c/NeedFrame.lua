@@ -212,45 +212,60 @@ function NeedFrame:AddItem(data)
         if hasRewardsForMe or not foundClasses then
             _G[frame .. 'QuestRewards']:Show()
             local rewardIndex = 0
-            for i, rewardID in next, tokenRewards[itemID].rewards do
+            for _, rewardID in next, tokenRewards[itemID].rewards do
 
-                local _, rewardLink, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
-                local _, _, rewardIL = core.find(rewardLink, "(item:%d+:%d+:%d+:%d+)");
+                if GetItemInfo(rewardID) then
 
-                GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
-                GameTooltip:SetHyperlink(rewardIL)
+                    local _, rewardLink, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
+                    local _, _, rewardIL = core.find(rewardLink, "(item:%d+:%d+:%d+:%d+)");
 
-                if foundClasses then
-                    for j = 1, 20 do
-                        if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
-                            local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
-                            if core.find(itemText, "Classes:", 1, true) then
-                                if core.find(core.lower(itemText), class, 1, true) then
-                                    rewardIndex = rewardIndex + 1
-                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
+                    GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                    GameTooltip:SetHyperlink(rewardIL)
 
-                                    core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL)
-                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
-                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
-                                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
+                    if foundClasses then
+                        for j = 1, 20 do
+                            if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
+                                local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
+                                if core.find(itemText, "Classes:", 1, true) then
+                                    if core.find(core.lower(itemText), class, 1, true) then
+                                        rewardIndex = rewardIndex + 1
+                                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
 
-                                    break
+                                        core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL, nil, true)
+                                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
+                                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
+                                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
+
+                                        break
+                                    end
                                 end
                             end
                         end
+                    else
+                        rewardIndex = rewardIndex + 1
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
+
+                        core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL, nil, true)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
                     end
+
+                    -- quest item has Classes, reward doesnt
+                    if rewardIndex == 0 then
+                        rewardIndex = rewardIndex + 1
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
+
+                        core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL, nil, true)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
+                        _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
+                    end
+
+                    GameTooltip:Hide()
                 else
-                    rewardIndex = rewardIndex + 1
-                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPoint("TOPLEFT", 20 + 23 * (rewardIndex - 1), -32)
-
-                    core.addButtonOnEnterTooltip(_G[frame .. 'QuestRewardsReward' .. rewardIndex], rewardIL)
-                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetNormalTexture(tex)
-                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:SetPushedTexture(tex)
-                    _G[frame .. 'QuestRewardsReward' .. rewardIndex]:Show()
+                    talc_debug("cant get info " .. rewardID)
                 end
-
-                GameTooltip:Hide()
-
             end
         end
     end
@@ -324,23 +339,16 @@ function NeedFrame:animOutFinished()
         talc_debug("auto pass click")
     else
         if db['NEED_FRAME_COLLAPSE'] then
-            NeedFrame:RepositionFrames()
+            NeedFrame:RepositionFrames(frame:GetID())
         end
     end
 end
 
-function NeedFrame:RepositionFrames()
-    for index, frame in next, self.itemFrames do
-        if not frame:IsVisible() then
-            if index < #self.itemFrames then
-
-                for i = index + 1, #self.itemFrames do
-                    local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
-                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 100)
-                end
-
-                break
-            end
+function NeedFrame:RepositionFrames(id)
+    if id < #self.itemFrames then
+        for i = id + 1, #self.itemFrames do
+            local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
+            self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 100)
         end
     end
 end
@@ -530,10 +538,10 @@ function NeedFrame:Test()
         '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
         '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
         '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
-        '\124cffa335ee\124Hitem:21221:0:0:0:0:0:0:0:0\124h[Eye of C\'Thun]\124h\124r',
+        '\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r',
         '\124cffa335ee\124Hitem:40611:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Protector]\124h\124r',
         '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
-        '\124cffff8000\124Hitem:17204:0:0:0:0:0:0:0:0\124h[Eye of Sulfuras]\124h\124r'
+        '\124cffff8000\124Hitem:45038:0:0:0:0:0:0:0:0\124h[Fragment of Val\'anyr]\124h\124r'
     }
 
     for i = 1, 7 do
