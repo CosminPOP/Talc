@@ -13,7 +13,6 @@ function NeedFrame:init()
     self:ResetVars()
 end
 
-
 function NeedFrame:ResetVars()
 
     self:hideAnchor()
@@ -325,7 +324,23 @@ function NeedFrame:animOutFinished()
         talc_debug("auto pass click")
     else
         if db['NEED_FRAME_COLLAPSE'] then
-            NeedFrame:repositionFrames()
+            NeedFrame:RepositionFrames()
+        end
+    end
+end
+
+function NeedFrame:RepositionFrames()
+    for index, frame in next, self.itemFrames do
+        if not frame:IsVisible() then
+            if index < #self.itemFrames then
+
+                for i = index + 1, #self.itemFrames do
+                    local _, _, _, _, yOfs = self.itemFrames[i]:GetPoint()
+                    self.itemFrames[i]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, yOfs - 100)
+                end
+
+                break
+            end
         end
     end
 end
@@ -364,7 +379,6 @@ function NeedFrame:hideAnchor()
     TalcNeedFrameScaleUp:Hide()
     TalcNeedFrameScaleText:Hide()
 end
-
 
 function NeedFrame:ScaleWindow(dir)
     if dir == 'up' then
@@ -407,7 +421,7 @@ function NeedFrame:NeedClick(need, f)
 
     local gearscore = 0
     for i = 0, 18 do
-        if GetInventoryItemLink("player", i) and i ~=4 then
+        if GetInventoryItemLink("player", i) and i ~= 4 then
             local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
             gearscore = gearscore + itemLevel
         end
@@ -442,43 +456,45 @@ function NeedFrame:NeedClick(need, f)
         -- token fix
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
             local _, _, _, _, _, _, _, _, r_equip_slot = GetItemInfo(tokenRewards[itemID].rewards[1])
-            local _, _, eqItemLink = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[r_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
-            myItem[1] = eqItemLink
+            if r_equip_slot ~= '' then
+                local _, _, eqItemLink = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[r_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
+                myItem[1] = eqItemLink
 
-            if t1 == "Quest" then
-                local ringsSet = false
-                local trinketsSet = false
+                if t1 == "Quest" then
+                    local ringsSet = false
+                    local trinketsSet = false
 
-                local rewardIndex = 0
-                local itemSet = {}
-                for i, rewardID in next, tokenRewards[itemID].rewards do
-                    local _, _, _, _, _, _, _, _, q_equip_slot = GetItemInfo(rewardID)
-                    if q_equip_slot == 'INVTYPE_FINGER' then
-                        if not ringsSet then
-                            local _, _, ring1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER0'].id), "(item:%d+:%d+:%d+:%d+)");
-                            rewardIndex = rewardIndex + 1
-                            myItem[rewardIndex] = ring1Link
-                            local _, _, ring2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER1'].id), "(item:%d+:%d+:%d+:%d+)");
-                            rewardIndex = rewardIndex + 1
-                            myItem[rewardIndex] = ring2Link
-                            ringsSet = true
-                        end
-                    elseif q_equip_slot == 'INVTYPE_TRINKET' then
-                        if not trinketsSet then
-                            local _, _, trinket1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET0'].id), "(item:%d+:%d+:%d+:%d+)");
-                            rewardIndex = rewardIndex + 1
-                            myItem[rewardIndex] = trinket1Link
-                            local _, _, trinket2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET1'].id), "(item:%d+:%d+:%d+:%d+)");
-                            rewardIndex = rewardIndex + 1
-                            myItem[rewardIndex] = trinket2Link
-                            trinketsSet = true
-                        end
-                    else
-                        if not itemSet[core.equipSlotsDetails[q_equip_slot].id] then
-                            local _, _, eqIL = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[q_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
-                            rewardIndex = rewardIndex + 1
-                            myItem[rewardIndex] = eqIL
-                            itemSet[core.equipSlotsDetails[q_equip_slot].id] = true
+                    local rewardIndex = 0
+                    local itemSet = {}
+                    for i, rewardID in next, tokenRewards[itemID].rewards do
+                        local _, _, _, _, _, _, _, _, q_equip_slot = GetItemInfo(rewardID)
+                        if q_equip_slot == 'INVTYPE_FINGER' then
+                            if not ringsSet then
+                                local _, _, ring1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER0'].id), "(item:%d+:%d+:%d+:%d+)");
+                                rewardIndex = rewardIndex + 1
+                                myItem[rewardIndex] = ring1Link
+                                local _, _, ring2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_FINGER1'].id), "(item:%d+:%d+:%d+:%d+)");
+                                rewardIndex = rewardIndex + 1
+                                myItem[rewardIndex] = ring2Link
+                                ringsSet = true
+                            end
+                        elseif q_equip_slot == 'INVTYPE_TRINKET' then
+                            if not trinketsSet then
+                                local _, _, trinket1Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET0'].id), "(item:%d+:%d+:%d+:%d+)");
+                                rewardIndex = rewardIndex + 1
+                                myItem[rewardIndex] = trinket1Link
+                                local _, _, trinket2Link = core.find(GetInventoryItemLink('player', core.equipSlotsDetails['INVTYPE_TRINKET1'].id), "(item:%d+:%d+:%d+:%d+)");
+                                rewardIndex = rewardIndex + 1
+                                myItem[rewardIndex] = trinket2Link
+                                trinketsSet = true
+                            end
+                        else
+                            if not itemSet[core.equipSlotsDetails[q_equip_slot].id] then
+                                local _, _, eqIL = core.find(GetInventoryItemLink('player', core.equipSlotsDetails[q_equip_slot].id), "(item:%d+:%d+:%d+:%d+)");
+                                rewardIndex = rewardIndex + 1
+                                myItem[rewardIndex] = eqIL
+                                itemSet[core.equipSlotsDetails[q_equip_slot].id] = true
+                            end
                         end
                     end
                 end
