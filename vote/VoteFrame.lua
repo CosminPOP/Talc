@@ -212,7 +212,7 @@ end
 ----------------------------------------------------
 
 function TalcFrame:handleSync(pre, t, ch, sender)
-    if not core.find(t, 'periodic', 1, true) then
+    if not core.find(t, 'Periodic', 1, true) then
         talc_debug(sender .. ' says: ' .. t)
     end
 
@@ -734,6 +734,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if lh[2] == 'Start' then
         elseif lh[2] == 'End' then
             if sender == core.me then
+                TalcFrame.manualLootSync = false
                 talc_print('History Sync complete.')
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
@@ -747,9 +748,11 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         else
 
             if sender == core.me then
-                self.syncLootHistoryCount = self.syncLootHistoryCount + 1
-                local percent = core.floor(self.syncLootHistoryCount * 100 / totalItems)
-                TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Syncing (' .. percent .. '%)')
+                if TalcFrame.manualLootSync then
+                    self.syncLootHistoryCount = self.syncLootHistoryCount + 1
+                    local percent = core.floor(self.syncLootHistoryCount * 100 / totalItems)
+                    TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Syncing (' .. percent .. '%)')
+                end
             else
                 local hash, timestamp, player, class, item, pick, raid
 
@@ -1098,11 +1101,11 @@ function TalcFrame:RaiderDetailsTab_OnClick(tab, playerName)
             frame:Hide()
         end
 
-        local att = db['ATTENDANCE_DATA'][playerName]
+        local att = core.getAttendance(playerName)
 
         TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameIcon:Hide()
-        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameLeft:SetText("|cffffffffTotal attendance points")
-        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameRight:SetText("|cffffffff" .. att.points)
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameLeft:SetText("|cffffffffTotal attendance points: " .. att.points)
+        TalcVoteFrameRaiderDetailsFrameAttendanceFrameTitleFrameRight:Hide()
 
         local index = 0
         for raidString, raidData in next, att.raids do
@@ -1415,6 +1418,8 @@ TalcVoteFrameVotingFrame:SetScript("OnHide", function()
     TalcVoteFrameWinnerStatus:Hide()
     TalcVoteFrameMLToWinner:Hide()
     TalcVoteFrameOfficersThatVotedList:Hide()
+
+    TalcFrame:RaiderDetailsClose()
 end)
 TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameTimeLeftBar:Show()
@@ -1426,6 +1431,8 @@ TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameRollLabel:Show()
     TalcVoteFrameVotesLabel:Show()
     TalcVoteFrameDoneVoting:Show()
+
+    TalcFrame:RaiderDetailsClose()
 
     if core.isRaidLeader() then
         TalcVoteFrameMLToWinner:Show()
@@ -2960,7 +2967,10 @@ function TalcFrame:SetAssist_OnClick(id, to)
     end
 end
 
+TalcFrame.manualLootSync = false
+
 function TalcFrame:SyncLootHistory()
+    TalcFrame.manualLootSync = true
     local totalItems = 0
     for _ in next, db['VOTE_LOOT_HISTORY'] do
         totalItems = totalItems + 1
@@ -3081,8 +3091,6 @@ function TalcFrame:CheckAssists()
         frame:Hide()
     end
 
-    TalcVoteFrameRLWindowFrame:SetHeight(110 + core.n(assistsAndCLs) * 25)
-
     for index, names in next, assistsAndCLs do
         if not self.assistFrames[index] then
             self.assistFrames[index] = CreateFrame('Frame', 'TALCAssistFrame' .. index, TalcVoteFrameRLWindowFrame, 'Talc_OfficerFrameTemplate')
@@ -3105,16 +3113,16 @@ function TalcFrame:CheckAssists()
             _G[frame .. 'StatusIconOffline']:Show()
         end
 
-        _G[frame .. 'CLCheck']:SetID(index)
-        _G[frame .. 'CLCheck']:SetChecked(names.cl)
+        _G[frame .. 'OfficerCheck']:SetID(index)
+        _G[frame .. 'OfficerCheck']:SetChecked(names.cl)
 
         _G[frame .. 'AssistCheck']:SetID(index)
         _G[frame .. 'AssistCheck']:SetChecked(names.assist)
 
-        _G[frame .. 'CLCheck']:Enable()
+        _G[frame .. 'OfficerCheck']:Enable()
         if names.name == core.me then
-            if _G[frame .. 'CLCheck']:GetChecked() then
-                _G[frame .. 'CLCheck']:Disable()
+            if _G[frame .. 'OfficerCheck']:GetChecked() then
+                _G[frame .. 'OfficerCheck']:Disable()
             end
             _G[frame .. 'AssistCheck']:Disable()
         end
@@ -3217,18 +3225,18 @@ function TalcFrame:WelcomeFrame_OnShow()
     TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Hide()
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Hide()
 
-    if db['ATTENDANCE_TRACKING'].enabled then
-        if db['ATTENDANCE_TRACKING'].started then
-            TalcVoteFrameWelcomeFrameAttendanceStopButton:Show()
-            TalcVoteFrameWelcomeFrameAttendanceStartButton:Hide()
-        else
-            TalcVoteFrameWelcomeFrameAttendanceStopButton:Hide()
-            TalcVoteFrameWelcomeFrameAttendanceStartButton:Show()
-        end
-    else
-        TalcVoteFrameWelcomeFrameAttendanceStopButton:Hide()
-        TalcVoteFrameWelcomeFrameAttendanceStartButton:Hide()
-    end
+    --if db['ATTENDANCE_TRACKING'].enabled then
+    --    if db['ATTENDANCE_TRACKING'].started then
+    --        TalcVoteFrameWelcomeFrameAttendanceStopButton:Show()
+    --        TalcVoteFrameWelcomeFrameAttendanceStartButton:Hide()
+    --    else
+    --        TalcVoteFrameWelcomeFrameAttendanceStopButton:Hide()
+    --        TalcVoteFrameWelcomeFrameAttendanceStartButton:Show()
+    --    end
+    --else
+    --    TalcVoteFrameWelcomeFrameAttendanceStopButton:Hide()
+    --    TalcVoteFrameWelcomeFrameAttendanceStartButton:Hide()
+    --end
 end
 
 function TalcFrame:ShowWelcomeItems()
@@ -3750,55 +3758,55 @@ end
 --- Attendance
 ----------------------------------------------------
 
-function Talc_AttendanceQueryWindow_OnUpdate()
-    if GetTime() * 1000 >= (this.startTime + 1) * 1000 then
-        if this.timeout > 0 then
-            this.startTime = GetTime();
-            this.timeout = this.timeout - 1
-            _G[this:GetName() .. "No"]:SetText("No (" .. this.timeout .. ")")
-        else
-            this:Hide()
-        end
-    end
-end
-
-TalcFrame.AttendanceTracker = CreateFrame("Frame")
-TalcFrame.AttendanceTracker:Hide()
-TalcFrame.AttendanceTracker:SetScript("OnShow", function()
-    this.startTime = GetTime();
-    talc_print("Attendance tracker started.")
-    db['ATTENDANCE_TRACKING'].started = true
-end)
-TalcFrame.AttendanceTracker:SetScript("OnHide", function()
-    talc_print("Attendance tracker stopped.")
-    db['ATTENDANCE_TRACKING'].started = false
-end)
-TalcFrame.AttendanceTracker:SetScript("OnUpdate", function()
-    local plus = 3 --db['ATTENDANCE_TRACKING'].period
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-    if gt >= st then
-        this.startTime = GetTime();
-        core.saveAttendance()
-    end
-end)
-
-function TalcFrame.AttendanceTracker:Start()
-    if not TalcFrame.AttendanceTracker:IsVisible() then
-        TalcFrame.AttendanceTracker:Show()
-    end
-    if TalcVoteFrameWelcomeFrame:IsVisible() then
-        TalcFrame:WelcomeFrame_OnShow()
-    end
-end
-
-function TalcFrame.AttendanceTracker:Stop()
-    talc_debug("stop pressed")
-    TalcFrame.AttendanceTracker:Hide()
-    if TalcVoteFrameWelcomeFrame:IsVisible() then
-        TalcFrame:WelcomeFrame_OnShow()
-    end
-end
+--function Talc_AttendanceQueryWindow_OnUpdate()
+--    if GetTime() * 1000 >= (this.startTime + 1) * 1000 then
+--        if this.timeout > 0 then
+--            this.startTime = GetTime();
+--            this.timeout = this.timeout - 1
+--            _G[this:GetName() .. "No"]:SetText("No (" .. this.timeout .. ")")
+--        else
+--            this:Hide()
+--        end
+--    end
+--end
+--
+--TalcFrame.AttendanceTracker = CreateFrame("Frame")
+--TalcFrame.AttendanceTracker:Hide()
+--TalcFrame.AttendanceTracker:SetScript("OnShow", function()
+--    this.startTime = GetTime();
+--    talc_print("Attendance tracker started.")
+--    db['ATTENDANCE_TRACKING'].started = true
+--end)
+--TalcFrame.AttendanceTracker:SetScript("OnHide", function()
+--    talc_print("Attendance tracker stopped.")
+--    db['ATTENDANCE_TRACKING'].started = false
+--end)
+--TalcFrame.AttendanceTracker:SetScript("OnUpdate", function()
+--    local plus = 3 --db['ATTENDANCE_TRACKING'].period
+--    local gt = GetTime() * 1000
+--    local st = (this.startTime + plus) * 1000
+--    if gt >= st then
+--        this.startTime = GetTime();
+--        core.saveAttendance()
+--    end
+--end)
+--
+--function TalcFrame.AttendanceTracker:Start()
+--    if not TalcFrame.AttendanceTracker:IsVisible() then
+--        TalcFrame.AttendanceTracker:Show()
+--    end
+--    if TalcVoteFrameWelcomeFrame:IsVisible() then
+--        TalcFrame:WelcomeFrame_OnShow()
+--    end
+--end
+--
+--function TalcFrame.AttendanceTracker:Stop()
+--    talc_debug("stop pressed")
+--    TalcFrame.AttendanceTracker:Hide()
+--    if TalcVoteFrameWelcomeFrame:IsVisible() then
+--        TalcFrame:WelcomeFrame_OnShow()
+--    end
+--end
 
 ----------------------------------------------------
 --- Who Query
@@ -3937,15 +3945,15 @@ function TalcFrame:SaveSetting(key, value)
 
     if core.type(key) == 'table' then
         db[key[1]][key[2]] = value == 1
-        if key[1] == 'ATTENDANCE_TRACKING' and key[2] == 'enabled' then
-            if db[key[1]][key[2]] then
-                TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
-                TalcVoteFrameSettingsFrameAttendanceTime:Enable()
-            else
-                TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
-                TalcVoteFrameSettingsFrameAttendanceTime:Disable()
-            end
-        end
+        --if key[1] == 'ATTENDANCE_TRACKING' and key[2] == 'enabled' then
+            --if db[key[1]][key[2]] then
+            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
+            --    TalcVoteFrameSettingsFrameAttendanceTime:Enable()
+            --else
+            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
+            --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
+            --end
+        --end
         return
     end
 
