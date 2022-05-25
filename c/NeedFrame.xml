@@ -41,7 +41,7 @@
                 </Alpha>
             </AnimationGroup>
             <AnimationGroup name="$parentAnimOut" parentKey="animOut">
-                <Alpha change="-1" duration="0.3" parentKey="animOut">
+                <Alpha change="-1" duration="0.2" parentKey="animOut">
                     <Scripts>
                         <OnFinished>
                             NeedFrame:animOutFinished()
@@ -302,9 +302,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentBISButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="230" y="-55"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -352,9 +352,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentMSUpgradeButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="261" y="-55"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -402,9 +402,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentOSButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="298" y="-55"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -452,9 +452,9 @@
                     <AbsDimension x="36" y="36"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="$parentXMOGButton" relativePoint="TOPRIGHT">
                         <Offset>
-                            <AbsDimension x="335" y="-55"/>
+                            <AbsDimension x="1" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
