@@ -557,9 +557,6 @@ function Talc_Utils:init()
 
         local _, _, _, raidString = core.instanceInfo()
 
-        local tickPoints = 1
-        local bossPoints = tickPoints * 10
-
         local att = db['ATTENDANCE_DATA']
 
         for i = 0, GetNumRaidMembers() do
@@ -569,29 +566,21 @@ function Talc_Utils:init()
 
                     if not att[n] then
                         att[n] = {
-                            points = tickPoints + (boss and bossPoints or 0),
                             raids = {}
                         }
-                    else
-                        att[n].points = att[n].points + tickPoints + (boss and bossPoints or 0)
                     end
                     if not att[n].raids[raidString] then
                         att[n].raids[raidString] = {
-                            points = tickPoints + (boss and bossPoints or 0),
                             bosses = {}
                         }
-                    else
-                        att[n].raids[raidString].points = att[n].raids[raidString].points + tickPoints + (boss and bossPoints or 0)
                     end
 
                     if boss then
                         if not att[n].raids[raidString].bosses[boss] then
                             att[n].raids[raidString].bosses[boss] = {
-                                kills = tickPoints * 10,
                                 dates = {time()}
                             }
                         else
-                            att[n].raids[raidString].bosses[boss].kills = att[n].raids[raidString].bosses[boss].kills + bossPoints
                             core.insert(att[n].raids[raidString].bosses[boss].dates, time())
                         end
                     end
@@ -601,13 +590,25 @@ function Talc_Utils:init()
     end
 
     core.getAttendance = function(player)
-        if not db['ATTENDANCE_DATA'][player] then
-            db['ATTENDANCE_DATA'][player] = {
+        local att = db['ATTENDANCE_DATA']
+        if not att[player] then
+            return {
                 points = 0,
                 raids = {}
             }
         end
-        return db['ATTENDANCE_DATA'][player]
+
+        att[player].points = 0
+        for _, raidData in next, att[player].raids do
+            raidData.points = 0
+            for _, bossData in next, raidData.bosses do
+                bossData.kills = #bossData.dates
+                raidData.points = raidData.points + bossData.kills
+            end
+            att[player].points = att[player].points + raidData.points
+        end
+
+        return att[player]
     end
 
     core.byteSum = function(str)
