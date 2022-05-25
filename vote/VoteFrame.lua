@@ -1932,13 +1932,13 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
     end
 
     if core.n(self.bagItems) > 0 then
-        local _, _, need = TalcFrame:GetPlayerInfo(playerName);
+        local _, _, need = self:GetPlayerInfo(playerName);
 
         if disenchant then
             need = "de"
         end
 
-        local shash = core.shash(playerName .. need)
+        local shash = core.shash(playerName, item, need, raid, CalendarGetDate(), GetGameTime())
 
         core.asend("PlayerWon="
                 .. shash .. "="
@@ -1992,13 +1992,13 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
 
         if foundItemIndexInLootFrame then
 
-            local index, _, need = TalcFrame:GetPlayerInfo(GetMasterLootCandidate(unitIndex));
+            local index, _, need = self:GetPlayerInfo(GetMasterLootCandidate(unitIndex));
 
             if disenchant then
                 need = "de"
             end
 
-            local shash = core.shash(playerName .. need)
+            local shash = core.shash(playerName, item, need, raid, CalendarGetDate(), GetGameTime())
 
             core.asend("PlayerWon="
                     .. shash .. "="
