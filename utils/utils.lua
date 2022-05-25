@@ -619,13 +619,19 @@ function Talc_Utils:init()
         return sum
     end
 
-    core.shash = function(str)
-        local uptimeDec = core.tostring(GetTime()):match("%.(%d+)")
-        local h = core.int(time() * 1000 + core.int(uptimeDec))
-        if str then
-            h = h + random(core.byteSum(str)) + random(time())
+    core.shash = function(...)
+        local str;
+        local key = ''
+        for i = 1, core.select('#', ...) do
+            str = core.tostring(core.select(i, ...));
+            key = key .. core.len(str) .. str
         end
-        return h
+        local i = 0;
+        for k = 1, core.len(key) do
+            i = i + core.byte(key, k);
+        end
+        print("Return " .. i)
+        return i;
     end
 
     core.sortTableBy = function(t, by, dir)
