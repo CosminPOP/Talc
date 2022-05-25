@@ -9,6 +9,7 @@ function Talc_Utils:init()
     tokenRewards = TALC_TOKENS
 
     core.type = type
+    core.select = select
     core.floor = math.floor
     core.ceil = math.ceil
     core.max = math.max
@@ -21,6 +22,7 @@ function Talc_Utils:init()
     core.find = string.find
     core.format = string.format
     core.byte = string.byte
+    core.char = string.char
     core.tostring = tostring
     core.len = string.len
     core.gsub = string.gsub
@@ -554,6 +556,10 @@ function Talc_Utils:init()
             talc_debug("cant save attendance outside")
             return
         end
+        if not boss then
+            talc_debug("save attendance not boss")
+            return
+        end
 
         local _, _, _, raidString = core.instanceInfo()
 
@@ -574,16 +580,14 @@ function Talc_Utils:init()
                             bosses = {}
                         }
                     end
+                    if not att[n].raids[raidString].bosses[boss] then
+                        att[n].raids[raidString].bosses[boss] = {
+                            dates = { time() }
+                        }
 
-                    if boss then
-                        if not att[n].raids[raidString].bosses[boss] then
-                            att[n].raids[raidString].bosses[boss] = {
-                                dates = {time()}
-                            }
-                        else
-                            core.insert(att[n].raids[raidString].bosses[boss].dates, time())
-                        end
                     end
+
+                    core.insert(att[n].raids[raidString].bosses[boss].dates, time())
                 end
             end
         end
