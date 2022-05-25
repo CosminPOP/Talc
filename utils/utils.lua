@@ -29,34 +29,6 @@ function Talc_Utils:init()
     core.sort = table.sort
     core.insert = table.insert
 
-    core.split = function(delimiter, str)
-        local result = {}
-        local from = 1
-        local delim_from, delim_to = core.find(str, delimiter, from)
-        while delim_from do
-            core.insert(result, core.sub(str, from, delim_from - 1))
-            from = delim_to + 1
-            delim_from, delim_to = core.find(str, delimiter, from)
-        end
-        core.insert(result, core.sub(str, from))
-        return result
-    end
-
-    core.asend = function(msg)
-        SendAddonMessage(core.channel, msg, "RAID")
-    end
-
-    core.bsend = function(prio, msg)
-        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "RAID")
-    end
-    core.bsendg = function(prio, msg)
-        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "GUILD")
-    end
-
-    core.wsend = function(prio, msg, to)
-        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "WHISPER", to)
-    end
-
     core.classColors = {
         ["warrior"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "|cffc79c6e" },
         ["mage"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "|cff69ccf0" },
@@ -69,32 +41,6 @@ function Talc_Utils:init()
         ["paladin"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "|cfff58cba" },
         ["deathknight"] = { r = 0.77, g = 0.12, b = 0.23, colorStr = "|cffC41F3B" },
     }
-
-    core.n = function(table)
-        local n = 0
-        for _ in next, table do
-            n = n + 1
-        end
-        return n
-    end
-    core.ucFirst = function(str)
-        return core.upper(core.sub(str, 1, 1)) .. core.sub(str, 2, core.len(str))
-    end
-
-    core.fixClassColorsInStr = function(str)
-        for class, data in next, core.classColors do
-            if core.find(str, class, 1, true) then
-                local cEx = core.split(class, str)
-                str = cEx[1] .. data.colorStr .. class .. '|r' .. cEx[2]
-            end
-
-            if core.find(str, core.ucFirst(class), 1, true) then
-                local cEx = core.split(core.ucFirst(class), str)
-                str = cEx[1] .. data.colorStr .. core.ucFirst(class) .. '|r' .. cEx[2]
-            end
-        end
-        return str
-    end
 
     core.needs = {
         ["bis"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = ITEM_QUALITY_COLORS[4].hex, text = 'BIS' },
@@ -175,13 +121,47 @@ function Talc_Utils:init()
         ["INVTYPE_QUIVER"] = 'Quiver', --	20,21,22,23',
     }
 
-    core.getEquipSlot = function(j)
-        for k, v in next, core.equipSlots do
-            if k == core.tostring(j) then
-                return v
-            end
+    core.subFind = function(source, code)
+        return core.sub(source, 1, core.len(code)) == code
+    end
+
+    core.split = function(delimiter, str)
+        local result = {}
+        local from = 1
+        local delim_from, delim_to = core.find(str, delimiter, from)
+        while delim_from do
+            core.insert(result, core.sub(str, from, delim_from - 1))
+            from = delim_to + 1
+            delim_from, delim_to = core.find(str, delimiter, from)
         end
-        return ''
+        core.insert(result, core.sub(str, from))
+        return result
+    end
+
+    core.asend = function(msg)
+        SendAddonMessage(core.channel, msg, "RAID")
+    end
+
+    core.bsend = function(prio, msg)
+        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "RAID")
+    end
+    core.bsendg = function(prio, msg)
+        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "GUILD")
+    end
+
+    core.wsend = function(prio, msg, to)
+        ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "WHISPER", to)
+    end
+
+    core.n = function(table)
+        local n = 0
+        for _ in next, table do
+            n = n + 1
+        end
+        return n
+    end
+    core.ucFirst = function(str)
+        return core.upper(core.sub(str, 1, 1)) .. core.sub(str, 2, core.len(str))
     end
 
     core.trim = function(s)
@@ -507,7 +487,7 @@ function Talc_Utils:init()
         end
     end
 
-    core.cacheItem = function(id)
+    core.CacheItem = function(id)
         if not id or not core.int(id) then
             talc_debug("cache item call with null or not int " .. id .. " " .. core.type(id))
             return
@@ -517,7 +497,7 @@ function Talc_Utils:init()
             -- cache rewards
             if tokenRewards[id] and tokenRewards[id].rewards then
                 for _, rewardID in next, tokenRewards[id].rewards do
-                    core.cacheItem(rewardID)
+                    core.CacheItem(rewardID)
                 end
             end
         else

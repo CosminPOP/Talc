@@ -8,7 +8,7 @@ RollFrame.rolls = {}
 
 function RollFrame:handleSync(pre, msg, ch, sender)
     if core.isRaidLeader(sender) then
-        if core.find(msg, 'rollFor=', 1, true) then
+        if core.subFind(msg, 'RollFor=') then
             local rfEx = core.split('=', msg)
             if rfEx[6] then
                 if rfEx[6] == core.me then
@@ -20,9 +20,9 @@ function RollFrame:handleSync(pre, msg, ch, sender)
                 end
             end
         end
-        if core.find(msg, 'rollframe=', 1, true) then
+        if core.subFind(msg, 'RollFrame=') then
             local command = core.split('=', msg)
-            if command[2] == "reset" then
+            if command[2] == "Reset" then
                 self:ResetVars()
             end
         end
@@ -149,7 +149,7 @@ function RollFrame:PickRoll(id, roll)
     end
 
     if roll == 'pass' then
-        core.asend("rollChoice=" .. id .. "=-1")
+        core.asend("RollChoice=" .. id .. "=-1")
     end
 
     if roll == 'roll' then

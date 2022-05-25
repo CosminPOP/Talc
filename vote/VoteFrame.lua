@@ -216,46 +216,49 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         talc_debug(sender .. ' says: ' .. t)
     end
 
-    if core.find(t, 'boss&', 1, true) then
+    if core.subFind(t, 'CurrentBoss=') then
         if not core.canVote() then
-            return false
+            return
         end
         if not core.isRaidLeader(sender) then
-            return false
+            return
         end
 
-        local bossName = core.split('&', t)
+        local bossName = core.split('=', t)
         if not bossName[2] then
-            return false
+            return
         end
 
         self:SetTitle(bossName[2])
         return
     end
 
-    if core.find(t, 'doneSending=', 1, true) and core.canVote() then
+    if core.subFind(t, 'DoneSending=') then
+        if not core.canVote() then
+            return
+        end
         if not core.isRaidLeader(sender) then
-            return false
+            return
         end
         local nrItems = core.split('=', t)
         if not nrItems[2] or not nrItems[3] then
             talc_error('wrong doneSending syntax')
             talc_error(t)
-            return false
+            return
         end
         TalcVoteFrameTimeLeftBarTextLeft:SetText('Loot sent. Waiting picks...')
-        core.asend("CLreceived=" .. self.numItems .. "=items") --todo rename CL
+        core.asend("OfficerReceived=" .. self.numItems .. "=items")
         return
     end
 
-    if core.sub(t, 1, 11) == 'CLreceived=' then
+    if core.subFind(t, 'OfficerReceived=') then
         if not core.isRaidLeader() then
             return
         end
 
         local nrItems = core.split('=', t)
         if not nrItems[2] or not nrItems[3] then
-            talc_error('wrong CLreceived syntax')
+            talc_error('wrong OfficerReceived syntax')
             talc_error(t)
             return false
         end
@@ -266,7 +269,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.sub(t, 1, 9) == 'received=' then
+    if core.subFind(t, 'Received=') then
         if not core.isRaidLeader() then
             return
         end
@@ -286,7 +289,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'playerRoll:', 1, true) then
+    if core.subFind(t, 'PlayerRoll=') then
 
         if not core.isRaidLeader(sender) or sender == core.me then
             return
@@ -295,7 +298,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        local indexEx = core.split(':', t)
+        local indexEx = core.split('=', t)
 
         if not indexEx[2] or not indexEx[3] then
             talc_error('bad playerRoll syntax')
@@ -312,7 +315,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'changePickTo@', 1, true) then
+    if core.subFind(t, 'ChangePickTo=') then
 
         if not core.isRaidLeader(sender) or sender == core.me then
             return
@@ -338,27 +341,23 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'rollChoice=', 1, true) then
+    if core.subFind(t, 'RollChoice=') then
 
         if not core.canVote() then
             return
         end
 
         local r = core.split('=', t)
-        if not r[2] or not r[3] then
+        if not r[3] then
             talc_debug('bad rollChoice syntax')
             talc_debug(t)
             return
         end
 
-        if core.int(r[3]) == -1 then
-
-            local name = sender
-            local roll = core.int(r[3])
-
+        if core.int(r[3]) == -1 then --pass
             for pwIndex, pwPlayer in next, self.playersWhoWantItems do
-                if pwPlayer['name'] == name and pwPlayer['roll'] == -2 then
-                    self.playersWhoWantItems[pwIndex]['roll'] = roll
+                if pwPlayer.name == sender and pwPlayer.roll == -2 then
+                    self.playersWhoWantItems[pwIndex].roll =  core.int(r[3])
                     self:updateVotedItemsFrames()
                     break
                 end
@@ -369,7 +368,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'itemVote:', 1, true) then
+    if core.subFind(t, 'ItemVote=') then
 
         if not core.canVote(sender) or sender == core.me then
             return
@@ -378,9 +377,9 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        local itemVoteEx = core.split(':', t)
+        local itemVoteEx = core.split('=', t)
 
-        if not itemVoteEx[2] or not itemVoteEx[3] or not itemVoteEx[4] then
+        if not itemVoteEx[4] then
             talc_error('bad itemVote syntax')
             talc_error(t)
             return false
@@ -397,12 +396,12 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'doneVoting;', 1, true) then
+    if core.subFind(t, 'DoneVoting=', 1, true) then
         if not core.canVote(sender) or not core.canVote() then
             return
         end
 
-        local itemEx = core.split(';', t)
+        local itemEx = core.split('=', t)
         if not itemEx[2] then
             talc_error('bad doneVoting syntax')
             talc_error(t)
@@ -418,17 +417,17 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'versionQuery=', 1, true) then
-        core.asend("versionReplay=" .. sender .. "=" .. core.addonVer)
+    if core.subFind(t, 'VersionQuery=') then
+        core.asend("VersionReply=" .. sender .. "=" .. core.addonVer)
         return
     end
 
-    if core.find(t, 'versionReplay=', 1, true) then
-        local i = core.split("=", t)
-        if i[2] == core.me then
-            if i[3] then
+    if core.subFind(t, 'VersionReply=') then
+        local vEx = core.split("=", t)
+        if vEx[2] == core.me then
+            if vEx[3] then
                 local verColor = ''
-                local ver = i[3]
+                local ver = vEx[3]
                 if core.ver(ver) == core.ver(core.addonVer) then
                     verColor = core.classColors['hunter'].colorStr
                 end
@@ -447,14 +446,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'voteframe=', 1, true) then
-        local command = core.split('=', t)
-
-        if not command[2] then
-            talc_error('bad voteframe syntax')
-            talc_error(t)
-            return
-        end
+    if core.subFind(t, 'VoteFrame=') then
 
         if not core.isRaidLeader(sender) then
             return
@@ -464,30 +456,30 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if command[2] == "reset" then
+        local command = core.split('=', t)
+
+        if not command[2] then
+            talc_error('bad voteframe= syntax')
+            talc_error(t)
+            return
+        end
+
+        if command[2] == "Reset" then
             self:ResetVars()
         end
-        if command[2] == "close" then
+        if command[2] == "Close" then
             self:CloseWindow()
         end
         return
     end
 
-    if core.find(t, 'preloadInVoteFrame=', 1, true) then
+    if core.subFind(t, 'PreloadItem=') then
 
-        local item = core.split("=", t)
-
-        local index = core.int(item[2])
-        local texture = item[3]
-        local link = item[5]
-
-        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
-        local itemID = core.split(':', itemLink)
-        core.cacheItem(core.int(itemID[2]))
-
-        if not core.isRaidLeader(sender) or not core.canVote() then
+        if not core.isRaidLeader(sender) then
             return
         end
+
+        local item = core.split("=", t)
 
         if not item[5] then
             talc_error('5bad loot syntax')
@@ -501,9 +493,21 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
+        local index = core.int(item[2])
+        local texture = item[3]
+        local link = item[5]
+
+        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local itemID = core.split(':', itemLink)
+        core.CacheItem(core.int(itemID[2]))
+
+        if not core.canVote() then
+            return
+        end
+
         self.numItems = self.numItems + 1
 
-        self:addVotedItem(index, texture, link)
+        self:AddVotedItem(index, texture, link)
 
         self:ShowScreen("Voting")
 
@@ -520,7 +524,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'countdownframe=', 1, true) then
+    if core.subFind(t, 'CountDownFrame=') then
 
         if not core.isRaidLeader(sender) or not core.canVote() then
             return
@@ -534,18 +538,18 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if action[2] == 'show' then
+        if action[2] == 'Show' then
             self.LootCountdown:Show()
         end
         return
     end
     --ms=1=item:123=item:323
-    if core.sub(t, 1, 4) == 'bis='
-            or core.sub(t, 1, 3) == 'ms='
-            or core.sub(t, 1, 3) == 'os='
-            or core.sub(t, 1, 5) == 'xmog='
-            or core.sub(t, 1, 5) == 'pass='
-            or core.sub(t, 1, 9) == 'autopass=' then
+    if core.subFind(t, 'bis=')
+            or core.subFind(t, 'ms=')
+            or core.subFind(t, 'os=')
+            or core.subFind(t, 'xmog=')
+            or core.subFind(t, 'pass=')
+            or core.subFind(t, 'autopass=') then
 
         if not core.canVote() then
             return
@@ -559,7 +563,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return false
         end
 
-        if core.sub(t, 1, 9) == 'autopass=' then
+        if core.subFind(t, 'autopass=') then
             return false
         end
 
@@ -601,11 +605,11 @@ function TalcFrame:handleSync(pre, t, ch, sender)
     end
 
     -- roster sync
-    if core.find(t, 'syncRoster=', 1, true) then
+    if core.subFind(t, 'SyncRoster=') then
         if not core.isRaidLeader(sender) then
             return
         end
-        if sender == core.me and t == 'syncRoster=end' then
+        if sender == core.me and t == 'SyncRoster=End' then
             return
         end
         if sender == core.me then
@@ -620,9 +624,9 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return false
         end
 
-        if command[2] == "start" then
+        if command[2] == "Start" then
             db['VOTE_ROSTER'] = {}
-        elseif command[2] == "end" then
+        elseif command[2] == "End" then
             talc_debug('Roster updated.')
         else
             core.insert(db['VOTE_ROSTER'], command[2])
@@ -630,13 +634,13 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'playerWon#', 1, true) then
+    if core.subFind(t, 'PlayerWon=') then
 
         if not core.isRaidLeader(sender) then
             return
         end
 
-        local wonData = core.split("#", t)
+        local wonData = core.split("=", t)
 
         if not wonData[7] then
             talc_error('bad playerWon syntax')
@@ -675,7 +679,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'Timers:ttn', 1, true) then
+    if core.subFind(t, 'Timers:ttn') then
         if not core.isRaidLeader(sender) then
             return
         end
@@ -703,8 +707,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    -- includes periodic_loot_history_sync too
-    if core.find(t, 'loot_history_sync;', 1, true) then
+    if core.subFind(t, 'LootHistorySync=') or core.subFind(t, 'PeriodicLootHistorySync=') then
 
         if not core.isRaidLeader(sender) then
             return
@@ -715,18 +718,18 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             totalItems = totalItems + 1
         end
 
-        local lh = core.split(";", t)
+        local lh = core.split("=", t)
 
         if not lh[8] then
-            if t ~= 'loot_history_sync;start' and t ~= 'loot_history_sync;end' then
-                talc_error('bad loot_history_sync syntax')
+            if t ~= 'LootHistorySync=Start' and t ~= 'LootHistorySync=End' then
+                talc_error('bad loothistorysync syntax')
                 talc_error(t)
                 return false
             end
         end
 
-        if lh[2] == 'start' then
-        elseif lh[2] == 'end' then
+        if lh[2] == 'Start' then
+        elseif lh[2] == 'End' then
             if sender == core.me then
                 talc_print('History Sync complete.')
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
@@ -757,7 +760,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
                 local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
                 local itemID = core.int(core.split(':', itemLink)[2])
-                core.cacheItem(itemID)
+                core.CacheItem(itemID)
 
                 if not db['VOTE_LOOT_HISTORY'][hash] then
                     db['VOTE_LOOT_HISTORY'][hash] = {
@@ -780,20 +783,20 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         return
     end
 
-    if core.find(t, 'sending=gear', 1, true) then
+    if core.subFind(t, 'SendingGear=', 1, true) then
 
-        if core.find(t, '=start', 1, true) then
+        if t =='SendingGear=Start' then
             self.inspectPlayerGear[sender] = {}
             return
         end
 
-        if core.find(t, '=end', 1, true) then
+        if t == 'SendingGear=End' then
             self:RaiderDetailsShowGear()
             return
         end
 
         local tEx = core.split('=', t)
-        local gearEx = core.split(':', tEx[3])
+        local gearEx = core.split(':', tEx[2])
 
         self.inspectPlayerGear[sender][core.int(gearEx[6])] = {
             item = gearEx[1] .. ":" .. gearEx[2] .. ":" .. gearEx[3] .. ":" .. gearEx[4] .. ":" .. gearEx[5],
@@ -895,13 +898,13 @@ function TalcFrame:ResetClose_OnClick()
 end
 
 function TalcFrame:SendReset()
-    core.asend("voteframe=reset")
-    core.asend("needframe=reset")
-    core.asend("rollframe=reset")
+    core.asend("VoteFrame=Reset")
+    core.asend("NeedFrame=Reset")
+    core.asend("RollFrame=Reset")
 end
 
 function TalcFrame:SendCloseWindow()
-    core.asend("voteframe=close")
+    core.asend("VoteFrame=Close")
 end
 
 ----------------------------------------------------
@@ -974,7 +977,7 @@ function TalcFrame:LootHistoryUpdate()
                     local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
                     local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
                     if not tex then
-                        core.cacheItem(core.int(core.split(':', itemLink)[2]))
+                        core.CacheItem(core.int(core.split(':', itemLink)[2]))
                         break
                     end
 
@@ -1031,7 +1034,7 @@ function TalcFrame:RaiderDetailsTab_OnClick(tab, playerName)
         end
 
         if core.n(self.inspectPlayerGear[playerName]) == 0 then
-            core.wsend("ALERT", "sendgear=", playerName)
+            core.wsend("ALERT", "SendGear=", playerName)
         else
             TalcFrame:RaiderDetailsShowGear()
         end
@@ -1321,7 +1324,7 @@ function TalcFrame.tradableItemsCheck:Item_OnClick(id)
         for i, d in next, TalcFrame.bagItems do
             local name, l, quality, _, _, _, _, _, _, tex = GetItemInfo(d.itemLink)
             if quality >= 0 and not d.preloaded then
-                core.bsend("BULK", "preloadInVoteFrame=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
+                core.bsend("BULK", "PreloadItem=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
                 d.preloaded = true
             end
         end
@@ -1582,14 +1585,14 @@ function TalcFrame:VoteButton_OnClick(id)
         self.itemVotes[self.CurrentVotedItem][name] = {
             [core.me] = '+'
         }
-        core.asend("itemVote:" .. self.CurrentVotedItem .. ":" .. name .. ":+")
+        core.asend("ItemVote=" .. self.CurrentVotedItem .. "=" .. name .. "=+")
     else
         if self.itemVotes[self.CurrentVotedItem][name][core.me] == '+' then
             self.itemVotes[self.CurrentVotedItem][name][core.me] = '-'
-            core.asend("itemVote:" .. self.CurrentVotedItem .. ":" .. name .. ":-")
+            core.asend("ItemVote=" .. self.CurrentVotedItem .. "=" .. name .. "=-")
         else
             self.itemVotes[self.CurrentVotedItem][name][core.me] = '+'
-            core.asend("itemVote:" .. self.CurrentVotedItem .. ":" .. name .. ":+")
+            core.asend("ItemVote=" .. self.CurrentVotedItem .. "=" .. name .. "=+")
         end
     end
 
@@ -1811,9 +1814,9 @@ function TalcFrame:MLToWinner_OnClick()
                         if pwPlayer.name == tieName and pwPlayer.itemIndex == self.CurrentVotedItem then
                             self.playersWhoWantItems[pwIndex].roll = -2
                             --send -2 to officers
-                            core.asend("playerRoll:" .. pwIndex .. ":-2:" .. self.CurrentVotedItem)
+                            core.asend("PlayerRoll=" .. pwIndex .. "=" .. self.playersWhoWantItems[pwIndex].roll .. "=" .. self.CurrentVotedItem)
                             --send to raiders
-                            core.asend('rollFor=' .. self.CurrentVotedItem .. '=' .. tex .. '=' .. name .. '=' .. linkString .. '=' .. tieName)
+                            core.asend('RollFor=' .. self.CurrentVotedItem .. '=' .. tex .. '=' .. name .. '=' .. linkString .. '=' .. tieName)
                             break
                         end
                     end
@@ -1925,12 +1928,12 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
 
         local shash = core.shash(playerName .. need)
 
-        core.asend("playerWon#"
-                .. shash .. "#"
-                .. playerName .. "#"
-                .. item .. "#"
-                .. cvi .. '#'
-                .. need .. '#'
+        core.asend("PlayerWon="
+                .. shash .. "="
+                .. playerName .. "="
+                .. item .. "="
+                .. cvi .. '='
+                .. need .. '='
                 .. raid)
 
         if db['VOTE_SCREENSHOT_LOOT'] then
@@ -1985,12 +1988,12 @@ function TalcFrame:AwardPlayer(playerName, cvi, disenchant)
 
             local shash = core.shash(playerName .. need)
 
-            core.asend("playerWon#"
-                    .. shash .. "#"
-                    .. GetMasterLootCandidate(unitIndex) .. "#"
-                    .. item .. "#"
-                    .. cvi .. "#"
-                    .. need .. "#"
+            core.asend("PlayerWon="
+                    .. shash .. "="
+                    .. GetMasterLootCandidate(unitIndex) .. "="
+                    .. item .. "="
+                    .. cvi .. "="
+                    .. need .. "="
                     .. raid)
 
             GiveMasterLoot(index, unitIndex);
@@ -2163,7 +2166,7 @@ function TalcFrame:VoteFrameListUpdate()
                 _G[frame .. 'ReplacesItem3']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21 + 21, -2)
                 _G[frame .. 'ReplacesItem4']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21 + 21 + 21, -2)
                 _G[frame .. 'Roll']:SetPoint("LEFT", _G[frame], core.floor(285 * ratio) - 5, 0)
-                _G[frame .. 'RollPass']:SetPoint("LEFT", _G[frame], core.floor(285 * ratio), 0)
+                _G[frame .. 'RollPass']:SetPoint("LEFT", _G[frame], core.floor(285 * ratio) - 5, 0)
                 _G[frame .. 'RollWinner']:SetPoint("LEFT", _G[frame], core.floor(270 * ratio), -2)
                 _G[frame .. 'Votes']:SetPoint("LEFT", _G[frame], core.floor(406 * ratio) - 5, 0)
                 _G[frame .. 'VoteButton']:SetPoint("TOPLEFT", _G[frame], core.floor(380 * ratio) - 80, -2)
@@ -2201,7 +2204,7 @@ function TalcFrame:VoteFrameListUpdate()
 
                 if roll == -1 then
                     _G[frame .. 'RollPass']:Show()
-                    _G[frame .. 'Roll']:SetText(' -')
+                    _G[frame .. 'Roll']:SetText('')
                 elseif roll == -2 then
                     _G[frame .. 'Roll']:SetText('...')
                 elseif roll > 0 then
@@ -2262,16 +2265,16 @@ function TalcFrame:VoteFrameListUpdate()
                 end
 
                 if self.itemVotes[self.CurrentVotedItem][name] then
-                    local w = 0
+                    local officer = 0
                     for voter, vote in next, self.itemVotes[self.CurrentVotedItem][name] do
                         if vote == '+' then
-                            w = w + 1
+                            officer = officer + 1
 
-                            if not _G[frame].officerVotedFrames[w] then
-                                _G[frame].officerVotedFrames[w] = CreateFrame("Button", "TALCOfficerVotedFrameI" .. self.CurrentVotedItem .. "P" .. index .. "W" .. w, _G[frame], 'Talc_SmallIconButtonTemplate')
+                            if not _G[frame].officerVotedFrames[officer] then
+                                _G[frame].officerVotedFrames[officer] = CreateFrame("Button", "TALCOfficerVotedFrameP" .. index .. "O" .. officer, _G[frame], 'Talc_SmallIconButtonTemplate')
                             end
 
-                            local oFrame = "TALCOfficerVotedFrameI" .. self.CurrentVotedItem .. "P" .. index .. "W" .. w
+                            local oFrame = "TALCOfficerVotedFrameP" .. index .. "O" .. officer
 
                             local voterClass = core.getPlayerClass(voter)
                             local locked = self.OfficerDoneVotingItem[voter] and self.OfficerDoneVotingItem[voter][self.CurrentVotedItem]
@@ -2279,10 +2282,10 @@ function TalcFrame:VoteFrameListUpdate()
                             _G[oFrame]:ClearAllPoints()
                             _G[oFrame]:SetSize(20, 20)
 
-                            if w == 1 then
+                            if officer == 1 then
                                 _G[oFrame]:SetPoint("LEFT", _G[frame .. 'Votes'], "LEFT", 15, 0)
                             else
-                                _G[oFrame]:SetPoint("LEFT", _G["TALCOfficerVotedFrameI" .. self.CurrentVotedItem .. "P" .. index .. "W" .. (w - 1)], "RIGHT", 1, 0)
+                                _G[oFrame]:SetPoint("LEFT", _G["TALCOfficerVotedFrameP" .. index .. "O" .. (officer - 1)], "RIGHT", 1, 0)
                             end
 
                             _G[oFrame]:SetNormalTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. voterClass)
@@ -2423,7 +2426,7 @@ function TalcFrame:ReceiveDrag()
             for i, d in next, self.bagItems do
                 local name, l, quality, _, _, _, _, _, _, tex = GetItemInfo(d.itemLink)
                 if quality >= 0 and not d.preloaded then
-                    core.bsend("BULK", "preloadInVoteFrame=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
+                    core.bsend("BULK", "PreloadItem=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
                     d.preloaded = true
                 end
             end
@@ -2443,7 +2446,7 @@ function TalcFrame:ReceiveDrag()
             self:SendTimersAndButtons()
 
             self.LootCountdown:Show()
-            core.asend('countdownframe=show')
+            core.asend('CountDownFrame=Show')
 
             local numLootItems = 0
             for i, d in next, self.bagItems do
@@ -2452,11 +2455,11 @@ function TalcFrame:ReceiveDrag()
 
                 if quality >= 0 then
                     --send to c
-                    core.bsend("ALERT", "loot=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
+                    core.bsend("ALERT", "Loot=" .. i .. "=" .. tex .. "=" .. name .. "=" .. l)
                     numLootItems = numLootItems + 1
                 end
             end
-            core.bsend("ALERT", "doneSending=" .. numLootItems .. "=items")
+            core.bsend("ALERT", "DoneSending=" .. numLootItems .. "=items")
             TalcVoteFrameMLToWinner:Disable()
 
             TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
@@ -2484,7 +2487,7 @@ function TalcFrame:BroadcastLoot_OnClick()
     if UnitIsPlayer('target') or not UnitExists('target') then
         target = 'Chest'
     end
-    core.asend('boss&' .. target)
+    core.asend('CurrentBoss=' .. target)
 
     if GetNumLootItems() == 0 then
         talc_print('There are no items in the loot frame.')
@@ -2511,7 +2514,7 @@ function TalcFrame:BroadcastLoot_OnClick()
                 local _, _, quality = GetItemInfo(itemLink)
                 if quality >= 0 then
                     --send to officers
-                    core.bsend("BULK", "preloadInVoteFrame=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
+                    core.bsend("BULK", "PreloadItem=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
                 end
             end
         end
@@ -2527,7 +2530,7 @@ function TalcFrame:BroadcastLoot_OnClick()
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
 
     self.LootCountdown:Show()
-    core.asend('countdownframe=show')
+    core.asend('CountDownFrame=Show')
 
     local numLootItems = 0
     for id = 0, GetNumLootItems() do
@@ -2538,18 +2541,18 @@ function TalcFrame:BroadcastLoot_OnClick()
             local _, _, quality = GetItemInfo(itemLink)
             if quality >= 0 then
                 --send to c
-                core.bsend("ALERT", "loot=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
+                core.bsend("ALERT", "Loot=" .. id .. "=" .. lootIcon .. "=" .. lootName .. "=" .. GetLootSlotLink(id))
                 numLootItems = numLootItems + 1
             end
         end
     end
-    core.bsend("ALERT", "doneSending=" .. numLootItems .. "=items")
+    core.bsend("ALERT", "DoneSending=" .. numLootItems .. "=items")
     TalcVoteFrameMLToWinner:Disable();
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:SetText(numLootItems .. " items sent")
 end
 
-function TalcFrame:addVotedItem(index, texture, link)
+function TalcFrame:AddVotedItem(index, texture, link)
 
     self.itemVotes[index] = {}
     self.doneVoting[index] = false
@@ -2751,7 +2754,7 @@ function TalcFrame:DoneVoting_OnClick()
     self.doneVoting[self.CurrentVotedItem] = true
     TalcVoteFrameDoneVoting:Disable();
     TalcVoteFrameDoneVotingCheck:Show();
-    core.asend("doneVoting;" .. self.CurrentVotedItem)
+    core.asend("DoneVoting=" .. self.CurrentVotedItem)
     self:VoteFrameListUpdate()
 end
 
@@ -2763,12 +2766,11 @@ function TalcFrame:ChangePlayerPickTo(playerName, newPick, itemIndex)
         end
     end
     if core.isRaidLeader() then
-        core.asend("changePickTo@" .. playerName .. "@" .. newPick .. "@" .. itemIndex)
+        core.asend("ChangePickTo=" .. playerName .. "=" .. newPick .. "=" .. itemIndex)
     end
 
     self:VoteFrameListUpdate()
 end
-
 
 function TalcFrame:TimeLeftBar_OnUpdate()
     if this:GetValue() <= 0 then
@@ -2788,8 +2790,6 @@ function TalcFrame:TimeLeftBar_OnUpdate()
     _G[this:GetName() .. 'Spark']:SetPoint("CENTER", this, "LEFT",
             this.currentTime * this:GetWidth() / this.countDownFrom, 0);
 end
-
-
 
 TalcFrame.VoteCountdown = CreateFrame("Frame")
 TalcFrame.VoteCountdown:Hide()
@@ -2966,20 +2966,20 @@ function TalcFrame:SyncLootHistory()
 
     talc_print('Starting History Sync, ' .. totalItems .. ' entries...')
 
-    core.bsend("BULK", "loot_history_sync;start")
+    core.bsend("BULK", "LootHistorySync=start")
 
     self.syncLootHistoryCount = 0
 
     for shash, item in next, db['VOTE_LOOT_HISTORY'] do
-        core.bsend("BULK", "loot_history_sync;" .. shash .. ";"
-                .. item.timestamp .. ";"
-                .. item.player .. ";"
-                .. item.class .. ";"
-                .. item.item .. ";"
-                .. item.pick .. ";"
+        core.bsend("BULK", "LootHistorySync=" .. shash .. "="
+                .. item.timestamp .. "="
+                .. item.player .. "="
+                .. item.class .. "="
+                .. item.item .. "="
+                .. item.pick .. "="
                 .. item.raid)
     end
-    core.bsend("BULK", "loot_history_sync;end")
+    core.bsend("BULK", "LootHistorySync=end")
 end
 
 TalcFrame.periodicSync = CreateFrame("Frame")
@@ -3014,12 +3014,12 @@ TalcFrame.periodicSync:SetScript("OnUpdate", function()
         for shash, item in core.sortedLootHistory() do
             i = i + 1
             if i == this.index then
-                core.bsendg("BULK", "periodic_loot_history_sync;" .. shash .. ";"
-                        .. item.timestamp .. ";"
-                        .. item.player .. ";"
-                        .. item.class .. ";"
-                        .. item.item .. ";"
-                        .. item.pick .. ";"
+                core.bsendg("BULK", "PeriodicLootHistorySync=" .. shash .. "="
+                        .. item.timestamp .. "="
+                        .. item.player .. "="
+                        .. item.class .. "="
+                        .. item.item .. "="
+                        .. item.pick .. "="
                         .. item.raid)
             end
         end
@@ -3514,7 +3514,7 @@ function TalcFrame:TryToAddToWishlist_OnClick(nameOrID)
         -- id or id from link, not cached
         if core.int(nameOrID) then
             -- cache and add
-            core.cacheItem(nameOrID)
+            core.CacheItem(nameOrID)
             self.delayAddToWishlist.id = nameOrID
             self.delayAddToWishlist:Show()
             return
@@ -3548,7 +3548,7 @@ function TalcFrame:TryToAddToWishlist_OnClick(nameOrID)
                                 end
                             end
                             if not found then
-                                core.cacheItem(v[2])
+                                core.CacheItem(v[2])
                                 core.insert(results, { id = v[2], name = itemName });
                             end
                         end
@@ -3808,7 +3808,7 @@ function TalcFrame:QueryWho_OnClick()
 
     TalcVoteFrameWho:Show()
 
-    core.asend("versionQuery=")
+    core.asend("VersionQuery=")
 
     self.withAddon = {}
     self.withAddonFrames = {}
@@ -4116,16 +4116,16 @@ function TalcFrame:SendTestItems_OnClick()
     self:SendReset()
 
     self.LootCountdown:Show()
-    core.asend('countdownframe=show')
+    core.asend('CountDownFrame=Show')
 
-    core.bsend("ALERT", "preloadInVoteFrame=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-    core.bsend("ALERT", "preloadInVoteFrame=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-    core.bsend("ALERT", "preloadInVoteFrame=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
+    core.bsend("ALERT", "PreloadItem=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+    core.bsend("ALERT", "PreloadItem=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+    core.bsend("ALERT", "PreloadItem=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
 
-    core.bsend("ALERT", "loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-    core.bsend("ALERT", "loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-    core.bsend("ALERT", "loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
-    core.bsend("ALERT", "doneSending=3=items")
+    core.bsend("ALERT", "Loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+    core.bsend("ALERT", "Loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+    core.bsend("ALERT", "Loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
+    core.bsend("ALERT", "DoneSending=3=items")
 
     TalcVoteFrameMLToWinner:Disable()
 end

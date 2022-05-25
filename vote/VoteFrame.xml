@@ -1265,7 +1265,7 @@
         </Layers>
         <Frames>
 
-            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER" toplevel="true">
+            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER" >
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
                         <Offset x="4" y="4"/>
@@ -1652,9 +1652,6 @@
             </Button>
 
             <ScrollFrame name="$parentContestantScrollListFrame" inherits="FauxScrollFrameTemplate">
-                <!--                <Size>-->
-                <!--                    <AbsDimension x="222" y="220"/>-->
-                <!--                </Size>-->
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
                           tile="false">
                 </Backdrop>
@@ -1675,7 +1672,7 @@
             </ScrollFrame>
 
             <Button name="$parentDoneVoting" framstrata="HIGH" inherits="Talc_ButtonTemplate" hidden="false"
-                    text="Done Voting">
+                    text="Done Voting" toplevel="true">
                 <Size>
                     <AbsDimension x="120" y="20"/>
                 </Size>

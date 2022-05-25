@@ -13,7 +13,70 @@ function NeedFrame:init()
     self:ResetVars()
 end
 
-function NeedFrame:addItem(data)
+
+function NeedFrame:ResetVars()
+
+    self:hideAnchor()
+
+    for _, frame in next, self.itemFrames do
+        frame:Hide()
+        frame = nil
+    end
+
+    for i = 1, 15 do
+        _G['NewItemTooltip' .. i]:Hide()
+    end
+
+    self.numItems = 0
+end
+
+function NeedFrame:handleSync(arg1, msg, arg3, sender)
+
+    if core.subFind(msg, 'NeedFrame=') then
+        local command = core.split('=', msg)
+        if command[2] == "Reset" and core.isRaidLeader(sender) then
+            self:ResetVars()
+            return
+        end
+        return
+    end
+
+    if core.subFind(msg, 'SendGear=', 1, true) then
+        self:SendGear(sender)
+        return
+    end
+
+    if core.subFind(msg, 'CacheItem=', 1, true) then
+        local cEx = core.split('=', msg)
+        core.CacheItem(core.int(cEx[2]))
+        return
+    end
+
+    if core.isRaidLeader(sender) then
+        if core.subFind(msg, 'Loot=') then
+            self.numItems = self.numItems + 1
+            self:AddItem(msg)
+            if not TalcNeedFrame:IsVisible() then
+                TalcNeedFrame:Show()
+            end
+            return
+        end
+
+        if core.find(msg, 'DoneSending=', 1, true) then
+            local nrItems = core.split('=', msg)
+            if not nrItems[2] or not nrItems[3] then
+                talc_debug('wrong doneSending syntax')
+                talc_debug(msg)
+                return
+            end
+
+            core.asend("Received=" .. self.numItems .. "=items")
+            return
+        end
+    end
+end
+
+function NeedFrame:AddItem(data)
     local item = core.split("=", data)
 
     local index = core.int(item[2])
@@ -197,7 +260,7 @@ function NeedFrame:addItem(data)
 end
 
 function NeedFrame:SendGear(to)
-    core.wsend("NORMAL", "sending=gear=start", to)
+    core.wsend("NORMAL", "SendingGear=Start", to)
     for i = 1, 19 do
         if GetInventoryItemLink("player", i) then
             local _, iL, _, _, _, _, _, _, equip_slot = GetItemInfo(GetInventoryItemLink("player", i));
@@ -213,10 +276,10 @@ function NeedFrame:SendGear(to)
                 talc_debug("cant determine slot, send gear " .. equip_slot)
                 return
             end
-            core.wsend("NORMAL", "sending=gear=" .. shortLink .. ":" .. i .. ":" .. slotString, to)
+            core.wsend("NORMAL", "SendingGear=" .. shortLink .. ":" .. i .. ":" .. slotString, to)
         end
     end
-    core.wsend("NORMAL", "sending=gear=end", to)
+    core.wsend("NORMAL", "SendingGear=End", to)
 end
 
 function NeedFrame:fadeInFrame(frame)
@@ -302,67 +365,6 @@ function NeedFrame:hideAnchor()
     TalcNeedFrameScaleText:Hide()
 end
 
-function NeedFrame:ResetVars()
-
-    self:hideAnchor()
-
-    for _, frame in next, self.itemFrames do
-        frame:Hide()
-        frame = nil
-    end
-
-    for i = 1, 15 do
-        _G['NewItemTooltip' .. i]:Hide()
-    end
-
-    self.numItems = 0
-end
-
-function NeedFrame:handleSync(arg1, msg, arg3, sender)
-
-    if core.find(msg, 'needframe=', 1, true) then
-        local command = core.split('=', msg)
-        if command[2] == "reset" and core.isRaidLeader(sender) then
-            self:ResetVars()
-            return
-        end
-        return
-    end
-
-    if core.find(msg, 'sendgear=', 1, true) then
-        self:SendGear(sender)
-        return
-    end
-
-    if core.isRaidLeader(sender) then
-        if core.find(msg, 'loot=', 1, true) then
-            self.numItems = self.numItems + 1
-            self:addItem(msg)
-            if not TalcNeedFrame:IsVisible() then
-                TalcNeedFrame:Show()
-            end
-            return
-        end
-
-        if core.find(msg, 'cacheItem=', 1, true) then
-            local item = core.split("=", msg)
-            core.cacheItem(item[2])
-            return
-        end
-
-        if core.find(msg, 'doneSending=', 1, true) then
-            local nrItems = core.split('=', msg)
-            if not nrItems[2] or not nrItems[3] then
-                talc_debug('wrong doneSending syntax')
-                talc_debug(msg)
-                return
-            end
-
-            core.asend("received=" .. self.numItems .. "=items")
-            return
-        end
-    end
-end
 
 function NeedFrame:ScaleWindow(dir)
     if dir == 'up' then
@@ -523,7 +525,7 @@ function NeedFrame:Test()
         local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
 
         if name and tex then
-            self:addItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
+            self:AddItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
             if not TalcNeedFrame:IsVisible() then
                 TalcNeedFrame:Show()
             end
@@ -554,7 +556,7 @@ NeedFrame.delayAddItem:SetScript("OnUpdate", function()
                 atLeastOne = true
                 talc_debug('delay add item on update for item id ' .. id .. ' data:[' .. data)
                 this.data[id] = nil
-                NeedFrame:addItem(data)
+                NeedFrame:AddItem(data)
             end
         end
 

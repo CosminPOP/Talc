@@ -26,7 +26,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             tokenRewards = TALC_TOKENS
 
             for id in next, tokenRewards do
-                core.cacheItem(id)
+                core.CacheItem(id)
             end
 
             if not db then
@@ -304,7 +304,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             TalcFrame.playersWhoWantItems[pwIndex].roll = roll
                             TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].rolled = true
                             -- send it to officers
-                            core.asend("playerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
+                            core.asend("PlayerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
                             TalcFrame:VoteFrameListUpdate()
                             break
                         end
@@ -335,7 +335,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                                 local itemID = core.int(core.split(':', itemLink)[2])
                                 if quality >= 3 then
                                     blueOrEpic = true
-                                    core.asend("cacheItem=" .. itemID)
+                                    core.asend("CacheItem=" .. itemID)
                                 end
                             end
                         end
