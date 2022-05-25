@@ -627,6 +627,9 @@ function TalcFrame:handleSync(pre, t, ch, sender)
         if command[2] == "Start" then
             db['VOTE_ROSTER'] = {}
         elseif command[2] == "End" then
+            if TalcVoteFrameWelcomeFrame:IsVisible() then
+                self:WelcomeFrame_OnShow()
+            end
             talc_debug('Roster updated.')
         else
             core.insert(db['VOTE_ROSTER'], command[2])
@@ -797,6 +800,8 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         local tEx = core.split('=', t)
         local gearEx = core.split(':', tEx[2])
+
+        core.CacheItem(core.int(gearEx[2]))
 
         self.inspectPlayerGear[sender][core.int(gearEx[6])] = {
             item = gearEx[1] .. ":" .. gearEx[2] .. ":" .. gearEx[3] .. ":" .. gearEx[4] .. ":" .. gearEx[5],
@@ -1217,7 +1222,7 @@ function TalcFrame:RaiderDetailsShowGear()
 
         local frame = _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']
 
-        if frame then
+        if q and frame then
 
             _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText(ITEM_QUALITY_COLORS[q].hex .. il)
 
@@ -2097,24 +2102,24 @@ function TalcFrame:VoteFrameListUpdate()
     if self.pickResponses[self.CurrentVotedItem] == core.getNumOnlineRaidMembers() then
 
         local bis, ms, os, pass, xmog = 0, 0, 0, 0, 0
-        for _, pwwi in next, self.playersWhoWantItems do
-            if pwwi['itemIndex'] == self.CurrentVotedItem then
-                if pwwi['need'] == 'bis' then
+        for _, data in next, self.playersWhoWantItems do
+            if data.itemIndex == self.CurrentVotedItem then
+                if data.need == 'bis' then
                     bis = bis + 1
-                elseif pwwi['need'] == 'ms' then
+                elseif data.need == 'ms' then
                     ms = ms + 1
-                elseif pwwi['need'] == 'os' then
+                elseif data.need == 'os' then
                     os = os + 1
-                elseif pwwi['need'] == 'xmog' then
+                elseif data.need == 'xmog' then
                     xmog = xmog + 1
-                elseif pwwi['need'] == 'pass' or pwwi['need'] == 'autopass' then
+                elseif data.need == 'pass' or data.need == 'autopass' then
                     pass = pass + 1
                 end
             end
         end
 
-        TalcVoteFrameTimeLeftBarTextLeft:SetText('Everyone(' .. self.pickResponses[self.CurrentVotedItem]
-                .. ') has picked(' .. pass .. ' passes).')
+        TalcVoteFrameTimeLeftBarTextLeft:SetText(core.getNumOnlineRaidMembers() .. '/' .. self.pickResponses[self.CurrentVotedItem]
+                .. ' pick(s), ' .. pass .. ' pass(es)')
         self.VotedItemsFrames[self.CurrentVotedItem].pickedByEveryone = true
     else
         TalcVoteFrameTimeLeftBarTextLeft:SetText('Waiting picks ' ..
@@ -2294,7 +2299,7 @@ function TalcFrame:VoteFrameListUpdate()
                             _G[oFrame]:Show()
                             _G[oFrame]:SetAlpha(locked and 1 or 0.5)
 
-                            local voterText = voter .. (locked and core.classColors['hunter'].colorStr .. "\nDone Voting" or core.classColors['rogue'].colorStr .. "\nNot Final")
+                            local voterText = voter .. (locked and core.classColors['hunter'].colorStr .. "\nFinal" or core.classColors['rogue'].colorStr .. "\nNot Final")
 
                             _G[oFrame]:SetScript("OnEnter", function(self)
                                 GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
@@ -2760,8 +2765,8 @@ end
 
 function TalcFrame:ChangePlayerPickTo(playerName, newPick, itemIndex)
     for pIndex, data in next, self.playersWhoWantItems do
-        if data['itemIndex'] == itemIndex and data['name'] == playerName then
-            self.playersWhoWantItems[pIndex]['need'] = newPick
+        if data.itemIndex == itemIndex and data.name == playerName then
+            self.playersWhoWantItems[pIndex].need = newPick
             break
         end
     end
