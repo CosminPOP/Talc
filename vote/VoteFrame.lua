@@ -350,10 +350,11 @@ function TalcFrame:handleSync(pre, t, ch, sender)
             return
         end
 
-        if core.int(r[3]) == -1 then --pass
+        if core.int(r[3]) == -1 then
+            --pass
             for pwIndex, pwPlayer in next, self.playersWhoWantItems do
                 if pwPlayer.name == sender and pwPlayer.roll == -2 then
-                    self.playersWhoWantItems[pwIndex].roll =  core.int(r[3])
+                    self.playersWhoWantItems[pwIndex].roll = core.int(r[3])
                     self:updateVotedItemsFrames()
                     break
                 end
@@ -787,7 +788,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
     if core.subFind(t, 'SendingGear=', 1, true) then
 
-        if t =='SendingGear=Start' then
+        if t == 'SendingGear=Start' then
             self.inspectPlayerGear[sender] = {}
             return
         end
@@ -3957,13 +3958,13 @@ function TalcFrame:SaveSetting(key, value)
     if core.type(key) == 'table' then
         db[key[1]][key[2]] = value == 1
         --if key[1] == 'ATTENDANCE_TRACKING' and key[2] == 'enabled' then
-            --if db[key[1]][key[2]] then
-            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
-            --    TalcVoteFrameSettingsFrameAttendanceTime:Enable()
-            --else
-            --    TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
-            --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
-            --end
+        --if db[key[1]][key[2]] then
+        --    TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
+        --    TalcVoteFrameSettingsFrameAttendanceTime:Enable()
+        --else
+        --    TalcVoteFrameSettingsFrameAttendanceBossKills:Disable()
+        --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
+        --end
         --end
         return
     end
