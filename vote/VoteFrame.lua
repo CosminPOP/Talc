@@ -3743,10 +3743,12 @@ function TalcFrame:WishlistUpdate()
 
         _G[frame .. 'RemoveButton']:SetID(index)
 
-        local _, _, q, iLevel, _, _, t2, _, equip_slot, tex = GetItemInfo(itemLink)
+        local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
         if tex then
             _G[frame .. 'ItemButtonIcon']:SetTexture(tex)
             core.addButtonOnEnterTooltip(_G[frame .. 'ItemButton'], itemLink, nil, true)
+        else
+            core.CacheItem(itemLink)
         end
 
         _G[frame]:Show()
