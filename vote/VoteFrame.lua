@@ -47,8 +47,6 @@ TalcFrame.contestantsFrames = {}
 TalcFrame.bagItems = {}
 TalcFrame.inspectPlayerGear = {}
 
-TalcFrame.durationNotification = 1000 * 60 -- 10 * 60 -- s
-
 TalcFrame.welcomeItemsFrames = {}
 
 TalcFrame.withAddon = {}
@@ -1295,27 +1293,28 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
         end
         TalcVoteFrameTradableItemsFrame:SetHeight(30)
 
-        local maxDuration = 2 * 3600
-
         for i, item in next, this.items do
 
-            if item.duration <= TalcFrame.durationNotification then
 
-                if not this.frames[i] then
-                    this.frames[i] = CreateFrame('Frame', 'TALCTradableItem' .. i, TalcVoteFrameTradableItemsFrame, 'Talc_TradableItemTemplate')
-                end
-
-                local frame = 'TALCTradableItem' .. i
-
-                _G[frame]:SetPoint("TOP", TalcVoteFrameTradableItemsFrame, "TOP", 0, -4 - 22 * i)
-                _G[frame]:Show()
-                _G[frame]:SetID(i)
-
-                _G[frame .. 'Name']:SetText(item.itemLink)
-                _G[frame .. 'Duration']:SetText(core.SecondsToClock(item.duration))
-
-                _G[frame .. 'DurationBar']:SetWidth(240 * (item.duration / maxDuration))
+            if not this.frames[i] then
+                this.frames[i] = CreateFrame('Frame', 'TALCTradableItem' .. i, TalcVoteFrameTradableItemsFrame, 'Talc_TradableItemTemplate')
             end
+
+            local frame = 'TALCTradableItem' .. i
+
+            _G[frame]:SetPoint("TOP", TalcVoteFrameTradableItemsFrame, "TOP", 0, -4 - 22 * i)
+            _G[frame]:Show()
+            _G[frame]:SetID(i)
+
+            _G[frame .. 'Name']:SetText(item.itemLink)
+            _G[frame .. 'Duration']:SetText(core.SecondsToClock(item.duration))
+
+            _G[frame .. 'DurationBar']:SetWidth(240 * (item.duration / (2 * 60 * 60)))
+
+            if item.duration <= 11 * 60 - 1 then
+                talc_print(item.itemLink .. " will expire in " .. core.SecondsToClock(item.duration) .. ".")
+            end
+
         end
 
         TalcVoteFrameTradableItemsFrame:SetHeight(40 + core.n(this.items) * 21)
