@@ -16,7 +16,7 @@ local init = false
 TALC:SetScript("OnEvent", function(__, event, ...)
     if event then
 
-        if event == "ADDON_LOADED" and arg1 == "Blizzard_TimeManager" then
+        if event == "ADDON_LOADED" and arg1 == "Talc" then
 
             TALC:UnregisterEvent("ADDON_LOADED")
 
