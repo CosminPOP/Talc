@@ -548,7 +548,7 @@ function Talc_Utils:init()
         local name, instanceType, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance = GetInstanceInfo();
 
         if instanceType == "party" then
-            return false --Cant save attendance in 5mans.
+            return false
         end
         local isHeroic = false;
         if instanceType == "raid" and not (difficulty == 1 and maxPlayers == 5) then
@@ -597,9 +597,8 @@ function Talc_Utils:init()
                     end
                     if not att[n].raids[raidString].bosses[boss] then
                         att[n].raids[raidString].bosses[boss] = {
-                            dates = { time() }
+                            dates = {}
                         }
-
                     end
 
                     core.insert(att[n].raids[raidString].bosses[boss].dates, time())
@@ -690,8 +689,7 @@ function Talc_Utils:init()
     end
 
     core.sortedLootHistory = function()
-        local t = db['VOTE_LOOT_HISTORY']
-        return core.sortTableBy(t, 'timestamp')
+        return core.sortTableBy(db['VOTE_LOOT_HISTORY'], 'timestamp')
     end
 end
 
