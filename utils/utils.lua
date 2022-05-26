@@ -601,8 +601,7 @@ function Talc_Utils:init()
                         }
                     end
 
-                    local st = core.serverTime()
-                    core.insert(att[n].raids[raidString].bosses[boss].dates, st)
+                    core.insert(att[n].raids[raidString].bosses[boss].dates, core.serverTime())
                 end
             end
         end
@@ -651,8 +650,7 @@ function Talc_Utils:init()
         local srvOffsetMinutes = srvMinutes - timeUTC.min
         local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
 
-        local st = time() + srvDiffSecondsUTC - tzDiffTotalSeconds
-        return st, date("%d/%m/%y %H:%M:%S", st)
+        return time() + srvDiffSecondsUTC - tzDiffTotalSeconds
     end
 
     core.localTimeFromServerTime = function(st)
@@ -666,8 +664,7 @@ function Talc_Utils:init()
         local srvOffsetMinutes = srvMinutes - timeUTC.min
         local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
 
-        local lt = time() + srvDiffSecondsUTC - tzDiffTotalSeconds
-        return lt, date("%d/%m/%y %H:%M:%S", lt)
+        return time() + srvDiffSecondsUTC - tzDiffTotalSeconds
     end
 
     -- todo add some entropy
