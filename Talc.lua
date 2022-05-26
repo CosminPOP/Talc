@@ -234,6 +234,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 return
             end
 
+            if event == "PLAYER_ENTERING_WORLD" then
+                TalcFrame.tradableItemsCheck:Hide()
+                TalcFrame.tradableItemsCheck:Show()
+            end
+
             if event == "RAID_ROSTER_UPDATE" then
                 if core.isRaidLeader() then
 
