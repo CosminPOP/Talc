@@ -2,6 +2,9 @@
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="VoteFrame.lua"/>
 
+    <GameTooltip name="TradableItemsTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+    <GameTooltip name="TALCTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
+
     <!--Templates-->
 
     <Button name="Talc_SmallIconButtonTemplate" inherits="UIPanelButtonTemplate" text="" virtual="true">

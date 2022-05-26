@@ -176,23 +176,21 @@ function TalcFrame:ResetVars()
     TalcVoteFrameRLExtraFrameDragLoot:SetText("Drag Loot")
     TalcVoteFrameRLExtraFrameDragLoot:Enable()
 
-    self.tradableItemsCheck:Show()
-
     if core.isRaidLeader() then
         TalcVoteFrameRLExtraFrame:Show()
 
         TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
-            GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0);
+            TALCTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0);
             if db['VOTE_ENCHANTER'] == '' then
-                GameTooltip:AddLine("Enchanter not set. Type /talc set enchanter [name]")
+                TALCTooltip:AddLine("Enchanter not set. Type /talc set enchanter [name]")
             else
-                GameTooltip:AddLine("ML to " .. db['VOTE_ENCHANTER'] .. " to disenchant.")
+                TALCTooltip:AddLine("ML to " .. db['VOTE_ENCHANTER'] .. " to disenchant.")
             end
-            GameTooltip:Show()
+            TALCTooltip:Show()
         end)
 
         TalcVoteFrameMLToEnchanter:SetScript("OnLeave", function(self)
-            GameTooltip:Hide()
+            TALCTooltip:Hide()
         end)
     else
         TalcVoteFrameRLExtraFrame:Hide()
@@ -1244,24 +1242,34 @@ end
 
 TalcFrame.tradableItemsCheck = CreateFrame("Frame")
 TalcFrame.tradableItemsCheck:Hide()
+TalcFrame.tradableItemsCheck.n = 0
 TalcFrame.tradableItemsCheck.items = {}
 TalcFrame.tradableItemsCheck.frames = {}
 TalcFrame.tradableItemsCheck:SetScript("OnShow", function()
     this.startTime = GetTime();
+    this.n = 0;
 end)
 TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
-    local plus = 60
+    local plus = 30
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
 
         this.startTime = GetTime()
 
+        -- hax
+        if this.n == 0 then
+            this.n = this.n + 1
+            this:GetTradableItems()
+            return
+        end
+        this.n = 0
+
         if not core.isRaidLeader() then
             return
         end
 
-        local items = TalcFrame:GetTradableItems()
+        local items = this:GetTradableItems()
 
         if core.n(this.items) > 0 then
             if core.n(this.items) > core.n(items) then
@@ -1343,7 +1351,7 @@ function TalcFrame.tradableItemsCheck:Item_OnClick(id)
     end
 end
 
-function TalcFrame:GetTradableItems()
+function TalcFrame.tradableItemsCheck:GetTradableItems()
     local items = {}
     for bag = 0, 4 do
         for slot = 0, GetContainerNumSlots(bag) do
@@ -1356,8 +1364,6 @@ function TalcFrame:GetTradableItems()
                 if tradable then
                     core.insert(items, {
                         itemLink = itemLink,
-                        bag = bag,
-                        slot = slot,
                         duration = duration
                     })
                 end
@@ -1367,18 +1373,18 @@ function TalcFrame:GetTradableItems()
     return items
 end
 
-function TalcFrame:IsTradable(bag, slot)
+function TalcFrame.tradableItemsCheck:IsTradable(bag, slot)
 
-    GameTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    GameTooltip:SetBagItem(bag, slot)
+    TradableItemsTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    TradableItemsTooltip:SetBagItem(bag, slot)
 
     local format = REFUND_TIME_REMAINING --BIND_TRADE_TIME_REMAINING
 
-    for i = 1, GameTooltip:NumLines() do
-        if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), core.format(format, ".*")) then
-            local _, _, hour = core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "(%d+ hour)");
-            local _, _, min = core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "(%d+ min)");
-            local _, _, sec = core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "(%d+ sec)");
+    for i = 1, TradableItemsTooltip:NumLines() do
+        if core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), core.format(format, ".*")) then
+            local _, _, hour = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ hour)");
+            local _, _, min = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ min)");
+            local _, _, sec = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ sec)");
 
             local duration = 0 --seconds
 
@@ -1394,11 +1400,11 @@ function TalcFrame:IsTradable(bag, slot)
                 local s = core.split(' ', sec)
                 duration = duration + core.int(s[1])
             end
-
+            TradableItemsTooltip:Hide()
             return true, duration
         end
     end
-    GameTooltip:Hide()
+    TradableItemsTooltip:Hide()
     return false, nil
 end
 
@@ -2058,13 +2064,13 @@ function TalcFrame:UpdateOfficerVotedIcons()
         frame:SetHighlightTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. class)
 
         frame:SetScript("OnEnter", function(self)
-            GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
-            GameTooltip:AddLine(this.name)
-            GameTooltip:Show();
+            TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+            TALCTooltip:AddLine(this.name)
+            TALCTooltip:Show();
         end)
 
         frame:SetScript("OnLeave", function(self)
-            GameTooltip:Hide();
+            TALCTooltip:Hide();
         end)
 
         frame:SetAlpha(0.3)
@@ -2313,13 +2319,13 @@ function TalcFrame:VoteFrameListUpdate()
                             local voterText = voter .. (locked and core.classColors['hunter'].colorStr .. "\nFinal" or core.classColors['rogue'].colorStr .. "\nNot Final")
 
                             _G[oFrame]:SetScript("OnEnter", function(self)
-                                GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
-                                GameTooltip:AddLine(core.classColors[voterClass].colorStr .. voterText)
-                                GameTooltip:Show();
+                                TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+                                TALCTooltip:AddLine(core.classColors[voterClass].colorStr .. voterText)
+                                TALCTooltip:Show();
                             end)
 
                             _G[oFrame]:SetScript("OnLeave", function(self)
-                                GameTooltip:Hide();
+                                TALCTooltip:Hide();
                             end)
                         end
                     end
@@ -2428,7 +2434,7 @@ function TalcFrame:ReceiveDrag()
         local infoType, id, itemLink = GetCursorInfo()
         if infoType == "item" then
 
-            self:GetTradableItems()
+            self.tradableItemsCheck:GetTradableItems()
 
             TalcVoteFrameRLExtraFrameDragLoot:Disable()
             TalcVoteFrameRLExtraFrameDragLoot:SetText('Waiting sync...')
@@ -2674,11 +2680,11 @@ function TalcFrame:SetCurrentVotedItem(id)
         -- Token
 
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
-            GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
-            GameTooltip:SetHyperlink(itemLink)
+            TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+            TALCTooltip:SetHyperlink(itemLink)
             for i = 1, 20 do
-                if _G["GameTooltipTextLeft" .. i] and _G["GameTooltipTextLeft" .. i]:GetText() then
-                    if core.find(_G["GameTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
+                if _G["TALCTooltipTextLeft" .. i] and _G["TALCTooltipTextLeft" .. i]:GetText() then
+                    if core.find(_G["TALCTooltipTextLeft" .. i]:GetText(), "Classes:", 1, true) then
                         local _, _, qq, level = GetItemInfo(tokenRewards[itemID].rewards[1])
                         iLevel = level
                         q = qq
@@ -2686,7 +2692,7 @@ function TalcFrame:SetCurrentVotedItem(id)
                     end
                 end
             end
-            GameTooltip:Hide()
+            TALCTooltip:Hide()
         end
     end
 
@@ -2725,13 +2731,13 @@ function TalcFrame:SetCurrentVotedItem(id)
                 _G[frame]:SetPushedTexture(tex)
                 _G[frame]:Show()
 
-                GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
-                GameTooltip:SetHyperlink(il)
+                TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                TALCTooltip:SetHyperlink(il)
 
                 for j = 5, 15 do
                     local classFound = false
-                    if _G["GameTooltipTextLeft" .. j] and _G["GameTooltipTextLeft" .. j]:GetText() then
-                        local itemText = _G["GameTooltipTextLeft" .. j]:GetText()
+                    if _G["TALCTooltipTextLeft" .. j] and _G["TALCTooltipTextLeft" .. j]:GetText() then
+                        local itemText = _G["TALCTooltipTextLeft" .. j]:GetText()
 
                         _G[frame .. "Border"]:Hide()
 
@@ -2749,7 +2755,7 @@ function TalcFrame:SetCurrentVotedItem(id)
                     end
                 end
 
-                GameTooltip:Hide()
+                TALCTooltip:Hide()
 
                 core.addButtonOnEnterTooltip(_G[frame], il)
 
