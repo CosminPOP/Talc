@@ -1313,7 +1313,7 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
             _G[frame .. 'DurationBar']:SetWidth(240 * (item.duration / (2 * 60 * 60)))
 
             if item.duration <= 11 * 60 - 1 then
-                talc_print(item.itemLink .. " will expire in " .. core.SecondsToClock(item.duration) .. ".")
+                talc_print(item.itemLink .. " will expire in " .. SecondsToTime(item.duration) .. ".")
             end
 
         end
