@@ -23,9 +23,10 @@ function Talc_Utils:init()
     core.format = string.format
     core.byte = string.byte
     core.char = string.char
-    core.tostring = tostring
     core.len = string.len
     core.gsub = string.gsub
+    core.rep = string.rep
+    core.tostring = tostring
     core.pairs = pairs
     core.ipairs = ipairs
     core.sort = table.sort
@@ -729,13 +730,13 @@ function talc_dump(tbl, indent)
     if not indent then
         indent = 0
     end
-    for k, v in pairs(tbl) do
-        local formatting = string.rep("  ", indent) .. k .. ": "
-        if type(v) == "table" then
+    for k, v in core.pairs(tbl) do
+        local formatting = core.rep("  ", indent) .. k .. ": "
+        if core.type(v) == "table" then
             print(formatting)
             talc_dump(v, indent + 1)
-        elseif type(v) == 'boolean' then
-            print(formatting .. tostring(v))
+        elseif core.type(v) == 'boolean' then
+            print(formatting .. core.tostring(v))
         else
             print(formatting .. v)
         end
