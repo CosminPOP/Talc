@@ -494,8 +494,22 @@ function Talc_Utils:init()
     end
 
     core.CacheItem = function(id)
-        if not id or not core.int(id) then
-            talc_debug("cache item call with null or not int " .. id .. " " .. core.type(id))
+
+        if not id then
+            talc_debug("cache item call with null")
+            return
+        end
+
+        if not core.int(id) then
+
+            -- try to get id from itemLink
+            local itemID = core.split(':', id)
+            if itemID[2] and core.int(itemID[2]) then
+                core.CacheItem(core.int(itemID[2]))
+                return
+            end
+
+            talc_debug("cache item call with not int " .. id .. " " .. core.type(id))
             return
         end
 
