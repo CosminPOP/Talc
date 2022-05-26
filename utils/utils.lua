@@ -637,6 +637,39 @@ function Talc_Utils:init()
         return sum
     end
 
+    core.serverTime = function()
+
+        -- inspired from ElvUI
+        local srvHours, srvMinutes = GetGameTime()
+        local timeUTC = date("!*t")
+        local timeLocal = date("*t")
+        local tzDiffHours = (timeLocal.hour - timeUTC.hour)
+        local tzDiffMinutes = (timeLocal.min - timeUTC.min)
+        local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
+        local srvOffsetHours = srvHours - timeUTC.hour
+        local srvOffsetMinutes = srvMinutes - timeUTC.min
+        local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
+
+        local st = time() + srvDiffSecondsUTC - tzDiffTotalSeconds
+        return st, date("%d/%m/%y %H:%M:%S", st)
+    end
+
+    core.localTimeFromServerTime = function(st)
+        local srvHours, srvMinutes = date("%H", st), date("%M", st)  --GetGameTime()
+        local timeUTC = date("!*t", st)
+        local timeLocal = date("*t", st)
+        local tzDiffHours = (timeLocal.hour - timeUTC.hour)
+        local tzDiffMinutes = (timeLocal.min - timeUTC.min)
+        local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
+        local srvOffsetHours = srvHours - timeUTC.hour
+        local srvOffsetMinutes = srvMinutes - timeUTC.min
+        local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
+
+        local lt = time() + srvDiffSecondsUTC - tzDiffTotalSeconds
+        return lt, date("%d/%m/%y %H:%M:%S", lt)
+    end
+
+    -- todo add some entropy
     core.shash = function(...)
         local str;
         local key = ''
