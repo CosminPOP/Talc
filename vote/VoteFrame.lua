@@ -176,6 +176,8 @@ function TalcFrame:ResetVars()
     TalcVoteFrameRLExtraFrameDragLoot:SetText("Drag Loot")
     TalcVoteFrameRLExtraFrameDragLoot:Enable()
 
+    self.tradableItemsCheck:Show()
+
     if core.isRaidLeader() then
         TalcVoteFrameRLExtraFrame:Show()
 
@@ -192,8 +194,6 @@ function TalcFrame:ResetVars()
         TalcVoteFrameMLToEnchanter:SetScript("OnLeave", function(self)
             GameTooltip:Hide()
         end)
-
-        self.tradableItemsCheck:Show()
     else
         TalcVoteFrameRLExtraFrame:Hide()
     end
@@ -1255,6 +1255,12 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
     local st = (this.startTime + plus) * 1000
     if gt >= st then
 
+        this.startTime = GetTime()
+
+        if not core.isRaidLeader() then
+            return
+        end
+
         local items = TalcFrame:GetTradableItems()
 
         if core.n(this.items) > 0 then
@@ -1306,13 +1312,11 @@ TalcFrame.tradableItemsCheck:SetScript("OnUpdate", function()
 
         TalcVoteFrameTradableItemsFrame:SetHeight(40 + core.n(this.items) * 21)
 
-        if core.n(this.items) > 0 then
+        if core.n(this.items) > 0 and UnitInRaid('player') then
             TalcVoteFrameTradableItemsFrame:Show()
         else
             TalcVoteFrameTradableItemsFrame:Hide()
         end
-
-        this.startTime = GetTime()
     end
 end)
 
