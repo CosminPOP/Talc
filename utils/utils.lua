@@ -601,7 +601,8 @@ function Talc_Utils:init()
                         }
                     end
 
-                    core.insert(att[n].raids[raidString].bosses[boss].dates, time())
+                    local st = core.serverTime()
+                    core.insert(att[n].raids[raidString].bosses[boss].dates, st)
                 end
             end
         end
