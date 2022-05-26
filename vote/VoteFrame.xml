@@ -50,17 +50,67 @@
         </Layers>
     </Button>
 
-    <Button name="Talc_ButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
-        <NormalTexture file="Interface\addons\Talc\images\grad2">
-            <Color r="0.24" g="0.45" b="0.84"/>
-        </NormalTexture>
-        <PushedTexture file="Interface\addons\Talc\images\grad2"/>
-        <DisabledTexture file="Interface\addons\Talc\images\grad2">
-            <Color r="0.3" g="0.3" b="0.3" a="1"/>
-        </DisabledTexture>
-        <HighlightTexture alphaMode="BLEND">
-            <Color r="0.24" g="0.45" b="0.84" a="0.2"/>
+    <Button name="Talc_ButtonTemplate" virtual="true">
+        <Layers>
+            <Layer level="BORDER">
+                <Texture name="$parentMiddle" file="Interface\Addons\Talc\images\background-main">
+<!--                    <Color r="1" g="1" b="1" a="1"/>-->
+                    <Size>
+                        <AbsDimension x="128" y="22"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <TexCoords left="0" right="0.25" top="0.5" bottom="0.855"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <ButtonText name="$parentText"/>
+        <NormalFont style="GameFontNormal"/>
+        <HighlightFont style="GameFontHighlight"/>
+        <DisabledFont style="GameFontDisable"/>
+        <HighlightTexture file="Interface\Addons\Talc\images\grad1" alphaMode="ADD">
+            <Color r="1" g="1" b="1" a="0.1"/>
+            <Size>
+                <AbsDimension x="128" y="22"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT"/>
+                <Anchor point="BOTTOMRIGHT"/>
+            </Anchors>
+            <TexCoords left="0" right="0.25" top="0.5" bottom="0.855"/>
         </HighlightTexture>
+        <Scripts>
+            <OnLoad>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("Interface\Addons\Talc\images\background-main");
+                end
+            </OnLoad>
+            <OnShow>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("Interface\Addons\Talc\images\background-main");
+                end
+            </OnShow>
+            <OnDisable>
+                SetDesaturation(_G[self:GetName().."Middle"], 1)
+            </OnDisable>
+            <OnEnable>
+                SetDesaturation(_G[self:GetName().."Middle"], 0)
+            </OnEnable>
+        </Scripts>
+
+<!--        <NormalTexture file="Interface\addons\Talc\images\background-main">-->
+<!--&lt;!&ndash;            <Color r="0.24" g="0.45" b="0.84"/>&ndash;&gt;-->
+<!--            <TexCoords left="0" right="0.5" top="0" bottom="0.375"/>-->
+<!--        </NormalTexture>-->
+<!--        <PushedTexture file="Interface\addons\Talc\images\grad2"/>-->
+<!--        <DisabledTexture file="Interface\addons\Talc\images\grad2">-->
+<!--            <Color r="0.3" g="0.3" b="0.3" a="1"/>-->
+<!--        </DisabledTexture>-->
+<!--        <HighlightTexture alphaMode="BLEND">-->
+<!--            <Color r="0.24" g="0.45" b="0.84" a="0.2"/>-->
+<!--        </HighlightTexture>-->
     </Button>
 
     <Button name="Talc_WhoButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
@@ -110,7 +160,7 @@
         <PushedTexture file="Interface\addons\Talc\images\ui-panel-minimizebutton-down"/>
     </Button>
 
-    <Button name="Talc_WelcomeItemTemplate" virtual="true" inherits="Talc_ButtonTemplate">
+    <Button name="Talc_WelcomeItemTemplate" virtual="true">
         <NormalTexture inherits=""/>
         <PushedTexture inherits=""/>
         <Size x="164" y="36"/>
@@ -130,6 +180,9 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parentMiddle" inherits=""/>
             </Layer>
             <Layer level="OVERLAY">
 
@@ -190,6 +243,19 @@
                 </FontString>
 
             </Layer>
+            <Layer level="HIGHLIGHT">
+                <Texture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD">
+<!--                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>-->
+<!--                    <Color r="1" g="1" b="1" a="1"/>-->
+                    <Size>
+                        <AbsDimension x="36" y="36"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
         </Layers>
         <Scripts>
             <OnClick>
@@ -221,6 +287,9 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parentMiddle" inherits=""/>
             </Layer>
             <Layer level="OVERLAY">
                 <FontString name="$parentName" inherits="GameFontNormal" text="Playername"
@@ -260,6 +329,16 @@
             <OnClick>
                 TalcFrame:WelcomePlayer_OnClick(this.name)
             </OnClick>
+            <OnLoad>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("");
+                end
+            </OnLoad>
+            <OnShow>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("");
+                end
+            </OnShow>
         </Scripts>
     </Button>
 
@@ -315,13 +394,29 @@
             <OnClick>
                 TalcFrame:ExpandAttendanceFrame_OnClick()
             </OnClick>
+            <OnLoad>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("");
+                end
+            </OnLoad>
+            <OnShow>
+                if ( self:IsEnabled() == 1 ) then
+                _G[self:GetName().."Middle"]:SetTexture("");
+                end
+            </OnShow>
+            <OnDisable>
+                SetDesaturation(_G[self:GetName().."Middle"], 1)
+            </OnDisable>
+            <OnEnable>
+                SetDesaturation(_G[self:GetName().."Middle"], 0)
+            </OnEnable>
         </Scripts>
     </Button>
 
     <Frame name="Talc_WishlistItemTemplate" virtual="true">
         <Size x="300" y="25"/>
         <Frames>
-            <Button name="$parentItemButton" inherits="Talc_ButtonTemplate">
+            <Button name="$parentItemButton">
                 <NormalTexture/>
                 <PushedTexture inherits=""/>
                 <HighlightTexture file="Interface\addons\Talc\images\grad1" alphaMode="ADD">
@@ -344,6 +439,9 @@
                     </Anchor>
                 </Anchors>
                 <Layers>
+                    <Layer level="BORDER">
+                        <Texture name="$parentMiddle" inherits=""/>
+                    </Layer>
                     <Layer level="OVERLAY">
                         <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
                             <Size x="24" y="24"/>
@@ -366,6 +464,17 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
+                    </Layer>
+                    <Layer level="HIGHLIGHT">
+                        <Texture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD">
+                            <Size>
+                                <AbsDimension x="24" y="24"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
                     </Layer>
                 </Layers>
             </Button>
@@ -1056,12 +1165,12 @@
                 <FontString name="$parentName" inherits="GameFontNormal" text="[Item]" hidden="false"
                             justifyH="LEFT">
                     <Size>
-                        <AbsDimension x="180" y="21"/>
+                        <AbsDimension x="160" y="21"/>
                     </Size>
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>
-                                <AbsDimension x="0" y="-1"/>
+                                <AbsDimension x="3" y="-1"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -1082,21 +1191,36 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button name="$parentButton" inherits="UIPanelButtonTemplate" text="Add">
+            <Button name="$parentButton" inherits="Talc_ButtonTemplate" text="Add">
                 <Size>
-                    <AbsDimension x="80" y="20"/>
+                    <AbsDimension x="50" y="20"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="CENTER">
+                    <Anchor point="RIGHT">
                         <Offset>
-                            <AbsDimension x="0" y="0"/>
+                            <AbsDimension x="-30" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
+                <Layers>
+                    <Layer level="BORDER">
+                        <Texture name="$parentMiddle" inherits=""/>
+                    </Layer>
+                </Layers>
                 <Scripts>
                     <OnClick>
                         TalcFrame.tradableItemsCheck:Item_OnClick(this:GetParent():GetID())
                     </OnClick>
+                    <OnLoad>
+                        if ( self:IsEnabled() == 1 ) then
+                        _G[self:GetName().."Middle"]:SetTexture("");
+                        end
+                    </OnLoad>
+                    <OnShow>
+                        if ( self:IsEnabled() == 1 ) then
+                        _G[self:GetName().."Middle"]:SetTexture("");
+                        end
+                    </OnShow>
                 </Scripts>
             </Button>
         </Frames>
@@ -1117,13 +1241,13 @@
             <maxResize x="1200" y="600"/>
         </ResizeBounds>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  edgeFile="Interface\addons\Talc\images\border-main"
                   tile="false">
             <EdgeSize>
-                <AbsValue val="16"/>
+                <AbsValue val="32"/>
             </EdgeSize>
             <TileSize>
-                <AbsValue val="1"/>
+                <AbsValue val="16"/>
             </TileSize>
             <BackgroundInsets>
                 <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -1147,22 +1271,31 @@
         </Animations>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\grad1">
-                    <Color r="0.24" g="0.45" b="0.84"/>
+                <Texture name="$parentTopGlyph" file="Interface\addons\Talc\images\top-glyph">
+                    <Size x="128" y="20"/>
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset x="0" y="15"/>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="1" top="0.375" bottom="1"/>
+                </Texture>
+                <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                            <Offset x="2" y="-4"/>
+                            <Offset x="2" y="-7"/>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
                             <Offset x="-2" y="-25"/>
                         </Anchor>
                     </Anchors>
+                    <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                 </Texture>
                 <Texture name="$parentBackground" file="Interface\addons\Talc\images\grad2" tile="true">
                     <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                            <Offset x="2" y="-25"/>
+                            <Offset x="2" y="-24"/>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
 <!--                            <Offset x="-2" y="28"/>-->
@@ -1172,8 +1305,8 @@
                 </Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture name="$parentLabelsBackground" file="Interface\addons\Talc\images\grad1">
-                    <Color r="0.24" g="0.45" b="0.84"/>
+                <Texture name="$parentLabelsBackground" file="Interface\addons\Talc\images\background-main">
+                    <TexCoords left="0" right="2" top="0.5" bottom="0.855"/>
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
                             <Offset x="5" y="-88"/>
@@ -1189,7 +1322,7 @@
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset>
-                                <AbsDimension x="0" y="-8"/>
+                                <AbsDimension x="0" y="-9"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -1265,77 +1398,6 @@
         </Layers>
         <Frames>
 
-            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER" >
-                <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
-                        <Offset x="4" y="4"/>
-                    </Anchor>
-                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT">
-                        <Offset x="-4" y="28"/>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <Texture setAllPoints="true">
-                            <Color r="0" g="0" b="0" a="0.3"/>
-                        </Texture>
-                    </Layer>
-                    <Layer level="ARTWORK">
-                        <FontString name="$parentTextLeft" inherits="GameFontHighlight" text="" hidden="false">
-                            <Anchors>
-                                <Anchor point="BOTTOMLEFT">
-                                    <Offset>
-                                        <AbsDimension x="10" y="5"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                        <FontString name="$parentTextCenter" inherits="GameFontHighlight" text="" hidden="true">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="5"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                    <Layer level="OVERLAY">
-                        <Texture name="$parentSpark" file="Interface\CastingBar\UI-CastingBar-Spark" alphaMode="ADD">
-                            <Size>
-                                <AbsDimension x="32" y="48"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="CENTER">
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
-                <Scripts>
-                    <OnLoad>
-                        this.currentTime = 0;
-                        this.countDownFrom = 0;
-                    </OnLoad>
-                    <OnUpdate>
-                        TalcFrame:TimeLeftBar_OnUpdate()
-                    </OnUpdate>
-                </Scripts>
-                <BarTexture file="Interface\addons\Talc\images\grad1">
-                    <Size>
-                        <AbsDimension x="185" y="26"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER">
-                            <Offset>
-                                <AbsDimension x="0" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </BarTexture>
-                <BarColor r="0.24" g="0.45" b="0.84"/>
-            </StatusBar>
-
             <Button name="Talc_Minimap" movable="true" parent="UIParent" enableMouse="true" toplevel="true"
                     frameStrata="LOW">
                 <Size x="33" y="33"/>
@@ -1397,6 +1459,24 @@
                     </OnMouseUp>
                 </Scripts>
             </Button>
+
+            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
+                <Size>
+                    <AbsDimension x="22" y="22"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-3" y="-4"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        TalcFrame:ToggleMainWindow_OnClick()
+                    </OnClick>
+                </Scripts>
+            </Button>
             <Button name="$parentResizeButton">
                 <NormalTexture file="Interface\AddOns\Talc\images\ResizeGrip"/>
                 <HighlightTexture file="Interface\AddOns\Talc\images\ResizeGrip" alphaMode="ADD"/>
@@ -1406,7 +1486,7 @@
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT">
                         <Offset>
-                            <AbsDimension x="0" y="0"/>
+                            <AbsDimension x="-2" y="0"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
@@ -1422,6 +1502,77 @@
                     </OnMouseUp>
                 </Scripts>
             </Button>
+
+            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER" >
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
+                        <Offset x="6" y="4"/>
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT">
+                        <Offset x="-6" y="28"/>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture setAllPoints="true">
+                            <Color r="0" g="0" b="0" a="0.3"/>
+                        </Texture>
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentTextLeft" inherits="GameFontHighlight" text="" hidden="false">
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT">
+                                    <Offset>
+                                        <AbsDimension x="10" y="5"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentTextCenter" inherits="GameFontHighlight" text="" hidden="true">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="5"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentSpark" file="Interface\CastingBar\UI-CastingBar-Spark" alphaMode="ADD">
+                            <Size>
+                                <AbsDimension x="32" y="48"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad>
+                        this.currentTime = 0;
+                        this.countDownFrom = 0;
+                    </OnLoad>
+                    <OnUpdate>
+                        TalcFrame:TimeLeftBar_OnUpdate()
+                    </OnUpdate>
+                </Scripts>
+                <BarTexture file="Interface\addons\Talc\images\grad1">
+                    <Size>
+                        <AbsDimension x="185" y="26"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </BarTexture>
+                <BarColor r="0" g="0.197" b="0.332"/>
+            </StatusBar>
 
             <Button name="$parentMLToWinner" inherits="Talc_ButtonTemplate" hidden="false" text="ML to Winner">
                 <Size>
@@ -1553,24 +1704,6 @@
                 <Frames>
                 </Frames>
             </Frame>
-
-            <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
-                <Size>
-                    <AbsDimension x="22" y="22"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT">
-                        <Offset>
-                            <AbsDimension x="-5" y="-4"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                        TalcFrame:ToggleMainWindow_OnClick()
-                    </OnClick>
-                </Scripts>
-            </Button>
 
             <Frame name="$parentVotedItemsFrame">
                 <Size>
@@ -1723,13 +1856,13 @@
                     </Anchor>
                 </Anchors>
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          edgeFile="Interface\addons\Talc\images\border-main"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="16"/>
+                        <AbsValue val="32"/>
                     </EdgeSize>
                     <TileSize>
-                        <AbsValue val="1"/>
+                        <AbsValue val="16"/>
                     </TileSize>
                     <BackgroundInsets>
                         <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -1737,14 +1870,14 @@
                 </Backdrop>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
-                            <Color r="0.24" g="0.45" b="0.84"/>
+                        <Texture file="Interface\addons\Talc\images\background-main" name="$parentTitleBackground">
+                            <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-4"/>
+                                    <Offset x="2" y="-7"/>
                                 </Anchor>
                                 <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="-2" y="-24"/>
+                                    <Offset x="-2" y="-25"/>
                                 </Anchor>
                             </Anchors>
                         </Texture>
@@ -1765,7 +1898,7 @@
                             <Anchors>
                                 <Anchor point="TOP">
                                     <Offset>
-                                        <AbsDimension x="0" y="-8"/>
+                                        <AbsDimension x="0" y="-9"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -1911,13 +2044,13 @@
                     </Anchor>
                 </Anchors>
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          edgeFile="Interface\addons\Talc\images\border-main"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="16"/>
+                        <AbsValue val="32"/>
                     </EdgeSize>
                     <TileSize>
-                        <AbsValue val="1"/>
+                        <AbsValue val="16"/>
                     </TileSize>
                     <BackgroundInsets>
                         <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -1925,16 +2058,16 @@
                 </Backdrop>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
-                            <Color r="0.24" g="0.45" b="0.84"/>
+                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-4"/>
+                                    <Offset x="2" y="-7"/>
                                 </Anchor>
                                 <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="-2" y="-24"/>
+                                    <Offset x="-2" y="-25"/>
                                 </Anchor>
                             </Anchors>
+                            <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                         </Texture>
                         <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
                             <Anchors>
@@ -1967,7 +2100,7 @@
                         <Anchors>
                             <Anchor point="TOPRIGHT">
                                 <Offset>
-                                    <AbsDimension x="-5" y="-4"/>
+                                    <AbsDimension x="-3" y="-4"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3698,13 +3831,13 @@
                     </Anchor>
                 </Anchors>
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          edgeFile="Interface\addons\Talc\images\border-main"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="16"/>
+                        <AbsValue val="32"/>
                     </EdgeSize>
                     <TileSize>
-                        <AbsValue val="1"/>
+                        <AbsValue val="16"/>
                     </TileSize>
                     <BackgroundInsets>
                         <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -3712,16 +3845,16 @@
                 </Backdrop>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\grad1">
-                            <Color r="0.24" g="0.45" b="0.84"/>
+                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-4"/>
+                                    <Offset x="2" y="-7"/>
                                 </Anchor>
                                 <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="-2" y="-24"/>
+                                    <Offset x="-2" y="-25"/>
                                 </Anchor>
                             </Anchors>
+                            <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                         </Texture>
                         <Texture name="$parentBG1" file="Interface\addons\Talc\images\grad2" tile="true">
                             <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
@@ -3740,7 +3873,7 @@
                             <Anchors>
                                 <Anchor point="TOP">
                                     <Offset>
-                                        <AbsDimension x="0" y="-8"/>
+                                        <AbsDimension x="0" y="-9"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -4082,7 +4215,7 @@
                         </Anchors>
                         <Frames>
 
-                            <Frame name="$parentTitleFrame" inherits="Talc_AttendanceLineTemplate">
+                            <Button name="$parentTitleFrame" inherits="Talc_AttendanceLineTemplate">
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
@@ -4090,7 +4223,7 @@
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
-                            </Frame>
+                            </Button>
 
                             <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
                                 <Size>
@@ -4149,13 +4282,13 @@
                     </Anchor>
                 </Anchors>
                 <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                          edgeFile="Interface\addons\Talc\images\border-maw"
+                          edgeFile="Interface\addons\Talc\images\border-main"
                           tile="false">
                     <EdgeSize>
-                        <AbsValue val="16"/>
+                        <AbsValue val="32"/>
                     </EdgeSize>
                     <TileSize>
-                        <AbsValue val="1"/>
+                        <AbsValue val="16"/>
                     </TileSize>
                     <BackgroundInsets>
                         <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -4163,16 +4296,16 @@
                 </Backdrop>
                 <Layers>
                     <Layer level="BACKGROUND">
-                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
-                            <Color r="0.24" g="0.45" b="0.84"/>
+                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
                             <Anchors>
                                 <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-4"/>
+                                    <Offset x="2" y="-7"/>
                                 </Anchor>
                                 <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="-2" y="-24"/>
+                                    <Offset x="-2" y="-25"/>
                                 </Anchor>
                             </Anchors>
+                            <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                         </Texture>
                         <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
                             <Anchors>
@@ -4216,7 +4349,6 @@
                             </OnClick>
                         </Scripts>
                     </Button>
-
                 </Frames>
                 <Scripts>
                     <OnLoad>
@@ -4266,13 +4398,13 @@
             </Anchor>
         </Anchors>
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                  edgeFile="Interface\addons\Talc\images\border-maw"
+                  edgeFile="Interface\addons\Talc\images\border-main"
                   tile="false">
             <EdgeSize>
-                <AbsValue val="16"/>
+                <AbsValue val="32"/>
             </EdgeSize>
             <TileSize>
-                <AbsValue val="1"/>
+                <AbsValue val="16"/>
             </TileSize>
             <BackgroundInsets>
                 <AbsInset left="5" right="5" top="5" bottom="5"/>
@@ -4280,16 +4412,16 @@
         </Backdrop>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">
-                    <Color r="0.24" g="0.45" b="0.84"/>
+                <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                            <Offset x="2" y="-4"/>
+                            <Offset x="2" y="-7"/>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                            <Offset x="-2" y="-24"/>
+                            <Offset x="-2" y="-25"/>
                         </Anchor>
                     </Anchors>
+                    <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                 </Texture>
                 <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
                     <Anchors>
