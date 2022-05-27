@@ -3006,8 +3006,7 @@
                             </OnLeave>
                         </Scripts>
                     </CheckButton>
-
-                    <CheckButton name="$parentWinCommon" inherits="UICheckButtonTemplate">
+                    <CheckButton name="$parentWinUncommon" inherits="UICheckButtonTemplate">
                         <Size>
                             <AbsDimension x="20" y="20"/>
                         </Size>
@@ -3015,45 +3014,6 @@
                             <Anchor point="TOPLEFT" relativeTo="$parentWinThresholdLabel" relativePoint="BOTTOMLEFT">
                                 <Offset>
                                     <AbsDimension x="0" y="-5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="|cffffffffCommon">
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="20" y="0"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </FontString>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnClick>
-                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '1' or '0')
-                            </OnClick>
-                            <OnEnter>
-                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                                GameTooltip:AddLine('Win Frame will pop up when looting Common quality items.')
-                                GameTooltip:Show()
-                            </OnEnter>
-                            <OnLeave>
-                                GameTooltip:Hide()
-                            </OnLeave>
-                        </Scripts>
-                    </CheckButton>
-                    <CheckButton name="$parentWinUncommon" inherits="UICheckButtonTemplate">
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativeTo="$parentWinCommon" relativePoint="BOTTOMLEFT">
-                                <Offset>
-                                    <AbsDimension x="0" y="0"/>
                                 </Offset>
                             </Anchor>
                         </Anchors>
@@ -3542,7 +3502,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                WinFrame.animFrame:showAnchor()
+                                WinFrame:ShowAnchor()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3560,7 +3520,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                RollFrame:showAnchor()
+                                RollFrame:ShowAnchor()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3578,7 +3538,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                NeedFrame:showAnchor()
+                                NeedFrame:ShowAnchor()
                             </OnClick>
                         </Scripts>
                     </Button>
