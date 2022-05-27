@@ -19,7 +19,7 @@
                 <Alpha change="1" duration="0.2" order="2">
                     <Scripts>
                         <OnFinished>
-                            NeedFrame:animInFinished()
+                            NeedFrame:AnimInFinished()
                         </OnFinished>
                     </Scripts>
                 </Alpha>
@@ -28,7 +28,7 @@
                 <Alpha change="-1" duration="0.2" parentKey="animOut">
                     <Scripts>
                         <OnFinished>
-                            WinFrame:animOutFinished()
+                            WinFrame:AnimOutFinished()
                         </OnFinished>
                     </Scripts>
                 </Alpha>

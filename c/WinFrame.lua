@@ -5,7 +5,7 @@ WinFrame = CreateFrame("Frame")
 WinFrame.items = {}
 WinFrame.xmog = false
 
-function WinFrame:handleSync(_, msg, _, sender)
+function WinFrame:HandleSync(_, msg, _, sender)
     if core.find(msg, 'PlayerWon=') and core.isRaidLeader(sender) then
         local wonData = core.split('=', msg)
         if wonData[7] and wonData[3] == core.me then
@@ -24,29 +24,29 @@ function WinFrame:handleSync(_, msg, _, sender)
     end
 end
 
-function WinFrame:handleLoot(arg1)
+function WinFrame:HandleLoot(arg1)
     if core.find(arg1, 'You receive loot', 1, true) then
         local recEx = core.split(' loot:', arg1)
         if recEx[1] then
-            self:addWonItem(recEx[2], recEx[1])
+            self:AddWonItem(recEx[2], recEx[1])
         end
     end
     if core.find(arg1, 'You create', 1, true) then
         local recEx = core.split(' create:', arg1)
         if recEx[1] then
-            self:addWonItem(recEx[2], recEx[1])
+            self:AddWonItem(recEx[2], recEx[1])
         end
     end
 end
 
-function WinFrame:init()
+function WinFrame:Init()
     core = TALC
     db = TALC_DB
     self.HideAnchor()
 end
 
 
-function WinFrame:addWonItem(linkString, winText)
+function WinFrame:AddWonItem(linkString, winText)
 
     local _, _, itemLink = core.find(linkString, "(item:%d+:%d+:%d+:%d+)");
 
@@ -153,7 +153,7 @@ function WinFrame:HideAnchor()
     TalcWinFrameCloseButton:Hide()
 end
 
-function NeedFrame:animInFinished()
+function NeedFrame:AnimInFinished()
     local frame = this:GetRegionParent()
     frame.animOut:Stop();
     frame.animOut.animOut:SetStartDelay(7);
@@ -161,7 +161,7 @@ function NeedFrame:animInFinished()
 
 end
 
-function WinFrame:animOutFinished()
+function WinFrame:AnimOutFinished()
     this:GetRegionParent():Hide()
     this:GetRegionParent().active = false
 end
@@ -193,9 +193,9 @@ function WinFrame:FadeInFrame(frame)
 end
 
 function WinFrame:AddTestItems()
-    WinFrame:addWonItem('\124cff0070dd\124Hitem:37220:0:0:0:0:0:0:0:0\124h[Essence of Gossamer]\124h\124r', 'You receive')
-    WinFrame:addWonItem('\124cffa335ee\124Hitem:45074:0:0:0:0:0:0:0:0\124h[Claymore of the Prophet]\124h\124r', 'You receive')
-    WinFrame:addWonItem('|cffff8000|Hitem:46017:0:0:0:0:0:0:0:0|h[Val\'anyr, Hammer of Ancient Kings]|h|4r"', 'You create')
+    WinFrame:AddWonItem('\124cff0070dd\124Hitem:37220:0:0:0:0:0:0:0:0\124h[Essence of Gossamer]\124h\124r', 'You receive')
+    WinFrame:AddWonItem('\124cffa335ee\124Hitem:45074:0:0:0:0:0:0:0:0\124h[Claymore of the Prophet]\124h\124r', 'You receive')
+    WinFrame:AddWonItem('|cffff8000|Hitem:46017:0:0:0:0:0:0:0:0|h[Val\'anyr, Hammer of Ancient Kings]|h|4r"', 'You create')
 end
 
 
