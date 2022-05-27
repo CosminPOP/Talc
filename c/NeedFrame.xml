@@ -323,27 +323,27 @@
                 </Scripts>
             </Button>
             <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\Addons\Talc\images\need\os_icon">
-                    <Size x="64" y="64"/>
+                <NormalTexture file="Interface\buttons\ui-grouploot-coin-up">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
-                            <Offset x="0" y="0"/>
+                            <Offset x="0" y="-5"/>
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture file="Interface\Addons\Talc\images\need\os_icon_highlight">
-                    <Size x="64" y="64"/>
+                <PushedTexture file="Interface\buttons\ui-grouploot-coin-down" alphaMode="ADD">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
-                            <Offset x="0" y="0"/>
+                            <Offset x="0" y="-5"/>
                         </Anchor>
                     </Anchors>
                 </PushedTexture>
-                <HighlightTexture file="Interface\Addons\Talc\images\need\os_icon_highlight">
-                    <Size x="64" y="64"/>
+                <HighlightTexture file="Interface\buttons\ui-grouploot-coin-highlight" alphaMode="ADD">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
-                            <Offset x="0" y="0"/>
+                            <Offset x="0" y="-5"/>
                         </Anchor>
                     </Anchors>
                 </HighlightTexture>
@@ -423,24 +423,24 @@
                 </Scripts>
             </Button>
             <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\Addons\Talc\images\need\pass_icon">
-                    <Size x="64" y="64"/>
+                <NormalTexture file="Interface\buttons\ui-grouploot-pass-up">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset x="0" y="0"/>
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture file="Interface\Addons\Talc\images\need\pass_icon">
-                    <Size x="64" y="64"/>
+                <PushedTexture file="Interface\buttons\ui-grouploot-pass-up">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset x="0" y="0"/>
                         </Anchor>
                     </Anchors>
                 </PushedTexture>
-                <HighlightTexture file="Interface\Addons\Talc\images\need\pass_icon_highlight">
-                    <Size x="64" y="64"/>
+                <HighlightTexture file="Interface\buttons\ui-grouploot-pass-up" alphaMode="ADD">
+                    <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset x="0" y="0"/>
