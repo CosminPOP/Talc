@@ -1182,7 +1182,7 @@ function TalcFrame:RaiderDetailsTab_OnClick(tab, playerName)
                             _G["TALCAttendanceFrame" .. code]:Show()
                             _G["TALCAttendanceFrame" .. code .. "Icon"]:Hide()
                             _G["TALCAttendanceFrame" .. code .. "Left"]:SetPoint("LEFT", 40, 0) --26
-                            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText("   " .. core.select(2, core.localTimeFromServerTime(timestamp)))
+                            _G["TALCAttendanceFrame" .. code .. "Left"]:SetText("   " .. date("%d/%m/%y %H:%M", core.localTimeFromServerTime(timestamp)))
                             _G["TALCAttendanceFrame" .. code .. "Right"]:SetText("")
 
                             core.remButtonOnEnterTooltip(_G["TALCAttendanceFrame" .. code])
