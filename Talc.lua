@@ -20,7 +20,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TALC:UnregisterEvent("ADDON_LOADED")
 
-            Talc_Utils:init();
+            Talc_Utils:Init();
 
             core = TALC
             db = TALC_DB
@@ -155,7 +155,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
             TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(db['WIN_VOLUME'] == 'high')
 
-            TalcVoteFrameSettingsFrameWinCommon:SetChecked(core.find(db['WIN_THRESHOLD'], '1', 1, true))
             TalcVoteFrameSettingsFrameWinUncommon:SetChecked(core.find(db['WIN_THRESHOLD'], '2', 1, true))
             TalcVoteFrameSettingsFrameWinRare:SetChecked(core.find(db['WIN_THRESHOLD'], '3', 1, true))
             TalcVoteFrameSettingsFrameWinEpic:SetChecked(core.find(db['WIN_THRESHOLD'], '4', 1, true))
@@ -190,12 +189,12 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
 
-            TalcFrame:init();
+            TalcFrame:Init();
 
-            NeedFrame:init();
-            WinFrame:init();
-            RollFrame:init();
-            BossFrame:init();
+            NeedFrame:Init();
+            WinFrame:Init();
+            RollFrame:Init();
+            BossFrame:Init();
 
             print("TALC INIt")
 
@@ -227,10 +226,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_ADDON' and arg1 == TALC.channel then
                 --print(arg1, arg2, arg3, arg4)
-                TalcFrame:handleSync(...)
-                NeedFrame:handleSync(...)
-                WinFrame:handleSync(...)
-                RollFrame:handleSync(...)
+                TalcFrame:HandleSync(...)
+                NeedFrame:HandleSync(...)
+                WinFrame:HandleSync(...)
+                RollFrame:HandleSync(...)
                 return
             end
 
@@ -273,7 +272,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == "CHAT_MSG_SYSTEM" then
 
-                RollFrame:handleSystem(arg1)
+                RollFrame:HandleSystem(arg1)
 
                 if not core.isRaidLeader() then
                     return
@@ -400,7 +399,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             --end
 
             if event == 'CHAT_MSG_LOOT' then
-                WinFrame:handleLoot(arg1)
+                WinFrame:HandleLoot(arg1)
                 TalcFrame:SaveItemLocation(arg1)
                 return
             end
