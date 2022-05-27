@@ -262,7 +262,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:WelcomeItem_OnClick(this:GetID())
+                VoteFrame:WelcomeItem_OnClick(this:GetID())
             </OnClick>
         </Scripts>
     </Button>
@@ -330,7 +330,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:WelcomePlayer_OnClick(this.name)
+                VoteFrame:WelcomePlayer_OnClick(this.name)
             </OnClick>
             <OnLoad>
                 if ( self:IsEnabled() == 1 ) then
@@ -395,7 +395,7 @@
         </Layers>
         <Scripts>
             <OnClick>
-                TalcFrame:ExpandAttendanceFrame_OnClick()
+                VoteFrame:ExpandAttendanceFrame_OnClick()
             </OnClick>
             <OnLoad>
                 if ( self:IsEnabled() == 1 ) then
@@ -493,7 +493,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:TryToAddToWishlist_OnClick(this:GetID())
+                        VoteFrame:TryToAddToWishlist_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -511,7 +511,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:RemoveFromWishlist_OnClick(this:GetID())
+                        VoteFrame:RemoveFromWishlist_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -555,7 +555,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:VotedItemButton_OnClick(this:GetID())
+                        VoteFrame:VotedItemButton_OnClick(this:GetID())
                     </OnClick>
                 </Scripts>
             </Button>
@@ -645,7 +645,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:SetAssist_OnClick(this:GetID(), this:GetChecked())
+                        VoteFrame:SetAssist_OnClick(this:GetID(), this:GetChecked())
                     </OnClick>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -667,7 +667,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:SetOfficer_OnClick(this:GetID(), this:GetChecked())
+                        VoteFrame:SetOfficer_OnClick(this:GetID(), this:GetChecked())
                     </OnClick>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
@@ -1031,26 +1031,26 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:VoteButton_OnClick(this:GetID());
+                        VoteFrame:VoteButton_OnClick(this:GetID());
                     </OnClick>
                     <OnEnter>
-                        TalcFrame:Contestant_OnEnter(this:GetID())
+                        VoteFrame:Contestant_OnEnter(this:GetID())
                     </OnEnter>
                     <OnLeave>
-                        TalcFrame:Contestant_OnLeave(this:GetID())
+                        VoteFrame:Contestant_OnLeave(this:GetID())
                     </OnLeave>
                 </Scripts>
             </Button>
         </Frames>
         <Scripts>
             <OnEnter>
-                TalcFrame:Contestant_OnEnter(this:GetID())
+                VoteFrame:Contestant_OnEnter(this:GetID())
             </OnEnter>
             <OnLeave>
-                TalcFrame:Contestant_OnLeave(this:GetID())
+                VoteFrame:Contestant_OnLeave(this:GetID())
             </OnLeave>
             <OnMouseUp>
-                TalcFrame:Contestant_OnClick(this:GetID())
+                VoteFrame:Contestant_OnClick(this:GetID())
             </OnMouseUp>
         </Scripts>
     </Frame>
@@ -1212,7 +1212,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame.tradableItemsCheck:Item_OnClick(this:GetParent():GetID())
+                        VoteFrame.tradableItemsCheck:Item_OnClick(this:GetParent():GetID())
                     </OnClick>
                     <OnLoad>
                         if ( self:IsEnabled() == 1 ) then
@@ -1455,9 +1455,9 @@
                     </OnLeave>
                     <OnMouseUp>
                         if arg1 == "LeftButton" then
-                        TalcFrame:ToggleMainWindow_OnClick()
+                        VoteFrame:ToggleMainWindow_OnClick()
                         else
-                        TalcFrame:ShowMinimapDropdown()
+                        VoteFrame:ShowMinimapDropdown()
                         end
                     </OnMouseUp>
                 </Scripts>
@@ -1476,7 +1476,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:ToggleMainWindow_OnClick()
+                        VoteFrame:ToggleMainWindow_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1497,11 +1497,11 @@
                     <OnMouseDown>
                         TalcVoteFrame:StartSizing("BOTTOMRIGHT")
                         TalcVoteFrame:SetUserPlaced(true)
-                        TalcFrame:Resizing()
+                        VoteFrame:Resizing()
                     </OnMouseDown>
                     <OnMouseUp>
                         TalcVoteFrame:StopMovingOrSizing()
-                        TalcFrame:Resized()
+                        VoteFrame:Resized()
                     </OnMouseUp>
                 </Scripts>
             </Button>
@@ -1559,7 +1559,7 @@
                         this.countDownFrom = 0;
                     </OnLoad>
                     <OnUpdate>
-                        TalcFrame:TimeLeftBar_OnUpdate()
+                        VoteFrame:TimeLeftBar_OnUpdate()
                     </OnUpdate>
                 </Scripts>
                 <BarTexture file="Interface\addons\Talc\images\grad1">
@@ -1603,7 +1603,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:MLToWinner_OnClick();
+                        VoteFrame:MLToWinner_OnClick();
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1659,7 +1659,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:MLToEnchanter_OnClick()
+                        VoteFrame:MLToEnchanter_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1802,7 +1802,7 @@
                 </Frames>
                 <Scripts>
                     <OnVerticalScroll>
-                        FauxScrollFrame_OnVerticalScroll(self, offset, 24, TalcFrame_VoteFrameListScroll_Update);
+                        FauxScrollFrame_OnVerticalScroll(self, offset, 24, VoteFrame_VoteFrameListScroll_Update);
                     </OnVerticalScroll>
                 </Scripts>
             </ScrollFrame>
@@ -1837,7 +1837,7 @@
                 </Layers>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:DoneVoting_OnClick();
+                        VoteFrame:DoneVoting_OnClick();
                     </OnClick>
                 </Scripts>
             </Button>
@@ -1924,7 +1924,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:BroadcastLoot_OnClick();
+                                VoteFrame:BroadcastLoot_OnClick();
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -1943,7 +1943,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ResetClose_OnClick();
+                                VoteFrame:ResetClose_OnClick();
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -1962,7 +1962,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ToggleRLOptions_OnClick();
+                                VoteFrame:ToggleRLOptions_OnClick();
                                 PlaySound("igMainMenuOptionCheckBoxOn");
                             </OnClick>
                         </Scripts>
@@ -1986,10 +1986,10 @@
                                 this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
                             </OnLoad>
                             <OnClick>
-                                TalcFrame:ReceiveDrag()
+                                VoteFrame:ReceiveDrag()
                             </OnClick>
                             <OnReceiveDrag>
-                                TalcFrame:ReceiveDrag()
+                                VoteFrame:ReceiveDrag()
                             </OnReceiveDrag>
                         </Scripts>
                     </Button>
@@ -2008,7 +2008,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SendTestItems_OnClick()
+                                VoteFrame:SendTestItems_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2027,7 +2027,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:QueryWho_OnClick()
+                                VoteFrame:QueryWho_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2128,7 +2128,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RLFrameChangeTab_OnClick(this:GetID());
+                                VoteFrame:RLFrameChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2145,7 +2145,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RLFrameChangeTab_OnClick(this:GetID());
+                                VoteFrame:RLFrameChangeTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2218,7 +2218,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveSetting('VOTE_AUTO_ASSIST', this:GetChecked())
+                                        VoteFrame:SaveSetting('VOTE_AUTO_ASSIST', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2298,7 +2298,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveLootButton('BIS', this:GetChecked())
+                                        VoteFrame:SaveLootButton('BIS', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2341,7 +2341,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveLootButton('MS', this:GetChecked())
+                                        VoteFrame:SaveLootButton('MS', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2384,7 +2384,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveLootButton('OS', this:GetChecked())
+                                        VoteFrame:SaveLootButton('OS', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2427,7 +2427,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveLootButton('XMOG', this:GetChecked())
+                                        VoteFrame:SaveLootButton('XMOG', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2460,7 +2460,7 @@
                                 </Anchors>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SyncLootHistory()
+                                        VoteFrame:SyncLootHistory()
                                     </OnClick>
                                 </Scripts>
                             </Button>
@@ -2492,7 +2492,7 @@
                                 </Layers>
                                 <Scripts>
                                     <OnClick>
-                                        TalcFrame:SaveSetting('VOTE_SCREENSHOT_LOOT', this:GetChecked())
+                                        VoteFrame:SaveSetting('VOTE_SCREENSHOT_LOOT', this:GetChecked())
                                     </OnClick>
                                     <OnEnter>
                                         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2616,7 +2616,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowScreen('Settings')
+                                VoteFrame:ShowScreen('Settings')
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2634,7 +2634,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowScreen("Wishlist")
+                                VoteFrame:ShowScreen("Wishlist")
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2653,7 +2653,7 @@
 <!--                        </Anchors>-->
 <!--                        <Scripts>-->
 <!--                            <OnClick>-->
-<!--                                TalcFrame.AttendanceTracker:Stop()-->
+<!--                                VoteFrame.AttendanceTracker:Stop()-->
 <!--                            </OnClick>-->
 <!--                        </Scripts>-->
 <!--                    </Button>-->
@@ -2672,7 +2672,7 @@
 <!--                        </Anchors>-->
 <!--                        <Scripts>-->
 <!--                            <OnClick>-->
-<!--                                TalcFrame.AttendanceTracker:Start()-->
+<!--                                VoteFrame.AttendanceTracker:Start()-->
 <!--                            </OnClick>-->
 <!--                        </Scripts>-->
 <!--                    </Button>-->
@@ -2723,7 +2723,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:WelcomeFrameBackButton_OnClick()
+                                VoteFrame:WelcomeFrameBackButton_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -2824,7 +2824,7 @@
                 </Frames>
                 <Scripts>
                     <OnShow>
-                        TalcFrame:WelcomeFrame_OnShow()
+                        VoteFrame:WelcomeFrame_OnShow()
                     </OnShow>
                 </Scripts>
             </Frame>
@@ -2954,7 +2954,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_ENABLE_SOUND', this:GetChecked())
+                                VoteFrame:SaveSetting('WIN_ENABLE_SOUND', this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -2994,7 +2994,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
+                                VoteFrame:SaveSetting('WIN_VOLUME', this:GetChecked() and 'high' or 'low')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3033,7 +3033,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '2' or '0')
+                                VoteFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '2' or '0')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3072,7 +3072,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '3' or '0')
+                                VoteFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '3' or '0')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3111,7 +3111,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '4' or '0')
+                                VoteFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '4' or '0')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3150,7 +3150,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '5' or '0')
+                                VoteFrame:SaveSetting('WIN_THRESHOLD', this:GetChecked() and '5' or '0')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3188,7 +3188,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('ROLL_ENABLE_SOUND', this:GetChecked())
+                                VoteFrame:SaveSetting('ROLL_ENABLE_SOUND', this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3227,7 +3227,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
+                                VoteFrame:SaveSetting('ROLL_VOLUME', this:GetChecked() and 'high' or 'low')
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3267,7 +3267,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('ROLL_TROMBONE', this:GetChecked())
+                                VoteFrame:SaveSetting('ROLL_TROMBONE', this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3305,7 +3305,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('NEED_FRAME_COLLAPSE', this:GetChecked())
+                                VoteFrame:SaveSetting('NEED_FRAME_COLLAPSE', this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3343,7 +3343,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('BOSS_FRAME_ENABLE', this:GetChecked())
+                                VoteFrame:SaveSetting('BOSS_FRAME_ENABLE', this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3381,7 +3381,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
+                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
                             </OnClick>
                             <OnEnter>
                                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -3421,7 +3421,7 @@
 <!--                        </Layers>-->
 <!--                        <Scripts>-->
 <!--                            <OnClick>-->
-<!--                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())-->
+<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())-->
 <!--                            </OnClick>-->
 <!--                        </Scripts>-->
 <!--                    </CheckButton>-->
@@ -3451,7 +3451,7 @@
 <!--                        </Layers>-->
 <!--                        <Scripts>-->
 <!--                            <OnClick>-->
-<!--                                TalcFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())-->
+<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())-->
 <!--                            </OnClick>-->
 <!--                        </Scripts>-->
 <!--                    </CheckButton>-->
@@ -3484,7 +3484,7 @@
                         </Layers>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:SaveSetting('_DEBUG', this:GetChecked())
+                                VoteFrame:SaveSetting('_DEBUG', this:GetChecked())
                             </OnClick>
                         </Scripts>
                     </CheckButton>
@@ -3557,7 +3557,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:PurgeLootHistory_OnClick()
+                                VoteFrame:PurgeLootHistory_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3575,7 +3575,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowScreen("Welcome")
+                                VoteFrame:ShowScreen("Welcome")
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3583,7 +3583,7 @@
                 </Frames>
                 <Scripts>
                     <OnShow>
-                        TalcFrame:SettingsFrame_OnShow()
+                        VoteFrame:SettingsFrame_OnShow()
                         PlaySound("igMainMenuOptionCheckBoxOn");
                     </OnShow>
                     <OnHide>
@@ -3703,7 +3703,7 @@
                                 this:ClearFocus(false);
                             </OnEscapePressed>
                             <OnEnterPressed>
-                                TalcFrame:TryToAddToWishlist_OnClick(this:GetText());
+                                VoteFrame:TryToAddToWishlist_OnClick(this:GetText());
                                 this:ClearFocus();
                             </OnEnterPressed>
                             <OnEditFocusLost>
@@ -3729,7 +3729,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:TryToAddToWishlist_OnClick(TalcVoteFrameWishlistFrameItemEditBox:GetText())
+                                VoteFrame:TryToAddToWishlist_OnClick(TalcVoteFrameWishlistFrameItemEditBox:GetText())
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3747,7 +3747,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:ShowScreen("Welcome")
+                                VoteFrame:ShowScreen("Welcome")
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3765,7 +3765,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:WishlistFrameResultsBackButton_OnClick()
+                                VoteFrame:WishlistFrameResultsBackButton_OnClick()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3773,7 +3773,7 @@
                 </Frames>
                 <Scripts>
                     <OnShow>
-                        TalcFrame:WishlistFrame_OnShow();
+                        VoteFrame:WishlistFrame_OnShow();
                         PlaySound("igMainMenuOptionCheckBoxOn");
                     </OnShow>
                     <OnHide>
@@ -3857,7 +3857,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsClose()
+                                VoteFrame:RaiderDetailsClose()
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3875,7 +3875,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
+                                VoteFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3892,7 +3892,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
+                                VoteFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -3909,7 +3909,7 @@
                         </Anchors>
                         <Scripts>
                             <OnClick>
-                                TalcFrame:RaiderDetailsTab_OnClick(this:GetID());
+                                VoteFrame:RaiderDetailsTab_OnClick(this:GetID());
                             </OnClick>
                         </Scripts>
                     </Button>
@@ -4436,7 +4436,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:AnnounceOlderAddon_OnClick()
+                        VoteFrame:AnnounceOlderAddon_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4454,7 +4454,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:QueryWho_OnClick();
+                        VoteFrame:QueryWho_OnClick();
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4472,7 +4472,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        TalcFrame:AnnounceWithoutAddon_OnClick()
+                        VoteFrame:AnnounceWithoutAddon_OnClick()
                     </OnClick>
                 </Scripts>
             </Button>
@@ -4571,7 +4571,7 @@
 <!--                <Scripts>-->
 <!--                    <OnClick>-->
 <!--                        this:GetParent():Hide()-->
-<!--                        TalcFrame.AttendanceTracker:Start()-->
+<!--                        VoteFrame.AttendanceTracker:Start()-->
 <!--                    </OnClick>-->
 <!--                </Scripts>-->
 <!--            </Button>-->
@@ -4696,7 +4696,7 @@
 <!--                <Scripts>-->
 <!--                    <OnClick>-->
 <!--                        this:GetParent():Hide()-->
-<!--                        TalcFrame.AttendanceTracker:Stop()-->
+<!--                        VoteFrame.AttendanceTracker:Stop()-->
 <!--                    </OnClick>-->
 <!--                </Scripts>-->
 <!--            </Button>-->

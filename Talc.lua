@@ -189,7 +189,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
 
-            TalcFrame:Init();
+            VoteFrame:Init();
 
             NeedFrame:Init();
             WinFrame:Init();
@@ -205,18 +205,18 @@ TALC:SetScript("OnEvent", function(__, event, ...)
         --if event == "PLAYER_ENTERING_WORLD" and db['ATTENDANCE_TRACKING'].enabled then
         --    if core.instanceInfo() then
         --        if db['ATTENDANCE_TRACKING'].started then
-        --            TalcFrame.AttendanceTracker:Start()
+        --            VoteFrame.AttendanceTracker:Start()
         --        else
         --            TalcVoteAttendanceQueryStart:Show()
         --        end
         --    else
         --        if db['ATTENDANCE_TRACKING'].started then
-        --            if not TalcFrame.AttendanceTracker:IsVisible() then
-        --                TalcFrame.AttendanceTracker:Show()
+        --            if not VoteFrame.AttendanceTracker:IsVisible() then
+        --                VoteFrame.AttendanceTracker:Show()
         --            end
         --            TalcVoteAttendanceQueryStop:Show()
         --        else
-        --            TalcFrame.AttendanceTracker:Stop()
+        --            VoteFrame.AttendanceTracker:Stop()
         --        end
         --    end
         --    return
@@ -226,7 +226,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_ADDON' and arg1 == TALC.channel then
                 --print(arg1, arg2, arg3, arg4)
-                TalcFrame:HandleSync(...)
+                VoteFrame:HandleSync(...)
                 NeedFrame:HandleSync(...)
                 WinFrame:HandleSync(...)
                 RollFrame:HandleSync(...)
@@ -234,8 +234,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "PLAYER_ENTERING_WORLD" then
-                TalcFrame.tradableItemsCheck:Hide()
-                TalcFrame.tradableItemsCheck:Show()
+                VoteFrame.tradableItemsCheck:Hide()
+                VoteFrame.tradableItemsCheck:Show()
             end
 
             if event == "RAID_ROSTER_UPDATE" then
@@ -262,7 +262,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     end
                     TalcVoteFrameRLExtraFrame:Show()
 
-                    TalcFrame:CheckAssists()
+                    VoteFrame:CheckAssists()
                     core.syncRoster("BULK")
                 else
                     TalcVoteFrameRLExtraFrame:Hide()
@@ -299,15 +299,15 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     local roll = core.int(r[3])
 
 
-                    for pwIndex, pwPlayer in next, TalcFrame.playersWhoWantItems do
+                    for pwIndex, pwPlayer in next, VoteFrame.playersWhoWantItems do
                         --check if name is in playersWhoWantItems with vote == -2
                         if pwPlayer.name == name and pwPlayer.roll == -2 then
                             -- set roll details
-                            TalcFrame.playersWhoWantItems[pwIndex].roll = roll
-                            TalcFrame.VotedItemsFrames[TalcFrame.CurrentVotedItem].rolled = true
+                            VoteFrame.playersWhoWantItems[pwIndex].roll = roll
+                            VoteFrame.VotedItemsFrames[VoteFrame.CurrentVotedItem].rolled = true
                             -- send it to officers
-                            core.asend("PlayerRoll:" .. pwIndex .. ":" .. roll .. ":" .. TalcFrame.CurrentVotedItem)
-                            TalcFrame:VoteFrameListUpdate()
+                            core.asend("PlayerRoll:" .. pwIndex .. ":" .. roll .. ":" .. VoteFrame.CurrentVotedItem)
+                            VoteFrame:VoteFrameListUpdate()
                             break
                         end
                     end
@@ -345,10 +345,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                         if blueOrEpic then
                             TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
                             TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
-                            TalcFrame.sentReset = false
+                            VoteFrame.sentReset = false
                             if core.me ~= 'Er' then
                                 -- dont show for me, ill show it from erui addon
-                                TalcFrame:ShowWindow()
+                                VoteFrame:ShowWindow()
                             end
                         end
 
@@ -400,7 +400,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_LOOT' then
                 WinFrame:HandleLoot(arg1)
-                TalcFrame:SaveItemLocation(arg1)
+                VoteFrame:SaveItemLocation(arg1)
                 return
             end
         end
@@ -537,7 +537,7 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print('You are not in a raid.')
                 return false
             end
-            TalcFrame:queryWho()
+            VoteFrame:queryWho()
             return
         end
     end
