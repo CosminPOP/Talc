@@ -56,7 +56,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if db['WIN_THRESHOLD'] == nil then
-                db['WIN_THRESHOLD'] = "00345"
+                db['WIN_THRESHOLD'] = "0345"
             end
             if db['WIN_ENABLE_SOUND'] == nil then
                 db['WIN_ENABLE_SOUND'] = true
