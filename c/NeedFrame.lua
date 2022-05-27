@@ -5,7 +5,7 @@ NeedFrame = CreateFrame("Frame")
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
 
-function NeedFrame:init()
+function NeedFrame:Init()
     core = TALC
     db = TALC_DB
     tokenRewards = TALC_TOKENS
@@ -15,7 +15,7 @@ end
 
 function NeedFrame:ResetVars()
 
-    self:hideAnchor()
+    self:HideAnchor()
 
     for _, frame in next, self.itemFrames do
         frame:Hide()
@@ -29,7 +29,7 @@ function NeedFrame:ResetVars()
     self.numItems = 0
 end
 
-function NeedFrame:handleSync(arg1, msg, arg3, sender)
+function NeedFrame:HandleSync(_, msg, _, sender)
 
     if core.subFind(msg, 'NeedFrame=') then
         local command = core.split('=', msg)
@@ -92,7 +92,11 @@ function NeedFrame:AddItem(data)
         talc_debug(' going to delay add item ')
         self.delayAddItem.data[index] = data
         self.delayAddItem:Show()
-        return false
+        return
+    end
+
+    if quality > 5 then
+        return
     end
 
     if not self.itemFrames[index] then
@@ -131,15 +135,25 @@ function NeedFrame:AddItem(data)
         end
     end
 
-    _G[frame .. 'Background']:SetTexture("Interface\\Addons\\Talc\\images\\need\\need_" .. quality)
+    _G[frame .. 'ItemQuality2']:Hide()
+    _G[frame .. 'ItemQuality3']:Hide()
+    _G[frame .. 'ItemQuality4']:Hide()
+    _G[frame .. 'ItemQuality5']:Hide()
+
+    if quality < 2 then
+        _G[frame .. 'ItemQuality2']:Show()
+        SetDesaturation(_G[frame .. 'ItemQuality2'], 1)
+    else
+        _G[frame .. 'ItemQuality' .. quality]:Show()
+    end
 
     _G[frame]:ClearAllPoints()
     _G[frame]:SetPoint("TOP", TalcNeedFrame, "TOP", 0, 20 + (100 * index))
 
-    _G[frame .. 'ItemIcon']:SetNormalTexture(texture);
-    _G[frame .. 'ItemIcon']:SetPushedTexture(texture);
-    _G[frame .. 'ItemIconItemName']:SetText(link);
-    _G[frame .. 'ItemIconItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
+    _G[frame .. 'Item']:SetNormalTexture(texture);
+    _G[frame .. 'Item']:SetPushedTexture(texture);
+    _G[frame .. 'ItemName']:SetText(link);
+    _G[frame .. 'ItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. il);
 
     _G[frame .. 'TimeLeftBar']:SetVertexColor(ITEM_QUALITY_COLORS[quality].r, ITEM_QUALITY_COLORS[quality].g, ITEM_QUALITY_COLORS[quality].b, .76)
 
@@ -152,7 +166,7 @@ function NeedFrame:AddItem(data)
         end
     end
 
-    core.addButtonOnEnterTooltip(_G[frame .. 'ItemIcon'], link, nil, true)
+    core.addButtonOnEnterTooltip(_G[frame .. 'Item'], link, nil, true)
 
     _G[frame .. 'QuestRewards']:Hide()
 
@@ -178,7 +192,7 @@ function NeedFrame:AddItem(data)
     GameTooltip:Hide()
 
     if not forMe and classes ~= "" then
-        SetDesaturation(_G[frame .. 'ItemIcon']:GetNormalTexture(), 1)
+        SetDesaturation(_G[frame .. 'Item']:GetNormalTexture(), 1)
     end
 
     local hasRewards = false
@@ -270,7 +284,7 @@ function NeedFrame:AddItem(data)
         end
     end
 
-    self:fadeInFrame(_G[frame])
+    self:FadeInFrame(_G[frame])
 end
 
 function NeedFrame:SendGear(to)
@@ -296,7 +310,7 @@ function NeedFrame:SendGear(to)
     core.wsend("NORMAL", "SendingGear=End", to)
 end
 
-function NeedFrame:fadeInFrame(frame)
+function NeedFrame:FadeInFrame(frame)
     frame:Show();
     frame.animIn:Stop();
     frame.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
@@ -314,15 +328,16 @@ function NeedFrame:fadeInFrame(frame)
     end
 end
 
-function NeedFrame:animInFinished()
+function NeedFrame:FadeInFinished()
     local frame = this:GetRegionParent()
-    _G[frame:GetName() .. "TimeLeftBar"].countdown:Stop();
-    _G[frame:GetName() .. "TimeLeftBar"].countdown.animIn:SetStartDelay(0);
-    _G[frame:GetName() .. "TimeLeftBar"].countdown.countdown:SetDuration(db['VOTE_TTN']);
-    _G[frame:GetName() .. "TimeLeftBar"].countdown:Play();
+    frame.timeleft.countdown:Stop();
+    frame.timeleft.countdown.animIn:SetStartDelay(0);
+    frame.timeleft.countdown.countdown:SetStartDelay(0);
+    frame.timeleft.countdown.countdown:SetDuration(db['VOTE_TTN'] - 1);
+    frame.timeleft.countdown:Play();
 end
 
-function NeedFrame:fadeOutFrame(frame)
+function NeedFrame:FadeOutFrame(frame)
     -- can reach here from need click too
     _G[frame:GetName() .. "TimeLeftBar"].countdown:Stop();
 
@@ -331,7 +346,7 @@ function NeedFrame:fadeOutFrame(frame)
     frame.animOut:Play();
 end
 
-function NeedFrame:animOutFinished()
+function NeedFrame:FadeOutFinished()
     local frame = this:GetRegionParent()
     frame:Hide();
     if frame.need == 'autopass' then
@@ -344,6 +359,17 @@ function NeedFrame:animOutFinished()
     end
 end
 
+function NeedFrame:CountdownFinished()
+    local frame = this:GetRegionParent():GetParent()
+    NeedFrame:FadeOutFrame(frame)
+end
+
+function NeedFrame:SetCountdownWidth()
+    local frame = this:GetRegionParent():GetParent()
+    frame.elapsed = frame.elapsed + core.int(arg1)
+    this:GetRegionParent():SetWidth(260 - frame.elapsed * 260 / db['VOTE_TTN'])
+end
+
 function NeedFrame:RepositionFrames(id)
     if id < #self.itemFrames then
         for i = id + 1, #self.itemFrames do
@@ -353,18 +379,7 @@ function NeedFrame:RepositionFrames(id)
     end
 end
 
-function NeedFrame:countdownFinished()
-    local frame = this:GetRegionParent():GetParent()
-    NeedFrame:fadeOutFrame(frame)
-end
-
-function NeedFrame:SetCountdownWidth()
-    local frame = this:GetRegionParent():GetParent()
-    frame.elapsed = frame.elapsed + core.int(arg1)
-    this:GetRegionParent():SetWidth(260 - frame.elapsed * 260 / db['VOTE_TTN'])
-end
-
-function NeedFrame:showAnchor()
+function NeedFrame:ShowAnchor()
     TalcNeedFrame:Show()
     TalcNeedFrame:EnableMouse(true)
     TalcNeedFrameTitle:Show()
@@ -376,7 +391,7 @@ function NeedFrame:showAnchor()
     TalcNeedFrameScaleText:Show()
 end
 
-function NeedFrame:hideAnchor()
+function NeedFrame:HideAnchor()
     TalcNeedFrame:Hide()
     TalcNeedFrame:EnableMouse(false)
     TalcNeedFrameTitle:Hide()
@@ -423,7 +438,7 @@ function NeedFrame:NeedClick(need, f)
     end
 
     if need == 'autopass' then
-        self:fadeOutFrame(frame)
+        self:FadeOutFrame(frame)
         return false
     end
 
@@ -529,7 +544,7 @@ function NeedFrame:NeedClick(need, f)
     local inWishlist = self.itemFrames[id].inWishlist and '1' or '0'
     core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore .. "=" .. inWishlist)
 
-    self:fadeOutFrame(frame)
+    self:FadeOutFrame(frame)
 end
 
 function NeedFrame:Test()
