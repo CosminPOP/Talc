@@ -2,7 +2,7 @@ local db, core
 
 BossFrame = CreateFrame("Frame")
 
-function BossFrame:init()
+function BossFrame:Init()
 
     core = TALC
     db = TALC_DB
