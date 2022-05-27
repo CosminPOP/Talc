@@ -4,7 +4,7 @@ local _G = _G
 RollFrame = CreateFrame("Frame")
 
 RollFrame.watchRolls = false
-RollFrame.rolls = {}
+RollFrame.id = 0
 
 function RollFrame:HandleSync(_, msg, _, sender)
     if core.isRaidLeader(sender) then
@@ -12,19 +12,41 @@ function RollFrame:HandleSync(_, msg, _, sender)
             local rfEx = core.split('=', msg)
             if rfEx[6] then
                 if rfEx[6] == core.me then
-                    self.frames:AddRolledItem(msg)
+                    self:AddRolledItem(msg)
                     if not TalcRollFrame:IsVisible() then
                         TalcRollFrame:Show()
                     end
                     self.watchRolls = true
                 end
             end
+            return
         end
         if core.subFind(msg, 'RollFrame=') then
             local command = core.split('=', msg)
             if command[2] == "Reset" then
                 self:ResetVars()
             end
+            return
+        end
+
+        if core.subFind(msg, 'PlayerWon=') and self.watchRolls then
+            if not core.isRaidLeader(sender) then
+                return
+            end
+
+            local wonData = core.split("=", t)
+
+            if not wonData[7] then
+                talc_error('bad playerWon syntax rollframe')
+                talc_error(msg)
+                return false
+            end
+
+            if wonData[3] ~= core.me and db['ROLL_TROMBONE'] and db['ROLL_ENABLE_SOUND'] then
+                PlaySoundFile("Interface\\AddOns\\Talc\\sound\\sadtrombone.ogg")
+                RollFrame.watchRolls = false
+            end
+            return
         end
     end
 end
@@ -63,10 +85,7 @@ function RollFrame:ShowAnchor()
     TalcRollFrameClosePlacement:Show()
 end
 
-function RollFrame:HideAnchor(withMessage)
-    if withMessage then
-        talc_print('Anchor window closed. Type |cfffff569/talc |cff69ccf0roll |rto show the Anchor window.')
-    end
+function RollFrame:HideAnchor()
     TalcRollFrame:SetBackdrop({
         bgFile = "",
         tile = true,
@@ -78,157 +97,15 @@ function RollFrame:HideAnchor(withMessage)
     TalcRollFrameClosePlacement:Hide()
 end
 
-function RollFrame:FadeInFrame(id)
-    if db['ROLL_ENABLE_SOUND'] then
-        PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. db['ROLL_VOLUME'] .. ".ogg");
-    end
-    self.fadeInAnimationFrame.ids[id] = true
-    self.fadeInAnimationFrame.frameIndex[id] = 0
-    self.fadeInAnimationFrame:Show()
-end
-
-function RollFrame:FadeOutFrame(id)
-    self.fadeOutAnimationFrame.ids[id] = true
-    self.fadeOutAnimationFrame:Show()
-end
-
 function RollFrame:ResetVars()
-
-    self:HideAnchor()
-
-    for _, frame in next, self.frames.itemFrames do
-        frame:Hide()
-    end
-
-    self.frames.freeSpots = {}
-
     TalcRollFrame:Hide()
-
-    self.countdown:Hide()
-    self.countdown.T = 1
-
-    self.fadeInAnimationFrame:Hide()
-
-    self.fadeInAnimationFrame.ids = {}
-    self.frames.itemQuality = {}
-
+    self:HideAnchor()
     self.watchRolls = false
     self.rolls = {}
 end
 
-function RollFrame:Test()
-
-    local linkString = '|cffa335ee|Hitem:19364:0:0:0:0:0:0:0:0|h[Ashkandi, Greatsword of the Brotherhood]|h|r'
-    local _, _, itemLink = core.find(linkString, "(item:%d+:%d+:%d+:%d+)");
-    local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
-
-    if name and tex then
-        self.frames:AddRolledItem('rollFor=0=' .. tex .. '=' .. name .. '=' .. linkString .. '=30=' .. core.me)
-        if not TalcRollFrame:IsVisible() then
-            TalcRollFrame:Show()
-        end
-    else
-        talc_debug("needs cache")
-        GameTooltip:SetHyperlink(itemLink)
-        GameTooltip:Hide()
-    end
-end
-
-function RollFrame:PickRoll(id, roll)
-
-    for i = 1, #self.frames.freeSpots do
-        if self.frames.freeSpots[i] == id then
-            self.frames.freeSpots[i] = 0
-            break
-        end
-    end
-
-    if id == 0 then
-        self:FadeOutFrame(id)
-        return
-    end
-
-    if roll == 'pass' then
-        core.asend("RollChoice=" .. id .. "=-1")
-    end
-
-    if roll == 'roll' then
-        RandomRoll(1, 100)
-    end
-
-    self:FadeOutFrame(id)
-end
-
-RollFrame.countdown = CreateFrame("Frame")
-RollFrame.countdown:Hide()
-RollFrame.countdown.timeToRoll = 30 --default, will be gotten via addonMessage
-RollFrame.countdown.T = 1
-RollFrame.countdown.C = 30
-
-RollFrame.countdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
-end)
-
-RollFrame.countdown:SetScript("OnUpdate", function()
-    local plus = 0.03
-    local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
-
-    if gt >= st then
-        if this.T ~= this.timeToRoll + plus then
-
-            for index in next, RollFrame.frames.itemFrames do
-                if core.floor(this.C - this.T + plus) < 0 then
-                    _G['RollFrame' .. index .. 'TimeLeftBarText']:SetText("CLOSED")
-                else
-                    _G['RollFrame' .. index .. 'TimeLeftBarText']:SetText(core.ceil(this.C - this.T + plus) .. "s")
-                end
-
-                _G['RollFrame' .. index .. 'TimeLeftBar']:SetWidth((this.C - this.T + plus) * 190 / this.timeToRoll)
-            end
-        end
-        this:Hide()
-        if this.T < this.C + plus then
-            --still tick
-            this.T = this.T + plus
-            this:Show()
-        elseif this.T > this.timeToRoll + plus then
-
-            for index, frame in next, RollFrame.frames.itemFrames do
-                if frame:IsVisible() then
-                    RollFrame:PickRoll(frame:GetID(), 'roll');
-                end
-            end
-
-            self:Hide()
-            this.T = 1
-
-        end
-    end
-end)
-
-RollFrame.frames = CreateFrame("Frame")
-RollFrame.frames.itemFrames = {}
-RollFrame.frames.itemQuality = {}
-RollFrame.frames.freeSpots = {}
-
-function RollFrame.frames:FirstFree(index)
-    for i = 1, #self.freeSpots do
-        if self.freeSpots[i] == 0 then
-            return i
-        end
-    end
-
-    self.freeSpots[#self.freeSpots + 1] = index
-    return #self.freeSpots
-end
-
-function RollFrame.frames:AddRolledItem(data)
+function RollFrame:AddRolledItem(data)
     local item = core.split("=", data)
-
-    RollFrame.countdown.timeToRoll = db['VOTE_TTR']
-    RollFrame.countdown.C = RollFrame.countdown.timeToRoll
-
     local index = core.int(item[2])
     local texture = item[3]
     local link = item[5]
@@ -246,192 +123,147 @@ function RollFrame.frames:AddRolledItem(data)
         return false
     end
 
-    self.itemQuality[index] = quality
-
-    if self.itemFrames[index] then
-        if self.itemFrames[index]:IsVisible() then
-            self.itemFrames[index]:Hide()
-            self:AddRolledItem(data)
-            return false
-        end
-    else
-        self.itemFrames[index] = CreateFrame("Frame", "RollFrame" .. index, TalcRollFrame, "Talc_RollFrameItemTemplate")
+    if quality > 5 then
+        return
     end
 
-    self.itemFrames[index]:Show()
-    self.itemFrames[index]:SetAlpha(0)
+    this.id = index
+    TalcRollFrameItem.elapsed = 0
 
-    self.itemFrames[index]:ClearAllPoints()
-    if index == 0 then
-        --test button
-        self.itemFrames[index]:SetPoint("TOP", TalcRollFrame, "TOP", 0, 40 + (80 * 1))
+    TalcRollFrameItemButton:SetNormalTexture(texture);
+    TalcRollFrameItemButton:SetPushedTexture(texture);
+    TalcRollFrameItemButtonName:SetText(link);
+
+    TalcRollFrameItemButtonQuality2:Hide()
+    TalcRollFrameItemButtonQuality3:Hide()
+    TalcRollFrameItemButtonQuality4:Hide()
+    TalcRollFrameItemButtonQuality5:Hide()
+
+    if quality < 2 then
+        TalcRollFrameItemButtonQuality2:Show()
+        SetDesaturation(TalcRollFrameItemButtonQuality2, 1)
     else
-        self.itemFrames[index]:SetPoint("TOP", TalcRollFrame, "TOP", 0, 40 + (80 * self:firstFree(index)))
+        _G['TalcRollFrameItemButtonQuality' .. quality]:Show()
     end
-    self.itemFrames[index].link = link
 
-    _G['RollFrame' .. index .. 'ItemIcon']:SetNormalTexture(texture);
-    _G['RollFrame' .. index .. 'ItemIcon']:SetPushedTexture(texture);
-    _G['RollFrame' .. index .. 'ItemIconItemName']:SetText(link);
-
-    _G['RollFrame' .. index .. 'Roll']:SetID(index);
-    _G['RollFrame' .. index .. 'Pass']:SetID(index);
-
-    local r, g, b = GetItemQualityColor(quality)
-
-    _G['RollFrame' .. index .. 'TimeLeftBar']:SetBackdropColor(r, g, b, .76)
-
-    core.addButtonOnEnterTooltip(_G['RollFrame' .. index .. 'ItemIcon'], link, nil, true)
+    core.addButtonOnEnterTooltip(TalcRollFrameItemButton, link, nil, true)
 
     RollFrame:FadeInFrame(index)
 end
 
-RollFrame.fadeInAnimationFrame = CreateFrame("Frame")
-RollFrame.fadeInAnimationFrame:Hide()
-RollFrame.fadeInAnimationFrame.ids = {}
-RollFrame.fadeInAnimationFrame.frameIndex = {}
+function RollFrame:FadeInFrame()
 
-RollFrame.fadeInAnimationFrame:SetScript("OnShow", function()
-    this.startTime = GetTime()
-end)
-
-RollFrame.fadeInAnimationFrame:SetScript("OnShow", function()
-    this.startTime = GetTime()
-end)
-
-RollFrame.fadeInAnimationFrame:SetScript("OnUpdate", function()
-    if ((GetTime()) >= (this.startTime) + 0.03) then
-
-        this.startTime = GetTime()
-
-        local atLeastOne = false
-        for id in next, this.ids do
-            if this.ids[id] then
-                atLeastOne = true
-                local frame = _G["RollFrame" .. id]
-
-                local frameNr = this.frameIndex[id]
-                if this.frameIndex[id] < 10 then
-                    frameNr = '0' .. this.frameIndex[id]
-                end
-
-                if this.frameIndex[id] > 30 then
-                    frameNr = 30
-                end
-
-                frame:SetBackdrop({
-                    bgFile = "Interface\\addons\\Talc\\images\\roll\\roll_frame_" .. RollFrame.frames.itemQuality[id] .. "_" .. frameNr,
-                    tile = false,
-                })
-
-                --fadein
-                if this.frameIndex[id] >= 0 and this.frameIndex[id] <= 5 then
-                    frame:SetAlpha(this.frameIndex[id] * 0.2)
-                end
-
-                --fadeout
-                if this.frameIndex[id] >= (RollFrame.countdown.timeToRoll - 1) * 30 and this.frameIndex[id] <= RollFrame.countdown.timeToRoll * 30 then
-                    frame:SetAlpha(frame:GetAlpha() - 0.2)
-                end
-
-                if this.frameIndex[id] < RollFrame.countdown.timeToRoll * 30 then
-                    _G['RollFrame' .. id .. 'TimeLeftBarText']:SetText(core.ceil(RollFrame.countdown.timeToRoll - this.frameIndex[id] / 30) - 1 .. "s")
-                    _G['RollFrame' .. id .. 'TimeLeftBar']:SetWidth(core.ceil(RollFrame.countdown.timeToRoll - this.frameIndex[id] / 30 - 1) * 190 / RollFrame.countdown.timeToRoll)
-                    this.frameIndex[id] = this.frameIndex[id] + 1
-                else
-                    if frame:IsVisible() then
-                        talc_debug('auto roll because it ended')
-                        RollFrame:PickRoll(id, 'roll');
-                    else
-                        talc_debug('timer ended and frame is invisible, should not roll')
-                    end
-                    this.ids[id] = nil
-
-                    if RollFrame.watchRolls == true then
-
-                        local maxRoll = 0
-                        for _, roll in next, RollFrame.rolls do
-                            if maxRoll < roll then
-                                maxRoll = roll
-                            end
-                        end
-
-                        talc_debug(' maxroll = ' .. maxRoll)
-
-                        if RollFrame.rolls[core.me] ~= maxRoll and db['ROLL_TROMBONE'] and db['ROLL_ENABLE_SOUND'] then
-                            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\sadtrombone.ogg")
-                            RollFrame.watchRolls = false
-                        end
-
-                    end
-
-                end
-            end
-        end
-        if not atLeastOne then
-            this:Hide()
-        end
+    if db['ROLL_ENABLE_SOUND'] then
+        PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. db['ROLL_VOLUME'] .. ".ogg");
     end
-end)
 
-RollFrame.fadeOutAnimationFrame = CreateFrame("Frame")
-RollFrame.fadeOutAnimationFrame:Hide()
-RollFrame.fadeOutAnimationFrame.ids = {}
+    TalcRollFrameItem:Show();
+    TalcRollFrameItem.animIn:Stop();
+    TalcRollFrameItem.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItem.animIn:Play();
 
-RollFrame.fadeOutAnimationFrame:SetScript("OnShow", function()
-    this.startTime = GetTime()
-end)
+    TalcRollFrameItem.glow.animIn:Stop();
+    TalcRollFrameItem.glow.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItem.glow.animIn:Play();
 
-RollFrame.fadeOutAnimationFrame:SetScript("OnUpdate", function()
-    if ((GetTime()) >= (this.startTime) + 0.03) then
+    TalcRollFrameItem.star.animIn:Stop();
+    TalcRollFrameItem.star.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItem.star.animIn:Play();
 
-        this.startTime = GetTime()
+    TalcRollFrameItem.shine.animIn:Stop();
+    TalcRollFrameItem.shine.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItem.shine.animIn:Play();
 
-        local atLeastOne = false
-        for id in next, this.ids do
-            if this.ids[id] then
-                atLeastOne = true
-                local frame = _G["RollFrame" .. id]
-                if frame:GetAlpha() > 0 then
-                    frame:SetAlpha(frame:GetAlpha() - 0.15)
-                else
-                    this.ids[id] = nil
-                    frame:Hide()
-                end
-            end
-        end
-        if not atLeastOne then
-            this:Hide()
-        end
+    TalcRollFrameItemButton.glow.animIn:Stop();
+    TalcRollFrameItemButton.glow.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItemButton.glow.animIn:Play();
+
+    TalcRollFrameItemRoll.fadeIn.animIn:Stop();
+    TalcRollFrameItemRoll.fadeIn.animIn.animIn:SetStartDelay(1);
+    TalcRollFrameItemRoll.fadeIn.animIn:Play();
+
+    TalcRollFrameItemPass.fadeIn.animIn:Stop();
+    TalcRollFrameItemPass.fadeIn.animIn.animIn:SetStartDelay(1.2);
+    TalcRollFrameItemPass.fadeIn.animIn:Play();
+end
+
+function RollFrame:FadeInFinished()
+    TalcRollFrameItem.timeleft.countdown:Stop();
+    TalcRollFrameItem.timeleft.countdown.animIn:SetStartDelay(0);
+    TalcRollFrameItem.timeleft.countdown.countdown:SetStartDelay(0);
+    TalcRollFrameItem.timeleft.countdown.countdown:SetDuration(db['VOTE_TTR'] - 1);
+    TalcRollFrameItem.timeleft.countdown.countdown:SetDuration(3);
+    TalcRollFrameItem.timeleft.countdown:Play();
+end
+
+function RollFrame:CountdownFinished()
+    print("countdown finished")
+    RollFrame:FadeOutFrame()
+end
+
+function RollFrame:UpdateCountdown()
+    local frame = this:GetRegionParent():GetParent()
+    frame.elapsed = frame.elapsed + core.int(arg1)
+    TalcRollFrameItemButtonInfo:SetText("Roll or Pass (".. core.floor(db['VOTE_TTR'] - frame.elapsed) .."s)")
+end
+
+function RollFrame:FadeOutFrame()
+    TalcRollFrameItem.animOut:Stop();
+    TalcRollFrameItem.animOut.animOut:SetStartDelay(0);
+    TalcRollFrameItem.animOut:Play();
+end
+
+function NeedFrame:FadeOutFinished()
+    TalcRollFrameItem:Hide()
+    RollFrame:PickRoll(this.id, 'roll');
+end
+
+function RollFrame:PickRoll(roll)
+
+    if this.id == 0 then
+        self:FadeOutFrame()
+        return
     end
-end)
+
+    if roll == 'pass' then
+        core.asend("RollChoice=" .. id .. "=-1")
+    elseif roll == 'roll' then
+        RandomRoll(1, 100)
+    end
+
+    self:FadeOutFrame()
+end
 
 RollFrame.delayAddItem = CreateFrame("Frame")
 RollFrame.delayAddItem:Hide()
-RollFrame.delayAddItem.data = {}
-
 RollFrame.delayAddItem:SetScript("OnShow", function()
     this.startTime = GetTime();
 end)
-
 RollFrame.delayAddItem:SetScript("OnUpdate", function()
-    local plus = 1
     local gt = GetTime() * 1000
-    local st = (this.startTime + plus) * 1000
+    local st = (this.startTime + 0.5) * 1000
     if gt >= st then
-
-        local atLeastOne = false
-        for id, data in next, this.data do
-            if this.data[id] then
-                atLeastOne = true
-                talc_debug('delay  add item on update')
-                RollFrame.frames:AddRolledItem(data)
-                this.data[id] = nil
-            end
-        end
-
-        if not atLeastOne then
-            this:Hide()
-        end
+        talc_debug('delay  add item on update')
+        RollFrame:AddRolledItem(data)
+        this:Hide()
     end
 end)
+
+
+function RollFrame:Test()
+
+    local linkString = '|cffa335ee|Hitem:19364:0:0:0:0:0:0:0:0|h[Ashkandi, Greatsword of the Brotherhood]|h|r'
+    local _, _, itemLink = core.find(linkString, "(item:%d+:%d+:%d+:%d+)");
+    local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+
+    if name and tex then
+        self:AddRolledItem('rollFor=0=' .. tex .. '=' .. name .. '=' .. linkString .. '=30=' .. core.me)
+        if not TalcRollFrame:IsVisible() then
+            TalcRollFrame:Show()
+        end
+    else
+        talc_debug("needs cache")
+        GameTooltip:SetHyperlink(itemLink)
+        GameTooltip:Hide()
+    end
+end
