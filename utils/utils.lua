@@ -3,7 +3,7 @@ local _G = _G
 
 Talc_Utils = CreateFrame("Frame")
 
-function Talc_Utils:init()
+function Talc_Utils:Init()
     core = TALC
     db = TALC_DB
     tokenRewards = TALC_TOKENS
@@ -31,6 +31,16 @@ function Talc_Utils:init()
     core.ipairs = ipairs
     core.sort = table.sort
     core.insert = table.insert
+
+    core.dow = {
+        [0] = "Sunday",
+        [1] = "Monday",
+        [2] = "Tuesday",
+        [3] = "Wednesday",
+        [4] = "Thursday",
+        [5] = "Friday",
+        [6] = "Saturday"
+    }
 
     core.classColors = {
         ["warrior"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "|cffc79c6e" },
