@@ -1609,7 +1609,7 @@
             </Button>
             <Button name="$parentMLToEnchanter" framstrata="HIGH" inherits="UIPanelButtonTemplate" hidden="false"
                     text="">
-                <NormalTexture name="$parentNormalTexture" file="Interface\addons\Talc\images\de\ui-grouploot-de-up">
+                <NormalTexture name="$parentNormalTexture" file="Interface\buttons\ui-grouploot-de-up">
                     <Size>
                         <AbsDimension x="24" y="24"/>
                     </Size>
@@ -1621,7 +1621,7 @@
                         </Anchor>
                     </Anchors>
                 </NormalTexture>
-                <PushedTexture name="$parentPushedTexture" file="Interface\addons\Talc\images\de\ui-grouploot-de-down"
+                <PushedTexture name="$parentPushedTexture" file="Interface\buttons\ui-grouploot-de-down"
                                alphaMode="ADD">
                     <Size>
                         <AbsDimension x="24" y="24"/>
@@ -1635,7 +1635,7 @@
                     </Anchors>
                 </PushedTexture>
                 <HighlightTexture name="$parentHighlightTexture"
-                                  file="Interface\addons\Talc\images\de\ui-grouploot-de-highlight" alphaMode="ADD">
+                                  file="Interface\buttons\ui-grouploot-de-highlight" alphaMode="ADD">
                     <Size>
                         <AbsDimension x="24" y="24"/>
                     </Size>
