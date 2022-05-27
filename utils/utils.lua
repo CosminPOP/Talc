@@ -664,9 +664,9 @@ function Talc_Utils:Init()
     end
 
     core.localTimeFromServerTime = function(st)
-        local srvHours, srvMinutes = date("%H", st), date("%M", st)  --GetGameTime()
-        local timeUTC = date("!*t", st)
-        local timeLocal = date("*t", st)
+        local srvHours, srvMinutes = date("%H", st), date("%M", st)
+        local timeLocal = date("!*t", st)
+        local timeUTC = date("*t", st)
         local tzDiffHours = (timeLocal.hour - timeUTC.hour)
         local tzDiffMinutes = (timeLocal.min - timeUTC.min)
         local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
@@ -674,7 +674,7 @@ function Talc_Utils:Init()
         local srvOffsetMinutes = srvMinutes - timeUTC.min
         local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
 
-        return time() + srvDiffSecondsUTC - tzDiffTotalSeconds
+        return st + srvDiffSecondsUTC - tzDiffTotalSeconds
     end
 
     -- todo add some entropy
