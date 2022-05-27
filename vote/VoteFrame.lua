@@ -80,7 +80,7 @@ TalcFrame.assistFrames = {}
 --- Init
 ----------------------------------------------------
 
-function TalcFrame:init()
+function TalcFrame:Init()
 
     db = TALC_DB
     core = TALC
@@ -207,7 +207,7 @@ end
 --- Addon Messages
 ----------------------------------------------------
 
-function TalcFrame:handleSync(pre, t, ch, sender)
+function TalcFrame:HandleSync(pre, t, ch, sender)
     if not core.find(t, 'Periodic', 1, true) then
         talc_debug(sender .. ' says: ' .. t)
     end
@@ -664,7 +664,7 @@ function TalcFrame:handleSync(pre, t, ch, sender)
 
         --save loot in history
         db['VOTE_LOOT_HISTORY'][hash] = {
-            timestamp = time(),
+            timestamp = core.serverTime(),
             player = player,
             class = core.getPlayerClass(player),
             item = item,
@@ -3277,8 +3277,25 @@ function TalcFrame:ShowWelcomeItems()
         index = index + 1
 
         local title = false
-        if raid ~= (item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", item.timestamp)) then
-            raid = item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", item.timestamp)
+
+        local raidStringFormatted = item.raid .. ", Today"
+
+        if date("%d%m", core.localTimeFromServerTime(item.timestamp)) ~= date("%d%m", time()) then
+            local dow = core.dow[core.int(date("%w", core.localTimeFromServerTime(item.timestamp)))]
+            local day = core.int(date("%d", core.localTimeFromServerTime(item.timestamp)))
+            if day == 1 or day == 21 or day == 31 then
+                day = day .. "st"
+            elseif day == 2 or day == 22 then
+                day = day .. "nd"
+            else
+                day = day .. "th"
+            end
+            local month = date("%B", core.localTimeFromServerTime(item.timestamp))
+            raidStringFormatted = item.raid .. ", " .. dow .. ", " .. day .. " of " .. month
+        end
+
+        if raid ~= raidStringFormatted then
+            raid = raidStringFormatted
             title = true
             offset = offset + 1
             if col ~= 1 then
@@ -3355,6 +3372,7 @@ function TalcFrame:WelcomeItem_OnClick(id)
         end
     end
 
+    -- todo add location next to name ?
     TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. core.n(itemHistory) .. ')')
 
     for _, frame in next, self.itemHistoryFrames do
@@ -3984,7 +4002,6 @@ function TalcFrame:SaveSetting(key, value)
         return
     elseif key == 'WIN_THRESHOLD' then
         local t = ''
-        t = t .. (TalcVoteFrameSettingsFrameWinCommon:GetChecked() and '1' or '0')
         t = t .. (TalcVoteFrameSettingsFrameWinUncommon:GetChecked() and '2' or '0')
         t = t .. (TalcVoteFrameSettingsFrameWinRare:GetChecked() and '3' or '0')
         t = t .. (TalcVoteFrameSettingsFrameWinEpic:GetChecked() and '4' or '0')
