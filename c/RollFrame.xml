@@ -260,7 +260,7 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        RollFrame:hideAnchor(true)
+                        RollFrame:HideAnchor(true)
                     </OnClick>
                 </Scripts>
             </Button>
