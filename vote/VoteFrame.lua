@@ -603,34 +603,22 @@ function VoteFrame:HandleSync(pre, t, ch, sender)
 
     -- roster sync
     if core.subFind(t, 'SyncRoster=') then
-        if not core.isRaidLeader(sender) then
+        if not core.isRaidLeader(sender) or sender == core.me then
             return
         end
-        if sender == core.me and t == 'SyncRoster=End' then
-            return
-        end
-        if sender == core.me then
-            return
-        end
+        
+        db['VOTE_ROSTER'] = {}
 
-        local command = core.split('=', t)
-
-        if not command[2] then
-            talc_error('bad syncRoster syntax')
-            talc_error(t)
-            return false
-        end
-
-        if command[2] == "Start" then
-            db['VOTE_ROSTER'] = {}
-        elseif command[2] == "End" then
-            if TalcVoteFrameWelcomeFrame:IsVisible() then
-                self:WelcomeFrame_OnShow()
+        for index, officer in next, core.split('=', t) do
+            if index > 1 then
+                core.insert(db['VOTE_ROSTER'], officer)
             end
-            talc_debug('Roster updated.')
-        else
-            core.insert(db['VOTE_ROSTER'], command[2])
         end
+
+        if TalcVoteFrameWelcomeFrame:IsVisible() then
+            self:WelcomeFrame_OnShow()
+        end
+        talc_debug('Roster updated.')
         return
     end
 

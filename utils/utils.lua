@@ -432,15 +432,16 @@ function Talc_Utils:Init()
             return
         end
 
-        if not prio then
-            prio = "ALERT"
+        local officers = ''
+        for _, name in next, db['VOTE_ROSTER'] do
+            officers = officers .. '=' .. name
+        end
+        if officers == '' then
+            --no officers to send
+            return
         end
 
-        core.bsend(prio, "SyncRoster=Start")
-        for _, name in next, db['VOTE_ROSTER'] do
-            core.bsend(prio, "SyncRoster=" .. name)
-        end
-        core.bsend(prio, "SyncRoster=End")
+        core.bsend(prio or "ALERT", "SyncRoster" .. officers)
 
         TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
     end
