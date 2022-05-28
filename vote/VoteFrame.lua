@@ -2979,7 +2979,7 @@ function VoteFrame:SyncLootHistory()
 
     talc_print('Starting History Sync, ' .. totalItems .. ' entries...')
 
-    core.bsend("BULK", "LootHistorySync=start")
+    core.bsend("BULK", "LootHistorySync=Start")
 
     self.syncLootHistoryCount = 0
 
@@ -2992,7 +2992,7 @@ function VoteFrame:SyncLootHistory()
                 .. item.pick .. "="
                 .. item.raid)
     end
-    core.bsend("BULK", "LootHistorySync=end")
+    core.bsend("BULK", "LootHistorySync=End")
 end
 
 VoteFrame.periodicSync = CreateFrame("Frame")
