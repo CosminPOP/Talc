@@ -53,7 +53,7 @@
                     <Size>
                         <AbsDimension x="288" y="111"/>
                     </Size>
-                    <TexCoords left="0" right="0.5625" top="0.216796875" bottom="0.43359375"/>
+                    <TexCoords left="0" right="0.5625" top="0.216796875" bottom="0.43119375"/>
                     <Anchors>
                         <Anchor point="CENTER">
                             <Offset>
