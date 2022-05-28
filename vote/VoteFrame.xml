@@ -570,13 +570,10 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Backdrop edgeFile="Interface\addons\Talc\images\border-maw" tile="false">
+                <Backdrop edgeFile="Interface\addons\Talc\images\border-main">
                     <EdgeSize>
-                        <AbsValue val="16"/>
+                        <AbsValue val="32"/>
                     </EdgeSize>
-                    <TileSize>
-                        <AbsValue val="1"/>
-                    </TileSize>
                 </Backdrop>
             </Frame>
         </Frames>
@@ -752,18 +749,6 @@
                     </Anchors>
                 </Texture>
 
-                <Texture name="$parentCLVote" hidden="true" file="Interface\GroupFrame\UI-Group-LeaderIcon">
-                    <Size>
-                        <AbsDimension x="16" y="16"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="RIGHT">
-                            <Offset>
-                                <AbsDimension x="30" y="0"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
                 <Texture name="$parentRollWinner" hidden="true" file="Interface\Buttons\UI-GroupLoot-Dice-Up">
                     <Size>
                         <AbsDimension x="16" y="16"/>
