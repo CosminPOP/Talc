@@ -3096,11 +3096,11 @@ function VoteFrame:CheckAssists()
 
         local frame = 'TALCAssistFrame' .. index
 
-        _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRLWindowFrame, "TOPLEFT", 4, -60 - 25 * index - 10)
+        _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRLWindowFrame, "TOPLEFT", 7, -60 - 25 * index - 10)
         _G[frame]:Show()
         _G[frame].name = names.name
 
-        _G[frame .. 'AName']:SetText(core.classColors[core.getPlayerClass(names.name)].colorStr .. names.name)
+        _G[frame .. 'Name']:SetText(core.classColors[core.getPlayerClass(names.name)].colorStr .. names.name)
 
         _G[frame .. 'StatusIconOnline']:Hide()
         _G[frame .. 'StatusIconOffline']:Hide()

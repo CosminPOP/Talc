@@ -584,7 +584,7 @@
 
     <Frame name="Talc_OfficerFrameTemplate" virtual="true" enableMouse="true">
         <Size>
-            <AbsDimension x="292" y="24"/>
+            <AbsDimension x="288" y="24"/>
         </Size>
         <Anchors>
             <Anchor point="TOPLEFT">
@@ -595,7 +595,7 @@
         </Anchors>
         <Layers>
             <Layer level="OVERLAY">
-                <FontString name="$parentAName" inherits="GameFontNormal" text="[Assist Name]">
+                <FontString name="$parentName" inherits="GameFontNormal" text="[Officer Name]">
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>
@@ -630,8 +630,9 @@
                 </Texture>
             </Layer>
         </Layers>
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background"
                   tile="true">
+            <Color r="0" g="0" b="0" a="0.3"/>
         </Backdrop>
         <Frames>
             <CheckButton name="$parentAssistCheck">
