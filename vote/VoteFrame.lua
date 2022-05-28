@@ -207,7 +207,7 @@ end
 --- Addon Messages
 ----------------------------------------------------
 
-function VoteFrame:HandleSync(pre, t, ch, sender)
+function VoteFrame:HandleSync(_, t, _, sender)
     if not core.find(t, 'Periodic', 1, true) then
         talc_debug(sender .. ' says: ' .. t)
     end
@@ -606,7 +606,7 @@ function VoteFrame:HandleSync(pre, t, ch, sender)
         if not core.isRaidLeader(sender) or sender == core.me then
             return
         end
-        
+
         db['VOTE_ROSTER'] = {}
 
         for index, officer in next, core.split('=', t) do
