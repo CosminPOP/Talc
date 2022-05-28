@@ -74,7 +74,7 @@ VoteFrame.wishlistSearchItemsFrames = {}
 VoteFrame.attendanceFrames = {}
 VoteFrame.expandedAttendanceFrames = {}
 
-VoteFrame.assistFrames = {}
+VoteFrame.officerFrames = {}
 
 ----------------------------------------------------
 --- Init
@@ -2941,9 +2941,9 @@ end
 
 function VoteFrame:SetOfficer_OnClick(id, to)
     if to then
-        core.addToRoster(self.assistFrames[id].name, this)
+        core.addToRoster(self.officerFrames[id].name, this)
     else
-        core.remFromRoster(self.assistFrames[id].name)
+        core.remFromRoster(self.officerFrames[id].name)
     end
 end
 
@@ -2951,7 +2951,7 @@ function VoteFrame:SetAssist_OnClick(id, to)
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
             local n = GetRaidRosterInfo(i);
-            if n == self.assistFrames[id].name then
+            if n == self.officerFrames[id].name then
                 if to then
                     talc_debug('promote ')
                     PromoteToAssistant(n)
@@ -3085,16 +3085,16 @@ function VoteFrame:CheckAssists()
         end
     end
 
-    for _, frame in next, self.assistFrames do
+    for _, frame in next, self.officerFrames do
         frame:Hide()
     end
 
     for index, names in next, assistsAndCLs do
-        if not self.assistFrames[index] then
-            self.assistFrames[index] = CreateFrame('Frame', 'TALCAssistFrame' .. index, TalcVoteFrameRLWindowFrame, 'Talc_OfficerFrameTemplate')
+        if not self.officerFrames[index] then
+            self.officerFrames[index] = CreateFrame('Frame', 'TALCOfficerFrame' .. index, TalcVoteFrameRLWindowFrame, 'Talc_OfficerFrameTemplate')
         end
 
-        local frame = 'TALCAssistFrame' .. index
+        local frame = 'TALCOfficerFrame' .. index
 
         _G[frame]:SetPoint("TOPLEFT", TalcVoteFrameRLWindowFrame, "TOPLEFT", 7, -60 - 25 * index - 10)
         _G[frame]:Show()
@@ -3142,7 +3142,7 @@ function VoteFrame:RLFrameChangeTab_OnClick(tab)
 
     _G['TalcVoteFrameRLWindowFrameTab' .. tab .. 'Contents']:Show()
 
-    for _, frame in next, self.assistFrames do
+    for _, frame in next, self.officerFrames do
         frame:Hide()
     end
 
