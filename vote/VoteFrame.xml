@@ -177,6 +177,7 @@
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
+                    <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
                     <Size x="36" y="36"/>
                     <Anchors>
                         <Anchor point="LEFT">
@@ -448,6 +449,7 @@
                     <Layer level="OVERLAY">
                         <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
                             <Size x="24" y="24"/>
+                            <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
                             <Anchors>
                                 <Anchor point="LEFT">
                                     <Offset>
@@ -858,6 +860,7 @@
 
             <Button name="$parentReplacesItem1" inherits="UIPanelButtonTemplate" text="">
                 <NormalTexture file="Interface\Icons\inv_staff_20">
+                    <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
                     <Size>
                         <AbsDimension x="20" y="20"/>
                     </Size>
