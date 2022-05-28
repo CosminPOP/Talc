@@ -733,6 +733,41 @@ function Talc_Utils:Init()
     core.sortedLootHistory = function()
         return core.sortTableBy(db['VOTE_LOOT_HISTORY'], 'timestamp')
     end
+
+    core.SaveItemLocation = function(lootText)
+
+        local _, _, _, raidString = core.instanceInfo()
+        if not raidString then
+            return
+        end
+
+        local _, _, itemLink = core.find(lootText, "(item:%d+:%d+:%d+:%d+)");
+        if itemLink then
+
+            local _, _, q = GetItemInfo(itemLink)
+
+            if q and q >= 3 then
+                local itemID = core.int(core.split(':', itemLink)[2])
+                db['ITEM_LOCATION_CACHE'][itemID] = raidString
+                talc_debug("saved " .. itemID .. " to " .. raidString)
+            end
+        end
+    end
+
+    core.GetItemLocation = function(itemLinkOrID)
+        if db['ITEM_LOCATION_CACHE'][itemLinkOrID] then
+            return db['ITEM_LOCATION_CACHE'][itemLinkOrID]
+        end
+
+        if not core.int(itemLinkOrID) then
+            local _, _, itemLink = core.find(itemLinkOrID, "(item:%d+:%d+:%d+:%d+)");
+            local itemID = core.int(core.split(':', itemLink)[2])
+            return core.GetItemLocation(itemID)
+        end
+
+        return false
+    end
+
 end
 
 function talc_print(a)

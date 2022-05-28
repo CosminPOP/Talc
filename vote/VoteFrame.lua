@@ -3360,8 +3360,9 @@ function VoteFrame:WelcomeItem_OnClick(id)
         end
     end
 
-    -- todo add location next to name ?
-    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName .. ' History (' .. core.n(itemHistory) .. ')')
+    TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. self.welcomeItemsFrames[id].itemName
+            .. ' History (' .. core.n(itemHistory) .. ') '
+            .. core.GetItemLocation(self.welcomeItemsFrames[id].itemName))
 
     for _, frame in next, self.itemHistoryFrames do
         frame:Hide()
@@ -4096,27 +4097,6 @@ function VoteFrame:GetPlayerInfo(playerIndexOrName)
     else
         return false
     end
-end
-
-function VoteFrame:SaveItemLocation(lootText)
-
-    local _, _, _, raidString = core.instanceInfo()
-    if not raidString then
-        return
-    end
-
-    local _, _, itemLink = core.find(lootText, "(item:%d+:%d+:%d+:%d+)");
-    if itemLink then
-
-        local _, _, q = GetItemInfo(itemLink)
-
-        if q and q >= 3 then
-            local itemID = core.int(core.split(':', itemLink)[2])
-            db['ITEM_LOCATION_CACHE'][itemID] = raidString
-            talc_debug("saved " .. itemID .. " to " .. raidString)
-        end
-    end
-
 end
 
 function VoteFrame:SendTestItems_OnClick()

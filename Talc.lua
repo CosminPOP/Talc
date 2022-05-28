@@ -266,7 +266,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     core.syncRoster("BULK")
                 else
                     TalcVoteFrameRLExtraFrame:Hide()
-
                 end
             end
 
@@ -400,7 +399,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == 'CHAT_MSG_LOOT' then
                 WinFrame:HandleLoot(arg1)
-                VoteFrame:SaveItemLocation(arg1)
+                core.SaveItemLocation(arg1)
                 return
             end
         end
