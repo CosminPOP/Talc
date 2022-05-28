@@ -18,7 +18,7 @@
     <GameTooltip name="NewItemTooltip14" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
     <GameTooltip name="NewItemTooltip15" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
 
-    <Frame name="TalcNeedFrameItemTemplate" virtual="true" enableMouse="true">
+    <Frame name="TalcNeedFrameItemTemplate" virtual="true">
         <Size>
             <AbsDimension x="512" y="128"/>
         </Size>
@@ -35,16 +35,16 @@
                 <Alpha change="1" duration="0.2" order="2">
                     <Scripts>
                         <OnFinished>
-                            NeedFrame:FadeInFinished()
+                            NeedFrame:FadeIn_Finished()
                         </OnFinished>
                     </Scripts>
                 </Alpha>
             </AnimationGroup>
             <AnimationGroup parentKey="animOut">
-                <Alpha change="-1" duration="0.2" parentKey="animOut">
+                <Alpha change="-1" duration="0.2" order="1" parentKey="animOut">
                     <Scripts>
                         <OnFinished>
-                            NeedFrame:FadeOutFinished();
+                            NeedFrame:FadeOut_Finished();
                         </OnFinished>
                     </Scripts>
                 </Alpha>
@@ -101,8 +101,8 @@
                     <Animations>
                         <AnimationGroup parentKey="animIn">
                             <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
-                            <Translation offsetX="140" offsetY="0" duration="0.85" order="2"/>
-                            <Alpha startDelay="0.35" change="-1" duration="0.5" order="2"/>
+                            <Translation offsetX="130" offsetY="0" duration="0.85" order="2"/>
+                            <Alpha startDelay="0.65" change="-1" duration="0.2" order="2"/>
                         </AnimationGroup>
                     </Animations>
                 </Texture>
@@ -122,7 +122,7 @@
                             <Alpha change="1" duration="30" order="2" parentKey="countdown">
                                 <Scripts>
                                     <OnFinished>
-                                        NeedFrame:CountdownFinished()
+                                        NeedFrame:Countdown_Finished()
                                     </OnFinished>
                                     <OnUpdate>
                                         NeedFrame:SetCountdownWidth()
@@ -215,28 +215,8 @@
                                 <AbsDimension x="40" y="40"/>
                             </Size>
                         </FontString>
-
-                        <Texture name="$parentQualityGlow" file="Interface\addons\talc\images\win\winatlas"
-                                 alphaMode="BLEND" alpha="1" parentKey="glow">
-                            <Size>
-                                <AbsDimension x="70" y="70"/>
-                            </Size>
-                            <TexCoords left="0.5625" right="0.69921875" top="0.216796875" bottom="0.353515625"/>
-                            <Anchors>
-                                <Anchor point="CENTER">
-                                    <Offset x="0" y="0"/>
-                                </Anchor>
-                            </Anchors>
-                            <Animations>
-                                <AnimationGroup parentKey="animIn">
-                                    <Alpha change="1" duration="0.1" order="1" parentKey="animIn"/>
-                                    <Alpha change="-1" duration="0.8" order="2"/>
-                                </AnimationGroup>
-                            </Animations>
-                        </Texture>
                     </Layer>
                     <Layer level="ARTWORK">
-
                         <Texture name="$parentQuality2" hidden="true" file="Interface\addons\talc\images\win\winatlas">
                             <Size>
                                 <AbsDimension x="60" y="60"/>
@@ -281,7 +261,26 @@
                                 </Anchor>
                             </Anchors>
                         </Texture>
-
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentQualityGlow" file="Interface\addons\talc\images\win\winatlas"
+                                 alphaMode="ADD" alpha="0" parentKey="qualityGlow">
+                            <Size>
+                                <AbsDimension x="70" y="70"/>
+                            </Size>
+                            <TexCoords left="0.5625" right="0.69921875" top="0.216796875" bottom="0.353515625"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                            <Animations>
+                                <AnimationGroup parentKey="animIn">
+                                    <Alpha change="1" duration="0.1" order="1" parentKey="animIn"/>
+                                    <Alpha change="-1" duration="0.8" order="2"/>
+                                </AnimationGroup>
+                            </Animations>
+                        </Texture>
                     </Layer>
                 </Layers>
                 <Scripts>
@@ -290,8 +289,14 @@
                 </Scripts>
             </Button>
 
-            <Button name="$parentBISButton" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\Addons\Talc\images\need\bis_icon">
+            <Button name="$parentBISButton" hidden="false" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\bis_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
                     <Size x="64" y="64"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -340,8 +345,14 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-            <Button name="$parentMSUpgradeButton" hidden="false" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\Addons\Talc\images\need\ms_icon">
+            <Button name="$parentMSUpgradeButton" hidden="false" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\ms_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
                     <Size x="64" y="64"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -390,8 +401,14 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-            <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\buttons\ui-grouploot-coin-up">
+            <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\buttons\ui-grouploot-coin-up" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
                     <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -440,8 +457,14 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-            <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\Addons\Talc\images\need\xmog_icon">
+            <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\xmog_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
                     <Size x="64" y="64"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">
@@ -490,8 +513,14 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-            <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                <NormalTexture file="Interface\buttons\ui-grouploot-pass-up">
+            <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\buttons\ui-grouploot-pass-up" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
                     <Size x="32" y="32"/>
                     <Anchors>
                         <Anchor point="TOPLEFT">

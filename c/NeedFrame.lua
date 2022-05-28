@@ -319,8 +319,31 @@ function NeedFrame:FadeInFrame(frame)
     frame.glow.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
     frame.glow.animIn:Play();
 
+    _G[frame:GetName() .. "Item"].qualityGlow.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
+    _G[frame:GetName() .. "Item"].qualityGlow.animIn:Play();
+
     frame.shine.animIn.animIn:SetStartDelay(frame:GetID() * 0.2);
     frame.shine.animIn:Play();
+
+    _G[frame:GetName() .. "BISButton"].fade.animIn:Stop();
+    _G[frame:GetName() .. "BISButton"].fade.animIn.animIn:SetStartDelay(frame:GetID() * 0.2 + 0.5);
+    _G[frame:GetName() .. "BISButton"].fade.animIn:Play();
+
+    _G[frame:GetName() .. "MSUpgradeButton"].fade.animIn:Stop();
+    _G[frame:GetName() .. "MSUpgradeButton"].fade.animIn.animIn:SetStartDelay(frame:GetID() * 0.2 + 0.65);
+    _G[frame:GetName() .. "MSUpgradeButton"].fade.animIn:Play();
+
+    _G[frame:GetName() .. "OSButton"].fade.animIn:Stop();
+    _G[frame:GetName() .. "OSButton"].fade.animIn.animIn:SetStartDelay(frame:GetID() * 0.2 + 0.8);
+    _G[frame:GetName() .. "OSButton"].fade.animIn:Play();
+
+    _G[frame:GetName() .. "XMOGButton"].fade.animIn:Stop();
+    _G[frame:GetName() .. "XMOGButton"].fade.animIn.animIn:SetStartDelay(frame:GetID() * 0.2 + 0.95);
+    _G[frame:GetName() .. "XMOGButton"].fade.animIn:Play();
+
+    _G[frame:GetName() .. "PassButton"].fade.animIn:Stop();
+    _G[frame:GetName() .. "PassButton"].fade.animIn.animIn:SetStartDelay(frame:GetID() * 0.2 + 1.1);
+    _G[frame:GetName() .. "PassButton"].fade.animIn:Play();
 
     -- wishlist pulse
     if frame.inWishlist then
@@ -328,7 +351,7 @@ function NeedFrame:FadeInFrame(frame)
     end
 end
 
-function NeedFrame:FadeInFinished()
+function NeedFrame:FadeIn_Finished()
     local frame = this:GetRegionParent()
     frame.timeleft.countdown:Stop();
     frame.timeleft.countdown.animIn:SetStartDelay(0);
@@ -346,7 +369,7 @@ function NeedFrame:FadeOutFrame(frame)
     frame.animOut:Play();
 end
 
-function NeedFrame:FadeOutFinished()
+function NeedFrame:FadeOut_Finished()
     local frame = this:GetRegionParent()
     frame:Hide();
     if frame.need == 'autopass' then
@@ -359,7 +382,7 @@ function NeedFrame:FadeOutFinished()
     end
 end
 
-function NeedFrame:CountdownFinished()
+function NeedFrame:Countdown_Finished()
     local frame = this:GetRegionParent():GetParent()
     NeedFrame:FadeOutFrame(frame)
 end
@@ -489,7 +512,7 @@ function NeedFrame:NeedClick(need, f)
 
                     local rewardIndex = 0
                     local itemSet = {}
-                    for i, rewardID in next, tokenRewards[itemID].rewards do
+                    for _, rewardID in next, tokenRewards[itemID].rewards do
                         local _, _, _, _, _, _, _, _, q_equip_slot = GetItemInfo(rewardID)
                         if q_equip_slot == 'INVTYPE_FINGER' then
                             if not ringsSet then
