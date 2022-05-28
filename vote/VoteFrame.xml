@@ -1708,19 +1708,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Backdrop bgFile="1Interface\DialogFrame\UI-DialogBox-Background"
-                          edgeFile="1Interface\addons\Talc\images\border-maw"
-                          tile="false">
-                    <EdgeSize>
-                        <AbsValue val="16"/>
-                    </EdgeSize>
-                    <TileSize>
-                        <AbsValue val="1"/>
-                    </TileSize>
-                    <BackgroundInsets>
-                        <AbsInset left="4" right="4" top="4" bottom="4"/>
-                    </BackgroundInsets>
-                </Backdrop>
                 <Frames>
                 </Frames>
             </Frame>
