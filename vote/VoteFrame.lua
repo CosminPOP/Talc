@@ -320,7 +320,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             return
         end
 
-        local pickEx = core.split('@', t)
+        local pickEx = core.split('=', t)
         if not pickEx[2] or not pickEx[3] or not pickEx[4] then
             talc_error('bad changePick syntax')
             talc_error(t)
