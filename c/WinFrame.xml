@@ -110,7 +110,7 @@
                         <AnimationGroup parentKey="animIn">
                             <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
                             <Translation offsetX="110" offsetY="0" duration="0.85" order="2"/>
-                            <Alpha startDelay="0.35" change="-1" duration="0.5" order="2"/>
+                            <Alpha startDelay="0.55" change="-1" duration="0.3" order="2"/>
                         </AnimationGroup>
                     </Animations>
                 </Texture>

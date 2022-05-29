@@ -15,7 +15,7 @@ function WinFrame:HandleSync(_, msg, _, sender)
 
             for index, item in next, db['NEED_WISHLIST'] do
                 if item == wonData[4] or item == name then
-                    TalcFrame:RemoveFromWishlist(index)
+                    VoteFrame:RemoveFromWishlist(index)
                     break
                 end
             end
@@ -42,7 +42,7 @@ end
 function WinFrame:Init()
     core = TALC
     db = TALC_DB
-    self.HideAnchor()
+    self:HideAnchor()
 end
 
 
