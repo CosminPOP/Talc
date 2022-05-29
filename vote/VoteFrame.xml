@@ -1577,19 +1577,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentNrOfVotes" inherits="GameFontNormal" text="">
-                            <Anchors>
-                                <Anchor point="TOP">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-30"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
                 <Scripts>
                     <OnClick>
                         VoteFrame:MLToWinner_OnClick();
@@ -1667,19 +1654,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentNrOfVotes" inherits="GameFontHighlight" text="non ML vote status">
-                            <Anchors>
-                                <Anchor point="TOP">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-30"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
             </Button>
 
             <Frame name="$parentOfficersThatVotedList">

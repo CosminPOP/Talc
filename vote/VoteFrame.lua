@@ -152,9 +152,7 @@ function VoteFrame:ResetVars()
     TalcVoteFrameWinnerStatus:Hide()
 
     TalcVoteFrameMLToWinner:Disable()
-    TalcVoteFrameMLToWinnerNrOfVotes:SetText()
     TalcVoteFrameMLToEnchanter:Hide()
-    TalcVoteFrameWinnerStatusNrOfVotes:SetText()
 
     TalcVoteFrameCurrentVotedItemButton:Hide()
     TalcVoteFrameVotedItemName:Hide()
@@ -1801,21 +1799,18 @@ function VoteFrame:UpdateOfficerVotesNum()
             for _, name in next, db['VOTE_ROSTER'] do
                 if voter == name and vote == '+' then
                     self.OfficerVoted[self.CurrentVotedItem][name] = true
-                    nr = nr + 1
                 end
             end
         end
     end
 
     for officer, voted in next, self.OfficerVoted[self.CurrentVotedItem] do
-        if not voted then
-            --check if he clicked done voting for this itme
-            if self.OfficerDoneVotingItem[officer] then
-                for itemIndex, doneVoting in next, self.OfficerDoneVotingItem[officer] do
-                    if itemIndex == self.CurrentVotedItem and doneVoting then
-                        nr = nr + 1
-                    end
-                end
+        if voted then
+            nr = nr + 1
+        else
+            --check if he clicked done voting for this item
+            if self.OfficerDoneVotingItem[officer] and self.OfficerDoneVotingItem[officer][self.CurrentVotedItem] then
+                nr = nr + 1
             end
         end
     end
@@ -1828,15 +1823,11 @@ function VoteFrame:UpdateOfficerVotesNum()
     end
 
     if nr == numOfficersInRaid then
-        TalcVoteFrameMLToWinnerNrOfVotes:SetText('|cff1fba1fEveryone voted!')
-        TalcVoteFrameWinnerStatusNrOfVotes:SetText('|cff1fba1fEveryone voted!')
         TalcVoteFrameMLToWinner:Enable()
         TalcVoteFrameVotesLabel:SetText('Votes |cff1fba1f' .. nr .. '/' .. numOfficersInRaid);
     elseif nr >= core.floor(numOfficersInRaid / 2) then
         TalcVoteFrameVotesLabel:SetText('Votes |cfffff569' .. nr .. '/' .. numOfficersInRaid);
     else
-        TalcVoteFrameMLToWinnerNrOfVotes:SetText('|cffa53737' .. nr .. '/' .. numOfficersInRaid .. ' votes')
-        TalcVoteFrameWinnerStatusNrOfVotes:SetText('|cffa53737' .. nr .. '/' .. numOfficersInRaid .. ' votes')
         TalcVoteFrameVotesLabel:SetText('Votes |cffa53737' .. nr .. '/' .. numOfficersInRaid);
     end
 end
@@ -2116,8 +2107,6 @@ function VoteFrame:UpdateOfficerVotedIcons()
         end
 
     end
-    TalcVoteFrameMLToWinnerNrOfVotes:Hide()
-    TalcVoteFrameWinnerStatusNrOfVotes:Hide()
 end
 
 function VoteFrame:VoteFrameListUpdate()
