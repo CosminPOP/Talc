@@ -328,6 +328,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 if not db['VOTE_ENABLED'] then
                     return
                 end
+
+                TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
+                TalcVoteFrameRLExtraFrameDragLoot:Disable()
+
                 if core.isRaidLeader() then
 
                     local lootMethod = GetLootMethod()
