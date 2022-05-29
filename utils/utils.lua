@@ -739,7 +739,7 @@ function Talc_Utils:Init()
             return core.GetItemLocation(itemID)
         end
 
-        return false
+        return ''
     end
 
 end
