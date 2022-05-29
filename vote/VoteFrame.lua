@@ -764,13 +764,8 @@ function VoteFrame:HandleSync(_, t, _, sender)
                 talc_print('History Sync complete.')
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:Enable()
                 TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Sync Loot History (' .. totalItems .. ')')
-            else
-                -- update welcome items if visible
-                if TalcVoteFrameWelcomeFrame:IsVisible() then
-                    self:WelcomeFrame_OnShow()
-                end
+                return
             end
-            talc_debug('loot history synced.')
         else
 
             if sender == core.me then
