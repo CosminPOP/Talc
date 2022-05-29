@@ -230,8 +230,10 @@ function NeedFrame:AddItem(data)
 
                 if GetItemInfo(rewardID) then
 
-                    local _, rewardLink, _, _, _, _, _, _, _, tex = GetItemInfo(rewardID)
+                    local _, rewardLink, _, itemLevel, _, _, _, _, _, tex = GetItemInfo(rewardID)
                     local _, _, rewardIL = core.find(rewardLink, "(item:%d+:%d+:%d+:%d+)");
+
+                    _G[frame .. 'ItemLevel']:SetText(ITEM_QUALITY_COLORS[quality].hex .. itemLevel);
 
                     GameTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
                     GameTooltip:SetHyperlink(rewardIL)

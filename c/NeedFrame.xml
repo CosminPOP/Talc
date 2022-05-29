@@ -187,7 +187,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="BORDER">
-                        <FontString name="$parentName" inherits="GameFontNormal" text="[name of nname]"
+                        <FontString name="$parentName" inherits="GameFontNormal" text="[item name here]"
                                     hidden="false"
                                     justifyH="LEFT">
                             <Anchors>
@@ -201,20 +201,7 @@
                                 <AbsDimension x="180" y="12"/>
                             </Size>
                         </FontString>
-                        <FontString name="$parentLevel" inherits="NumberFontNormalSmall" text="215"
-                                    hidden="false"
-                                    justifyH="CENTER">
-                            <Anchors>
-                                <Anchor point="BOTTOM">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-18"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                            <Size>
-                                <AbsDimension x="40" y="40"/>
-                            </Size>
-                        </FontString>
+
                     </Layer>
                     <Layer level="ARTWORK">
                         <Texture name="$parentQuality2" hidden="true" file="Interface\addons\talc\images\win\winatlas">
@@ -281,6 +268,20 @@
                                 </AnimationGroup>
                             </Animations>
                         </Texture>
+                        <FontString name="$parentLevel" inherits="NumberFontNormalSmall" text="215"
+                                    hidden="false"
+                                    justifyH="CENTER">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="40" y="40"/>
+                            </Size>
+                        </FontString>
                     </Layer>
                 </Layers>
                 <Scripts>
