@@ -3575,7 +3575,10 @@ function VoteFrame:TryToAddToWishlist_OnClick(nameOrID)
     nameOrID = core.trim(nameOrID)
 
     -- empty query or wishlist full
-    if core.len(nameOrID) == 0 or nameOrId == 0 or core.n(db['NEED_WISHLIST']) == core.numWishlistItems then
+    if core.len(nameOrID) == 0 or
+            (core.int(nameOrID) and core.int(nameOrID) == 0) or
+            nameOrID == 'Item ID or URL' or
+            core.n(db['NEED_WISHLIST']) == core.numWishlistItems then
         self:WishlistUpdate()
         return
     end
