@@ -18,6 +18,54 @@
     <GameTooltip name="NewItemTooltip14" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
     <GameTooltip name="NewItemTooltip15" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
 
+    <Button name="Talc_RewardItemButtonTemplate" virtual="true" inherits="UIPanelButtonTemplate">
+        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="20" y="20"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalTexture>
+        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="20" y="20"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </PushedTexture>
+        <HighlightTexture inherits=""/>
+        <Size>
+            <AbsDimension x="20" y="20"/>
+        </Size>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentCount" inherits="NumberFontNormalSmall" text="5"
+                            hidden="true" justifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="7" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
     <Frame name="TalcNeedFrameItemTemplate" virtual="true">
         <Size>
             <AbsDimension x="512" y="128"/>
@@ -598,35 +646,7 @@
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button name="$parentReward1" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </NormalTexture>
-                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </PushedTexture>
-                        <HighlightTexture inherits=""/>
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
+                    <Button name="$parentReward1" hidden="true" inherits="Talc_RewardItemButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
@@ -634,40 +654,8 @@
                                 </Offset>
                             </Anchor>
                         </Anchors>
-                        <Scripts>
-                            <OnClick>
-                            </OnClick>
-                        </Scripts>
                     </Button>
-                    <Button name="$parentReward2" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </NormalTexture>
-                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </PushedTexture>
-                        <HighlightTexture inherits=""/>
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
+                    <Button name="$parentReward2" hidden="true" inherits="Talc_RewardItemButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
@@ -675,40 +663,8 @@
                                 </Offset>
                             </Anchor>
                         </Anchors>
-                        <Scripts>
-                            <OnClick>
-                            </OnClick>
-                        </Scripts>
                     </Button>
-                    <Button name="$parentReward3" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </NormalTexture>
-                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </PushedTexture>
-                        <HighlightTexture inherits=""/>
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
+                    <Button name="$parentReward3" hidden="true" inherits="Talc_RewardItemButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
@@ -716,40 +672,8 @@
                                 </Offset>
                             </Anchor>
                         </Anchors>
-                        <Scripts>
-                            <OnClick>
-                            </OnClick>
-                        </Scripts>
                     </Button>
-                    <Button name="$parentReward4" hidden="true" inherits="UIPanelButtonTemplate" text="">
-                        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </NormalTexture>
-                        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
-                            <Size>
-                                <AbsDimension x="20" y="20"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </PushedTexture>
-                        <HighlightTexture inherits=""/>
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
+                    <Button name="$parentReward4" hidden="true" inherits="Talc_RewardItemButtonTemplate">
                         <Anchors>
                             <Anchor point="TOPLEFT">
                                 <Offset>
@@ -757,10 +681,6 @@
                                 </Offset>
                             </Anchor>
                         </Anchors>
-                        <Scripts>
-                            <OnClick>
-                            </OnClick>
-                        </Scripts>
                     </Button>
                 </Frames>
             </Frame>

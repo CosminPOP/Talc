@@ -225,6 +225,14 @@ function NeedFrame:AddItem(data)
 
         if hasRewardsForMe or not foundClasses then
             _G[frame .. 'QuestRewards']:Show()
+
+            if tokenRewards[itemID].count then
+                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:SetText(tokenRewards[itemID].count)
+                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:Show()
+            else
+                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:Hide()
+            end
+
             local rewardIndex = 0
             for _, rewardID in next, tokenRewards[itemID].rewards do
 
