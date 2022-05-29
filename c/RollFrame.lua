@@ -34,7 +34,7 @@ function RollFrame:HandleSync(_, msg, _, sender)
                 return
             end
 
-            local wonData = core.split("=", t)
+            local wonData = core.split("=", msg)
 
             if not wonData[7] then
                 talc_error('bad playerWon syntax rollframe')
