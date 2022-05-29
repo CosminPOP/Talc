@@ -304,7 +304,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             VoteFrame.playersWhoWantItems[pwIndex].roll = roll
                             VoteFrame.VotedItemsFrames[VoteFrame.CurrentVotedItem].rolled = true
                             -- send it to officers
-                            core.asend("PlayerRoll:" .. pwIndex .. ":" .. roll .. ":" .. VoteFrame.CurrentVotedItem)
+                            core.asend("PlayerRoll=" .. pwIndex .. "=" .. roll .. "=" .. VoteFrame.CurrentVotedItem)
                             VoteFrame:VoteFrameListUpdate()
                             break
                         end
