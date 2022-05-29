@@ -613,7 +613,7 @@ function Talc_Utils:Init()
                         }
                     end
 
-                    core.insert(att[n].raids[raidString].bosses[boss].dates, core.serverTime())
+                    core.insert(att[n].raids[raidString].bosses[boss].dates, core.timeUTC())
                 end
             end
         end
