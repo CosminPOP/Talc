@@ -39,15 +39,17 @@
                     <AbsDimension x="325" y="128"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="BOTTOM">
+                    <Anchor point="CENTER">
                         <Offset>
-                            <AbsDimension x="0" y="20"/>
+                            <AbsDimension x="0" y="80"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Animations>
                     <AnimationGroup parentKey="animIn">
                         <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                        <Scale scaleX="1.2" scaleY="1.2" duration="0" order="1"/>
+                        <Scale scaleX="0.8" scaleY="0.8" duration="0.2" order="2"/>
                         <Alpha change="1" duration="0.2" order="2">
                             <Scripts>
                                 <OnFinished>
@@ -57,13 +59,14 @@
                         </Alpha>
                     </AnimationGroup>
                     <AnimationGroup parentKey="animOut">
-                        <Alpha change="-1" duration="0.2" parentKey="animOut">
+                        <Alpha change="-1" duration="0.2" order="1" parentKey="animOut"/>
+                        <Scale scaleX="1.1" scaleY="1.1" duration="0.2" order="1">
                             <Scripts>
                                 <OnFinished>
                                     NeedFrame:FadeOutFinished();
                                 </OnFinished>
                             </Scripts>
-                        </Alpha>
+                        </Scale>
                     </AnimationGroup>
                 </Animations>
                 <Layers>
@@ -94,27 +97,7 @@
                                 </AnimationGroup>
                             </Animations>
                         </Texture>
-                        <Texture name="$parentStar" file="Interface\addons\Talc\images\roll\roll"
-                                 parentKey="star" alpha="0">
-                            <Size>
-                                <AbsDimension x="187" y="187"/>
-                            </Size>
-                            <TexCoords left="0.639865625" right="1" top="0" bottom="0.73046875"/>
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="-40" y="35"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                            <Animations>
-                                <AnimationGroup name="$parentAnimIn" parentKey="animIn">
-                                    <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
-                                    <Alpha change="1" duration="0.3" order="2"/>
-                                    <Alpha change="-1" duration="0.3" order="3"/>
-                                </AnimationGroup>
-                            </Animations>
-                        </Texture>
+
                     </Layer>
                     <Layer level="ARTWORK">
                         <Texture name="$parentBackground" file="Interface\addons\Talc\images\roll\roll">
@@ -171,15 +154,43 @@
                                 </AnimationGroup>
                             </Animations>
                         </Texture>
+
+                        <Texture name="$parentStar" file="Interface\addons\Talc\images\roll\roll"
+                                 parentKey="star" alpha="0">
+                            <Size>
+                                <AbsDimension x="187" y="187"/>
+                            </Size>
+                            <TexCoords left="0.639865625" right="1" top="0" bottom="0.73046875"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="-30" y="25"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Animations>
+                                <AnimationGroup name="$parentAnimIn" parentKey="animIn">
+                                    <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                                    <Alpha change="1" duration="0.3" order="2"/>
+                                    <Alpha change="-1" duration="0.3" order="3"/>
+                                </AnimationGroup>
+                            </Animations>
+                        </Texture>
                     </Layer>
                 </Layers>
                 <Frames>
-                    <Button name="$parentButton" inherits="UIPanelButtonTemplate" text="">
-                        <NormalTexture file="Interface\Icons\inv_staff_20">
+                    <Button name="$parentButton" inherits="UIPanelButtonTemplate">
+                        <NormalTexture file="Interface\Icons\inv_staff_20" parentKey="fadeIn">
                             <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
                             <Size>
                                 <AbsDimension x="44" y="44"/>
                             </Size>
+                            <Animations>
+                                <AnimationGroup parentKey="animIn">
+                                    <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                                    <Alpha change="1" duration="0.2" order="2"/>
+                                </AnimationGroup>
+                            </Animations>
                             <Anchors>
                                 <Anchor point="CENTER">
                                     <Offset>
@@ -284,11 +295,20 @@
                                         </Anchor>
                                     </Anchors>
                                 </Texture>
-                                <Texture name="$parentQuality4" hidden="false"
+                                <Texture name="$parentQuality4" hidden="true" parentKey="qualityBorder"
                                          file="Interface\addons\talc\images\win\winatlas">
                                     <Size>
                                         <AbsDimension x="60" y="60"/>
                                     </Size>
+                                    <Animations>
+                                        <AnimationGroup parentKey="animIn">
+                                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                                            <Alpha change="1" duration="1.2" order="2"/>
+                                        </AnimationGroup>
+                                        <AnimationGroup parentKey="animOut">
+                                            <Alpha change="-1" duration="0.2" order="1" parentKey="animOut"/>
+                                        </AnimationGroup>
+                                    </Animations>
                                     <TexCoords left="0.81640625" right="0.93359375" top="0.685546875"
                                                bottom="0.802734375"/>
                                     <Anchors>

@@ -127,7 +127,7 @@ function RollFrame:AddRolledItem(data)
         return
     end
 
-    this.id = index
+    self.id = index
     TalcRollFrameItem.elapsed = 0
 
     TalcRollFrameItemButton:SetNormalTexture(texture);
@@ -148,7 +148,7 @@ function RollFrame:AddRolledItem(data)
 
     core.addButtonOnEnterTooltip(TalcRollFrameItemButton, link, nil, true)
 
-    RollFrame:FadeInFrame(index)
+    RollFrame:FadeInFrame()
 end
 
 function RollFrame:FadeInFrame()
@@ -174,9 +174,17 @@ function RollFrame:FadeInFrame()
     TalcRollFrameItem.shine.animIn.animIn:SetStartDelay(0);
     TalcRollFrameItem.shine.animIn:Play();
 
+    TalcRollFrameItemButton.fadeIn.animIn:Stop();
+    TalcRollFrameItemButton.fadeIn.animIn.animIn:SetStartDelay(0.2);
+    TalcRollFrameItemButton.fadeIn.animIn:Play();
+
     TalcRollFrameItemButton.glow.animIn:Stop();
-    TalcRollFrameItemButton.glow.animIn.animIn:SetStartDelay(0);
+    TalcRollFrameItemButton.glow.animIn.animIn:SetStartDelay(0.2);
     TalcRollFrameItemButton.glow.animIn:Play();
+
+    TalcRollFrameItemButton.qualityBorder.animIn:Stop();
+    TalcRollFrameItemButton.qualityBorder.animIn.animIn:SetStartDelay(0.2);
+    TalcRollFrameItemButton.qualityBorder.animIn:Play();
 
     TalcRollFrameItemRoll.fadeIn.animIn:Stop();
     TalcRollFrameItemRoll.fadeIn.animIn.animIn:SetStartDelay(1);
@@ -192,7 +200,6 @@ function RollFrame:FadeInFinished()
     TalcRollFrameItem.timeleft.countdown.animIn:SetStartDelay(0);
     TalcRollFrameItem.timeleft.countdown.countdown:SetStartDelay(0);
     TalcRollFrameItem.timeleft.countdown.countdown:SetDuration(db['VOTE_TTR'] - 1);
-    TalcRollFrameItem.timeleft.countdown.countdown:SetDuration(3);
     TalcRollFrameItem.timeleft.countdown:Play();
 end
 
@@ -211,22 +218,26 @@ function RollFrame:FadeOutFrame()
     TalcRollFrameItem.animOut:Stop();
     TalcRollFrameItem.animOut.animOut:SetStartDelay(0);
     TalcRollFrameItem.animOut:Play();
+
+    --TalcRollFrameItemButton.qualityBorder.animOut:Stop();
+    --TalcRollFrameItemButton.qualityBorder.animOut.animOut:SetStartDelay(0);
+    --TalcRollFrameItemButton.qualityBorder.animOut:Play();
 end
 
 function NeedFrame:FadeOutFinished()
     TalcRollFrameItem:Hide()
-    RollFrame:PickRoll(this.id, 'roll');
+    RollFrame:PickRoll(self.id, 'roll');
 end
 
 function RollFrame:PickRoll(roll)
 
-    if this.id == 0 then
+    if self.id == 0 then
         self:FadeOutFrame()
         return
     end
 
     if roll == 'pass' then
-        core.asend("RollChoice=" .. id .. "=-1")
+        core.asend("RollChoice=" .. self.id .. "=-1")
     elseif roll == 'roll' then
         RandomRoll(1, 100)
     end
