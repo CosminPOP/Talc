@@ -1,18 +1,15 @@
 TALC_TOKENS = {
-    -- Phase 1
+    ---------------
+    --- Phase 1 ---
+    ---------------
 
-    [44569] = {
-        name = "The Key to the Focusing Iris",
-        rewards = { 44582 }
-    },
-    [44577] = {
-        name = "Heroic Key to the Focusing Iris",
-        rewards = { 44581 }
-    },
+    [44569] = { name = "The Key to the Focusing Iris", rewards = { 44582 } },
+    [44577] = { name = "Heroic Key to the Focusing Iris", rewards = { 44581 } },
 
     [43347] = { name = "Satchel of Spoils", rewards = { 47241 }, count = 5 },
     [43346] = { name = "Large Satchel of Spoils", rewards = { 47241 }, count = 5 },
-    -- t8 10man
+
+    -- t8
 
     [40610] = { name = "Chestguard of the Lost Conqueror", rewards = { 39497, 39515, 39523, 39629, 39633, 39638, } },
     [40625] = { name = "Breastplate of the Lost Conqueror", rewards = { 40423, 40449, 40458, 40569, 40574, 40579 } },
@@ -62,13 +59,14 @@ TALC_TOKENS = {
     [40639] = { name = "Mantle of the Lost Vanquisher", rewards = { 40419, 40465, 40470, 40494, 40502, 40557, 40568 } },
 
 
-    -- Phase 2
-    [46052] = {
-        name = "Reply-Code Alpha", -- 10man
-        rewards = { 46320, 46321, 46322, 46323 }
-    },
-    [45038] = {
-        name = "Fragment of Val'anyr",
-        rewards = { 46017 }
-    },
+    ---------------
+    --- Phase 2 ---
+    ---------------
+
+    -- 10man
+    [46052] = { name = "Reply-Code Alpha", rewards = { 46320, 46321, 46322, 46323 } },
+    -- 25man
+    [46053] = { name = "Reply-Code Alpha", reward = { 45588, 45618, 45608, 45614 } },
+
+    [45038] = { name = "Fragment of Val'anyr", rewards = { 46017 } },
 }
