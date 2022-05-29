@@ -31,6 +31,7 @@ function Talc_Utils:Init()
     core.ipairs = ipairs
     core.sort = table.sort
     core.insert = table.insert
+    core.wipe = table.wipe
 
     core.dow = {
         [0] = "Sunday",
@@ -648,27 +649,16 @@ function Talc_Utils:Init()
         return sum
     end
 
-    core.serverTime = function()
-
-        -- inspired from ElvUI
-        local srvHours, srvMinutes = GetGameTime()
-        local timeUTC = date("!*t")
-        local timeLocal = date("*t")
-        local tzDiffHours = (timeLocal.hour - timeUTC.hour)
-        local tzDiffMinutes = (timeLocal.min - timeUTC.min)
-        local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
-        local srvOffsetHours = srvHours - timeUTC.hour
-        local srvOffsetMinutes = srvMinutes - timeUTC.min
-        local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
-
-        return time() + srvDiffSecondsUTC - tzDiffTotalSeconds
+    core.timeUTC = function()
+        return time(date("!*t"))
     end
 
     core.localTimeFromServerTime = function(st)
+        -- inspired from ElvUI
         local srvHours, srvMinutes = date("%H", st), date("%M", st)
         local timeLocal = date("!*t", st)
-        local timeUTC = date("*t", st)
-        local tzDiffHours = (timeLocal.hour - timeUTC.hour)
+        local timeUTC = date("*t")
+        local tzDiffHours = (timeLocal.hour - timeUTC.hour) + (timeUTC.isdst and 1 or 0)
         local tzDiffMinutes = (timeLocal.min - timeUTC.min)
         local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
         local srvOffsetHours = srvHours - timeUTC.hour
@@ -676,22 +666,6 @@ function Talc_Utils:Init()
         local srvDiffSecondsUTC = (srvOffsetHours * 3600) + (srvOffsetMinutes * 60)
 
         return st + srvDiffSecondsUTC - tzDiffTotalSeconds
-    end
-
-    -- todo add some entropy
-    core.shash = function(...)
-        local str;
-        local key = ''
-        for i = 1, core.select('#', ...) do
-            str = core.tostring(core.select(i, ...));
-            key = key .. core.len(str) .. str
-        end
-        local i = 0;
-        for k = 1, core.len(key) do
-            i = i + core.byte(key, k);
-        end
-        print("Return " .. i)
-        return i;
     end
 
     core.sortTableBy = function(t, by, dir)

@@ -636,9 +636,9 @@ function VoteFrame:HandleSync(_, t, _, sender)
             return false
         end
 
-        local hash, player, item, index, pick, raid
+        local timestamp, player, item, index, pick, raid
 
-        hash = core.int(wonData[2])
+        timestamp = core.int(wonData[2])
         player = wonData[3]
         item = wonData[4]
         index = core.int(wonData[5])
@@ -651,8 +651,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         end
 
         --save loot in history
-        db['VOTE_LOOT_HISTORY'][hash] = {
-            timestamp = core.serverTime(),
+        db['VOTE_LOOT_HISTORY'][timestamp] = {
             player = player,
             class = core.getPlayerClass(player),
             item = item,
@@ -695,7 +694,49 @@ function VoteFrame:HandleSync(_, t, _, sender)
         return
     end
 
-    if core.subFind(t, 'LootHistorySync=') or core.subFind(t, 'PeriodicLootHistorySync=') then
+    if core.subFind(t, 'PeriodicLootHistorySync=') then
+        if sender ~= core.me then
+            local lh = core.split("=", t)
+            if not lh[7] then
+                if t ~= 'LootHistorySync=Start' and t ~= 'LootHistorySync=End' then
+                    talc_error('bad PeriodicLootHistorySync syntax')
+                    talc_error(t)
+                    return false
+                end
+            end
+
+            local timestamp, player, class, item, pick, raid
+
+            timestamp = core.int(lh[2])
+            player = lh[3]
+            class = lh[4]
+            item = lh[5]
+            pick = lh[6]
+            raid = lh[7]
+
+            local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
+            local itemID = core.int(core.split(':', itemLink)[2])
+            core.CacheItem(itemID)
+
+            if not db['VOTE_LOOT_HISTORY'][timestamp] then
+                db['VOTE_LOOT_HISTORY'][timestamp] = {
+                    player = player,
+                    class = class,
+                    item = item,
+                    pick = pick,
+                    raid = raid
+                }
+            end
+
+            -- update welcome items if visible
+            if TalcVoteFrameWelcomeFrame:IsVisible() then
+                self:WelcomeFrame_OnShow()
+            end
+        end
+        return
+    end
+
+    if core.subFind(t, 'LootHistorySync=') then
 
         if not core.isRaidLeader(sender) then
             return
@@ -708,7 +749,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
 
         local lh = core.split("=", t)
 
-        if not lh[8] then
+        if not lh[7] then
             if t ~= 'LootHistorySync=Start' and t ~= 'LootHistorySync=End' then
                 talc_error('bad loothistorysync syntax')
                 talc_error(t)
@@ -737,25 +778,24 @@ function VoteFrame:HandleSync(_, t, _, sender)
                     self.syncLootHistoryCount = self.syncLootHistoryCount + 1
                     local percent = core.floor(self.syncLootHistoryCount * 100 / totalItems)
                     TalcVoteFrameRLWindowFrameTab2ContentsSyncLootHistory:SetText('Syncing (' .. percent .. '%)')
+                    return
                 end
             else
-                local hash, timestamp, player, class, item, pick, raid
+                local timestamp, player, class, item, pick, raid
 
-                hash = core.int(lh[2])
-                timestamp = core.int(lh[3])
-                player = lh[4]
-                class = lh[5]
-                item = lh[6]
-                pick = lh[7]
-                raid = lh[8]
+                timestamp = core.int(lh[2])
+                player = lh[3]
+                class = lh[4]
+                item = lh[5]
+                pick = lh[6]
+                raid = lh[7]
 
                 local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
                 local itemID = core.int(core.split(':', itemLink)[2])
                 core.CacheItem(itemID)
 
-                if not db['VOTE_LOOT_HISTORY'][hash] then
-                    db['VOTE_LOOT_HISTORY'][hash] = {
-                        timestamp = timestamp,
+                if not db['VOTE_LOOT_HISTORY'][timestamp] then
+                    db['VOTE_LOOT_HISTORY'][timestamp] = {
                         player = player,
                         class = class,
                         item = item,
@@ -763,14 +803,14 @@ function VoteFrame:HandleSync(_, t, _, sender)
                         raid = raid
                     }
                 end
-
-                -- update welcome items if visible
-                if TalcVoteFrameWelcomeFrame:IsVisible() then
-                    self:WelcomeFrame_OnShow()
-                end
-
             end
         end
+
+        -- update welcome items if visible
+        if TalcVoteFrameWelcomeFrame:IsVisible() then
+            self:WelcomeFrame_OnShow()
+        end
+
         return
     end
 
@@ -939,7 +979,7 @@ function VoteFrame:LootHistoryUpdate()
     if totalItems > 0 then
 
         local index = 0
-        for _, item in core.sortedLootHistory() do
+        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
             if historyPlayerName == item.player then
 
                 index = index + 1
@@ -957,14 +997,14 @@ function VoteFrame:LootHistoryUpdate()
                     _G[frame]:SetWidth(190)
 
                     local today = ''
-                    if date("%d/%m") == date("%d/%m", item.timestamp) then
+                    if date("%d/%m") == date("%d/%m", core.localTimeFromServerTime(timestamp)) then
                         today = core.classColors['mage'].colorStr
                     end
 
                     _G[frame .. 'TopText']:SetWidth(165)
                     _G[frame .. 'TopText']:SetText(item.item)
                     _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
-                    _G[frame .. 'BottomText']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", item.timestamp) ..
+                    _G[frame .. 'BottomText']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", core.localTimeFromServerTime(timestamp)) ..
                             " |r" .. item.raid)
 
                     local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
@@ -1936,10 +1976,8 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
             need = "de"
         end
 
-        local shash = core.shash(playerName, item, need, raid, CalendarGetDate(), GetGameTime())
-
         core.asend("PlayerWon="
-                .. shash .. "="
+                .. core.timeUTC() .. "="
                 .. playerName .. "="
                 .. item .. "="
                 .. cvi .. '='
@@ -1996,10 +2034,8 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
                 need = "de"
             end
 
-            local shash = core.shash(playerName, item, need, raid, CalendarGetDate(), GetGameTime())
-
             core.asend("PlayerWon="
-                    .. shash .. "="
+                    .. core.timeUTC() .. "="
                     .. GetMasterLootCandidate(unitIndex) .. "="
                     .. item .. "="
                     .. cvi .. "="
@@ -2983,9 +3019,9 @@ function VoteFrame:SyncLootHistory()
 
     self.syncLootHistoryCount = 0
 
-    for shash, item in next, db['VOTE_LOOT_HISTORY'] do
-        core.bsend("BULK", "LootHistorySync=" .. shash .. "="
-                .. item.timestamp .. "="
+    for timestamp, item in next, db['VOTE_LOOT_HISTORY'] do
+        core.bsend("BULK", "LootHistorySync="
+                .. timestamp .. "="
                 .. item.player .. "="
                 .. item.class .. "="
                 .. item.item .. "="
@@ -3024,11 +3060,11 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
         end
 
         local i = 0
-        for shash, item in core.sortedLootHistory() do
+        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
             i = i + 1
             if i == this.index then
-                core.bsendg("BULK", "PeriodicLootHistorySync=" .. shash .. "="
-                        .. item.timestamp .. "="
+                core.bsendg("BULK", "PeriodicLootHistorySync="
+                        .. timestamp .. "="
                         .. item.player .. "="
                         .. item.class .. "="
                         .. item.item .. "="
@@ -3186,9 +3222,7 @@ function VoteFrame:SettingsFrame_OnShow()
 end
 
 function VoteFrame:PurgeLootHistory_OnClick()
-    for shash in next, db['VOTE_LOOT_HISTORY'] do
-        db['VOTE_LOOT_HISTORY'][shash] = nil
-    end
+    core.wipe(db['VOTE_LOOT_HISTORY'])
     talc_print('Loot History purged.')
     TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
     TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History');
@@ -3261,16 +3295,16 @@ function VoteFrame:ShowWelcomeItems()
     local raid = ''
     local offset = 0
 
-    for _, item in core.sortedLootHistory() do
+    for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
         index = index + 1
 
         local title = false
 
         local raidStringFormatted = item.raid .. ", Today"
 
-        if date("%d%m", core.localTimeFromServerTime(item.timestamp)) ~= date("%d%m", time()) then
-            local dow = core.dow[core.int(date("%w", core.localTimeFromServerTime(item.timestamp)))]
-            local day = core.int(date("%d", core.localTimeFromServerTime(item.timestamp)))
+        if date("%d%m", core.localTimeFromServerTime(timestamp)) ~= date("%d%m", time()) then
+            local dow = core.dow[core.int(date("%w", core.localTimeFromServerTime(timestamp)))]
+            local day = core.int(date("%d", core.localTimeFromServerTime(timestamp)))
             if day == 1 or day == 21 or day == 31 then
                 day = day .. "st"
             elseif day == 2 or day == 22 then
@@ -3278,7 +3312,7 @@ function VoteFrame:ShowWelcomeItems()
             else
                 day = day .. "th"
             end
-            local month = date("%B", core.localTimeFromServerTime(item.timestamp))
+            local month = date("%B", core.localTimeFromServerTime(timestamp))
             raidStringFormatted = item.raid .. ", " .. dow .. ", " .. day .. " of " .. month
         end
 
@@ -3368,26 +3402,32 @@ function VoteFrame:WelcomeItem_OnClick(id)
         frame:Hide()
     end
 
-    for index, item in core.sortTableBy(itemHistory, 'timestamp') do
+    local index = 0
+    for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
 
-        if not self.itemHistoryFrames[index] then
-            self.itemHistoryFrames[index] = CreateFrame('Button', 'TALCItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
-        end
-        local frame = 'TALCItemHistoryPlayerFrame' .. index
+        if item.item == self.welcomeItemsFrames[id].itemName then
 
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
-        _G[frame .. 'Name']:SetText(core.classColors[item.class].colorStr .. item.player)
-        _G[frame .. 'Pick']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
-        _G[frame .. 'Date']:SetText((date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", item.timestamp))
+            index = index + 1
+            if not self.itemHistoryFrames[index] then
+                self.itemHistoryFrames[index] = CreateFrame('Button', 'TALCItemHistoryPlayerFrame' .. index, TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild, 'Talc_WelcomePlayerTemplate')
+            end
+            local frame = 'TALCItemHistoryPlayerFrame' .. index
 
-        _G[frame .. 'Icon']:SetTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. item.class)
+            _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFrameItemHistoryScrollFrameChild', 'TOPLEFT', 0, 26 - 26 * index)
+            _G[frame .. 'Name']:SetText(core.classColors[item.class].colorStr .. item.player)
+            _G[frame .. 'Pick']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+            _G[frame .. 'Date']:SetText((date("%d/%m", timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp))
 
-        _G[frame].name = item.player
+            _G[frame .. 'Icon']:SetTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. item.class)
 
-        _G[frame]:Show()
+            _G[frame].name = item.player
 
-        if index == core.maxItemHistoryPlayers then
-            break
+            _G[frame]:Show()
+
+            if index == core.maxItemHistoryPlayers then
+                break
+            end
+
         end
     end
 
@@ -3425,55 +3465,77 @@ function VoteFrame:WelcomePlayer_OnClick(name)
     local raid = ''
     local offset = 0
 
-    for index, item in core.sortTableBy(playerHistory, 'timestamp') do
+    local index = 0
+    for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+        if item.player == name then
 
-        local title = false
-        if raid ~= (item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)) then
-            raid = item.raid .. ", " .. (date("%d/%m", item.timestamp) == date("%d/%m", time()) and core.classColors['hunter'].colorStr or '|r') .. date("%d/%m", timestamp)
-            title = true
-            offset = offset + 1
-            if col ~= 1 then
+            index = index + 1
+
+            local title = false
+
+            local raidStringFormatted = item.raid .. ", Today"
+
+            if date("%d%m", core.localTimeFromServerTime(timestamp)) ~= date("%d%m", time()) then
+                local dow = core.dow[core.int(date("%w", core.localTimeFromServerTime(timestamp)))]
+                local day = core.int(date("%d", core.localTimeFromServerTime(timestamp)))
+                if day == 1 or day == 21 or day == 31 then
+                    day = day .. "st"
+                elseif day == 2 or day == 22 then
+                    day = day .. "nd"
+                else
+                    day = day .. "th"
+                end
+                local month = date("%B", core.localTimeFromServerTime(timestamp))
+                raidStringFormatted = item.raid .. ", " .. dow .. ", " .. day .. " of " .. month
+            end
+
+            if raid ~= raidStringFormatted then
+                raid = raidStringFormatted
+                title = true
+                offset = offset + 1
+                if col ~= 1 then
+                    row = row + 1
+                end
+                col = 1
+            end
+
+            if not self.playerHistoryFrames[index] then
+                self.playerHistoryFrames[index] = CreateFrame('Button', 'TALCPlayerHistoryFrame' .. index, TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
+            end
+
+            local frame = 'TALCPlayerHistoryFrame' .. index
+
+            _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 54 - 44 * row - (offset * 30))
+            _G[frame]:SetID(index)
+
+            _G[frame .. 'RaidTitle']:Hide()
+            if title then
+                _G[frame .. 'RaidTitle']:SetText(raid)
+                _G[frame .. 'RaidTitle']:Show()
+            end
+
+            _G[frame .. 'TopText']:SetText(item.item)
+            _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
+            _G[frame .. 'BottomText']:SetText("")
+
+            _G[frame].name = item.player
+
+            local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
+            _G[frame .. 'Icon']:SetTexture(tex)
+            core.addButtonOnEnterTooltip(_G[frame], item.item)
+
+            _G[frame]:Show()
+
+            col = col + 1
+
+            if col > numCols then
+                col = 1
                 row = row + 1
             end
-            col = 1
-        end
 
-        if not self.playerHistoryFrames[index] then
-            self.playerHistoryFrames[index] = CreateFrame('Button', 'TALCPlayerHistoryFrame' .. index, TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild, 'Talc_WelcomeItemTemplate')
-        end
-
-        local frame = 'TALCPlayerHistoryFrame' .. index
-
-        _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 54 - 44 * row - (offset * 30))
-        _G[frame]:SetID(index)
-
-        _G[frame .. 'RaidTitle']:Hide()
-        if title then
-            _G[frame .. 'RaidTitle']:SetText(raid)
-            _G[frame .. 'RaidTitle']:Show()
-        end
-
-        _G[frame .. 'TopText']:SetText(item.item)
-        _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
-        _G[frame .. 'BottomText']:SetText("")
-
-        _G[frame].name = item.player
-
-        local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(item.item)
-        _G[frame .. 'Icon']:SetTexture(tex)
-        core.addButtonOnEnterTooltip(_G[frame], item.item)
-
-        _G[frame]:Show()
-
-        col = col + 1
-
-        if col > numCols then
-            col = 1
-            row = row + 1
-        end
-
-        if index == core.maxRecentItems then
-            break
+            if index == core.maxRecentItems then
+                break
+            end
         end
     end
 
