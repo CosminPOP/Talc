@@ -297,7 +297,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     local name = r[1]
                     local roll = core.int(r[3])
 
-
                     for pwIndex, pwPlayer in next, VoteFrame.playersWhoWantItems do
                         --check if name is in playersWhoWantItems with vote == -2
                         if pwPlayer.name == name and pwPlayer.roll == -2 then
@@ -315,8 +314,17 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "LOOT_OPENED" then
-                TalcVoteFrameRLExtraFrameBroadcastLoot:Enable()
-                TalcVoteFrameRLExtraFrameDragLoot:Disable()
+
+                for id = 0, GetNumLootItems() do
+                    if GetLootSlotInfo(id) and GetLootSlotLink(id) then
+                        local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
+                        local _, _, quality = GetItemInfo(itemLink)
+                        if quality >= 3 then
+                            core.SaveItemLocation(itemLink)
+                        end
+                    end
+                end
+
                 if not db['VOTE_ENABLED'] then
                     return
                 end
