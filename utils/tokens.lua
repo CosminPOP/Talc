@@ -10,6 +10,8 @@ TALC_TOKENS = {
         rewards = { 44581 }
     },
 
+    [43347] = { name = "Satchel of Spoils", rewards = { 47241 }, count = 5 },
+    [43346] = { name = "Large Satchel of Spoils", rewards = { 47241 }, count = 5 },
     -- t8 10man
 
     [40610] = { name = "Chestguard of the Lost Conqueror", rewards = { 39497, 39515, 39523, 39629, 39633, 39638, } },
