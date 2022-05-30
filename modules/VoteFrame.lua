@@ -613,7 +613,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             end
         end
 
-        if TalcVoteFrameWelcomeFrame:IsVisible() then
+        if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
             self:WelcomeFrame_OnShow()
         end
         talc_debug('Roster updated.')
@@ -658,8 +658,8 @@ function VoteFrame:HandleSync(_, t, _, sender)
         }
 
         -- update welcome items if visible
-        if TalcVoteFrameWelcomeFrame:IsVisible() then
-            VoteFrame:WelcomeFrame_OnShow()
+        if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
+            self:WelcomeFrame_OnShow()
         end
         return
     end
@@ -727,7 +727,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             end
 
             -- update welcome items if visible
-            if TalcVoteFrameWelcomeFrame:IsVisible() then
+            if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
                 self:WelcomeFrame_OnShow()
             end
         end
@@ -1920,12 +1920,6 @@ function VoteFrame:Contestant_OnClick(id)
             self.inspectPlayerGear[self.selectedPlayer[self.CurrentVotedItem]] = {}
         end
         self.HistoryId = id
-        local totalItems = 0
-        for _, item in next, db['VOTE_LOOT_HISTORY'] do
-            if _G['TALCContestantFrame' .. id].name == item.player then
-                totalItems = totalItems + 1
-            end
-        end
         self:RaiderDetailsTab_OnClick(1, _G['TALCContestantFrame' .. id].name)
     end
 end
@@ -3536,10 +3530,10 @@ end
 
 function VoteFrame:WelcomeFrameBackButton_OnClick()
     if TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:IsVisible() then
-        VoteFrame:WelcomeFrame_OnShow()
+        self:WelcomeFrame_OnShow()
     end
     if TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:IsVisible() then
-        VoteFrame:WelcomeItem_OnClick(self.itemHistoryIndex)
+        self:WelcomeItem_OnClick(self.itemHistoryIndex)
     end
 end
 
@@ -3871,17 +3865,17 @@ end
 --    if not VoteFrame.AttendanceTracker:IsVisible() then
 --        VoteFrame.AttendanceTracker:Show()
 --    end
---    if TalcVoteFrameWelcomeFrame:IsVisible() then
---        VoteFrame:WelcomeFrame_OnShow()
---    end
+--if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
+--    self:WelcomeFrame_OnShow()
+--end
 --end
 --
 --function VoteFrame.AttendanceTracker:Stop()
 --    talc_debug("stop pressed")
 --    VoteFrame.AttendanceTracker:Hide()
---    if TalcVoteFrameWelcomeFrame:IsVisible() then
---        VoteFrame:WelcomeFrame_OnShow()
---    end
+--if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
+--    self:WelcomeFrame_OnShow()
+--end
 --end
 
 ----------------------------------------------------
