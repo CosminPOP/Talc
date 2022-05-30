@@ -1067,7 +1067,7 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
         if core.n(self.inspectPlayerGear[playerName]) == 0 then
             core.wsend("ALERT", "SendGear=", playerName)
         else
-            VoteFrame:RaiderDetailsShowGear()
+            self:RaiderDetailsShowGear()
         end
 
         for i = 0, GetNumRaidMembers() do
@@ -1655,7 +1655,7 @@ function VoteFrame:CalculateVotes()
     if self.CurrentVotedItem ~= nil then
         for n, _ in next, self.itemVotes[self.CurrentVotedItem] do
             if self:GetPlayerInfo(n) then
-                local _, _, _, _, _, _, _, _, _, pIndex = VoteFrame:GetPlayerInfo(n)
+                local _, _, _, _, _, _, _, _, _, pIndex = self:GetPlayerInfo(n)
                 for _, vote in next, self.itemVotes[self.CurrentVotedItem][n] do
                     if vote == '+' then
                         self.currentPlayersList[pIndex].votes = self.currentPlayersList[pIndex].votes + 1
@@ -2622,7 +2622,7 @@ function VoteFrame:AddVotedItem(index, texture, link)
     end
 
     if not self.CurrentVotedItem then
-        VoteFrame:VotedItemButton_OnClick(index)
+        self:VotedItemButton_OnClick(index)
     end
 end
 
@@ -3757,7 +3757,7 @@ function VoteFrame:RemoveFromWishlist_OnClick(id)
         end
         db['NEED_WISHLIST'][core.n(db['NEED_WISHLIST'])] = nil
     end
-    VoteFrame:WishlistUpdate()
+    self:WishlistUpdate()
 end
 
 function VoteFrame:WishlistUpdate()
@@ -4107,7 +4107,7 @@ function VoteFrame:Resized()
 
     -- resize player item history results
     if TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:IsVisible() then
-        VoteFrame:WelcomePlayer_OnClick(TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame.name)
+        self:WelcomePlayer_OnClick(TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame.name)
     end
 end
 
