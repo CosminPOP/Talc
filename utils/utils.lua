@@ -467,7 +467,6 @@ function Talc_Utils:Init()
         end
         core.insert(db['VOTE_ROSTER'], newName)
         talc_print(core.classColors[core.getPlayerClass(newName)].colorStr .. newName .. ' |radded to TALC Roster')
-        PromoteToAssistant(newName)
         core.syncRoster()
     end
 
