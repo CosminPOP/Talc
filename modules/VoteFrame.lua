@@ -826,6 +826,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
 
         self.inspectPlayerGear[sender][core.int(gearEx[6])] = {
             item = gearEx[1] .. ":" .. gearEx[2] .. ":" .. gearEx[3] .. ":" .. gearEx[4] .. ":" .. gearEx[5],
+            enchant = core.int(gearEx[3]),
             slot = gearEx[7]
         }
 
@@ -1249,6 +1250,14 @@ function VoteFrame:RaiderDetailsShowGear()
         local frame = _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']
 
         if q and frame then
+
+            _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotNotEnchanted']:Hide()
+
+            for _, es in next, core.equipSlotsDetails do
+                if d.slot == es.slot and es.canHaveEnchant and d.enchant == 0 then
+                    _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotNotEnchanted']:Show()
+                end
+            end
 
             _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText(ITEM_QUALITY_COLORS[q].hex .. il)
 

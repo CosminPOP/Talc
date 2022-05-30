@@ -147,6 +147,20 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
+                <Texture name="$parentNotEnchanted" file="Interface\Buttons\UI-Debuff-Overlays" hidden="true">
+                    <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
+                    <Color r="1" g="0" b="0" a="1"/>
+                    <Size>
+                        <AbsDimension x="24" y="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
             </Layer>
         </Layers>
     </Button>
