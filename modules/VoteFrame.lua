@@ -1252,6 +1252,7 @@ end
 
 function VoteFrame:RaiderDetailsShowGear()
 
+    -- clear frames from prev player
     for _, d in next, core.equipSlotsDetails do
         if _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot'] then
 
@@ -1259,8 +1260,6 @@ function VoteFrame:RaiderDetailsShowGear()
             if frame then
                 local tex = frame:GetTexture()
                 _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetNormalTexture(tex)
-                --_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetPushedTexture(tex)
-                --_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot']:SetHighlightTexture(tex)
                 _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText('')
 
                 core.remButtonOnEnterTooltip(_G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'Slot'])
@@ -1289,8 +1288,6 @@ function VoteFrame:RaiderDetailsShowGear()
             _G['TalcVoteFrameRaiderDetailsFrameInspectGearFrame' .. d.slot .. 'SlotItemLevel']:SetText(ITEM_QUALITY_COLORS[q].hex .. il)
 
             frame:SetNormalTexture(tex)
-            --frame:SetPushedTexture(tex)
-            --frame:SetHighlightTexture(tex)
 
             core.addButtonOnEnterTooltip(frame, link)
         end
