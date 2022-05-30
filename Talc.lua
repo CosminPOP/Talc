@@ -42,6 +42,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 db['_DEBUG'] = false
             end
 
+            if db['PERIODIC_SYNC_INDEX'] == nil then
+                db['PERIODIC_SYNC_INDEX'] = 1
+            end
+
             if db['PLAYER_CLASS_CACHE'] == nil then
                 db['PLAYER_CLASS_CACHE'] = {}
             end

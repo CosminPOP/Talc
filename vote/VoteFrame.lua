@@ -3026,8 +3026,7 @@ VoteFrame.periodicSync:Hide()
 VoteFrame.periodicSync.plus = 0
 VoteFrame.periodicSync:SetScript("OnShow", function()
     this.startTime = GetTime()
-    this.index = 1
-    talc_debug('periodic sync started at ' .. this.plus .. 's interval')
+    talc_debug('periodic sync started at ' .. this.plus .. 's interval, current index = ' .. db['PERIODIC_SYNC_INDEX'])
 end)
 VoteFrame.periodicSync:SetScript("OnHide", function()
     talc_debug('periodic sync stopped')
@@ -3052,7 +3051,8 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
         local i = 0
         for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
             i = i + 1
-            if i == this.index then
+            if i == db['PERIODIC_SYNC_INDEX'] then
+                talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
                 core.bsendg("BULK", "PeriodicLootHistorySync="
                         .. timestamp .. "="
                         .. item.player .. "="
@@ -3063,10 +3063,10 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
             end
         end
 
-        if this.index < core.n(db['VOTE_LOOT_HISTORY']) and this.index < core.periodicSyncMaxItems then
-            this.index = this.index + 1
+        if db['PERIODIC_SYNC_INDEX'] < core.n(db['VOTE_LOOT_HISTORY']) and db['PERIODIC_SYNC_INDEX'] < core.periodicSyncMaxItems then
+            db['PERIODIC_SYNC_INDEX'] = db['PERIODIC_SYNC_INDEX'] + 1
         else
-            this.index = 1
+            db['PERIODIC_SYNC_INDEX'] = 1
         end
     end
 end)
