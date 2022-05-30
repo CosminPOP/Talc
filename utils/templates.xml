@@ -134,7 +134,7 @@
 
     <Button name="Talc_InspectGearButtonTemplate" inherits="UIPanelButtonTemplate2" virtual="true">
         <Size>
-            <AbsDimension x="24" y="24"/>
+            <AbsDimension x="32" y="32"/>
         </Size>
         <Layers>
             <Layer level="OVERLAY">
@@ -151,7 +151,7 @@
                     <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
                     <Color r="1" g="0" b="0" a="1"/>
                     <Size>
-                        <AbsDimension x="24" y="24"/>
+                        <AbsDimension x="32" y="32"/>
                     </Size>
                     <Anchors>
                         <Anchor point="CENTER">

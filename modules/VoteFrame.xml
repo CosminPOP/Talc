@@ -2697,7 +2697,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
-                                            <AbsDimension x="5" y="0"/>
+                                            <AbsDimension x="5" y="44"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2706,7 +2706,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentHeadSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2715,7 +2715,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentNeckSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2724,7 +2724,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentShoulderSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2733,7 +2733,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentBackSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2742,7 +2742,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentChestSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2751,7 +2751,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentShirtSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2760,7 +2760,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentTabardSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2770,7 +2770,7 @@
                                 <Anchors>
                                     <Anchor point="TOPRIGHT">
                                         <Offset>
-                                            <AbsDimension x="-5" y="0"/>
+                                            <AbsDimension x="-5" y="44"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2779,7 +2779,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentHandsSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2788,7 +2788,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentWaistSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2797,7 +2797,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentLegsSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2806,7 +2806,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentFeetSlot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2815,7 +2815,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentFinger0Slot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2824,7 +2824,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentFinger1Slot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2833,7 +2833,7 @@
                                 <Anchors>
                                     <Anchor point="TOPLEFT" relativeTo="$parentTrinket0Slot" relativePoint="BOTTOMLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="-4"/>
+                                            <AbsDimension x="0" y="-3"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -2843,7 +2843,7 @@
                                 <Anchors>
                                     <Anchor point="BOTTOM">
                                         <Offset>
-                                            <AbsDimension x="0" y="0"/>
+                                            <AbsDimension x="0" y="-10"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
