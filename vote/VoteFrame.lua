@@ -148,7 +148,7 @@ function VoteFrame:ResetVars()
 
     TalcVoteFrame:SetScale(db['VOTE_SCALE'])
 
-    TalcVoteFrameVotesLabel:SetText('Votes');
+    TalcVoteFrameVotesLabel:SetText('Votes')
     TalcVoteFrameWinnerStatus:Hide()
 
     TalcVoteFrameMLToWinner:Disable()
@@ -160,8 +160,8 @@ function VoteFrame:ResetVars()
     TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
 
-    TalcVoteFrameDoneVoting:Disable();
-    TalcVoteFrameDoneVotingCheck:Hide();
+    TalcVoteFrameDoneVoting:Disable()
+    TalcVoteFrameDoneVotingCheck:Hide()
     TalcVoteFrameContestantScrollListFrame:Hide()
 
     TalcVoteFrameTradableItemsFrame:Hide()
@@ -176,7 +176,7 @@ function VoteFrame:ResetVars()
         TalcVoteFrameRLExtraFrame:Show()
 
         TalcVoteFrameMLToEnchanter:SetScript("OnEnter", function(self)
-            TALCTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0);
+            TALCTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", -100, 0)
             if db['VOTE_ENCHANTER'] == '' then
                 TALCTooltip:AddLine("Enchanter not set. Type /talc set enchanter [name]")
             else
@@ -492,7 +492,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         local texture = item[3]
         local link = item[5]
 
-        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)")
         local itemID = core.split(':', itemLink)
         core.CacheItem(core.int(itemID[2]))
 
@@ -712,7 +712,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             pick = lh[6]
             raid = lh[7]
 
-            local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
+            local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)")
             local itemID = core.int(core.split(':', itemLink)[2])
             core.CacheItem(itemID)
 
@@ -783,7 +783,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
                 pick = lh[6]
                 raid = lh[7]
 
-                local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)");
+                local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)")
                 local itemID = core.int(core.split(':', itemLink)[2])
                 core.CacheItem(itemID)
 
@@ -838,18 +838,18 @@ end
 ----------------------------------------------------
 
 function Talc_BuildMinimapMenu()
-    local separator = {};
+    local separator = {}
     separator.text = ""
     separator.disabled = true
 
-    local title = {};
+    local title = {}
     title.text = "TALC"
     title.disabled = false
     title.isTitle = true
-    UIDropDownMenu_AddButton(title);
-    UIDropDownMenu_AddButton(separator);
+    UIDropDownMenu_AddButton(title)
+    UIDropDownMenu_AddButton(separator)
 
-    local menu_enabled = {};
+    local menu_enabled = {}
     menu_enabled.text = "Enabled"
     menu_enabled.disabled = false
     menu_enabled.isTitle = false
@@ -862,11 +862,12 @@ function Talc_BuildMinimapMenu()
         if db['VOTE_ENABLED'] then
             talc_print('Addon enabled.')
         else
+            VoteFrame:CloseWindow()
             talc_print('Addon disabled.')
         end
     end
-    UIDropDownMenu_AddButton(menu_enabled);
-    local menu_settings = {};
+    UIDropDownMenu_AddButton(menu_enabled)
+    local menu_settings = {}
     menu_settings.text = "Settings"
     menu_settings.isTitle = false
     menu_settings.justifyH = 'LEFT'
@@ -874,22 +875,23 @@ function Talc_BuildMinimapMenu()
         VoteFrame:ShowWindow()
         VoteFrame:ShowScreen("Settings")
     end
-    UIDropDownMenu_AddButton(menu_settings);
-    UIDropDownMenu_AddButton(separator);
+    UIDropDownMenu_AddButton(menu_settings)
+    UIDropDownMenu_AddButton(separator)
 
-    local close = {};
+    local close = {}
     close.text = "Close"
     close.disabled = false
     close.isTitle = false
-    UIDropDownMenu_AddButton(close);
+    UIDropDownMenu_AddButton(close)
 end
 
 function VoteFrame:ShowMinimapDropdown()
     local TALCMinimapMenuFrame = CreateFrame('Frame', 'TALCMinimapMenuFrame', UIParent, 'UIDropDownMenuTemplate')
-    UIDropDownMenu_Initialize(TALCMinimapMenuFrame, Talc_BuildMinimapMenu, "MENU");
-    ToggleDropDownMenu(1, nil, TALCMinimapMenuFrame, Talc_Minimap, 1, 1);
+    UIDropDownMenu_Initialize(TALCMinimapMenuFrame, Talc_BuildMinimapMenu, "MENU")
+    ToggleDropDownMenu(1, nil, TALCMinimapMenuFrame, Talc_Minimap, 1, 1)
 end
 
+----------------------------------------------------
 ----------------------------------------------------
 --- Main Window
 ----------------------------------------------------
@@ -899,7 +901,11 @@ function VoteFrame:ToggleMainWindow_OnClick()
     if TalcVoteFrame:IsVisible() then
         self:CloseWindow()
     else
-        self:ShowWindow()
+        if db['VOTE_ENABLED'] then
+            self:ShowWindow()
+        else
+            talc_print("TALC is disabled.")
+        end
     end
 end
 
@@ -950,7 +956,7 @@ end
 
 function VoteFrame:LootHistoryUpdate()
 
-    local itemOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame);
+    local itemOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame)
 
     local id = self.HistoryId
 
@@ -1000,7 +1006,7 @@ function VoteFrame:LootHistoryUpdate()
                     _G[frame .. 'BottomText']:SetText(core.classColors['rogue'].colorStr .. today .. date("%d/%m", core.localTimeFromServerTime(timestamp)) ..
                             " |r" .. item.raid)
 
-                    local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)");
+                    local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)")
                     local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
                     if not tex then
                         core.CacheItem(core.int(core.split(':', itemLink)[2]))
@@ -1016,7 +1022,7 @@ function VoteFrame:LootHistoryUpdate()
     end
 
     -- ScrollFrame update
-    FauxScrollFrame_Update(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, totalItems, 7, 38);
+    FauxScrollFrame_Update(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame, totalItems, 7, 38)
 end
 
 function VoteFrame:ExpandAttendanceFrame_OnClick()
@@ -1266,8 +1272,8 @@ VoteFrame.tradableItemsCheck.n = 0
 VoteFrame.tradableItemsCheck.items = {}
 VoteFrame.tradableItemsCheck.frames = {}
 VoteFrame.tradableItemsCheck:SetScript("OnShow", function()
-    this.startTime = GetTime();
-    this.n = 0;
+    this.startTime = GetTime()
+    this.n = 0
 end)
 VoteFrame.tradableItemsCheck:SetScript("OnUpdate", function()
     local plus = 30
@@ -1353,7 +1359,7 @@ function VoteFrame.tradableItemsCheck:Item_OnClick(id)
     if TalcVoteFrame:IsVisible() and TalcVoteFrameRLExtraFrameDragLoot:IsEnabled() then
 
         local link = self.items[id].itemLink
-        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)")
         local itemID = core.split(':', itemLink)[2]
 
         core.insert(VoteFrame.bagItems, {
@@ -1403,9 +1409,9 @@ function VoteFrame.tradableItemsCheck:IsTradable(bag, slot)
 
     for i = 1, TradableItemsTooltip:NumLines() do
         if core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), core.format(format, ".*")) then
-            local _, _, hour = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ hour)");
-            local _, _, min = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ min)");
-            local _, _, sec = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ sec)");
+            local _, _, hour = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ hour)")
+            local _, _, min = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ min)")
+            local _, _, sec = core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), "(%d+ sec)")
 
             local duration = 0 --seconds
 
@@ -1476,19 +1482,19 @@ end)
 
 function Talc_BuildContestantDropdownMenu()
     local id = ContestantDropdownMenu.currentContestantId
-    local separator = {};
+    local separator = {}
     separator.text = ""
     separator.disabled = true
 
-    local title = {};
+    local title = {}
     title.text = _G['TALCContestantFrame' .. id].name .. ' ' .. _G['TALCContestantFrame' .. id .. 'Need']:GetText()
     title.disabled = false
     title.notCheckable = true
     title.isTitle = true
-    UIDropDownMenu_AddButton(title);
-    UIDropDownMenu_AddButton(separator);
+    UIDropDownMenu_AddButton(title)
+    UIDropDownMenu_AddButton(separator)
 
-    local award = {};
+    local award = {}
     if VoteFrame.VotedItemsFrames[VoteFrame.CurrentVotedItem].awardedTo ~= '' then
         award.text = "Awarded " .. TalcVoteFrameVotedItemName:GetText()
     else
@@ -1503,8 +1509,8 @@ function Talc_BuildContestantDropdownMenu()
     award.func = function()
         VoteFrame:AwardPlayer(_G['TALCContestantFrame' .. id].name, VoteFrame.CurrentVotedItem)
     end
-    UIDropDownMenu_AddButton(award);
-    UIDropDownMenu_AddButton(separator);
+    UIDropDownMenu_AddButton(award)
+    UIDropDownMenu_AddButton(separator)
 
     local changeToBIS = {}
     changeToBIS.text = "Change to " .. core.needs['bis'].colorStr .. core.needs['bis'].text
@@ -1517,7 +1523,7 @@ function Talc_BuildContestantDropdownMenu()
     changeToBIS.func = function()
         VoteFrame:ChangePlayerPickTo(_G['TALCContestantFrame' .. id].name, 'bis', VoteFrame.CurrentVotedItem)
     end
-    UIDropDownMenu_AddButton(changeToBIS);
+    UIDropDownMenu_AddButton(changeToBIS)
 
     local changeToMS = {}
     changeToMS.text = "Change to " .. core.needs['ms'].colorStr .. core.needs['ms'].text
@@ -1530,7 +1536,7 @@ function Talc_BuildContestantDropdownMenu()
     changeToMS.func = function()
         VoteFrame:ChangePlayerPickTo(_G['TALCContestantFrame' .. id].name, 'ms', VoteFrame.CurrentVotedItem)
     end
-    UIDropDownMenu_AddButton(changeToMS);
+    UIDropDownMenu_AddButton(changeToMS)
 
     local changeToOS = {}
     changeToOS.text = "Change to " .. core.needs['os'].colorStr .. core.needs['os'].text
@@ -1543,7 +1549,7 @@ function Talc_BuildContestantDropdownMenu()
     changeToOS.func = function()
         VoteFrame:ChangePlayerPickTo(_G['TALCContestantFrame' .. id].name, 'os', VoteFrame.CurrentVotedItem)
     end
-    UIDropDownMenu_AddButton(changeToOS);
+    UIDropDownMenu_AddButton(changeToOS)
 
     local changeToXMOG = {}
     changeToXMOG.text = "Change to " .. core.needs['xmog'].colorStr .. core.needs['xmog'].text
@@ -1556,16 +1562,16 @@ function Talc_BuildContestantDropdownMenu()
     changeToXMOG.func = function()
         VoteFrame:ChangePlayerPickTo(_G['TALCContestantFrame' .. id].name, 'xmog', VoteFrame.CurrentVotedItem)
     end
-    UIDropDownMenu_AddButton(changeToXMOG);
+    UIDropDownMenu_AddButton(changeToXMOG)
 
-    UIDropDownMenu_AddButton(separator);
+    UIDropDownMenu_AddButton(separator)
 
-    local close = {};
+    local close = {}
     close.text = "Close"
     close.disabled = false
     close.notCheckable = true
     close.isTitle = false
-    UIDropDownMenu_AddButton(close);
+    UIDropDownMenu_AddButton(close)
 end
 
 function VoteFrame:RefreshContestantsList()
@@ -1682,10 +1688,10 @@ function VoteFrame:CalculateWinner()
     end
 
     if self.VotedItemsFrames[self.CurrentVotedItem].awardedTo ~= '' then
-        TalcVoteFrameMLToWinner:Disable();
+        TalcVoteFrameMLToWinner:Disable()
         local color = core.classColors[core.getPlayerClass(self.VotedItemsFrames[self.CurrentVotedItem].awardedTo)]
-        TalcVoteFrameMLToWinner:SetText('Awarded to ' .. color.colorStr .. self.VotedItemsFrames[self.CurrentVotedItem].awardedTo);
-        TalcVoteFrameWinnerStatus:SetText('Awarded to ' .. color.colorStr .. self.VotedItemsFrames[self.CurrentVotedItem].awardedTo);
+        TalcVoteFrameMLToWinner:SetText('Awarded to ' .. color.colorStr .. self.VotedItemsFrames[self.CurrentVotedItem].awardedTo)
+        TalcVoteFrameWinnerStatus:SetText('Awarded to ' .. color.colorStr .. self.VotedItemsFrames[self.CurrentVotedItem].awardedTo)
         return
     end
 
@@ -1699,10 +1705,10 @@ function VoteFrame:CalculateWinner()
 
     if rollTie ~= 0 then
         if rollTie == 1 then
-            TalcVoteFrameMLToWinner:Enable();
+            TalcVoteFrameMLToWinner:Enable()
             local color = core.classColors[core.getPlayerClass(self.currentRollWinner)]
-            TalcVoteFrameMLToWinner:SetText('Award ' .. color.colorStr .. self.currentRollWinner);
-            TalcVoteFrameWinnerStatus:SetText('Winner: ' .. color.colorStr .. self.currentRollWinner);
+            TalcVoteFrameMLToWinner:SetText('Award ' .. color.colorStr .. self.currentRollWinner)
+            TalcVoteFrameWinnerStatus:SetText('Winner: ' .. color.colorStr .. self.currentRollWinner)
 
             self.currentItemWinner = self.currentRollWinner
             self.voteTiePlayers = ''
@@ -1717,7 +1723,7 @@ function VoteFrame:CalculateWinner()
         -- calc vote winner
         self.currentItemWinner = ''
         self.currentItemMaxVotes = 0
-        self.voteTiePlayers = '';
+        self.voteTiePlayers = ''
         self.numPlayersThatWant = 0
         self.namePlayersThatWants = ''
         for _, d in next, self.currentPlayersList do
@@ -1738,10 +1744,10 @@ function VoteFrame:CalculateWinner()
 
         if self.numPlayersThatWant == 1 then
             self.currentItemWinner = self.namePlayersThatWants
-            TalcVoteFrameMLToWinner:Enable();
+            TalcVoteFrameMLToWinner:Enable()
             local color = core.classColors[core.getPlayerClass(self.currentItemWinner)]
-            TalcVoteFrameMLToWinner:SetText('Award single picker ' .. color.colorStr .. self.currentItemWinner);
-            TalcVoteFrameWinnerStatus:SetText('Single picker ' .. color.colorStr .. self.currentItemWinner);
+            TalcVoteFrameMLToWinner:SetText('Award single picker ' .. color.colorStr .. self.currentItemWinner)
+            TalcVoteFrameWinnerStatus:SetText('Single picker ' .. color.colorStr .. self.currentItemWinner)
             return
         end
 
@@ -1766,10 +1772,10 @@ function VoteFrame:CalculateWinner()
             --no tie
             self.voteTiePlayers = ''
             if self.currentItemWinner ~= '' then
-                TalcVoteFrameMLToWinner:Enable();
+                TalcVoteFrameMLToWinner:Enable()
                 local color = core.classColors[core.getPlayerClass(self.currentItemWinner)]
-                TalcVoteFrameMLToWinner:SetText('Award ' .. color.colorStr .. self.currentItemWinner);
-                TalcVoteFrameWinnerStatus:SetText('Winner: ' .. color.colorStr .. self.currentItemWinner);
+                TalcVoteFrameMLToWinner:SetText('Award ' .. color.colorStr .. self.currentItemWinner)
+                TalcVoteFrameWinnerStatus:SetText('Winner: ' .. color.colorStr .. self.currentItemWinner)
             else
                 TalcVoteFrameMLToWinner:Disable()
                 TalcVoteFrameMLToWinner:SetText('Waiting votes...')
@@ -1824,11 +1830,11 @@ function VoteFrame:UpdateOfficerVotesNum()
 
     if nr == numOfficersInRaid then
         TalcVoteFrameMLToWinner:Enable()
-        TalcVoteFrameVotesLabel:SetText('Votes |cff1fba1f' .. nr .. '/' .. numOfficersInRaid);
+        TalcVoteFrameVotesLabel:SetText('Votes |cff1fba1f' .. nr .. '/' .. numOfficersInRaid)
     elseif nr >= core.floor(numOfficersInRaid / 2) then
-        TalcVoteFrameVotesLabel:SetText('Votes |cfffff569' .. nr .. '/' .. numOfficersInRaid);
+        TalcVoteFrameVotesLabel:SetText('Votes |cfffff569' .. nr .. '/' .. numOfficersInRaid)
     else
-        TalcVoteFrameVotesLabel:SetText('Votes |cffa53737' .. nr .. '/' .. numOfficersInRaid);
+        TalcVoteFrameVotesLabel:SetText('Votes |cffa53737' .. nr .. '/' .. numOfficersInRaid)
     end
 end
 
@@ -1843,7 +1849,7 @@ function VoteFrame:MLToWinner_OnClick()
                 if d.itemIndex == self.CurrentVotedItem and d.name == tieName then
 
                     local linkString = self.VotedItemsFrames[self.CurrentVotedItem].link
-                    local _, _, itemLink = core.find(linkString, "(item:%d+:%d+:%d+:%d+)");
+                    local _, _, itemLink = core.find(linkString, "(item:%d+:%d+:%d+:%d+)")
                     local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
 
                     for pwIndex, pwPlayer in next, self.playersWhoWantItems do
@@ -1859,7 +1865,7 @@ function VoteFrame:MLToWinner_OnClick()
                 end
             end
         end
-        TalcVoteFrameMLToWinner:Disable();
+        TalcVoteFrameMLToWinner:Disable()
         self:VoteFrameListUpdate()
     else
         -- no tie, award player
@@ -1877,7 +1883,7 @@ function VoteFrame:MLToEnchanter_OnClick()
 
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
-            local n = GetRaidRosterInfo(i);
+            local n = GetRaidRosterInfo(i)
             if n == db['VOTE_ENCHANTER'] then
                 foundInRaid = true
             end
@@ -1885,11 +1891,11 @@ function VoteFrame:MLToEnchanter_OnClick()
     end
     if not foundInRaid then
         talc_print('Enchanter ' .. db['VOTE_ENCHANTER'] .. ' is not in raid. Use /talc set enchanter [name] to set a new one.')
-        return false;
+        return
     end
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
-            local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
+            local n, _, _, _, _, _, z = GetRaidRosterInfo(i)
             if n == db['VOTE_ENCHANTER'] and z == 'Offline' then
                 talc_print('Enchanter ' .. db['VOTE_ENCHANTER'] .. ' is offline. Use /talc set enchanter [name] to set a new one.')
                 return
@@ -1901,7 +1907,7 @@ end
 
 function VoteFrame:Contestant_OnClick(id)
 
-    local playerOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame);
+    local playerOffset = FauxScrollFrame_GetOffset(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrame)
     id = id - playerOffset
 
     if arg1 == 'RightButton' then
@@ -1923,7 +1929,7 @@ function VoteFrame:Contestant_OnClick(id)
                 totalItems = totalItems + 1
             end
         end
-        self:RaiderDetailsTab_OnClick(1, _G['TALCContestantFrame' .. id].name);
+        self:RaiderDetailsTab_OnClick(1, _G['TALCContestantFrame' .. id].name)
     end
 end
 
@@ -1956,7 +1962,7 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
     end
 
     if core.n(self.bagItems) > 0 then
-        local _, _, need = self:GetPlayerInfo(playerName);
+        local _, _, need = self:GetPlayerInfo(playerName)
 
         if disenchant then
             need = "de"
@@ -2014,7 +2020,7 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
 
         if foundItemIndexInLootFrame then
 
-            local index, _, need = self:GetPlayerInfo(GetMasterLootCandidate(unitIndex));
+            local index, _, need = self:GetPlayerInfo(GetMasterLootCandidate(unitIndex))
 
             if disenchant then
                 need = "de"
@@ -2028,7 +2034,7 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
                     .. need .. "="
                     .. raid)
 
-            GiveMasterLoot(index, unitIndex);
+            GiveMasterLoot(index, unitIndex)
 
             if db['VOTE_SCREENSHOT_LOOT'] then
                 Screenshot()
@@ -2074,13 +2080,13 @@ function VoteFrame:UpdateOfficerVotedIcons()
         frame:SetHighlightTexture("Interface\\AddOns\\Talc\\images\\classes\\" .. class)
 
         frame:SetScript("OnEnter", function(self)
-            TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+            TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4))
             TALCTooltip:AddLine(this.name)
-            TALCTooltip:Show();
+            TALCTooltip:Show()
         end)
 
         frame:SetScript("OnLeave", function(self)
-            TALCTooltip:Hide();
+            TALCTooltip:Hide()
         end)
 
         frame:SetAlpha(0.3)
@@ -2160,7 +2166,7 @@ function VoteFrame:VoteFrameListUpdate()
     local frameHeight = 23 + 1
     local framesPerPage = core.floor(TalcVoteFrameContestantScrollListFrame:GetHeight() / frameHeight)
     local maxFrames = 40
-    FauxScrollFrame_Update(TalcVoteFrameContestantScrollListFrame, maxFrames, framesPerPage, frameHeight);
+    FauxScrollFrame_Update(TalcVoteFrameContestantScrollListFrame, maxFrames, framesPerPage, frameHeight)
     local offset = FauxScrollFrame_GetOffset(TalcVoteFrameContestantScrollListFrame)
 
     local index = 0
@@ -2187,7 +2193,7 @@ function VoteFrame:VoteFrameListUpdate()
                 _G[frame]:SetPoint("TOPRIGHT", TalcVoteFrameContestantScrollListFrame, 0, 23 - 24 * (index - offset))
                 _G[frame]:SetID(index)
 
-                local ratio = TalcVoteFrame:GetWidth() / 600;
+                local ratio = TalcVoteFrame:GetWidth() / 600
                 _G[frame .. 'Name']:SetPoint("LEFT", _G[frame], core.floor(8 * ratio) + 20, 0)
                 _G[frame .. 'GearScore']:SetPoint("LEFT", _G[frame], core.floor(100 * ratio) - 5, 0)
                 _G[frame .. 'Need']:SetPoint("LEFT", _G[frame], core.floor(165 * ratio) - 5, 0)
@@ -2204,15 +2210,15 @@ function VoteFrame:VoteFrameListUpdate()
                 _G[frame]:Show()
 
                 local currentItem = {}
-                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore, inWishlist = self:GetPlayerInfo(index);
+                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore, inWishlist = self:GetPlayerInfo(index)
                 currentItem[1] = ci1
                 currentItem[2] = ci2
                 currentItem[3] = ci3
                 currentItem[4] = ci4
 
-                _G[frame].name = name;
-                _G[frame].need = need;
-                _G[frame].gearscore = gearscore;
+                _G[frame].name = name
+                _G[frame].need = need
+                _G[frame].gearscore = gearscore
 
                 local class = core.getPlayerClass(name)
                 local color = core.classColors[class]
@@ -2242,7 +2248,7 @@ function VoteFrame:VoteFrameListUpdate()
                 end
 
                 if votes == self.currentItemMaxVotes and self.currentItemMaxVotes > 0 then
-                    _G[frame .. 'Votes']:SetText('|cff1fba1f' .. votes);
+                    _G[frame .. 'Votes']:SetText('|cff1fba1f' .. votes)
                 end
 
                 local canVote = true
@@ -2285,7 +2291,7 @@ function VoteFrame:VoteFrameListUpdate()
                 if self.currentMaxRoll[self.CurrentVotedItem] == roll and roll > 0 then
                     _G[frame .. 'RollWinner']:Show()
                 end
-                _G[frame .. 'WinnerIcon']:Hide();
+                _G[frame .. 'WinnerIcon']:Hide()
                 if self.VotedItemsFrames[self.CurrentVotedItem].awardedTo == name then
                     _G[frame .. 'WinnerIcon']:Show()
                 end
@@ -2327,30 +2333,30 @@ function VoteFrame:VoteFrameListUpdate()
                             local voterText = voter .. (locked and core.classColors['hunter'].colorStr .. "\nFinal" or core.classColors['rogue'].colorStr .. "\nNot Final")
 
                             _G[oFrame]:SetScript("OnEnter", function(self)
-                                TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4));
+                                TALCTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 4), -(this:GetHeight() / 4))
                                 TALCTooltip:AddLine(core.classColors[voterClass].colorStr .. voterText)
-                                TALCTooltip:Show();
+                                TALCTooltip:Show()
                             end)
 
                             _G[oFrame]:SetScript("OnLeave", function(self)
-                                TALCTooltip:Hide();
+                                TALCTooltip:Hide()
                             end)
                         end
                     end
                 end
 
-                _G[frame .. 'VoteButton']:SetID(index);
+                _G[frame .. 'VoteButton']:SetID(index)
 
-                _G[frame .. 'ClassIcon']:SetTexture('Interface\\AddOns\\Talc\\images\\classes\\' .. class);
+                _G[frame .. 'ClassIcon']:SetTexture('Interface\\AddOns\\Talc\\images\\classes\\' .. class)
 
-                _G[frame .. 'VoteButton']:Show();
+                _G[frame .. 'VoteButton']:Show()
                 if need == 'pass' or need == 'autopass' then
-                    _G[frame .. 'VoteButton']:Hide();
+                    _G[frame .. 'VoteButton']:Hide()
                 end
 
                 for i = 1, 4 do
                     if currentItem[i] ~= "0" then
-                        local _, _, itemLink = core.find(currentItem[i], "(item:%d+:%d+:%d+:%d+)");
+                        local _, _, itemLink = core.find(currentItem[i], "(item:%d+:%d+:%d+:%d+)")
                         local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
 
                         if not tex then
@@ -2411,8 +2417,8 @@ function VoteFrame:ShowContestantDropdownMenu(id)
 
     ContestantDropdownMenu.currentContestantId = id
 
-    UIDropDownMenu_Initialize(ContestantDropdownMenu, Talc_BuildContestantDropdownMenu, "MENU");
-    ToggleDropDownMenu(1, nil, ContestantDropdownMenu, "cursor", 2, 3);
+    UIDropDownMenu_Initialize(ContestantDropdownMenu, Talc_BuildContestantDropdownMenu, "MENU")
+    ToggleDropDownMenu(1, nil, ContestantDropdownMenu, "cursor", 2, 3)
 end
 
 function VoteFrame:SendTimersAndButtons()
@@ -2540,7 +2546,7 @@ function VoteFrame:BroadcastLoot_OnClick()
             if GetLootSlotInfo(id) and GetLootSlotLink(id) then
                 local lootIcon, lootName = GetLootSlotInfo(id)
 
-                local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
+                local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)")
                 local _, _, quality = GetItemInfo(itemLink)
                 if quality >= 0 then
                     --send to officers
@@ -2567,7 +2573,7 @@ function VoteFrame:BroadcastLoot_OnClick()
         if GetLootSlotInfo(id) and GetLootSlotLink(id) then
             local lootIcon, lootName = GetLootSlotInfo(id)
 
-            local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
+            local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)")
             local _, _, quality = GetItemInfo(itemLink)
             if quality >= 0 then
                 --send to c
@@ -2577,7 +2583,7 @@ function VoteFrame:BroadcastLoot_OnClick()
         end
     end
     core.bsend("ALERT", "DoneSending=" .. numLootItems .. "=items")
-    TalcVoteFrameMLToWinner:Disable();
+    TalcVoteFrameMLToWinner:Disable()
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:SetText(numLootItems .. " items sent")
 end
@@ -2588,7 +2594,7 @@ function VoteFrame:AddVotedItem(index, texture, link)
     self.doneVoting[index] = false
     self.selectedPlayer[index] = ''
 
-    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)")
     local itemID = core.int(core.split(':', itemLink)[2])
 
     if not self.VotedItemsFrames[index] then
@@ -2671,7 +2677,7 @@ function VoteFrame:SetCurrentVotedItem(id)
     TalcVoteFrameVotedItemName:SetText(link)
     core.addButtonOnEnterTooltip(TalcVoteFrameCurrentVotedItemButton, link, 'playerHistory')
 
-    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)")
     local itemID = core.split(':', itemLink)
     itemID = core.int(itemID[2])
     local _, _, q, iLevel, _, _, t2, _, equip_slot = GetItemInfo(itemLink)
@@ -2688,7 +2694,7 @@ function VoteFrame:SetCurrentVotedItem(id)
         -- Token
 
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
-            TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+            TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE")
             TALCTooltip:SetHyperlink(itemLink)
             for i = 1, 20 do
                 if _G["TALCTooltipTextLeft" .. i] and _G["TALCTooltipTextLeft" .. i]:GetText() then
@@ -2739,7 +2745,7 @@ function VoteFrame:SetCurrentVotedItem(id)
                 _G[frame]:SetPushedTexture(tex)
                 _G[frame]:Show()
 
-                TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE");
+                TALCTooltip:SetOwner(TalcNeedFrame, "ANCHOR_NONE")
                 TALCTooltip:SetHyperlink(il)
 
                 for j = 5, 15 do
@@ -2782,8 +2788,8 @@ end
 
 function VoteFrame:DoneVoting_OnClick()
     self.doneVoting[self.CurrentVotedItem] = true
-    TalcVoteFrameDoneVoting:Disable();
-    TalcVoteFrameDoneVotingCheck:Show();
+    TalcVoteFrameDoneVoting:Disable()
+    TalcVoteFrameDoneVotingCheck:Show()
     core.asend("DoneVoting=" .. self.CurrentVotedItem)
     self:VoteFrameListUpdate()
 end
@@ -2804,21 +2810,21 @@ end
 
 function VoteFrame:TimeLeftBar_OnUpdate()
     if this:GetValue() <= 0 then
-        _G[this:GetName() .. 'Spark']:Hide();
+        _G[this:GetName() .. 'Spark']:Hide()
         TalcVoteFrameTimeLeftBarTextCenter:Hide()
     else
-        _G[this:GetName() .. 'Spark']:Show();
+        _G[this:GetName() .. 'Spark']:Show()
         TalcVoteFrameTimeLeftBarTextCenter:Show()
     end
 
     if this.pleaseVote then
-        TalcVoteFrameTimeLeftBarTextCenter:SetText('Please VOTE ! ' .. core.SecondsToClock(this:GetValue()));
+        TalcVoteFrameTimeLeftBarTextCenter:SetText('Please VOTE ! ' .. core.SecondsToClock(this:GetValue()))
     else
-        TalcVoteFrameTimeLeftBarTextCenter:SetText(core.SecondsToClock(this:GetValue()));
+        TalcVoteFrameTimeLeftBarTextCenter:SetText(core.SecondsToClock(this:GetValue()))
     end
 
     _G[this:GetName() .. 'Spark']:SetPoint("CENTER", this, "LEFT",
-            this.currentTime * this:GetWidth() / this.countDownFrom, 0);
+            this.currentTime * this:GetWidth() / this.countDownFrom, 0)
 end
 
 VoteFrame.VoteCountdown = CreateFrame("Frame")
@@ -2826,7 +2832,7 @@ VoteFrame.VoteCountdown:Hide()
 VoteFrame.VoteCountdown.currentTime = 0
 VoteFrame.VoteCountdown.votingOpen = false
 VoteFrame.VoteCountdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
+    this.startTime = GetTime()
     TalcVoteFrameTimeLeftBar:SetMinMaxValues(0, this.countDownFrom)
     this.currentTime = this.countDownFrom
 
@@ -2850,7 +2856,7 @@ VoteFrame.VoteCountdown:SetScript("OnUpdate", function()
             this:Hide()
         end
 
-        this.startTime = GetTime();
+        this.startTime = GetTime()
     end
 end)
 
@@ -2858,7 +2864,7 @@ VoteFrame.LootCountdown = CreateFrame("Frame")
 VoteFrame.LootCountdown:Hide()
 VoteFrame.LootCountdown.currentTime = 0
 VoteFrame.LootCountdown:SetScript("OnShow", function()
-    this.startTime = GetTime();
+    this.startTime = GetTime()
     TalcVoteFrameTimeLeftBar:SetMinMaxValues(0, this.countDownFrom)
     this.currentTime = this.countDownFrom
 
@@ -2886,7 +2892,7 @@ VoteFrame.LootCountdown:SetScript("OnUpdate", function()
 
             for raidi = 0, GetNumRaidMembers() do
                 if GetRaidRosterInfo(raidi) then
-                    local n, _, _, _, _, _, z = GetRaidRosterInfo(raidi);
+                    local n, _, _, _, _, _, z = GetRaidRosterInfo(raidi)
                     if z ~= 'Offline' then
 
                         for index in next, VoteFrame.VotedItemsFrames do
@@ -2970,7 +2976,7 @@ end
 function VoteFrame:SetAssist_OnClick(id, to)
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
-            local n = GetRaidRosterInfo(i);
+            local n = GetRaidRosterInfo(i)
             if n == self.officerFrames[id].name then
                 if to then
                     talc_debug('promote ')
@@ -3017,10 +3023,10 @@ end
 
 VoteFrame.periodicSync = CreateFrame("Frame")
 VoteFrame.periodicSync:Hide()
-VoteFrame.periodicSync.plus = 0;
+VoteFrame.periodicSync.plus = 0
 VoteFrame.periodicSync:SetScript("OnShow", function()
-    this.startTime = GetTime();
-    this.index = 1;
+    this.startTime = GetTime()
+    this.index = 1
     talc_debug('periodic sync started at ' .. this.plus .. 's interval')
 end)
 VoteFrame.periodicSync:SetScript("OnHide", function()
@@ -3037,7 +3043,7 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
     local st = (this.startTime + this.plus) * 1000
     if gt >= st then
 
-        this.startTime = GetTime();
+        this.startTime = GetTime()
 
         if core.n(db['VOTE_LOOT_HISTORY']) == 0 then
             return
@@ -3078,7 +3084,7 @@ function VoteFrame:CheckAssists()
     -- get assists
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
-            local n, r = GetRaidRosterInfo(i);
+            local n, r = GetRaidRosterInfo(i)
             if r == 1 then
                 core.insert(assistsAndCLs, {
                     name = n,
@@ -3150,7 +3156,7 @@ function VoteFrame:CheckAssists()
 end
 
 function VoteFrame:SaveLootButton(button, value)
-    db['VOTE_CONFIG']['NeedButtons'][button] = value;
+    db['VOTE_CONFIG']['NeedButtons'][button] = value
 end
 
 function VoteFrame:RLFrameChangeTab_OnClick(tab)
@@ -3196,7 +3202,7 @@ function VoteFrame:SettingsFrame_OnShow()
         return
     end
 
-    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History (' .. core.n(db['VOTE_LOOT_HISTORY']) .. ')');
+    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History (' .. core.n(db['VOTE_LOOT_HISTORY']) .. ')')
 
     if core.n(db['VOTE_LOOT_HISTORY']) > 0 then
         TalcVoteFrameSettingsFramePurgeLootHistory:Enable()
@@ -3209,7 +3215,7 @@ function VoteFrame:PurgeLootHistory_OnClick()
     core.wipe(db['VOTE_LOOT_HISTORY'])
     talc_print('Loot History purged.')
     TalcVoteFrameSettingsFramePurgeLootHistory:Disable()
-    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History');
+    TalcVoteFrameSettingsFramePurgeLootHistory:SetText('Purge Loot History')
 end
 
 ----------------------------------------------------
@@ -3547,7 +3553,7 @@ VoteFrame.delayAddToWishlist = CreateFrame("Frame")
 VoteFrame.delayAddToWishlist:Hide()
 VoteFrame.delayAddToWishlist.id = 0
 VoteFrame.delayAddToWishlist:SetScript("OnShow", function()
-    this.startTime = GetTime();
+    this.startTime = GetTime()
 end)
 VoteFrame.delayAddToWishlist:SetScript("OnUpdate", function()
     local plus = 1
@@ -3601,10 +3607,10 @@ function VoteFrame:TryToAddToWishlist_OnClick(nameOrID)
 
         -- text, not url, go search in atlas, if available
         if IsAddOnLoaded("AtlasLoot") and AtlasLoot_Data then
-            AtlasLoot_LoadAllModules();
+            AtlasLoot_LoadAllModules()
 
-            nameOrID = core.lower(nameOrID);
-            local results = {};
+            nameOrID = core.lower(nameOrID)
+            local results = {}
             local maxCols = core.floor((TalcVoteFrame:GetWidth() - 10) / 345)
             local maxRows = core.floor((TalcVoteFrame:GetHeight() - 180) / 30)
             local maxResults = maxCols * maxRows
@@ -3613,7 +3619,7 @@ function VoteFrame:TryToAddToWishlist_OnClick(nameOrID)
             for _, data in core.pairs(AtlasLoot_Data) do
                 for _, v in core.ipairs(data) do
                     if core.type(v[2]) == "number" and v[2] > 0 then
-                        local itemName = GetItemInfo(v[2]);
+                        local itemName = GetItemInfo(v[2])
                         if not itemName then
                             itemName = core.gsub(v[4], "=q%d=", "")
                         end
@@ -3628,7 +3634,7 @@ function VoteFrame:TryToAddToWishlist_OnClick(nameOrID)
                             end
                             if not found then
                                 core.CacheItem(v[2])
-                                core.insert(results, { id = v[2], name = itemName });
+                                core.insert(results, { id = v[2], name = itemName })
                             end
                         end
                     end
@@ -3719,7 +3725,7 @@ function VoteFrame:AddToWishlist(itemLink, direct)
 
         for _, item in next, db['NEED_WISHLIST'] do
 
-            local found, _, link = core.find(itemLink, "(item:%d+:%d+:%d+:%d+)");
+            local found, _, link = core.find(itemLink, "(item:%d+:%d+:%d+:%d+)")
             local name = found and GetItemInfo(link) or itemLink
 
             if item == itemLink or item == name then
@@ -3829,7 +3835,7 @@ end
 --function Talc_AttendanceQueryWindow_OnUpdate()
 --    if GetTime() * 1000 >= (this.startTime + 1) * 1000 then
 --        if this.timeout > 0 then
---            this.startTime = GetTime();
+--            this.startTime = GetTime()
 --            this.timeout = this.timeout - 1
 --            _G[this:GetName() .. "No"]:SetText("No (" .. this.timeout .. ")")
 --        else
@@ -3841,7 +3847,7 @@ end
 --VoteFrame.AttendanceTracker = CreateFrame("Frame")
 --VoteFrame.AttendanceTracker:Hide()
 --VoteFrame.AttendanceTracker:SetScript("OnShow", function()
---    this.startTime = GetTime();
+--    this.startTime = GetTime()
 --    talc_print("Attendance tracker started.")
 --    db['ATTENDANCE_TRACKING'].started = true
 --end)
@@ -3854,7 +3860,7 @@ end
 --    local gt = GetTime() * 1000
 --    local st = (this.startTime + plus) * 1000
 --    if gt >= st then
---        this.startTime = GetTime();
+--        this.startTime = GetTime()
 --        core.saveAttendance()
 --    end
 --end)
@@ -3898,7 +3904,7 @@ function VoteFrame:QueryWho_OnClick()
 
     for i = 0, GetNumRaidMembers() do
         if GetRaidRosterInfo(i) then
-            local n, _, _, _, _, _, z = GetRaidRosterInfo(i);
+            local n, _, _, _, _, _, z = GetRaidRosterInfo(i)
             local _, class = UnitClass('raid' .. i)
 
             self.withAddon[n] = {
@@ -4028,13 +4034,13 @@ function VoteFrame:SaveSetting(key, value)
     if key == 'WIN_ENABLE_SOUND' then
         if value then
             TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
-            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. db['WIN_VOLUME'] .. ".ogg");
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. db['WIN_VOLUME'] .. ".ogg")
         else
             TalcVoteFrameSettingsFrameWinSoundHigh:Disable()
         end
     elseif key == 'WIN_VOLUME' then
         if db['WIN_ENABLE_SOUND'] then
-            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. value .. ".ogg");
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\win_" .. value .. ".ogg")
         end
         db[key] = value
         return
@@ -4055,11 +4061,11 @@ function VoteFrame:SaveSetting(key, value)
             TalcVoteFrameSettingsFrameRollTrombone:Disable()
         end
         if value then
-            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. db['ROLL_VOLUME'] .. ".ogg");
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. db['ROLL_VOLUME'] .. ".ogg")
         end
     elseif key == 'ROLL_VOLUME' then
         if db['ROLL_ENABLE_SOUND'] then
-            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. value .. ".ogg");
+            PlaySoundFile("Interface\\AddOns\\Talc\\sound\\please_roll_" .. value .. ".ogg")
         end
         db[key] = value
         return
@@ -4073,7 +4079,7 @@ function VoteFrame:SaveSetting(key, value)
         end
     end
 
-    db[key] = value == 1;
+    db[key] = value == 1
 end
 
 function VoteFrame:Resizing()
@@ -4082,7 +4088,7 @@ end
 
 function VoteFrame:Resized()
 
-    local ratio = TalcVoteFrame:GetWidth() / 600;
+    local ratio = TalcVoteFrame:GetWidth() / 600
     TalcVoteFrameNameLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(8 * ratio), -92)
     TalcVoteFrameGearScoreLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(100 * ratio), -92)
     TalcVoteFramePickLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(165 * ratio), -92)
@@ -4150,53 +4156,61 @@ end
 
 function VoteFrame:SendTestItems_OnClick()
 
-    local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r";
+    local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r"
     local testItem2 = "\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r"
-    local testItem3 = "\124cffa335ee\124Hitem:40614:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
+    --local testItem3 = "\124cffa335ee\124Hitem:40614:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
+    local testItem3 = "\124cffa335ee\124Hitem:43347:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
 
-    local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)")
     local lootName1, _, quality1, _, _, _, _, _, _, lootIcon1 = GetItemInfo(itemLink1)
 
-    local _, _, itemLink2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink2 = core.find(testItem2, "(item:%d+:%d+:%d+:%d+)")
     local lootName2, _, quality2, _, _, _, _, _, _, lootIcon2 = GetItemInfo(itemLink2)
 
-    local _, _, itemLink3 = core.find(testItem3, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink3 = core.find(testItem3, "(item:%d+:%d+:%d+:%d+)")
     local lootName3, _, quality3, _, _, _, _, _, _, lootIcon3 = GetItemInfo(itemLink3)
 
-    SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
-    TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
+    if lootName1 and lootName2 and lootName3 then
 
-    core.SetDynTTN(3)
-    core.SetDynTTV(3)
-    self.LootCountdown.countDownFrom = db['VOTE_TTN']
+        SendChatMessage('This is a test, click whatever you want!', "RAID_WARNING")
+        TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
 
-    self:SendTimersAndButtons()
+        core.SetDynTTN(3)
+        core.SetDynTTV(3)
+        self.LootCountdown.countDownFrom = db['VOTE_TTN']
 
-    self:SendReset()
+        self:SendTimersAndButtons()
 
-    self.LootCountdown:Show()
-    core.asend('CountDownFrame=Show')
+        self:SendReset()
 
-    core.bsend("ALERT", "PreloadItem=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-    core.bsend("ALERT", "PreloadItem=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-    core.bsend("ALERT", "PreloadItem=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
+        self.LootCountdown:Show()
+        core.asend('CountDownFrame=Show')
 
-    core.bsend("ALERT", "Loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
-    core.bsend("ALERT", "Loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
-    core.bsend("ALERT", "Loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
-    core.bsend("ALERT", "DoneSending=3=items")
+        core.bsend("ALERT", "PreloadItem=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+        core.bsend("ALERT", "PreloadItem=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+        core.bsend("ALERT", "PreloadItem=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
 
-    TalcVoteFrameMLToWinner:Disable()
+        core.bsend("ALERT", "Loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
+        core.bsend("ALERT", "Loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
+        core.bsend("ALERT", "Loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
+        core.bsend("ALERT", "DoneSending=3=items")
+
+        TalcVoteFrameMLToWinner:Disable()
+    else
+        talc_print("Items are caching, try again in a couple moments.")
+    end
 end
 
 --[[
-PlaySound("igQuestListOpen");
-PlaySound("igQuestListClose");
+PlaySound("igQuestListOpen")
+PlaySound("igQuestListClose")
 
-PlaySound("igMainMenuOptionCheckBoxOn");
-PlaySound("igMainMenuOptionCheckBoxOff");
+PlaySound("igMainMenuOptionCheckBoxOn")
+PlaySound("igMainMenuOptionCheckBoxOff")
 
-PlaySound("igCharacterInfoTab");
-PlaySound("igMainMenuClose");
+PlaySound("igCharacterInfoTab")
+PlaySound("igMainMenuClose")
 ]]--
 
+
+--/run t=time(date("!*t")) l=date("!*t", t) tu=date("*t") tzDH=l.hour-tu.hour+(tu.isdst and 1 or 0) tzDM=l.min-tu.min DEFAULT_CHAT_FRAME:AddMessage(date("%c",t+((date("%H",t)-tu.hour)*3600+(date("%M",t)-tu.min)*60)-(tzDH*3600+tzDM*60)))
