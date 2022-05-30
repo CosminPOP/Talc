@@ -166,8 +166,8 @@ function VoteFrame:ResetVars()
 
     TalcVoteFrameTradableItemsFrame:Hide()
 
-    TalcVoteFrameContestantScrollListFrame:SetPoint("TOPLEFT", TalcVoteFrame, "TOPLEFT", 5, -109)
-    TalcVoteFrameContestantScrollListFrame:SetPoint("BOTTOMRIGHT", TalcVoteFrame, "BOTTOMRIGHT", -5, 28)
+    --TalcVoteFrameContestantScrollListFrame:SetPoint("TOPLEFT", TalcVoteFrame, "TOPLEFT", 5, -109)
+    --TalcVoteFrameContestantScrollListFrame:SetPoint("BOTTOMRIGHT", TalcVoteFrame, "BOTTOMRIGHT", -5, 28)
 
     TalcVoteFrameRLExtraFrameDragLoot:SetText("Drag Loot")
     TalcVoteFrameRLExtraFrameDragLoot:Enable()

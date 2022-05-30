@@ -1747,6 +1747,11 @@
                             <AbsDimension x="5" y="-109"/>
                         </Offset>
                     </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="28"/>
+                        </Offset>
+                    </Anchor>
                 </Anchors>
                 <Frames>
                 </Frames>
@@ -4182,103 +4187,6 @@
                 </Scripts>
             </Frame>
 
-            <Frame name="TalcVoteFrameTradableItemsFrame" hidden="true" parent="UIParent" movable="true"
-                   enableMouse="true" toplevel="true">
-                <Size>
-                    <AbsDimension x="250" y="300"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="CENTER">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
-                          edgeFile="Interface\addons\Talc\images\border-main"
-                          tile="false">
-                    <EdgeSize>
-                        <AbsValue val="32"/>
-                    </EdgeSize>
-                    <TileSize>
-                        <AbsValue val="16"/>
-                    </TileSize>
-                    <BackgroundInsets>
-                        <AbsInset left="5" right="5" top="5" bottom="5"/>
-                    </BackgroundInsets>
-                </Backdrop>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <Texture name="$parentTitleBackground" file="Interface\addons\Talc\images\background-main">
-                            <Anchors>
-                                <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-7"/>
-                                </Anchor>
-                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
-                                    <Offset x="-2" y="-25"/>
-                                </Anchor>
-                            </Anchors>
-                            <TexCoords left="0" right="2" top="0" bottom="0.375"/>
-                        </Texture>
-                        <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">
-                            <Anchors>
-                                <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                                    <Offset x="2" y="-24"/>
-                                </Anchor>
-                                <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
-                                    <Offset x="-2" y="5"/>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentTitle" inherits="GameFontNormal" text="Tradable Items">
-                            <Anchors>
-                                <Anchor point="TOP">
-                                    <Offset>
-                                        <AbsDimension x="0" y="-9"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Frames>
-                    <Button name="$parentCloseButton" inherits="Talc_CloseButtonTemplate">
-                        <Size>
-                            <AbsDimension x="22" y="22"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPRIGHT">
-                                <Offset>
-                                    <AbsDimension x="-5" y="-4"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                HideUIPanel(TalcVoteFrameTradableItemsFrame)
-                                PlaySound("igMainMenuOptionCheckBoxOn");
-                            </OnClick>
-                        </Scripts>
-                    </Button>
-                </Frames>
-                <Scripts>
-                    <OnLoad>
-                        this:RegisterForDrag("LeftButton");
-                        this:SetMovable(1);
-                        this:SetUserPlaced(true);
-                    </OnLoad>
-                    <OnDragStart>
-                        this:StartMoving();
-                        this.isMoving = true;
-                    </OnDragStart>
-                    <OnDragStop>
-                        this:StopMovingOrSizing();
-                        this.isMoving = false;
-                    </OnDragStop>
-                </Scripts>
-            </Frame>
 
         </Frames>
         <Scripts>
