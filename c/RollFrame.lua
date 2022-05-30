@@ -1,10 +1,18 @@
+RollFrame = CreateFrame("Frame")
+
+----------------------------------------------------
+--- Constants
+----------------------------------------------------
+
 local db, core
 local _G = _G
 
-RollFrame = CreateFrame("Frame")
-
 RollFrame.watchRolls = false
 RollFrame.id = 0
+
+----------------------------------------------------
+--- Event Handler
+----------------------------------------------------
 
 function RollFrame:HandleSync(_, msg, _, sender)
     if core.isRaidLeader(sender) then
@@ -21,6 +29,7 @@ function RollFrame:HandleSync(_, msg, _, sender)
             end
             return
         end
+
         if core.subFind(msg, 'RollFrame=') then
             local command = core.split('=', msg)
             if command[2] == "Reset" then
@@ -59,6 +68,12 @@ function RollFrame:Init()
     self:ResetVars()
 end
 
+function RollFrame:ResetVars()
+    TalcRollFrame:Hide()
+    self:HideAnchor()
+    self.watchRolls = false
+end
+
 function RollFrame:ShowAnchor()
     TalcRollFrame:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -81,12 +96,6 @@ function RollFrame:HideAnchor()
     TalcRollFrameTitle:Hide()
     TalcRollFrameTestPlacement:Hide()
     TalcRollFrameClosePlacement:Hide()
-end
-
-function RollFrame:ResetVars()
-    TalcRollFrame:Hide()
-    self:HideAnchor()
-    self.watchRolls = false
 end
 
 function RollFrame:AddRolledItem(data)
@@ -189,7 +198,6 @@ function RollFrame:FadeInFinished()
 end
 
 function RollFrame:CountdownFinished()
-    print("countdown finished")
     RollFrame:FadeOutFrame()
 end
 
@@ -230,6 +238,10 @@ function RollFrame:PickRoll(roll)
     self:FadeOutFrame()
 end
 
+----------------------------------------------------
+--- Delay/Cache Add
+----------------------------------------------------
+
 RollFrame.delayAddItem = CreateFrame("Frame")
 RollFrame.delayAddItem:Hide()
 RollFrame.delayAddItem:SetScript("OnShow", function()
@@ -245,6 +257,10 @@ RollFrame.delayAddItem:SetScript("OnUpdate", function()
     end
 end)
 
+
+----------------------------------------------------
+--- Test
+----------------------------------------------------
 
 function RollFrame:Test()
 
