@@ -2,32 +2,17 @@ local db, core, tokenRewards
 local _G = _G
 
 NeedFrame = CreateFrame("Frame")
+
+----------------------------------------------------
+--- Vars
+----------------------------------------------------
+
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
 
-function NeedFrame:Init()
-    core = TALC
-    db = TALC_DB
-    tokenRewards = TALC_TOKENS
-
-    self:ResetVars()
-end
-
-function NeedFrame:ResetVars()
-
-    self:HideAnchor()
-
-    for _, frame in next, self.itemFrames do
-        frame:Hide()
-        frame = nil
-    end
-
-    for i = 1, 15 do
-        _G['NewItemTooltip' .. i]:Hide()
-    end
-
-    self.numItems = 0
-end
+----------------------------------------------------
+--- Event Handler
+----------------------------------------------------
 
 function NeedFrame:HandleSync(_, msg, _, sender)
 
@@ -74,6 +59,35 @@ function NeedFrame:HandleSync(_, msg, _, sender)
         end
     end
 end
+
+----------------------------------------------------
+--- Init
+----------------------------------------------------
+
+function NeedFrame:Init()
+    core = TALC
+    db = TALC_DB
+    tokenRewards = TALC_TOKENS
+
+    self:ResetVars()
+end
+
+function NeedFrame:ResetVars()
+
+    self:HideAnchor()
+
+    for _, frame in next, self.itemFrames do
+        frame:Hide()
+        frame = nil
+    end
+
+    for i = 1, 15 do
+        _G['NewItemTooltip' .. i]:Hide()
+    end
+
+    self.numItems = 0
+end
+
 
 function NeedFrame:AddItem(data)
     local item = core.split("=", data)
@@ -580,34 +594,9 @@ function NeedFrame:NeedClick(need, f)
     self:FadeOutFrame(frame)
 end
 
-function NeedFrame:Test()
-
-    local linkStrings = {
-        '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
-        '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
-        '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
-        '\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r',
-        '\124cffa335ee\124Hitem:40611:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Protector]\124h\124r',
-        '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
-        '\124cffff8000\124Hitem:45038:0:0:0:0:0:0:0:0\124h[Fragment of Val\'anyr]\124h\124r'
-    }
-
-    for i = 1, 7 do
-        local _, _, itemLink = core.find(linkStrings[i], "(item:%d+:%d+:%d+:%d+)");
-        local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
-
-        if name and tex then
-            self:AddItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
-            if not TalcNeedFrame:IsVisible() then
-                TalcNeedFrame:Show()
-            end
-        else
-            talc_print('Caching items... please try again.')
-            GameTooltip:SetHyperlink(itemLink)
-            GameTooltip:Hide()
-        end
-    end
-end
+----------------------------------------------------
+--- Delay/Cache Add
+----------------------------------------------------
 
 NeedFrame.delayAddItem = CreateFrame("Frame")
 NeedFrame.delayAddItem:Hide()
@@ -637,3 +626,37 @@ NeedFrame.delayAddItem:SetScript("OnUpdate", function()
         end
     end
 end)
+
+
+----------------------------------------------------
+--- Test
+----------------------------------------------------
+
+function NeedFrame:Test()
+
+    local linkStrings = {
+        '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',
+        '\124cff0070dd\124Hitem:10399:0:0:0:0:0:0:0:0\124h[Blackened Defias Armor]\124h\124r',
+        '\124cff1eff00\124Hitem:10402:0:0:0:0:0:0:0:0\124h[Blackened Defias Boots]\124h\124r',
+        '\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r',
+        '\124cffa335ee\124Hitem:40611:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Protector]\124h\124r',
+        '\124cffa335ee\124Hitem:44569:0:0:0:0:0:0:0:0\124h[Key to the Focusing Iris]\124h\124r',
+        '\124cffff8000\124Hitem:45038:0:0:0:0:0:0:0:0\124h[Fragment of Val\'anyr]\124h\124r'
+    }
+
+    for i = 1, 7 do
+        local _, _, itemLink = core.find(linkStrings[i], "(item:%d+:%d+:%d+:%d+)");
+        local name, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+
+        if name and tex then
+            self:AddItem('testloot=' .. i .. '=' .. tex .. '=' .. name .. '=' .. linkStrings[i] .. '=60')
+            if not TalcNeedFrame:IsVisible() then
+                TalcNeedFrame:Show()
+            end
+        else
+            talc_print('Caching items... please try again.')
+            GameTooltip:SetHyperlink(itemLink)
+            GameTooltip:Hide()
+        end
+    end
+end

@@ -2,8 +2,17 @@ local db, core
 local _G = _G
 
 WinFrame = CreateFrame("Frame")
+
+----------------------------------------------------
+--- Vars
+----------------------------------------------------
+
 WinFrame.items = {}
 WinFrame.xmog = false
+
+----------------------------------------------------
+--- Event Handler
+----------------------------------------------------
 
 function WinFrame:HandleSync(_, msg, _, sender)
     if core.find(msg, 'PlayerWon=') and core.isRaidLeader(sender) then
@@ -41,12 +50,15 @@ function WinFrame:HandleLoot(arg1)
     end
 end
 
+----------------------------------------------------
+--- Init
+----------------------------------------------------
+
 function WinFrame:Init()
     core = TALC
     db = TALC_DB
     self:HideAnchor()
 end
-
 
 function WinFrame:AddWonItem(linkString, winText)
 
@@ -200,6 +212,9 @@ function WinFrame:AddTestItems()
     WinFrame:AddWonItem('|cffff8000|Hitem:46017:0:0:0:0:0:0:0:0|h[Val\'anyr, Hammer of Ancient Kings]|h|4r"', 'You create')
 end
 
+----------------------------------------------------
+--- Delay/Cache Add
+----------------------------------------------------
 
 WinFrame.delayAddWonItem = CreateFrame("Frame")
 WinFrame.delayAddWonItem:Hide()

@@ -1,11 +1,11 @@
+local db, core
+local _G = _G
+
 RollFrame = CreateFrame("Frame")
 
 ----------------------------------------------------
---- Constants
+--- Vars
 ----------------------------------------------------
-
-local db, core
-local _G = _G
 
 RollFrame.watchRolls = false
 RollFrame.id = 0
@@ -59,6 +59,10 @@ function RollFrame:HandleSync(_, msg, _, sender)
         end
     end
 end
+
+----------------------------------------------------
+--- Init
+----------------------------------------------------
 
 function RollFrame:Init()
 

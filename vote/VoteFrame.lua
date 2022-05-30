@@ -76,6 +76,8 @@ VoteFrame.expandedAttendanceFrames = {}
 
 VoteFrame.officerFrames = {}
 
+VoteFrame.manualLootSync = false
+
 ----------------------------------------------------
 --- Init
 ----------------------------------------------------
@@ -198,7 +200,7 @@ function VoteFrame:ResetVars()
 end
 
 ----------------------------------------------------
---- Addon Messages
+--- Event Handler
 ----------------------------------------------------
 
 function VoteFrame:HandleSync(_, t, _, sender)
@@ -890,7 +892,6 @@ function VoteFrame:ShowMinimapDropdown()
 end
 
 ----------------------------------------------------
-----------------------------------------------------
 --- Main Window
 ----------------------------------------------------
 
@@ -1573,7 +1574,7 @@ function Talc_BuildContestantDropdownMenu()
 end
 
 function VoteFrame:RefreshContestantsList()
-    --getto ordering
+    --ghetto ordering
     local tempTable = self.playersWhoWantItems
     self.playersWhoWantItems = {}
     local j = 0
@@ -2983,8 +2984,6 @@ function VoteFrame:SetAssist_OnClick(id, to)
     end
 end
 
-VoteFrame.manualLootSync = false
-
 function VoteFrame:SyncLootHistory()
     VoteFrame.manualLootSync = true
     local totalItems = 0
@@ -3012,56 +3011,6 @@ function VoteFrame:SyncLootHistory()
     end
     core.bsend("BULK", "LootHistorySync=End")
 end
-
-VoteFrame.periodicSync = CreateFrame("Frame")
-VoteFrame.periodicSync:Hide()
-VoteFrame.periodicSync.plus = 0
-VoteFrame.periodicSync:SetScript("OnShow", function()
-    this.startTime = GetTime()
-    talc_debug('periodic sync started at ' .. this.plus .. 's interval, current index = ' .. db['PERIODIC_SYNC_INDEX'])
-end)
-VoteFrame.periodicSync:SetScript("OnHide", function()
-    talc_debug('periodic sync stopped')
-end)
-VoteFrame.periodicSync:SetScript("OnUpdate", function()
-
-    if this.plus == 0 then
-        this:Hide()
-        return
-    end
-
-    local gt = GetTime() * 1000
-    local st = (this.startTime + this.plus) * 1000
-    if gt >= st then
-
-        this.startTime = GetTime()
-
-        if core.n(db['VOTE_LOOT_HISTORY']) == 0 then
-            return
-        end
-
-        local i = 0
-        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
-            i = i + 1
-            if i == db['PERIODIC_SYNC_INDEX'] then
-                talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
-                core.bsendg("BULK", "PeriodicLootHistorySync="
-                        .. timestamp .. "="
-                        .. item.player .. "="
-                        .. item.class .. "="
-                        .. item.item .. "="
-                        .. item.pick .. "="
-                        .. item.raid)
-            end
-        end
-
-        if db['PERIODIC_SYNC_INDEX'] < core.n(db['VOTE_LOOT_HISTORY']) and db['PERIODIC_SYNC_INDEX'] < core.periodicSyncMaxItems then
-            db['PERIODIC_SYNC_INDEX'] = db['PERIODIC_SYNC_INDEX'] + 1
-        else
-            db['PERIODIC_SYNC_INDEX'] = 1
-        end
-    end
-end)
 
 function VoteFrame:CheckAssists()
 
@@ -3147,6 +3096,7 @@ function VoteFrame:CheckAssists()
     TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
 end
 
+
 function VoteFrame:SaveLootButton(button, value)
     db['VOTE_CONFIG']['NeedButtons'][button] = value
 end
@@ -3184,12 +3134,65 @@ function VoteFrame:RLFrameChangeTab_OnClick(tab)
 end
 
 ----------------------------------------------------
+--- Periodic Loot History Sync
+----------------------------------------------------
+
+VoteFrame.periodicSync = CreateFrame("Frame")
+VoteFrame.periodicSync:Hide()
+VoteFrame.periodicSync.plus = 0
+VoteFrame.periodicSync:SetScript("OnShow", function()
+    this.startTime = GetTime()
+    talc_debug('periodic sync started at ' .. this.plus .. 's interval, current index = ' .. db['PERIODIC_SYNC_INDEX'])
+end)
+VoteFrame.periodicSync:SetScript("OnHide", function()
+    talc_debug('periodic sync stopped')
+end)
+VoteFrame.periodicSync:SetScript("OnUpdate", function()
+
+    if this.plus == 0 then
+        this:Hide()
+        return
+    end
+
+    local gt = GetTime() * 1000
+    local st = (this.startTime + this.plus) * 1000
+    if gt >= st then
+
+        this.startTime = GetTime()
+
+        if core.n(db['VOTE_LOOT_HISTORY']) == 0 then
+            return
+        end
+
+        local i = 0
+        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+            i = i + 1
+            if i == db['PERIODIC_SYNC_INDEX'] then
+                talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
+                core.bsendg("BULK", "PeriodicLootHistorySync="
+                        .. timestamp .. "="
+                        .. item.player .. "="
+                        .. item.class .. "="
+                        .. item.item .. "="
+                        .. item.pick .. "="
+                        .. item.raid)
+            end
+        end
+
+        if db['PERIODIC_SYNC_INDEX'] < core.n(db['VOTE_LOOT_HISTORY']) and db['PERIODIC_SYNC_INDEX'] < core.periodicSyncMaxItems then
+            db['PERIODIC_SYNC_INDEX'] = db['PERIODIC_SYNC_INDEX'] + 1
+        else
+            db['PERIODIC_SYNC_INDEX'] = 1
+        end
+    end
+end)
+
+----------------------------------------------------
 --- Settings Screen
 ----------------------------------------------------
 
 function VoteFrame:SettingsFrame_OnShow()
 
-    -- dev
     if not db then
         return
     end
@@ -4203,6 +4206,5 @@ PlaySound("igMainMenuOptionCheckBoxOff")
 PlaySound("igCharacterInfoTab")
 PlaySound("igMainMenuClose")
 ]]--
-
 
 --/run t=time(date("!*t")) l=date("!*t", t) tu=date("*t") tzDH=l.hour-tu.hour+(tu.isdst and 1 or 0) tzDM=l.min-tu.min DEFAULT_CHAT_FRAME:AddMessage(date("%c",t+((date("%H",t)-tu.hour)*3600+(date("%M",t)-tu.min)*60)-(tzDH*3600+tzDM*60)))
