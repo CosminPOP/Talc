@@ -2681,12 +2681,12 @@
                         <Frames>
                             <PlayerModel name="$parentModelFrame">
                                 <Size>
-                                    <AbsDimension x="260" y="223"/>
+                                    <AbsDimension x="260" y="200"/>
                                 </Size>
                                 <Anchors>
                                     <Anchor point="TOPLEFT">
                                         <Offset>
-                                            <AbsDimension x="0" y="20"/>
+                                            <AbsDimension x="0" y="0"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>

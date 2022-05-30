@@ -1075,6 +1075,7 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
                 local n = GetRaidRosterInfo(i)
                 if n == playerName then
                     TalcVoteFrameRaiderDetailsFrameInspectGearFrameModelFrame:SetUnit('raid' .. i)
+                    TalcVoteFrameRaiderDetailsFrameInspectGearFrameModelFrame:SetPosition(-0.5,0,0)
                     break
                 end
             end
