@@ -1,9 +1,10 @@
 local core, db, tokenRewards
 local _G = _G
 
-Talc_Utils = CreateFrame("Frame")
+TALCUtils = CreateFrame("Frame")
 
-function Talc_Utils:Init()
+function TALCUtils:Init()
+
     core = TALC
     db = TALC_DB
     tokenRewards = TALC_TOKENS
@@ -777,6 +778,9 @@ function talc_error(a)
 end
 
 function talc_debug(a)
+    if not db then
+        return
+    end
     if not db['_DEBUG'] then
         return
     end
