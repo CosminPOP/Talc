@@ -232,7 +232,7 @@ WinFrame.delayAddWonItem:SetScript("OnUpdate", function()
         for id, data in next, this.data do
             if this.data[id] then
                 atLeastOne = true
-                WinFrame:addWonItem(id, data)
+                WinFrame:AddWonItem(id, data)
                 this.data[id] = nil
             end
         end

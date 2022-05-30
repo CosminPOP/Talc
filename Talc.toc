@@ -5,14 +5,15 @@
 ## Notes: Thunder Ale Loot Council
 ## SavedVariables: TALC_DB
 
-Talc.lua
-
+utils\templates.xml
 utils\ChatThrottleLib\ChatThrottleLib.lua
 utils\tokens.lua
 utils\utils.lua
 
-vote\VoteFrame.xml
-c\NeedFrame.xml
-c\WinFrame.xml
-c\RollFrame.xml
-c\BossFrame.xml
+modules\VoteFrame.xml
+modules\NeedFrame.xml
+modules\WinFrame.xml
+modules\RollFrame.xml
+modules\BossFrame.xml
+
+Talc.lua
