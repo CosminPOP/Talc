@@ -1065,6 +1065,33 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
             end
         end
 
+        -- dont send gear from me to me
+        if playerName == core.me then
+            for i = 1, 19 do
+                if GetInventoryItemLink("player", i) then
+                    local _, iL, _, _, _, _, _, _, equip_slot = GetItemInfo(GetInventoryItemLink("player", i));
+                    local _, _, shortLink = core.find(iL, "(item:%d+:%d+:%d+:%d+)")
+                    local slotString = ''
+                    for slot, data in next, core.equipSlotsDetails do
+                        if (slot == equip_slot or slot == equip_slot .. "0" or slot == equip_slot .. "1") and i == data.id then
+                            slotString = data.slot
+                            break
+                        end
+                    end
+                    if slotString == '' then
+                        talc_debug("cant determine slot, send gear " .. equip_slot)
+                        return
+                    end
+                    local enchantEx = core.split(':', shortLink)
+                    self.inspectPlayerGear[playerName][i] = {
+                        item = shortLink,
+                        enchant = core.int(enchantEx[3]),
+                        slot = slotString
+                    }
+                end
+            end
+        end
+
         if core.n(self.inspectPlayerGear[playerName]) == 0 then
             core.wsend("ALERT", "SendGear=", playerName)
         else
