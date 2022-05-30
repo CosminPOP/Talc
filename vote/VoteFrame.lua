@@ -254,7 +254,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not nrItems[2] or not nrItems[3] then
             talc_error('wrong OfficerReceived syntax')
             talc_error(t)
-            return false
+            return
         end
 
         if core.int(nrItems[2]) ~= self.numItems then
@@ -272,7 +272,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not nrItems[2] or not nrItems[3] then
             talc_error('wrong received syntax')
             talc_error(t)
-            return false
+            return
         end
 
         if core.int(nrItems[2]) ~= self.numItems then
@@ -297,10 +297,10 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not indexEx[2] or not indexEx[3] then
             talc_error('bad playerRoll syntax')
             talc_error(t)
-            return false
+            return
         end
         if not core.int(indexEx[3]) then
-            return false
+            return
         end
 
         self.playersWhoWantItems[core.int(indexEx[2])]['roll'] = core.int(indexEx[3])
@@ -377,7 +377,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not itemVoteEx[4] then
             talc_error('bad itemVote syntax')
             talc_error(t)
-            return false
+            return
         end
 
         local votedItem = core.int(itemVoteEx[2])
@@ -555,11 +555,11 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not needEx[7] then
             talc_error('bad need syntax')
             talc_error(t)
-            return false
+            return
         end
 
         if core.subFind(t, 'autopass=') then
-            return false
+            return
         end
 
         -- double need protection
@@ -631,7 +631,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         if not wonData[7] then
             talc_error('bad playerWon syntax')
             talc_error(t)
-            return false
+            return
         end
 
         local timestamp, player, item, index, pick, raid
@@ -699,7 +699,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
                 if t ~= 'LootHistorySync=Start' and t ~= 'LootHistorySync=End' then
                     talc_error('bad PeriodicLootHistorySync syntax')
                     talc_error(t)
-                    return false
+                    return
                 end
             end
 
@@ -751,7 +751,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             if t ~= 'LootHistorySync=Start' and t ~= 'LootHistorySync=End' then
                 talc_error('bad loothistorysync syntax')
                 talc_error(t)
-                return false
+                return
             end
         end
 
@@ -1674,7 +1674,7 @@ end
 function VoteFrame:CalculateWinner()
 
     if not self.CurrentVotedItem then
-        return false
+        return
     end
 
     self.currentRollWinner = ''
@@ -1788,7 +1788,7 @@ end
 function VoteFrame:UpdateOfficerVotesNum()
 
     if not self.CurrentVotedItem then
-        return false
+        return
     end
 
     if not self.OfficerVoted[self.CurrentVotedItem] then
@@ -1876,7 +1876,7 @@ end
 function VoteFrame:MLToEnchanter_OnClick()
     if db['VOTE_ENCHANTER'] == '' then
         talc_print('Enchanter not set. Use /talc set enchanter [name] to set it.')
-        return false;
+        return
     end
 
     local foundInRaid = false
@@ -2118,7 +2118,7 @@ end
 function VoteFrame:VoteFrameListUpdate()
 
     if not self.CurrentVotedItem then
-        return false
+        return
     end
 
     self:RefreshContestantsList()
@@ -2516,7 +2516,7 @@ function VoteFrame:BroadcastLoot_OnClick()
     local lootMethod = GetLootMethod()
     if lootMethod ~= 'master' then
         talc_print('Looting method is not master looter. (' .. lootMethod .. ')')
-        return false
+        return
     end
 
     local target = UnitName('target')
@@ -2560,7 +2560,7 @@ function VoteFrame:BroadcastLoot_OnClick()
 
         TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Waiting sync...')
 
-        return false
+        return
     end
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
