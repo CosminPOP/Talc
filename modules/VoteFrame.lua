@@ -3555,7 +3555,7 @@ VoteFrame.delayAddToWishlist:SetScript("OnUpdate", function()
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        VoteFrame:TryToAddToWishlist_OnClick(this.item)
+        VoteFrame:TryToAddToWishlist_OnClick(this.id)
         this:Hide()
     end
 end)
