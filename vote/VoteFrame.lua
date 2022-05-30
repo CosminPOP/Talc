@@ -86,10 +86,6 @@ function VoteFrame:Init()
     core = TALC
     tokenRewards = TALC_TOKENS
 
-    -- start syncing item history with guild every x seconds
-    -- 2x 10m = 30/week
-    -- 4x 25m = 60/week
-    -- 4680 / year naxx
     VoteFrame.periodicSync.plus = 30 -- core.floor(3600 / core.min(core.periodicSyncMaxItems, core.n(db['VOTE_LOOT_HISTORY'])))
     VoteFrame.periodicSync:Show()
 
@@ -294,12 +290,14 @@ function VoteFrame:HandleSync(_, t, _, sender)
 
         local indexEx = core.split('=', t)
 
-        if not indexEx[2] or not indexEx[3] then
-            talc_error('bad playerRoll syntax')
+        if indexEx[4] then
+            talc_error('bad playerRoll syntax 4')
             talc_error(t)
             return
         end
         if not core.int(indexEx[3]) then
+            talc_error('bad playerRoll syntax 3')
+            talc_error(t)
             return
         end
 
@@ -319,14 +317,14 @@ function VoteFrame:HandleSync(_, t, _, sender)
         end
 
         local pickEx = core.split('=', t)
-        if not pickEx[2] or not pickEx[3] or not pickEx[4] then
-            talc_error('bad changePick syntax')
+        if not pickEx[4] then
+            talc_error('bad changePick syntax 4')
             talc_error(t)
             return
         end
 
         if not core.int(pickEx[4]) then
-            talc_error('bad changePick itemIndex')
+            talc_error('bad changePick itemIndex 42')
             talc_error(t)
             return
         end
@@ -1631,9 +1629,7 @@ function VoteFrame:VoteButton_OnClick(id)
     local _, name = self:GetPlayerInfo(id)
 
     if not self.itemVotes[self.CurrentVotedItem][name] then
-        self.itemVotes[self.CurrentVotedItem][name] = {
-            [core.me] = '+'
-        }
+        self.itemVotes[self.CurrentVotedItem][name] = { [core.me] = '+' }
         core.asend("ItemVote=" .. self.CurrentVotedItem .. "=" .. name .. "=+")
     else
         if self.itemVotes[self.CurrentVotedItem][name][core.me] == '+' then
@@ -1954,11 +1950,7 @@ function VoteFrame:AwardPlayer(playerName, cvi, disenchant)
 
     local _, _, _, raid = core.instanceInfo()
     if not raid then
-        if db['ITEM_LOCATION_CACHE'][self.VotedItemsFrames[cvi].itemID] then
-            raid = db['ITEM_LOCATION_CACHE'][self.VotedItemsFrames[cvi].itemID]
-        else
-            raid = "Unknown"
-        end
+        raid = core.GetItemLocation(self.VotedItemsFrames[cvi].itemID)
     end
 
     if core.n(self.bagItems) > 0 then
