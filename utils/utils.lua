@@ -752,7 +752,7 @@ function Talc_Utils:Init()
             return core.GetItemLocation(itemID)
         end
 
-        return ''
+        return GetZoneText()
     end
 
 end
