@@ -63,13 +63,13 @@ function NeedFrame:HandleSync(_, msg, _, sender)
 
         if core.find(msg, 'DoneSending=', 1, true) then
             local nrItems = core.split('=', msg)
-            if not nrItems[2] or not nrItems[3] then
+            if not nrItems[2] then
                 talc_debug('wrong doneSending syntax')
                 talc_debug(msg)
                 return
             end
 
-            core.asend("Received=" .. self.numItems .. "=items")
+            core.asend("Received=" .. self.numItems)
             return
         end
     end

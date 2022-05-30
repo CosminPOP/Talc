@@ -235,13 +235,13 @@ function VoteFrame:HandleSync(_, t, _, sender)
             return
         end
         local nrItems = core.split('=', t)
-        if not nrItems[2] or not nrItems[3] then
+        if not nrItems[2] then
             talc_error('wrong doneSending syntax')
             talc_error(t)
             return
         end
         TalcVoteFrameTimeLeftBarTextLeft:SetText('Loot sent. Waiting picks...')
-        core.asend("OfficerReceived=" .. self.numItems .. "=items")
+        core.asend("OfficerReceived=" .. self.numItems)
         return
     end
 
@@ -251,7 +251,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         end
 
         local nrItems = core.split('=', t)
-        if not nrItems[2] or not nrItems[3] then
+        if not nrItems[2] then
             talc_error('wrong OfficerReceived syntax')
             talc_error(t)
             return
@@ -269,7 +269,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
         end
 
         local nrItems = core.split('=', t)
-        if not nrItems[2] or not nrItems[3] then
+        if not nrItems[2] then
             talc_error('wrong received syntax')
             talc_error(t)
             return
@@ -2495,7 +2495,7 @@ function VoteFrame:ReceiveDrag()
                     numLootItems = numLootItems + 1
                 end
             end
-            core.bsend("ALERT", "DoneSending=" .. numLootItems .. "=items")
+            core.bsend("ALERT", "DoneSending=" .. numLootItems)
             TalcVoteFrameMLToWinner:Disable()
 
             TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
@@ -2582,7 +2582,7 @@ function VoteFrame:BroadcastLoot_OnClick()
             end
         end
     end
-    core.bsend("ALERT", "DoneSending=" .. numLootItems .. "=items")
+    core.bsend("ALERT", "DoneSending=" .. numLootItems)
     TalcVoteFrameMLToWinner:Disable()
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:SetText(numLootItems .. " items sent")
@@ -4193,7 +4193,7 @@ function VoteFrame:SendTestItems_OnClick()
         core.bsend("ALERT", "Loot=1=" .. lootIcon1 .. "=" .. lootName1 .. "=" .. testItem1)
         core.bsend("ALERT", "Loot=2=" .. lootIcon2 .. "=" .. lootName2 .. "=" .. testItem2)
         core.bsend("ALERT", "Loot=3=" .. lootIcon3 .. "=" .. lootName3 .. "=" .. testItem3)
-        core.bsend("ALERT", "DoneSending=3=items")
+        core.bsend("ALERT", "DoneSending=3")
 
         TalcVoteFrameMLToWinner:Disable()
     else
