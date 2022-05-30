@@ -292,7 +292,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
 
         local indexEx = core.split('=', t)
 
-        if indexEx[4] then
+        if not indexEx[4] then
             talc_error('bad playerRoll syntax 4')
             talc_error(t)
             return
