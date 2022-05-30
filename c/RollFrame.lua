@@ -51,20 +51,6 @@ function RollFrame:HandleSync(_, msg, _, sender)
     end
 end
 
-function RollFrame:HandleSystem(arg1)
-    if not self.watchRolls then
-        return false
-    end
-
-    if core.find(arg1, "rolls", 1, true) and core.find(arg1, "(1-100)", 1, true) then
-        local r = core.split(" ", arg1)
-        if not r[3] then
-            return false
-        end
-        self.rolls[r[1]] = core.int(r[3])
-    end
-end
-
 function RollFrame:Init()
 
     core = TALC
@@ -101,7 +87,6 @@ function RollFrame:ResetVars()
     TalcRollFrame:Hide()
     self:HideAnchor()
     self.watchRolls = false
-    self.rolls = {}
 end
 
 function RollFrame:AddRolledItem(data)
