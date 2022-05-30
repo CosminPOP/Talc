@@ -14,7 +14,7 @@ TALC.maxOfficers = 10
 TALC.periodicSyncMaxItems = 200
 TALC.updateNotificationShown = false
 
-local core, db, tokenRewards
+local core, tokenRewards
 local assistTriggers = 0
 local init = false
 
@@ -29,116 +29,113 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TALC:UnregisterEvent("ADDON_LOADED")
 
-            Talc_Utils:Init();
-
             core = TALC
-            db = TALC_DB
             tokenRewards = TALC_TOKENS
 
             --- init saved vars
-            if not db then
-                db = {}
+            if not TALC_DB then
+                TALC_DB = {}
             end
-            if db['_DEBUG'] == nil then
-                db['_DEBUG'] = false
-            end
-
-            if db['PERIODIC_SYNC_INDEX'] == nil then
-                db['PERIODIC_SYNC_INDEX'] = 1
+            if TALC_DB['_DEBUG'] == nil then
+                TALC_DB['_DEBUG'] = false
             end
 
-            if db['PLAYER_CLASS_CACHE'] == nil then
-                db['PLAYER_CLASS_CACHE'] = {}
+            if TALC_DB['PERIODIC_SYNC_INDEX'] == nil then
+                TALC_DB['PERIODIC_SYNC_INDEX'] = 1
             end
 
-            if db['ITEM_LOCATION_CACHE'] == nil then
-                db['ITEM_LOCATION_CACHE'] = {}
+            if TALC_DB['PLAYER_CLASS_CACHE'] == nil then
+                TALC_DB['PLAYER_CLASS_CACHE'] = {}
             end
 
-            if db['ATTENDANCE_DATA'] == nil then
-                db['ATTENDANCE_DATA'] = {}
+            if TALC_DB['ITEM_LOCATION_CACHE'] == nil then
+                TALC_DB['ITEM_LOCATION_CACHE'] = {}
             end
 
-            if db['ATTENDANCE_TRACKING'] == nil then
-                db['ATTENDANCE_TRACKING'] = {
+            if TALC_DB['ATTENDANCE_DATA'] == nil then
+                TALC_DB['ATTENDANCE_DATA'] = {}
+            end
+
+            if TALC_DB['ATTENDANCE_TRACKING'] == nil then
+                TALC_DB['ATTENDANCE_TRACKING'] = {
                     enabled = false,
                 }
             end
 
-            if db['WIN_THRESHOLD'] == nil then
-                db['WIN_THRESHOLD'] = "0345"
+            if TALC_DB['WIN_THRESHOLD'] == nil then
+                TALC_DB['WIN_THRESHOLD'] = "0345"
             end
-            if db['WIN_ENABLE_SOUND'] == nil then
-                db['WIN_ENABLE_SOUND'] = true
+            if TALC_DB['WIN_ENABLE_SOUND'] == nil then
+                TALC_DB['WIN_ENABLE_SOUND'] = true
             end
-            if db['WIN_VOLUME'] == nil then
-                db['WIN_VOLUME'] = 'low'
-            end
-
-            if db['ROLL_ENABLE_SOUND'] == nil then
-                db['ROLL_ENABLE_SOUND'] = true
-            end
-            if db['ROLL_VOLUME'] == nil then
-                db['ROLL_VOLUME'] = 'low'
-            end
-            if db['ROLL_TROMBONE'] == nil then
-                db['ROLL_TROMBONE'] = true
+            if TALC_DB['WIN_VOLUME'] == nil then
+                TALC_DB['WIN_VOLUME'] = 'low'
             end
 
-            if db['NEED_SCALE'] == nil then
-                db['NEED_SCALE'] = 1
+            if TALC_DB['ROLL_ENABLE_SOUND'] == nil then
+                TALC_DB['ROLL_ENABLE_SOUND'] = true
             end
-            if db['NEED_WISHLIST'] == nil then
-                db['NEED_WISHLIST'] = {}
+            if TALC_DB['ROLL_VOLUME'] == nil then
+                TALC_DB['ROLL_VOLUME'] = 'low'
             end
-
-            if db['NEED_FRAME_COLLAPSE'] == nil then
-                db['NEED_FRAME_COLLAPSE'] = false
-            end
-
-            if db['BOSS_FRAME_ENABLE'] == nil then
-                db['BOSS_FRAME_ENABLE'] = true
+            if TALC_DB['ROLL_TROMBONE'] == nil then
+                TALC_DB['ROLL_TROMBONE'] = true
             end
 
-            if db['VOTE_ROSTER'] == nil then
-                db['VOTE_ROSTER'] = {}
+            if TALC_DB['NEED_SCALE'] == nil then
+                TALC_DB['NEED_SCALE'] = 1
             end
-            if db['VOTE_ROSTER_GUILD_NAME'] == nil then
-                db['VOTE_ROSTER_GUILD_NAME'] = ''
-            end
-            if db['VOTE_LOOT_HISTORY'] == nil then
-                db['VOTE_LOOT_HISTORY'] = {}
-            end
-            if db['VOTE_TTN'] == nil then
-                db['VOTE_TTN'] = 30
-            end
-            if db['VOTE_TTV'] == nil then
-                db['VOTE_TTV'] = 30
-            end
-            if db['VOTE_TTR'] == nil then
-                db['VOTE_TTR'] = 30
-            end
-            if db['VOTE_ENABLED'] == nil then
-                db['VOTE_ENABLED'] = true
-            end
-            if db['VOTE_SCALE'] == nil then
-                db['VOTE_SCALE'] = 1
-            end
-            if db['VOTE_ALPHA'] == nil then
-                db['VOTE_ALPHA'] = 1
-            end
-            if db['VOTE_AUTO_ASSIST'] == nil then
-                db['VOTE_AUTO_ASSIST'] = false
-            end
-            if db['VOTE_ENCHANTER'] == nil then
-                db['VOTE_ENCHANTER'] = ''
-            end
-            if db['VOTE_SCREENSHOT_LOOT'] == nil then
-                db['VOTE_SCREENSHOT_LOOT'] = true
+            if TALC_DB['NEED_WISHLIST'] == nil then
+                TALC_DB['NEED_WISHLIST'] = {}
             end
 
-            if db['VOTE_CONFIG'] == nil then
-                db['VOTE_CONFIG'] = {
+            if TALC_DB['NEED_FRAME_COLLAPSE'] == nil then
+                TALC_DB['NEED_FRAME_COLLAPSE'] = false
+            end
+
+            if TALC_DB['BOSS_FRAME_ENABLE'] == nil then
+                TALC_DB['BOSS_FRAME_ENABLE'] = true
+            end
+
+            if TALC_DB['VOTE_ROSTER'] == nil then
+                TALC_DB['VOTE_ROSTER'] = {}
+            end
+            if TALC_DB['VOTE_ROSTER_GUILD_NAME'] == nil then
+                TALC_DB['VOTE_ROSTER_GUILD_NAME'] = ''
+            end
+            if TALC_DB['VOTE_LOOT_HISTORY'] == nil then
+                TALC_DB['VOTE_LOOT_HISTORY'] = {}
+            end
+            if TALC_DB['VOTE_TTN'] == nil then
+                TALC_DB['VOTE_TTN'] = 30
+            end
+            if TALC_DB['VOTE_TTV'] == nil then
+                TALC_DB['VOTE_TTV'] = 30
+            end
+            if TALC_DB['VOTE_TTR'] == nil then
+                TALC_DB['VOTE_TTR'] = 30
+            end
+            if TALC_DB['VOTE_ENABLED'] == nil then
+                TALC_DB['VOTE_ENABLED'] = true
+            end
+            if TALC_DB['VOTE_SCALE'] == nil then
+                TALC_DB['VOTE_SCALE'] = 1
+            end
+            if TALC_DB['VOTE_ALPHA'] == nil then
+                TALC_DB['VOTE_ALPHA'] = 1
+            end
+            if TALC_DB['VOTE_AUTO_ASSIST'] == nil then
+                TALC_DB['VOTE_AUTO_ASSIST'] = false
+            end
+            if TALC_DB['VOTE_ENCHANTER'] == nil then
+                TALC_DB['VOTE_ENCHANTER'] = ''
+            end
+            if TALC_DB['VOTE_SCREENSHOT_LOOT'] == nil then
+                TALC_DB['VOTE_SCREENSHOT_LOOT'] = true
+            end
+
+            if TALC_DB['VOTE_CONFIG'] == nil then
+                TALC_DB['VOTE_CONFIG'] = {
                     ['NeedButtons'] = {
                         ['BIS'] = false,
                         ['MS'] = true,
@@ -148,9 +145,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 }
             end
 
+            TALCUtils:Init();
+
             --- pre cache
             --- wishlist
-            for _, id in next, db['NEED_WISHLIST'] do
+            for _, id in next, TALC_DB['NEED_WISHLIST'] do
                 core.CacheItem(id)
             end
             --- tokenRewards
@@ -159,49 +158,49 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             --- update UI
-            TalcNeedFrame:SetScale(db['NEED_SCALE'])
+            TalcNeedFrame:SetScale(TALC_DB['NEED_SCALE'])
 
-            TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['BIS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['MS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['OS']);
-            TalcVoteFrameRLWindowFrameTab2ContentsXMOGButton:SetChecked(db['VOTE_CONFIG']['NeedButtons']['XMOG']);
+            TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['BIS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['MS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsOSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['OS']);
+            TalcVoteFrameRLWindowFrameTab2ContentsXMOGButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['XMOG']);
 
-            TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(db['VOTE_AUTO_ASSIST']);
-            TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(db['VOTE_SCREENSHOT_LOOT']);
+            TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(TALC_DB['VOTE_AUTO_ASSIST']);
+            TalcVoteFrameRLWindowFrameTab2ContentsScreenShot:SetChecked(TALC_DB['VOTE_SCREENSHOT_LOOT']);
 
-            TalcVoteFrameSettingsFrameWinEnableSound:SetChecked(db['WIN_ENABLE_SOUND'])
-            if db['WIN_ENABLE_SOUND'] then
+            TalcVoteFrameSettingsFrameWinEnableSound:SetChecked(TALC_DB['WIN_ENABLE_SOUND'])
+            if TALC_DB['WIN_ENABLE_SOUND'] then
                 TalcVoteFrameSettingsFrameWinSoundHigh:Enable()
             else
                 TalcVoteFrameSettingsFrameWinSoundHigh:Disable()
             end
-            TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(db['WIN_VOLUME'] == 'high')
+            TalcVoteFrameSettingsFrameWinSoundHigh:SetChecked(TALC_DB['WIN_VOLUME'] == 'high')
 
-            TalcVoteFrameSettingsFrameWinUncommon:SetChecked(core.find(db['WIN_THRESHOLD'], '2', 1, true))
-            TalcVoteFrameSettingsFrameWinRare:SetChecked(core.find(db['WIN_THRESHOLD'], '3', 1, true))
-            TalcVoteFrameSettingsFrameWinEpic:SetChecked(core.find(db['WIN_THRESHOLD'], '4', 1, true))
-            TalcVoteFrameSettingsFrameWinLegendary:SetChecked(core.find(db['WIN_THRESHOLD'], '5', 1, true))
+            TalcVoteFrameSettingsFrameWinUncommon:SetChecked(core.find(TALC_DB['WIN_THRESHOLD'], '2', 1, true))
+            TalcVoteFrameSettingsFrameWinRare:SetChecked(core.find(TALC_DB['WIN_THRESHOLD'], '3', 1, true))
+            TalcVoteFrameSettingsFrameWinEpic:SetChecked(core.find(TALC_DB['WIN_THRESHOLD'], '4', 1, true))
+            TalcVoteFrameSettingsFrameWinLegendary:SetChecked(core.find(TALC_DB['WIN_THRESHOLD'], '5', 1, true))
 
-            TalcVoteFrameSettingsFrameRollEnableSound:SetChecked(db['ROLL_ENABLE_SOUND'])
-            if db['ROLL_ENABLE_SOUND'] then
+            TalcVoteFrameSettingsFrameRollEnableSound:SetChecked(TALC_DB['ROLL_ENABLE_SOUND'])
+            if TALC_DB['ROLL_ENABLE_SOUND'] then
                 TalcVoteFrameSettingsFrameRollSoundHigh:Enable()
                 TalcVoteFrameSettingsFrameRollTrombone:Enable()
             else
                 TalcVoteFrameSettingsFrameRollSoundHigh:Disable()
                 TalcVoteFrameSettingsFrameRollTrombone:Disable()
             end
-            TalcVoteFrameSettingsFrameRollSoundHigh:SetChecked(db['ROLL_VOLUME'] == 'high')
+            TalcVoteFrameSettingsFrameRollSoundHigh:SetChecked(TALC_DB['ROLL_VOLUME'] == 'high')
 
-            TalcVoteFrameSettingsFrameRollTrombone:SetChecked(db['ROLL_TROMBONE'])
+            TalcVoteFrameSettingsFrameRollTrombone:SetChecked(TALC_DB['ROLL_TROMBONE'])
 
-            TalcVoteFrameSettingsFrameBossEnable:SetChecked(db['BOSS_FRAME_ENABLE'])
+            TalcVoteFrameSettingsFrameBossEnable:SetChecked(TALC_DB['BOSS_FRAME_ENABLE'])
 
-            TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(db['NEED_FRAME_COLLAPSE'])
+            TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(TALC_DB['NEED_FRAME_COLLAPSE'])
 
-            TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(db['ATTENDANCE_TRACKING'].enabled)
-            --TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(db['ATTENDANCE_TRACKING'].bossKills)
-            --TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(db['ATTENDANCE_TRACKING'].periodic)
-            --if db['ATTENDANCE_TRACKING'].enabled then
+            TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].enabled)
+            --TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].bossKills)
+            --TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].periodic)
+            --if TALC_DB['ATTENDANCE_TRACKING'].enabled then
             --    TalcVoteFrameSettingsFrameAttendanceBossKills:Enable()
             --    TalcVoteFrameSettingsFrameAttendanceTime:Enable()
             --else
@@ -209,7 +208,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
             --end
 
-            TalcVoteFrameSettingsFrameDebug:SetChecked(db['_DEBUG'])
+            TalcVoteFrameSettingsFrameDebug:SetChecked(TALC_DB['_DEBUG'])
 
             --- init modules
             VoteFrame:Init();
@@ -224,15 +223,15 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             return
         end
 
-        --if event == "PLAYER_ENTERING_WORLD" and db['ATTENDANCE_TRACKING'].enabled then
+        --if event == "PLAYER_ENTERING_WORLD" and TALC_DB['ATTENDANCE_TRACKING'].enabled then
         --    if core.instanceInfo() then
-        --        if db['ATTENDANCE_TRACKING'].started then
+        --        if TALC_DB['ATTENDANCE_TRACKING'].started then
         --            VoteFrame.AttendanceTracker:Start()
         --        else
         --            TalcVoteAttendanceQueryStart:Show()
         --        end
         --    else
-        --        if db['ATTENDANCE_TRACKING'].started then
+        --        if TALC_DB['ATTENDANCE_TRACKING'].started then
         --            if not VoteFrame.AttendanceTracker:IsVisible() then
         --                VoteFrame.AttendanceTracker:Show()
         --            end
@@ -278,7 +277,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 if core.isRaidLeader() then
 
                     --- auto assist officers on raid update
-                    if db['VOTE_AUTO_ASSIST'] then
+                    if TALC_DB['VOTE_AUTO_ASSIST'] then
                         for i = 0, GetNumRaidMembers() do
                             if GetRaidRosterInfo(i) then
                                 local n, r = GetRaidRosterInfo(i);
@@ -289,8 +288,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
                                     if assistTriggers > 100 then
                                         talc_error('Autoassist trigger error (>100). Autoassist disabled.')
-                                        db['VOTE_AUTO_ASSIST'] = false
-                                        TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(db['VOTE_AUTO_ASSIST']);
+                                        TALC_DB['VOTE_AUTO_ASSIST'] = false
+                                        TalcVoteFrameRLWindowFrameTab1ContentsAutoAssist:SetChecked(TALC_DB['VOTE_AUTO_ASSIST']);
                                     end
 
                                     return
@@ -365,7 +364,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                     end
                 end
 
-                if not db['VOTE_ENABLED'] then
+                if not TALC_DB['VOTE_ENABLED'] then
                     return
                 end
 
@@ -379,7 +378,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 local lootMethod = GetLootMethod()
                 if lootMethod == 'master' then
 
-                    db['VOTE_TTN'] = core.SetDynTTN(GetNumLootItems())
+                    TALC_DB['VOTE_TTN'] = core.SetDynTTN(GetNumLootItems())
 
                     local blueOrEpic = false
 
@@ -428,7 +427,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             if MiniMapInstanceDifficultyText:GetText() == '10' or MiniMapInstanceDifficultyText:GetText() == '25' then
                                 core.saveAttendance(boss)
                             end
-                            if db['BOSS_FRAME_ENABLE'] then
+                            if TALC_DB['BOSS_FRAME_ENABLE'] then
                                 BossFrame:StartBossAnimation(boss)
                             end
                             return
@@ -490,17 +489,17 @@ SlashCmdList["TALC"] = function(cmd)
                             talc_print('Incorrect syntax. Use /talc set enchanter [name]')
                             return
                         end
-                        db['VOTE_ENCHANTER'] = setEx[3]
+                        TALC_DB['VOTE_ENCHANTER'] = setEx[3]
                         talc_print('Enchanter set to ' ..
-                                core.classColors[core.getPlayerClass(db['VOTE_ENCHANTER'])].colorStr ..
-                                db['VOTE_ENCHANTER'])
+                                core.classColors[core.getPlayerClass(TALC_DB['VOTE_ENCHANTER'])].colorStr ..
+                                TALC_DB['VOTE_ENCHANTER'])
                     end
                 else
                     talc_print('You are not the raid leader.')
                 end
             else
                 talc_print('Set Options:')
-                talc_print('/talc set enchanter [name] (current: ' .. db['VOTE_ENCHANTER'] .. ')')
+                talc_print('/talc set enchanter [name] (current: ' .. TALC_DB['VOTE_ENCHANTER'] .. ')')
             end
         end
 
@@ -510,7 +509,7 @@ SlashCmdList["TALC"] = function(cmd)
             if cmdEx[2] then
 
                 local numItems = 0
-                for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                for _, item in core.pairsByKeysReverse(TALC_DB['VOTE_LOOT_HISTORY']) do
                     if core.lower(cmdEx[2]) == core.lower(item.player) then
                         numItems = numItems + 1
                     end
@@ -518,7 +517,7 @@ SlashCmdList["TALC"] = function(cmd)
 
                 if numItems > 0 then
                     talc_print('Listing ' .. cmdEx[2] .. '\'s loot history(' .. numItems .. '):')
-                    for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                    for timestamp, item in core.pairsByKeysReverse(TALC_DB['VOTE_LOOT_HISTORY']) do
                         if core.lower(cmdEx[2]) == core.lower(item.player) then
                             talc_print(item.item .. ' - ' .. date("%x", core.localTimeFromServerTime(timestamp)))
                         end
@@ -527,7 +526,7 @@ SlashCmdList["TALC"] = function(cmd)
                     talc_print('No items found for player ' .. cmdEx[2] .. '.')
                 end
 
-                for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                for timestamp, item in core.pairsByKeysReverse(TALC_DB['VOTE_LOOT_HISTORY']) do
                     if core.find(core.lower(item.item), core.lower(cmdEx[2])) then
                         talc_print(core.classColors[item.class].colorStr .. item.player .. "|r - " ..
                                 item.item .. " - " .. date("%x", core.localTimeFromServerTime(timestamp)))
@@ -536,7 +535,7 @@ SlashCmdList["TALC"] = function(cmd)
 
                 if core.find(cmdEx[2], '/', 1, true) then
                     numItems = 0
-                    for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                    for timestamp, item in core.pairsByKeysReverse(TALC_DB['VOTE_LOOT_HISTORY']) do
                         if date("%m/%d", core.localTimeFromServerTime(timestamp)) == cmdEx[2] then
                             talc_print(core.classColors[item.class].colorStr .. item.player .. "|r - " ..
                                     item.item .. " - " .. date("%x", core.localTimeFromServerTime(timestamp)))
@@ -563,7 +562,7 @@ SlashCmdList["TALC"] = function(cmd)
                 TalcVoteFrame:SetScale(core.int(scaleEx[2]))
                 TalcVoteFrame:ClearAllPoints();
                 TalcVoteFrame:SetPoint("CENTER", UIParent);
-                db['VOTE_SCALE'] = core.int(scaleEx[2])
+                TALC_DB['VOTE_SCALE'] = core.int(scaleEx[2])
                 talc_print('Scale set to: x' .. core['VOTE_SCALE'])
             else
                 talc_print('Set scale syntax: /talc scale [scale from 0.5 to 2]')
@@ -578,9 +577,9 @@ SlashCmdList["TALC"] = function(cmd)
             end
 
             if core.int(alphaEx[2]) >= 0.2 and core.int(alphaEx[2]) <= 1 then
-                db['VOTE_ALPHA'] = core.int(alphaEx[2])
-                TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
-                talc_print('Alpha set to: ' .. db['VOTE_ALPHA'])
+                TALC_DB['VOTE_ALPHA'] = core.int(alphaEx[2])
+                TalcVoteFrame:SetAlpha(TALC_DB['VOTE_ALPHA'])
+                talc_print('Alpha set to: ' .. TALC_DB['VOTE_ALPHA'])
             else
                 talc_print('Set alpha syntax: /talc alpha [0.2-1]')
             end
@@ -590,8 +589,8 @@ SlashCmdList["TALC"] = function(cmd)
             TalcNeedFrame:ClearAllPoints()
             TalcNeedFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 100)
             talc_print('Frame scale reset to 1x.')
-            db['NEED_SCALE'] = 1
-            TalcNeedFrame:SetScale(db['NEED_SCALE'])
+            TALC_DB['NEED_SCALE'] = 1
+            TalcNeedFrame:SetScale(TALC_DB['NEED_SCALE'])
             return
         end
 
