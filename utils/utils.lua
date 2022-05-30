@@ -755,6 +755,13 @@ function Talc_Utils:Init()
         return GetZoneText()
     end
 
+    core.SendVersion = function ()
+        core.asend("TALCVersion=" .. core.addonVer, "PARTY")
+        core.asend("TALCVersion=" .. core.addonVer, "GUILD")
+        core.asend("TALCVersion=" .. core.addonVer, "RAID")
+        core.asend("TALCVersion=" .. core.addonVer, "BATTLEGROUND")
+    end
+
 end
 
 function talc_print(a)

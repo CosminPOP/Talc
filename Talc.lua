@@ -12,6 +12,7 @@ TALC.maxRecentItems = 100
 TALC.maxItemHistoryPlayers = 20
 TALC.maxOfficers = 10
 TALC.periodicSyncMaxItems = 200
+TALC.updateNotificationShown = false
 
 local core, db, tokenRewards
 local assistTriggers = 0
@@ -251,6 +252,17 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 NeedFrame:HandleSync(...)
                 WinFrame:HandleSync(...)
                 RollFrame:HandleSync(...)
+
+                --- version
+                if core.subFind(arg2, "TALCVersion=") and arg4 ~= core.me and not core.updateNotificationShown then
+                    local verEx = core.split('=', arg2)
+                    if core.ver(verEx[2]) > core.ver(core.addonVer) then
+                        talc_print('New version available |cff69ccf0v' .. verEx[2] ..
+                                '|r (your version |cffff8000v' .. core.addonVer .. '|r)')
+                        talc_print('Update yours at |cff69ccf0https://github.com/CosminPOP/Talc')
+                        core.updateNotificationShown = true
+                    end
+                end
                 return
             end
 
@@ -258,6 +270,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 --- restart tradableItemsCheck on loading screen
                 VoteFrame.tradableItemsCheck:Hide()
                 VoteFrame.tradableItemsCheck:Show()
+
+                core.SendVersion()
             end
 
             if event == "RAID_ROSTER_UPDATE" then
