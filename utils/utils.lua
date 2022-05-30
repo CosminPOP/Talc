@@ -453,8 +453,8 @@ function Talc_Utils:Init()
             return
         end
 
-        if core.n(db['VOTE_ROSTER']) == core.maxLC then
-            talc_print("You can have a maximum of " .. core.maxLC .. " Officers.")
+        if core.n(db['VOTE_ROSTER']) == core.maxOfficers then
+            talc_print("You can have a maximum of " .. core.maxOfficers .. " Officers.")
             checkbox:SetChecked(false)
             return
         end

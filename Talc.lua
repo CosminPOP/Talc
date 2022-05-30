@@ -10,7 +10,7 @@ TALC.me = UnitName('player')
 TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100
 TALC.maxItemHistoryPlayers = 20
-TALC.maxLC = 3
+TALC.maxOfficers = 10
 TALC.periodicSyncMaxItems = 200
 
 local core, db, tokenRewards
