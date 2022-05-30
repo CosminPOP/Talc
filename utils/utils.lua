@@ -219,12 +219,26 @@ function Talc_Utils:Init()
                 GameTooltip:SetHyperlink(core.sub(ex[3], 2, core.len(ex[3])));
 
                 if custom and custom == 'playerHistory' then
-                    GameTooltip:AddLine('-------AWARD HISTORY --------')
+
                     local _, _, il = core.find(itemLink, "(item:%d+:%d+:%d+:%d+)");
                     local name = GetItemInfo(il)
+                    local numItems = 0
                     for _, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                         if core.find(core.lower(item['item']), core.lower(name)) then
-                            GameTooltip:AddLine('|r' .. date("%d/%m", item.timestamp) .. " " .. core.classColors[core.getPlayerClass(item.player)].colorStr .. item.player)
+                            numItems = numItems + 1
+                        end
+                    end
+
+                    if numItems == 0 then
+                        GameTooltip:AddLine('------- AWARD HISTORY -------')
+                        GameTooltip:AddLine('No records.')
+                    else
+                        GameTooltip:AddLine('------- AWARD HISTORY ('.. numItems ..') -------')
+
+                        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+                            if core.find(core.lower(item['item']), core.lower(name)) then
+                                GameTooltip:AddLine('|r' .. date("%d/%m", core.localTimeFromServerTime(timestamp)) .. " " .. core.classColors[core.getPlayerClass(item.player)].colorStr .. item.player)
+                            end
                         end
                     end
                 end
