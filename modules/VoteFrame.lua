@@ -1086,8 +1086,7 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
                         core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
-                        "|rGearscore: " .. gearScore
-        )
+                        ((gearScore >= 0) and "|rGearscore: " .. gearScore or "" ))
 
         for index in next, self.lootHistoryFrames do
             self.lootHistoryFrames[index]:Hide()
@@ -2225,6 +2224,11 @@ function VoteFrame:VoteFrameListUpdate()
                     _G[frame .. 'Wishlist']:Show()
                 end
                 _G[frame .. 'GearScore']:SetText(gearscore)
+                if gearscore >= 0 then
+                    _G[frame .. 'GearScore']:Show()
+                else
+                    _G[frame .. 'GearScore']:Hide()
+                end
                 _G[frame .. 'RollPass']:Hide()
 
                 _G[frame .. 'Votes']:SetText(votes)
@@ -2906,7 +2910,9 @@ VoteFrame.LootCountdown:SetScript("OnUpdate", function()
                                     need = 'autopass',
                                     ci1 = '0', ci2 = '0', ci3 = '0', ci4 = '0',
                                     votes = 0,
-                                    roll = 0
+                                    roll = 0,
+                                    gearscore = -1,
+                                    inWishlist = false
                                 })
 
                                 --increment pick responses, even for autopass
