@@ -736,8 +736,10 @@ function TALCUtils:Init()
 
             if q and q >= 3 then
                 local itemID = core.int(core.split(':', itemLink)[2])
-                db['ITEM_LOCATION_CACHE'][itemID] = raidString
-                talc_debug("saved " .. itemID .. " to " .. raidString)
+                if not db['ITEM_LOCATION_CACHE'][itemID] then
+                    db['ITEM_LOCATION_CACHE'][itemID] = raidString
+                    talc_debug("saved " .. itemID .. " to " .. raidString)
+                end
             end
         end
     end
