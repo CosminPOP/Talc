@@ -241,10 +241,10 @@ function NeedFrame:AddItem(data)
             _G[frame .. 'QuestRewards']:Show()
 
             if tokenRewards[itemID].count then
-                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:SetText(tokenRewards[itemID].count)
-                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:Show()
+                _G[frame .. 'QuestRewardsReward1Count']:SetText(tokenRewards[itemID].count)
+                _G[frame .. 'QuestRewardsReward1Count']:Show()
             else
-                _G[frame .. 'QuestRewardsReward' .. 1 .. 'Count']:Hide()
+                _G[frame .. 'QuestRewardsReward1Count']:Hide()
             end
 
             local rewardIndex = 0
