@@ -2750,6 +2750,13 @@ function VoteFrame:SetCurrentVotedItem(id)
             self.itemRewardsFrames[1] = CreateFrame("Button", "TALCItemReward1", TalcVoteFrame, 'Talc_SmallIconButtonTemplate')
         end
 
+        if tokenRewards[itemID].count then
+            _G['TALCItemReward1Count']:SetText(tokenRewards[itemID].count)
+            _G['TALCItemReward1Count']:Show()
+        else
+            _G['TALCItemReward1Count']:Hide()
+        end
+
         _G["TALCItemReward1"]:SetPoint("TOPLEFT", TalcVoteFrameCurrentVotedItemButton, "BOTTOMRIGHT", 3, 25)
 
         for i, rewardID in next, tokenRewards[itemID].rewards do
