@@ -325,10 +325,10 @@ function NeedFrame:SendGear(to)
                 end
             end
             if slotString == '' then
-                talc_debug("cant determine slot, send gear " .. equip_slot)
-                return
+                talc_error("cant determine slot, send gear " .. equip_slot)
+            else
+                core.wsend("NORMAL", "SendingGear=" .. shortLink .. ":" .. i .. ":" .. slotString, to)
             end
-            core.wsend("NORMAL", "SendingGear=" .. shortLink .. ":" .. i .. ":" .. slotString, to)
         end
     end
     core.wsend("NORMAL", "SendingGear=End", to)
