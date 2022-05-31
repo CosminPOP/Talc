@@ -58,7 +58,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if TALC_DB['ATTENDANCE_TRACKING'] == nil then
                 TALC_DB['ATTENDANCE_TRACKING'] = {
-                    enabled = false,
+                    enabled = true,
                 }
             end
 
@@ -201,7 +201,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(TALC_DB['NEED_FRAME_COLLAPSE'])
 
-            TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].enabled)
+            --TalcVoteFrameSettingsFrameAttendanceTrack:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].enabled)
             --TalcVoteFrameSettingsFrameAttendanceBossKills:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].bossKills)
             --TalcVoteFrameSettingsFrameAttendanceTime:SetChecked(TALC_DB['ATTENDANCE_TRACKING'].periodic)
             --if TALC_DB['ATTENDANCE_TRACKING'].enabled then
@@ -212,7 +212,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             --    TalcVoteFrameSettingsFrameAttendanceTime:Disable()
             --end
 
-            TalcVoteFrameSettingsFrameDebug:SetChecked(TALC_DB['_DEBUG'])
+            --TalcVoteFrameSettingsFrameDebug:SetChecked(TALC_DB['_DEBUG'])
 
             --- init modules
             VoteFrame:Init();

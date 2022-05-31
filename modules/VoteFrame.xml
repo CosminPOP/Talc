@@ -1650,29 +1650,29 @@
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="360" y="-40"/>
+                                        <AbsDimension x="350" y="-40"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
                         </FontString>
 
-                        <FontString name="$parentAttendanceLabel" inherits="GameFontHighlight"
-                                    text="Attendance Tracking">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="520" y="-40"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
+<!--                        <FontString name="$parentAttendanceLabel" inherits="GameFontHighlight"-->
+<!--                                    text="Attendance Tracking">-->
+<!--                            <Anchors>-->
+<!--                                <Anchor point="TOPLEFT">-->
+<!--                                    <Offset>-->
+<!--                                        <AbsDimension x="520" y="-40"/>-->
+<!--                                    </Offset>-->
+<!--                                </Anchor>-->
+<!--                            </Anchors>-->
+<!--                        </FontString>-->
 
                         <FontString name="$parentBossFrameLabel" inherits="GameFontHighlight"
                                     text="Boss Defeated Frame">
                             <Anchors>
-                                <Anchor point="TOPLEFT" relativeTo="$parentRollFrameLabel" relativePoint="TOPLEFT">
+                                <Anchor point="TOPLEFT">
                                     <Offset>
-                                        <AbsDimension x="0" y="-130"/>
+                                        <AbsDimension x="520" y="-40"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -2147,45 +2147,45 @@
                         </Scripts>
                     </CheckButton>
 
-                    <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">
-                        <Size x="20" y="20"/>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceLabel" relativePoint="BOTTOMLEFT">
-                                <Offset>
-                                    <AbsDimension x="0" y="-5"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="Track Attendance">
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="20" y="0"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </FontString>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnClick>
-                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())
-                            </OnClick>
-                            <OnEnter>
-                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                                GameTooltip:AddLine('Track attendance')
-                                GameTooltip:AddLine('Attendance is saved on each boss kills.', 1, 1, 1)
-                                GameTooltip:AddLine('Each kill is worth one point.', 1, 1, 1)
-                                GameTooltip:Show()
-                            </OnEnter>
-                            <OnLeave>
-                                GameTooltip:Hide()
-                            </OnLeave>
-                        </Scripts>
-                    </CheckButton>
+<!--                    <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">-->
+<!--                        <Size x="20" y="20"/>-->
+<!--                        <Anchors>-->
+<!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceLabel" relativePoint="BOTTOMLEFT">-->
+<!--                                <Offset>-->
+<!--                                    <AbsDimension x="0" y="-5"/>-->
+<!--                                </Offset>-->
+<!--                            </Anchor>-->
+<!--                        </Anchors>-->
+<!--                        <Layers>-->
+<!--                            <Layer level="OVERLAY">-->
+<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+<!--                                            text="Track Attendance">-->
+<!--                                    <Anchors>-->
+<!--                                        <Anchor point="LEFT">-->
+<!--                                            <Offset>-->
+<!--                                                <AbsDimension x="20" y="0"/>-->
+<!--                                            </Offset>-->
+<!--                                        </Anchor>-->
+<!--                                    </Anchors>-->
+<!--                                </FontString>-->
+<!--                            </Layer>-->
+<!--                        </Layers>-->
+<!--                        <Scripts>-->
+<!--                            <OnClick>-->
+<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())-->
+<!--                            </OnClick>-->
+<!--                            <OnEnter>-->
+<!--                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")-->
+<!--                                GameTooltip:AddLine('Track attendance')-->
+<!--                                GameTooltip:AddLine('Attendance is saved on each boss kills.', 1, 1, 1)-->
+<!--                                GameTooltip:AddLine('Each kill is worth one point.', 1, 1, 1)-->
+<!--                                GameTooltip:Show()-->
+<!--                            </OnEnter>-->
+<!--                            <OnLeave>-->
+<!--                                GameTooltip:Hide()-->
+<!--                            </OnLeave>-->
+<!--                        </Scripts>-->
+<!--                    </CheckButton>-->
 
 <!--                    <CheckButton name="$parentAttendanceBossKills" inherits="UICheckButtonTemplate">-->
 <!--                        <Size x="20" y="20"/>-->
@@ -2248,37 +2248,37 @@
 <!--                    </CheckButton>-->
 
 
-                    <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">
-                        <Size>
-                            <AbsDimension x="20" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="BOTTOMRIGHT">
-                                <Offset>
-                                    <AbsDimension x="-80" y="30"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Layers>
-                            <Layer level="OVERLAY">
-                                <FontString name="$parentText" inherits="GameFontNormal"
-                                            text="Debugging">
-                                    <Anchors>
-                                        <Anchor point="LEFT">
-                                            <Offset>
-                                                <AbsDimension x="20" y="0"/>
-                                            </Offset>
-                                        </Anchor>
-                                    </Anchors>
-                                </FontString>
-                            </Layer>
-                        </Layers>
-                        <Scripts>
-                            <OnClick>
-                                VoteFrame:SaveSetting('_DEBUG', this:GetChecked())
-                            </OnClick>
-                        </Scripts>
-                    </CheckButton>
+<!--                    <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">-->
+<!--                        <Size>-->
+<!--                            <AbsDimension x="20" y="20"/>-->
+<!--                        </Size>-->
+<!--                        <Anchors>-->
+<!--                            <Anchor point="BOTTOMRIGHT">-->
+<!--                                <Offset>-->
+<!--                                    <AbsDimension x="-80" y="30"/>-->
+<!--                                </Offset>-->
+<!--                            </Anchor>-->
+<!--                        </Anchors>-->
+<!--                        <Layers>-->
+<!--                            <Layer level="OVERLAY">-->
+<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+<!--                                            text="Debugging">-->
+<!--                                    <Anchors>-->
+<!--                                        <Anchor point="LEFT">-->
+<!--                                            <Offset>-->
+<!--                                                <AbsDimension x="20" y="0"/>-->
+<!--                                            </Offset>-->
+<!--                                        </Anchor>-->
+<!--                                    </Anchors>-->
+<!--                                </FontString>-->
+<!--                            </Layer>-->
+<!--                        </Layers>-->
+<!--                        <Scripts>-->
+<!--                            <OnClick>-->
+<!--                                VoteFrame:SaveSetting('_DEBUG', this:GetChecked())-->
+<!--                            </OnClick>-->
+<!--                        </Scripts>-->
+<!--                    </CheckButton>-->
 
                     <Button name="$parentWinShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
                         <Size>
