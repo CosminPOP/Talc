@@ -372,6 +372,8 @@ function NeedFrame:FadeInFrame(frame)
     -- wishlist pulse
     if frame.inWishlist then
         frame.glow.wishPulse:Play();
+    else
+        frame.glow.wishPulse:Stop();
     end
 end
 
