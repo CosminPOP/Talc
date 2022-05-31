@@ -933,6 +933,7 @@ function VoteFrame:SendReset()
     core.asend("VoteFrame=Reset")
     core.asend("NeedFrame=Reset")
     core.asend("RollFrame=Reset")
+    core.asend("BossLootFrame=Reset")
 end
 
 function VoteFrame:SendCloseWindow()
@@ -4105,6 +4106,10 @@ function VoteFrame:SaveSetting(key, value)
     elseif key == 'BOSS_FRAME_ENABLE' then
         if value then
             BossFrame:StartBossAnimation("Raid Boss")
+        end
+    elseif key == 'BOSS_LOOT_FRAME_ENABLE' then
+        if value then
+            BossLootFrame:StartTestAnimation()
         end
     end
 

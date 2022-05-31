@@ -96,6 +96,9 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if TALC_DB['BOSS_FRAME_ENABLE'] == nil then
                 TALC_DB['BOSS_FRAME_ENABLE'] = true
             end
+            if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] == nil then
+                TALC_DB['BOSS_LOOT_FRAME_ENABLE'] = true
+            end
 
             if TALC_DB['VOTE_ROSTER'] == nil then
                 TALC_DB['VOTE_ROSTER'] = {}
@@ -194,6 +197,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             TalcVoteFrameSettingsFrameRollTrombone:SetChecked(TALC_DB['ROLL_TROMBONE'])
 
             TalcVoteFrameSettingsFrameBossEnable:SetChecked(TALC_DB['BOSS_FRAME_ENABLE'])
+            TalcVoteFrameSettingsFrameBossLootEnable:SetChecked(TALC_DB['BOSS_LOOT_FRAME_ENABLE'])
 
             TalcVoteFrameSettingsFrameNeedFrameCollapse:SetChecked(TALC_DB['NEED_FRAME_COLLAPSE'])
 
@@ -216,6 +220,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             WinFrame:Init();
             RollFrame:Init();
             BossFrame:Init();
+            BossLootFrame:Init();
 
             print("TALC INIt")
 
@@ -251,6 +256,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 NeedFrame:HandleSync(...)
                 WinFrame:HandleSync(...)
                 RollFrame:HandleSync(...)
+                BossLootFrame:HandleSync(...)
 
                 --- version
                 if core.subFind(arg2, "TALCVersion=") and arg4 ~= core.me and not core.updateNotificationShown then
@@ -353,14 +359,27 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == "LOOT_OPENED" then
 
-                --- save item location if item is blue or better
-                for id = 0, GetNumLootItems() do
-                    if GetLootSlotInfo(id) and GetLootSlotLink(id) then
-                        local _, _, itemLink = core.find(GetLootSlotLink(id), "(item:%d+:%d+:%d+:%d+)");
-                        local _, _, quality = GetItemInfo(itemLink)
-                        if quality >= 3 then
-                            core.SaveItemLocation(itemLink)
+                -- save item location if item is epic or better
+                if GetNumLootItems() > 0 then
+                    if BossLootFrame.sendItems then
+                        core.asend("BossLootFrame=Start")
+                    end
+                    for i = 0, GetNumLootItems() do
+                        if GetLootSlotInfo(i) and GetLootSlotLink(i) then
+                            local _, _, itemLink = core.find(GetLootSlotLink(i), "(item:%d+:%d+:%d+:%d+)");
+                            local _, _, quality = GetItemInfo(itemLink)
+                            if quality >= 4 then
+                                core.SaveItemLocation(itemLink)
+                                -- send to all
+                                if BossLootFrame.sendItems then
+                                    core.asend("BossLootFrame=" .. i .. "=" .. itemLink)
+                                end
+                            end
                         end
+                    end
+                    if BossLootFrame.sendItems then
+                        core.asend("BossLootFrame=End")
+                        BossLootFrame.sendItems = false
                     end
                 end
 

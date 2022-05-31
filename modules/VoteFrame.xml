@@ -2096,6 +2096,44 @@
                         </Scripts>
                     </CheckButton>
 
+                    <CheckButton name="$parentBossLootEnable" inherits="UICheckButtonTemplate">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentBossEnable" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="0"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="OVERLAY">
+                                <FontString name="$parentText" inherits="GameFontNormal"
+                                            text="Boss Loot Toast">
+                                    <Anchors>
+                                        <Anchor point="LEFT">
+                                            <Offset>
+                                                <AbsDimension x="20" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                VoteFrame:SaveSetting('BOSS_LOOT_FRAME_ENABLE', this:GetChecked())
+                            </OnClick>
+                            <OnEnter>
+                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                                GameTooltip:AddLine('Enable boss loot toast.')
+                                GameTooltip:Show()
+                            </OnEnter>
+                            <OnLeave>
+                                GameTooltip:Hide()
+                            </OnLeave>
+                        </Scripts>
+                    </CheckButton>
+
                     <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">
                         <Size x="20" y="20"/>
                         <Anchors>

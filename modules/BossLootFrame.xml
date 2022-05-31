@@ -1,0 +1,186 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+    <Script file="BossLootFrame.lua"/>
+
+    <Frame name="Talc_BossLootItemTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="240" y="40"/>
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentWhiteGlow" file="Interface\Addons\Talc\images\boss\bossloot"
+                         alphaMode="ADD">
+                    <TexCoords left="0.4609375" right="0.5390625" top="0.8671875" bottom="0.9453125"/>
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+            <Color r="0.67" g="0.83" b="0.45" a="1"/>
+        </Backdrop>
+        <Frames>
+
+            <Button name="$parentButton" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="38" y="38"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentTexture" file="Interface\Icons\inv_staff_20" alpha="0">
+<!--                            <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>-->
+                            <Size x="38" y="38"/>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <FontString name="$parentName" justifyH="LEFT" justifyV="MIDDLE"
+                                    inherits="GameFontNormalLarge" alpha="0"
+                                    text="longest item name ever ever ever ever ever ever">
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="42" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="188" y="40"/>
+                            </Size>
+                        </FontString>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" alpha="0"
+                        alphaMode="ADD">
+                            <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
+                            <Color r="1" g="0" b="0" a="1"/>
+                            <Size>
+                                <AbsDimension x="38" y="38"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeTo="$parentTexture">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Button>
+
+        </Frames>
+    </Frame>
+
+    <Frame name="TalcBossLootFrame" hidden="false" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="512" y="256"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOP">
+                <Offset>
+                    <AbsDimension x="0" y="-285"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentTop" file="Interface\Addons\Talc\images\boss\bossloot">
+                    <TexCoords left="0" right="1" top="0" bottom="0.15625"/>
+                    <Size>
+                        <AbsDimension x="512" y="80"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentMiddle" file="Interface\Addons\Talc\images\boss\bossloot">
+                    <TexCoords left="0" right="1" top="0.390625" bottom="0.51953125"/>
+                    <Size>
+                        <AbsDimension x="512" y="166"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="$parentTop" relativePoint="BOTTOM">
+                            <Offset>
+                                <AbsDimension x="0" y="23"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+                <Texture name="$parentBottom" file="Interface\Addons\Talc\images\boss\bossloot">
+                    <TexCoords left="0" right="1" top="0.169015625" bottom="0.352265625"/>
+                    <Size>
+                        <AbsDimension x="512" y="80"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="$parentMiddle" relativePoint="BOTTOM">
+                            <Offset>
+                                <AbsDimension x="0" y="24"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentTopGlyph" file="Interface\Addons\Talc\images\boss\bossloot">
+                    <TexCoords left="0.33203125" right="0.66796875" top="0.6640625" bottom="0.80078125"/>
+                    <Size>
+                        <AbsDimension x="172" y="70"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="$parentTop" relativePoint="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-2"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBottomGlyph" file="Interface\Addons\Talc\images\boss\bossloot">
+                    <TexCoords left="0.439453125" right="0.560546875" top="0.576171875" bottom="0.619140625"/>
+                    <Size>
+                        <AbsDimension x="62" y="22"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="$parentBottom" relativePoint="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-19"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+        </Frames>
+    </Frame>
+
+</Ui>
