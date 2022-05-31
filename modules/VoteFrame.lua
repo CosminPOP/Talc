@@ -2193,6 +2193,17 @@ function VoteFrame:VoteFrameListUpdate()
 
     local index = 0
 
+    -- calc max gs
+    local maxGS = 0
+    for i in next, self.currentPlayersList do
+        if self:GetPlayerInfo(i) then
+            local _, _, _, _, _, _, _, _, _, _, gearscore = self:GetPlayerInfo(i)
+            if gearscore > maxGS then
+                maxGS = gearscore
+            end
+        end
+    end
+
     for _ in next, self.currentPlayersList do
 
         index = index + 1
@@ -2252,7 +2263,17 @@ function VoteFrame:VoteFrameListUpdate()
                 if inWishlist then
                     _G[frame .. 'Wishlist']:Show()
                 end
-                _G[frame .. 'GearScore']:SetText(gearscore)
+
+                -- color gs
+                local GSColor = '|cff0be700'
+                local GSPerc = core.floor(gearscore * 100 / maxGS)
+                if GSPerc < 75 and GSPerc >= 50 then
+                    GSColor = '|cffffb400'
+                elseif GSPerc < 50 then
+                    GSColor = '|cffc80500'
+                end
+
+                _G[frame .. 'GearScore']:SetText(GSColor .. gearscore)
                 if gearscore >= 0 then
                     _G[frame .. 'GearScore']:Show()
                 else
