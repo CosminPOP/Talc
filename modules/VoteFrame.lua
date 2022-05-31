@@ -154,6 +154,7 @@ function VoteFrame:ResetVars()
 
     TalcVoteFrameCurrentVotedItemButton:Hide()
     TalcVoteFrameVotedItemName:Hide()
+    TalcVoteFrameVotedItemType:Hide()
 
     TalcVoteFrameRLExtraFrameBroadcastLoot:SetText('Load Items')
     TalcVoteFrameRLExtraFrameBroadcastLoot:Disable()
@@ -2684,7 +2685,6 @@ function VoteFrame:SetCurrentVotedItem(id)
     self.CurrentVotedItem = id
 
     TalcVoteFrameCurrentVotedItemButton:Show()
-    TalcVoteFrameVotedItemName:Show()
 
     for index, frame in next, self.VotedItemsFrames do
         if index == id then
@@ -2700,13 +2700,26 @@ function VoteFrame:SetCurrentVotedItem(id)
     TalcVoteFrameCurrentVotedItemButton:SetPushedTexture(self.VotedItemsFrames[id].texture)
 
     local link = self.VotedItemsFrames[id].link
+
     TalcVoteFrameVotedItemName:SetText(link)
+    TalcVoteFrameVotedItemName:Show()
+
     core.addButtonOnEnterTooltip(TalcVoteFrameCurrentVotedItemButton, link, 'playerHistory')
 
     local _, _, itemLink = core.find(link, "(item:%d+:%d+:%d+:%d+)")
     local itemID = core.split(':', itemLink)
     itemID = core.int(itemID[2])
     local _, _, q, iLevel, _, _, t2, _, equip_slot = GetItemInfo(itemLink)
+
+    TalcVoteFrameVotedItemType:Hide()
+
+    local itemType = ''
+    if core.equipSlotsDetails[equip_slot] then
+        itemType = core.equipSlotsDetails[equip_slot].name .. ", " .. t2
+        TalcVoteFrameVotedItemType:SetText(itemType)
+        TalcVoteFrameVotedItemType:Show()
+    end
+
 
     if core.find(t2, 'Quest', 1, true) then
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then

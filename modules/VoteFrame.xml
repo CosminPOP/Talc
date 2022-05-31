@@ -158,7 +158,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentVotedItemName" hidden="false" inherits="GameFontNormalLarge"
+                <FontString name="$parentVotedItemName" inherits="GameFontNormalLarge"
                             text="[voted item name]" justifyH="LEFT">
                     <Size>
                         <AbsDimension x="330" y="30"/>
@@ -167,6 +167,19 @@
                         <Anchor point="TOPLEFT">
                             <Offset>
                                 <AbsDimension x="65" y="-30"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentVotedItemType" inherits="GameFontHighlight"
+                            text="voted item type" justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="330" y="30"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="65" y="-60"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
