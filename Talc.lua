@@ -359,28 +359,30 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if event == "LOOT_OPENED" then
 
+                local bossItems = {}
                 -- save item location if item is epic or better
                 if GetNumLootItems() > 0 then
-                    if BossLootFrame.sendItems then
-                        core.asend("BossLootFrame=Start")
-                    end
                     for i = 0, GetNumLootItems() do
                         if GetLootSlotInfo(i) and GetLootSlotLink(i) then
                             local _, _, itemLink = core.find(GetLootSlotLink(i), "(item:%d+:%d+:%d+:%d+)");
                             local _, _, quality = GetItemInfo(itemLink)
                             if quality >= 4 then
                                 core.SaveItemLocation(itemLink)
-                                -- send to all
-                                if BossLootFrame.sendItems then
-                                    core.asend("BossLootFrame=" .. i .. "=" .. itemLink)
+                                local _, name = GetLootSlotInfo(i)
+                                if not core.find(name, "Emblem of", 1, true) then
+                                    core.insert(bossItems, itemLink)
                                 end
                             end
                         end
                     end
-                    if BossLootFrame.sendItems then
-                        core.asend("BossLootFrame=End")
-                        BossLootFrame.sendItems = false
+                end
+                if BossLootFrame.sendItems and #bossItems > 0 then
+                    core.asend("BossLootFrame=Start")
+                    for i, item in next, bossItems do
+                        core.asend("BossLootFrame=" .. i .. "=" .. item)
                     end
+                    core.asend("BossLootFrame=End")
+                    BossLootFrame.sendItems = false
                 end
 
                 if not TALC_DB['VOTE_ENABLED'] then
