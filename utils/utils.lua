@@ -96,7 +96,7 @@ function TALCUtils:Init()
         ["INVTYPE_WEAPON"] = { slot = "MainHand", id = 16, canHaveEnchant = true, name = 'Weapon' },
         ["INVTYPE_WEAPON0"] = { slot = "MainHand", id = 16, canHaveEnchant = true, name = 'Weapon' },
 
-        ["INVTYPE_2HWEAPON"] = { slot = "SecondaryHand", id = 17, canHaveEnchant = false, name = 'Weapon' },
+        ["INVTYPE_2HWEAPON0"] = { slot = "SecondaryHand", id = 17, canHaveEnchant = false, name = 'Weapon' },
         ["INVTYPE_WEAPON1"] = { slot = "SecondaryHand", id = 17, canHaveEnchant = false, name = 'Weapon' },
         ["INVTYPE_SHIELD"] = { slot = "SecondaryHand", id = 17, canHaveEnchant = false, name = 'Shield' },
         ["INVTYPE_WEAPONOFFHAND"] = { slot = "SecondaryHand", id = 17, canHaveEnchant = false, name = 'Off-hand Weapon' },
