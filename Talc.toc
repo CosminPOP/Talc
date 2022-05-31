@@ -15,5 +15,6 @@ modules\NeedFrame.xml
 modules\WinFrame.xml
 modules\RollFrame.xml
 modules\BossFrame.xml
+modules\BossLootFrame.xml
 
 Talc.lua
