@@ -1,9 +1,7 @@
 # Talc - Thunder Ale Loot Council
 For WoW 3.3.5 enGB/enUS
 
-![image](https://user-images.githubusercontent.com/7255825/171359613-c6399dd7-5d1a-4a44-b7b0-355b9da7dfe2.png)
-
-
+![image](https://user-images.githubusercontent.com/7255825/171423054-1f2df548-6f85-4625-b32a-776789484a3b.png)
 
 
 ## Features
@@ -68,7 +66,8 @@ Shows the loot that dropped before the master looter sends it for picks.
 
 ### Welcome Screen
   
-  ![image](https://user-images.githubusercontent.com/7255825/171360334-9c32d450-097d-41aa-9bfd-1f080e5fadf7.png)
+![image](https://user-images.githubusercontent.com/7255825/171423110-66cb34d0-c690-479f-95ac-a3a207479ff9.png)
+
 
   
 Displays latest awarded loot, grouped by date allowing players to see items' history and other players' loot history.
