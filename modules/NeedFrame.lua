@@ -121,6 +121,7 @@ function NeedFrame:AddItem(data)
     _G[frame]:SetID(index)
     _G[frame].need = 'autopass'
     _G[frame].elapsed = 0
+    _G[frame].test = item[1] == 'testloot'
     _G[frame].link = link
 
     _G[frame .. 'BISButton']:Hide()
@@ -305,6 +306,14 @@ function NeedFrame:AddItem(data)
                     talc_debug("cant get info " .. rewardID)
                 end
             end
+        end
+    end
+
+    for _, blacklistItem in next, db['NEED_BLACKLIST'] do
+        if core.lower(blacklistItem) == core.lower(name) then
+            talc_print(link .. " auto passed because its in your Need Blacklist.")
+            NeedFrame:NeedClick('pass', _G[frame])
+            return
         end
     end
 
@@ -503,7 +512,7 @@ function NeedFrame:NeedClick(need, f)
 
     local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
     local itemID = core.int(core.split(':', itemLink)[2])
-    local _, _, _, _, _, _, t1, _, equip_slot = GetItemInfo(itemLink)
+    local name, _, _, _, _, _, t1, _, equip_slot = GetItemInfo(itemLink)
 
     if need ~= 'pass' and need ~= 'autopass' then
         for i = 1, 19 do
@@ -588,6 +597,26 @@ function NeedFrame:NeedClick(need, f)
             end
         end
 
+    end
+
+    local inBlacklist = false
+    for _, blacklistItem in next, db['NEED_BLACKLIST'] do
+        if core.lower(blacklistItem) == core.lower(name) then
+            inBlacklist = true
+            break
+        end
+    end
+    if need == 'pass' and not frame.test and not inBlacklist then
+        if not db['NEED_PASSES'][itemID] then
+            db['NEED_PASSES'][itemID] = 1
+        else
+            db['NEED_PASSES'][itemID] = db['NEED_PASSES'][itemID] + 1
+            if db['NEED_PASSES'][itemID] >= 5 then
+                talc_print("You have passed on ".. self.itemFrames[id].link .." " ..
+                        db['NEED_PASSES'][itemID] .. " times. You can add it to your Need Blacklist to auto pass next time it drops.")
+                talc_print("To add it to Need Blacklist type /talc need blacklist add " .. name)
+            end
+        end
     end
 
     local inWishlist = self.itemFrames[id].inWishlist and '1' or '0'

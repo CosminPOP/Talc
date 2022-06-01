@@ -91,6 +91,13 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if TALC_DB['NEED_WISHLIST'] == nil then
                 TALC_DB['NEED_WISHLIST'] = {}
             end
+            if TALC_DB['NEED_BLACKLIST'] == nil then
+                TALC_DB['NEED_BLACKLIST'] = {}
+            end
+            if TALC_DB['NEED_PASSES'] == nil then
+                TALC_DB['NEED_PASSES'] = {}
+            end
+
 
             if TALC_DB['NEED_FRAME_COLLAPSE'] == nil then
                 TALC_DB['NEED_FRAME_COLLAPSE'] = false
@@ -655,6 +662,47 @@ SlashCmdList["TALC"] = function(cmd)
                     talc_print(index .. ". " .. item)
                 end
                 talc_print("Type /talc win blacklist remove [name] to remove items from the list.")
+                return
+            end
+        end
+
+        if core.find(cmd, 'need blacklist') then
+            if core.find(cmd, 'need blacklist add') then
+                local cmdEx = core.split(" add ", cmd)
+                for _, item in next, TALC_DB['NEED_BLACKLIST'] do
+                    if core.lower(item) == core.lower(cmdEx[2]) then
+                        talc_print(item .. " is already in your Need Blacklist.")
+                        return
+                    end
+                end
+                core.insert(TALC_DB['NEED_BLACKLIST'], cmdEx[2])
+                talc_print(cmdEx[2] .. " was added to your Need Blacklist and it will not show when it drops.")
+                return
+            end
+            if core.find(cmd, 'need blacklist remove') then
+                local cmdEx = core.split(" remove ", cmd)
+                for index, item in next, TALC_DB['NEED_BLACKLIST'] do
+                    if core.lower(item) == core.lower(cmdEx[2]) then
+                        talc_print(item .. " was remove from your Need Blacklist and it will show when it drops.")
+                        TALC_DB['NEED_BLACKLIST'][index] = nil
+                        return
+                    end
+                end
+
+                talc_print(cmdEx[2] .. " was not found in your Need Blacklist.")
+                return
+            end
+            if core.find(cmd, 'need blacklist list') then
+                if #TALC_DB['NEED_BLACKLIST'] == 0 then
+                    talc_print("Your Need Blacklist is empty.")
+                    talc_print("Type /talc need blacklist add [name] to add items to the list.")
+                    return
+                end
+                talc_print("Listing your Need Blacklist, " .. #TALC_DB['NEED_BLACKLIST'] .. " item(s).")
+                for index, item in next, TALC_DB['NEED_BLACKLIST'] do
+                    talc_print(index .. ". " .. item)
+                end
+                talc_print("Type /talc need blacklist remove [name] to remove items from the list.")
                 return
             end
         end
