@@ -664,6 +664,11 @@ SlashCmdList["TALC"] = function(cmd)
                 talc_print("Type /talc win blacklist remove [name] to remove items from the list.")
                 return
             end
+            if core.find(cmd, 'win blacklist clear') then
+                TALC_DB['WIN_BLACKLIST'] = {}
+                talc_print("Win Blacklist cleared.")
+                return
+            end
         end
 
         if core.find(cmd, 'need blacklist') then
@@ -703,6 +708,11 @@ SlashCmdList["TALC"] = function(cmd)
                     talc_print(index .. ". " .. item)
                 end
                 talc_print("Type /talc need blacklist remove [name] to remove items from the list.")
+                return
+            end
+            if core.find(cmd, 'need blacklist clear') then
+                TALC_DB['NEED_BLACKLIST'] = {}
+                talc_print("Need Blacklist cleared.")
                 return
             end
         end
