@@ -55,6 +55,10 @@ officers will see that that player had this item in his wishlist.
 `/talc search [player/item]` - Search the loot history for players or items<Br>
 `/talc scale [0.5-2]` - Scales the main window<Br>
 `/talc alpha [0.2-1]` - Sets main window transparency level<Br>
-`/talc need rescale` - Resets NeedFrame position and size<Br>
+`/talc need rescale` - Resets NeedFrame position and size<Br><br>
+
+`/talc win blacklist add [item]` - Adds an item to the win blacklist<Br>
+`/talc win blacklist remove [item]` - Removes an item from the win blacklist<Br>
+`/talc win blacklist list` - Shows the win blacklist<Br>
 
 
