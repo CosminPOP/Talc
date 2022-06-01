@@ -75,6 +75,13 @@ function WinFrame:AddWonItem(linkString, winText)
         return false
     end
 
+    -- skip items if they are in win blacklist
+    for _, item in next, db['WIN_BLACKLIST'] do
+        if core.lower(item) == core.lower(name) then
+            return
+        end
+    end
+
     if quality < 2 or quality > 5 then
         return
     end

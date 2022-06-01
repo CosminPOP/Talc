@@ -71,6 +71,9 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if TALC_DB['WIN_VOLUME'] == nil then
                 TALC_DB['WIN_VOLUME'] = 'low'
             end
+            if TALC_DB['WIN_BLACKLIST'] == nil then
+                TALC_DB['WIN_BLACKLIST'] = {}
+            end
 
             if TALC_DB['ROLL_ENABLE_SOUND'] == nil then
                 TALC_DB['ROLL_ENABLE_SOUND'] = true
@@ -613,6 +616,47 @@ SlashCmdList["TALC"] = function(cmd)
             TALC_DB['NEED_SCALE'] = 1
             TalcNeedFrame:SetScale(TALC_DB['NEED_SCALE'])
             return
+        end
+
+        if core.find(cmd, 'win blacklist') then
+            if core.find(cmd, 'win blacklist add') then
+                local cmdEx = core.split(" add ", cmd)
+                for _, item in next, TALC_DB['WIN_BLACKLIST'] do
+                    if core.lower(item) == core.lower(cmdEx[2]) then
+                        talc_print(item .. " is already in your Win Blacklist.")
+                        return
+                    end
+                end
+                core.insert(TALC_DB['WIN_BLACKLIST'], cmdEx[2])
+                talc_print(cmdEx[2] .. " was added to your Win Blacklist and it will not show when looted.")
+                return
+            end
+            if core.find(cmd, 'win blacklist remove') then
+                local cmdEx = core.split(" remove ", cmd)
+                for index, item in next, TALC_DB['WIN_BLACKLIST'] do
+                    if core.lower(item) == core.lower(cmdEx[2]) then
+                        talc_print(item .. " was remove from your Win Blacklist and it will show when looted.")
+                        TALC_DB['WIN_BLACKLIST'][index] = nil
+                        return
+                    end
+                end
+
+                talc_print(cmdEx[2] .. " was not found in your Win Blacklist.")
+                return
+            end
+            if core.find(cmd, 'win blacklist list') then
+                if #TALC_DB['WIN_BLACKLIST'] == 0 then
+                    talc_print("Your Win Blacklist is empty.")
+                    talc_print("Type /talc win blacklist add [name] to add items to the list.")
+                    return
+                end
+                talc_print("Listing your Win Blacklist, " .. #TALC_DB['WIN_BLACKLIST'] .. " item(s).")
+                for index, item in next, TALC_DB['WIN_BLACKLIST'] do
+                    talc_print(index .. ". " .. item)
+                end
+                talc_print("Type /talc win blacklist remove [name] to remove items from the list.")
+                return
+            end
         end
 
         if cmd == 'who' then
