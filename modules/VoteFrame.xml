@@ -1324,8 +1324,8 @@
                                 </Anchor>
                             </Anchors>
                         </FontString>
-                        <FontString name="$parentLCStatus" inherits="GameFontHighlight"
-                                    text="You are not part of Loot Council">
+                        <FontString name="$parentEventInfo" inherits="GameFontHighlight"
+                                    text="Event Info">
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>

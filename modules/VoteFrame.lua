@@ -3298,15 +3298,37 @@ function VoteFrame:WelcomeFrame_OnShow()
         db['VOTE_ROSTER_GUILD_NAME'] = GetGuildInfo('player')
     end
 
-    if core.canVote() then
-        TalcVoteFrameWelcomeFrameLCStatus:SetText("You are part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
-    else
-        if GetGuildInfo('player') then
-            TalcVoteFrameWelcomeFrameLCStatus:SetText("You are not part of the " .. ITEM_QUALITY_COLORS[5].hex .. db['VOTE_ROSTER_GUILD_NAME'] .. " |rLoot Council.")
-        else
-            TalcVoteFrameWelcomeFrameLCStatus:SetText("You are not part of a guild.")
+
+    local title, description, creator, eventType, repeatOption, maxSize, textureIndex,
+    weekday, month, day, year, hour, minute, lockoutWeekday, lockoutMonth,
+    lockoutDay, lockoutYear, lockoutHour, lockoutMinute, locked, autoApprove = CalendarGetEventInfo()
+
+    local nextEventText = ''
+
+    if title and description then
+
+        if minute < 10 then
+            minute = '0' .. minute
         end
+
+        if hour < 10 then
+            hour = '0' .. hour
+        end
+
+        nextEventText = 'Your next event is ' .. ITEM_QUALITY_COLORS[5].hex .. title ..
+                '|r, '
+        if month == core.int(date('%m')) and
+                year == 2000 + core.int(date('%y')) and
+                day == core.int(date('%d')) then
+            nextEventText = nextEventText .. "today at " .. hour .. ":" .. minute
+        else
+            nextEventText = nextEventText .. core.dow[weekday - 1] .. " at " .. hour .. ":" .. minute
+        end
+    else
+        nextEventText = 'You have no upcoming events.'
     end
+
+    TalcVoteFrameWelcomeFrameEventInfo:SetText(nextEventText)
 
     self:ShowWelcomeItems()
 
