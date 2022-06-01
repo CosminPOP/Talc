@@ -213,6 +213,11 @@ function WinFrame:FadeInFrame(frame)
     end
 end
 
+function WinFrame:ClearBlacklist()
+    db['WIN_BLACKLIST'] = {}
+    talc_print("Win Blacklist cleared.")
+end
+
 function WinFrame:AddTestItems()
     WinFrame:AddWonItem('\124cff0070dd\124Hitem:37220:0:0:0:0:0:0:0:0\124h[Essence of Gossamer]\124h\124r', 'You receive')
     WinFrame:AddWonItem('\124cffa335ee\124Hitem:45074:0:0:0:0:0:0:0:0\124h[Claymore of the Prophet]\124h\124r', 'You receive')

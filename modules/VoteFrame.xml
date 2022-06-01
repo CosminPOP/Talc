@@ -1916,6 +1916,42 @@
                         </Scripts>
                     </CheckButton>
 
+                    <Button name="$parentWinShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinLegendary" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                WinFrame:ShowAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentWinClearBlacklist" inherits="Talc_ButtonTemplate" text="Clear Blacklist">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentWinShowAnchor" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                WinFrame:ClearBlacklist()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
                     <CheckButton name="$parentRollEnableSound" inherits="UICheckButtonTemplate">
                         <Size x="20" y="20"/>
                         <Anchors>
@@ -2033,6 +2069,24 @@
                         </Scripts>
                     </CheckButton>
 
+                    <Button name="$parentRollShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentRollTrombone" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                RollFrame:ShowAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
                     <CheckButton name="$parentNeedFrameCollapse" inherits="UICheckButtonTemplate">
                         <Size x="20" y="20"/>
                         <Anchors>
@@ -2070,6 +2124,42 @@
                             </OnLeave>
                         </Scripts>
                     </CheckButton>
+
+                    <Button name="$parentNeedShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentNeedFrameLabel" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-30"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                NeedFrame:ShowAnchor()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <Button name="$parentNeedClearBlacklist" inherits="Talc_ButtonTemplate" text="Clear Blacklist">
+                        <Size>
+                            <AbsDimension x="100" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentNeedShowAnchor" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-10"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                NeedFrame:ClearBlacklist()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
 
                     <CheckButton name="$parentBossEnable" inherits="UICheckButtonTemplate">
                         <Size x="20" y="20"/>
@@ -2280,59 +2370,9 @@
 <!--                        </Scripts>-->
 <!--                    </CheckButton>-->
 
-                    <Button name="$parentWinShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
-                        <Size>
-                            <AbsDimension x="100" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativeTo="$parentWinLegendary" relativePoint="BOTTOMLEFT">
-                                <Offset>
-                                    <AbsDimension x="0" y="-10"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                WinFrame:ShowAnchor()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
 
-                    <Button name="$parentRollShowAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
-                        <Size>
-                            <AbsDimension x="100" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativeTo="$parentRollTrombone" relativePoint="BOTTOMLEFT">
-                                <Offset>
-                                    <AbsDimension x="0" y="-10"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                RollFrame:ShowAnchor()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
 
-                    <Button name="$parentRollNeedAnchor" inherits="Talc_ButtonTemplate" text="Show Anchor">
-                        <Size>
-                            <AbsDimension x="100" y="20"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="TOPLEFT" relativeTo="$parentNeedFrameLabel" relativePoint="BOTTOMLEFT">
-                                <Offset>
-                                    <AbsDimension x="0" y="-30"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <Scripts>
-                            <OnClick>
-                                NeedFrame:ShowAnchor()
-                            </OnClick>
-                        </Scripts>
-                    </Button>
+
 
 
                     <Button name="$parentPurgeLootHistory" inherits="Talc_ButtonTemplate" text="Purge Loot History">

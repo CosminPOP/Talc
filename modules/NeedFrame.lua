@@ -630,6 +630,11 @@ function NeedFrame:NeedClick(need, f)
     self:FadeOutFrame(frame)
 end
 
+function NeedFrame:ClearBlacklist()
+    db['NEED_BLACKLIST'] = {}
+    talc_print("Need Blacklist cleared.")
+end
+
 ----------------------------------------------------
 --- Delay/Cache Add
 ----------------------------------------------------
