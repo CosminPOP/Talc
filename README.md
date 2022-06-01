@@ -57,8 +57,14 @@ officers will see that that player had this item in his wishlist.
 `/talc alpha [0.2-1]` - Sets main window transparency level<Br>
 `/talc need rescale` - Resets NeedFrame position and size<Br><br>
 
-`/talc win blacklist add [item]` - Adds an item to the win blacklist<Br>
-`/talc win blacklist remove [item]` - Removes an item from the win blacklist<Br>
-`/talc win blacklist list` - Shows the win blacklist<Br>
+`/talc win blacklist add [item]` - Add an item to the Win Blacklist<Br>
+`/talc win blacklist remove [item]` - Remove an item from the Win Blacklist<Br>
+`/talc win blacklist list` - Show the Win Blacklist<Br>
+`/talc win blacklist clear` - Clear the Win Blacklist<Br><br>
+
+`/talc need blacklist add [item]` - Add an item to the Need Blacklist<Br>
+`/talc need blacklist remove [item]` - Remove an item from the Need Blacklist<Br>
+`/talc need blacklist list` - Show the Need Blacklist<Br>
+`/talc need blacklist clear` - Clear the Need Blacklist<Br><Br>
 
 
