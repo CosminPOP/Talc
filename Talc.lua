@@ -229,6 +229,8 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             BossFrame:Init();
             BossLootFrame:Init();
 
+            OpenCalendar();
+
             print("TALC INIt")
 
             init = true
@@ -499,6 +501,7 @@ TALC:RegisterEvent("CHAT_MSG_ADDON")
 TALC:RegisterEvent("CHAT_MSG_LOOT")
 TALC:RegisterEvent("COMBAT_LOG_EVENT")
 TALC:RegisterEvent("PLAYER_ENTERING_WORLD")
+TALC:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
 
 
 ----------------------------------------------------

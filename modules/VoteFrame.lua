@@ -3292,15 +3292,38 @@ end
 ----------------------------------------------------
 
 function VoteFrame:WelcomeFrame_OnShow()
+
+    --eventType
+    --CALENDAR_EVENTTYPE_RAID    = 1
+    --CALENDAR_EVENTTYPE_DUNGEON = 2
+    --CALENDAR_EVENTTYPE_PVP     = 3
+    --CALENDAR_EVENTTYPE_MEETING = 4
+    --CALENDAR_EVENTTYPE_OTHER   = 5
+
     local title, description, creator, eventType, repeatOption, maxSize, textureIndex,
     weekday, month, day, year, hour, minute,
     lockoutWeekday, lockoutMonth, lockoutDay, lockoutYear, lockoutHour, lockoutMinute,
     locked, autoApprove, pendingInvite, inviteStatus, inviteType, calendarType = CalendarGetEventInfo()
 
+    if not title then
+        -- try to trigger callendar stuff
+        for i = core.int(date('%d')), 31 do
+            if CalendarGetDayEvent(0, i, 1) then
+                title, hour, minute, _, _, _, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
+                day = i
+                month = core.int(date('%m'))
+                local today = date("*t")
+                today.day = day
+                weekday = date('%w', time(today)) + 1
+                break
+            end
+        end
+    end
+
     local eventColor = core.RGBToHex(NORMAL_FONT_COLOR)
 
     if inviteStatus == CALENDAR_INVITESTATUS_ACCEPTED or inviteStatus == CALENDAR_INVITESTATUS_CONFIRMED or
-        inviteStatus == CALENDAR_INVITESTATUS_SIGNEDUP then
+            inviteStatus == CALENDAR_INVITESTATUS_SIGNEDUP then
         eventColor = core.RGBToHex(GREEN_FONT_COLOR)
     elseif inviteStatus == CALENDAR_INVITESTATUS_STANDBY or inviteStatus == CALENDAR_INVITESTATUS_TENTATIVE then
         eventColor = core.RGBToHex(ORANGE_FONT_COLOR)
@@ -3308,7 +3331,7 @@ function VoteFrame:WelcomeFrame_OnShow()
 
     local nextEventText = ''
 
-    if title and description then
+    if title then
         if minute < 10 then
             minute = '0' .. minute
         end
@@ -3316,7 +3339,24 @@ function VoteFrame:WelcomeFrame_OnShow()
             hour = '0' .. hour
         end
 
-        nextEventText = 'Your next event is ' .. eventColor .. title .. '|r, '
+        local eventTypeText = ''
+        if eventType == CALENDAR_EVENTTYPE_RAID then
+            eventTypeText = ' (RAID)'
+        end
+        if eventType == CALENDAR_EVENTTYPE_DUNGEON then
+            eventTypeText = ' (DUNGEON)'
+        end
+        if eventType == CALENDAR_EVENTTYPE_PVP then
+            eventTypeText = ' (PVP)'
+        end
+        if eventType == CALENDAR_EVENTTYPE_MEETING then
+            eventTypeText = ' (MEETING)'
+        end
+        if eventType == CALENDAR_EVENTTYPE_OTHER then
+            eventTypeText = ' (OTHER)'
+        end
+
+        nextEventText = 'Your next event is ' .. eventColor .. title .. '|r' .. eventTypeText .. ', '
         if month == core.int(date('%m')) and
                 year == 2000 + core.int(date('%y')) and
                 day == core.int(date('%d')) then
@@ -3330,7 +3370,7 @@ function VoteFrame:WelcomeFrame_OnShow()
                 day = day .. "th"
             end
             month = core.months[month]
-            nextEventText = nextEventText .. core.dow[weekday - 1] .. " " .. day .. " of " .. month .. "  at " .. hour .. ":" .. minute
+            nextEventText = nextEventText .. core.dow[weekday - 1] .. " " .. day .. " of " .. month .. " at " .. hour .. ":" .. minute .. "ST"
         end
     else
         nextEventText = 'You have no upcoming events.'
