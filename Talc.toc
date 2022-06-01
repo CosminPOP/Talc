@@ -2,7 +2,7 @@
 ## Title: Talc
 ## Author: Xerron/Er
 ## Version: 3.0.0.0
-## Notes: Thunder Ale Loot Council
+## Notes: Thunder Ale Loot Companion
 ## SavedVariables: TALC_DB
 
 utils\templates.xml

@@ -1,13 +1,13 @@
-# Talc - Thunder Ale Loot Council
-For WoW 3.3.5 enGB/enUS
+# Talc - Thunder Ale Loot Companion
+_WoW 3.3.5 enGB/enUS_
 
 ![image](https://user-images.githubusercontent.com/7255825/171423054-1f2df548-6f85-4625-b32a-776789484a3b.png)
 
 
 ## Features
 
-### Loot Council of max 10 players 
-Members will be able to vote on loot.
+### 10 max Officers 
+Officers will be able to vote on loot.
 
 ### Raid leader options
 

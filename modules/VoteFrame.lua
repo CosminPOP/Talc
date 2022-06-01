@@ -4289,9 +4289,9 @@ end
 
 function VoteFrame:SetTitle(to)
     if not to then
-        TalcVoteFrameTitle:SetText('|cfffff569T|rhunder |cfffff569A|rle Brewing Co |cfffff569L|root |cfffff569C|rouncil v' .. core.addonVer)
+        TalcVoteFrameTitle:SetText('|cfffff569T|rhunder |cfffff569A|rle Brewing Co |cfffff569L|root |cfffff569C|rompanion v' .. core.addonVer)
     else
-        TalcVoteFrameTitle:SetText('|cfffff569T|rhunder |cfffff569A|rle Brewing Co |cfffff569L|root |cfffff569C|rouncil v' .. core.addonVer .. ' - ' .. to)
+        TalcVoteFrameTitle:SetText('|cfffff569T|rhunder |cfffff569A|rle Brewing Co |cfffff569L|root |cfffff569C|rompanion v' .. core.addonVer .. ' - ' .. to)
     end
 end
 
@@ -4317,7 +4317,7 @@ function VoteFrame:SendTestItems_OnClick()
     local testItem1 = "\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r"
     local testItem2 = "\124cffa335ee\124Hitem:46052:0:0:0:0:0:0:0:0\124h[Reply-Code Alpha]\124h\124r"
     --local testItem3 = "\124cffa335ee\124Hitem:40614:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
-    local testItem3 = "\124cffa335ee\124Hitem:43347:0:0:0:0:0:0:0:0\124h[Gloves of the Lost Protector]\124h\124r"
+    local testItem3 = "\124cffa335ee\124Hitem:40256:0:0:0:0:0:0:0:0\124h[Grim Toll]\124h\124r"
 
     local _, _, itemLink1 = core.find(testItem1, "(item:%d+:%d+:%d+:%d+)")
     local lootName1, _, quality1, _, _, _, _, _, _, lootIcon1 = GetItemInfo(itemLink1)
