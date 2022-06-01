@@ -611,6 +611,7 @@
                     <OnEnter>
                         GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
                         GameTooltip:AddLine('Pass', 1, 1, 1)
+                        GameTooltip:AddLine('Shift-Click to add this item \nto your Need Blacklist', 1, 1, 1)
                         GameTooltip:Show()
                     </OnEnter>
                     <OnLeave>

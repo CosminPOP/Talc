@@ -599,6 +599,11 @@ function NeedFrame:NeedClick(need, f)
 
     end
 
+    if need == 'pass' and IsShiftKeyDown() then
+        core.insert(db['NEED_BLACKLIST'], name)
+        talc_print(self.itemFrames[id].link .. " was added to your Need Blacklist and it will not show when it drops.")
+    end
+
     local inBlacklist = false
     for _, blacklistItem in next, db['NEED_BLACKLIST'] do
         if core.lower(blacklistItem) == core.lower(name) then
