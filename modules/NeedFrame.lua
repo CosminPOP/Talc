@@ -114,7 +114,7 @@ function NeedFrame:AddItem(data)
     end
 
     if not self.itemFrames[index] then
-        self.itemFrames[index] = CreateFrame("Frame", "NeedFrame" .. index, TalcNeedFrame, "TalcNeedFrameItemTemplate")
+        self.itemFrames[index] = CreateFrame("Frame", "NeedFrame" .. index, TalcNeedFrame, "Talc_NeedFrameItemTemplate")
     end
     local frame = "NeedFrame" .. index
 

@@ -4,7 +4,6 @@
 
     <GameTooltip name="RollFrameTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
 
-
     <Frame name="TalcRollFrame" hidden="false" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
         <Size>
             <AbsDimension x="250" y="20"/>

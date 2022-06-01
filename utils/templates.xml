@@ -441,6 +441,54 @@
         </Scripts>
     </Button>
 
+    <Button name="Talc_RewardItemButtonTemplate" virtual="true" inherits="UIPanelButtonTemplate">
+        <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="20" y="20"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalTexture>
+        <PushedTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+            <Size>
+                <AbsDimension x="20" y="20"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="0" y="0"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </PushedTexture>
+        <HighlightTexture inherits=""/>
+        <Size>
+            <AbsDimension x="20" y="20"/>
+        </Size>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentCount" inherits="NumberFontNormalSmall" text="5"
+                            hidden="true" justifyH="CENTER">
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="7" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Button>
+
     <Frame name="Talc_WishlistItemTemplate" virtual="true">
         <Size x="300" y="25"/>
         <Frames>
@@ -1234,6 +1282,1018 @@
                 </Scripts>
             </Button>
         </Frames>
+    </Frame>
+
+    <Frame name="Talc_BossLootItemTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="240" y="40"/>
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentWhiteGlow" file="Interface\Addons\Talc\images\boss\bossloot"
+                         alphaMode="ADD">
+                    <TexCoords left="0.4609375" right="0.5390625" top="0.8671875" bottom="0.9453125"/>
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" tile="true">
+            <Color r="0.67" g="0.83" b="0.45" a="1"/>
+        </Backdrop>
+        <Frames>
+
+            <Button name="$parentButton" inherits="UIPanelButtonTemplate">
+                <NormalTexture inherits=""/>
+                <PushedTexture inherits=""/>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="38" y="38"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="2" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentTexture" file="Interface\Icons\inv_staff_20" alpha="0">
+                            <Size x="38" y="38"/>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <FontString name="$parentName" justifyH="LEFT" justifyV="MIDDLE"
+                                    inherits="GameFontNormalLarge" alpha="0"
+                                    text="longest item name ever ever ever ever ever ever">
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="42" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="188" y="40"/>
+                            </Size>
+                        </FontString>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentBorder" file="Interface\Buttons\UI-Debuff-Overlays" alpha="0"
+                                 alphaMode="ADD">
+                            <TexCoords left=".296875" right=".5703125" top="0" bottom=".515625"/>
+                            <Color r="1" g="0" b="0" a="1"/>
+                            <Size>
+                                <AbsDimension x="38" y="38"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeTo="$parentTexture">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Button>
+
+        </Frames>
+    </Frame>
+
+    <Frame name="Talc_NeedFrameItemTemplate" virtual="true" toplevel="true">
+        <Size>
+            <AbsDimension x="512" y="128"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOP">
+                <Offset>
+                    <AbsDimension x="0" y="-50"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Animations>
+            <AnimationGroup parentKey="animIn">
+                <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                <Alpha change="1" duration="0.2" order="2">
+                    <Scripts>
+                        <OnFinished>
+                            NeedFrame:FadeIn_Finished()
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+            <AnimationGroup parentKey="animOut">
+                <Alpha change="-1" duration="0.2" order="1" parentKey="animOut">
+                    <Scripts>
+                        <OnFinished>
+                            NeedFrame:FadeOut_Finished();
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+        </Animations>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="Interface\addons\Talc\images\need\need">
+                    <Size>
+                        <AbsDimension x="512" y="128"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentGlow" file="Interface\addons\Talc\images\need\need_glow"
+                         alphaMode="ADD" alpha="0" parentKey="glow">
+                    <Size>
+                        <AbsDimension x="512" y="128"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup name="$parentAnimIn" parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Alpha change="-1" duration="0.5" order="2"/>
+                        </AnimationGroup>
+                        <AnimationGroup name="$parentWishlistGlow" parentKey="wishPulse" looping="REPEAT">
+                            <Alpha change="0.5" duration="0.5" order="1" parentKey="pulseIn"/>
+                            <Alpha change="-0.5" duration="0.5" order="2" parentKey="puseOut"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+                <Texture name="$parentShine" file="Interface\addons\talc\images\win\winatlas"
+                         alphaMode="ADD" alpha="0" parentKey="shine">
+                    <Size>
+                        <AbsDimension x="173" y="77"/>
+                    </Size>
+                    <TexCoords left="0.5625" right="0.900390625" top="0" bottom="0.150390625"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="100" y="-26"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Translation offsetX="130" offsetY="0" duration="0.85" order="2"/>
+                            <Alpha startDelay="0.65" change="-1" duration="0.2" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+                <Texture name="$parentTimeLeftBar" file="Interface\addons\Talc\images\grad1"
+                         alpha="1" parentKey="timeleft">
+                    <Size>
+                        <AbsDimension x="260" y="5"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="126" y="-93"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="countdown">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="30" order="2" parentKey="countdown">
+                                <Scripts>
+                                    <OnFinished>
+                                        NeedFrame:Countdown_Finished()
+                                    </OnFinished>
+                                    <OnUpdate>
+                                        NeedFrame:SetCountdownWidth()
+                                    </OnUpdate>
+                                </Scripts>
+                            </Alpha>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+
+            <Button name="$parentItem" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
+                    <Size>
+                        <AbsDimension x="44" y="44"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <DisabledTexture name="$parentDisabledTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </DisabledTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="39" y="39"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="138" y="-44"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BORDER">
+                        <FontString name="$parentName" inherits="GameFontNormal" text="[item name here]"
+                                    hidden="false"
+                                    justifyH="LEFT">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="53" y="10"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="180" y="12"/>
+                            </Size>
+                        </FontString>
+
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentQuality2" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.333984375" bottom="0.451171875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality3" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.69921875" right="0.81640625" top="0.333984375" bottom="0.451171875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality4" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.685546875" bottom="0.802734375"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality5" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.568359375" bottom="0.685546875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <Texture name="$parentQualityGlow" file="Interface\addons\talc\images\win\winatlas"
+                                 alphaMode="ADD" alpha="0" parentKey="qualityGlow">
+                            <Size>
+                                <AbsDimension x="70" y="70"/>
+                            </Size>
+                            <TexCoords left="0.5625" right="0.69921875" top="0.216796875" bottom="0.353515625"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                            <Animations>
+                                <AnimationGroup parentKey="animIn">
+                                    <Alpha change="1" duration="0.1" order="1" parentKey="animIn"/>
+                                    <Alpha change="-1" duration="0.8" order="2"/>
+                                </AnimationGroup>
+                            </Animations>
+                        </Texture>
+                        <FontString name="$parentLevel" inherits="NumberFontNormalSmall" text="215"
+                                    hidden="false"
+                                    justifyH="CENTER">
+                            <Anchors>
+                                <Anchor point="BOTTOM">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-18"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="40" y="40"/>
+                            </Size>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentBISButton" hidden="false" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\bis_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\bis_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\bis_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="193" y="-55"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame:NeedClick('bis');
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Best In Slot', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentMSUpgradeButton" hidden="false" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\ms_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\ms_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\ms_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBISButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="1" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame:NeedClick('ms');
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Main Spec', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentOSButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\buttons\ui-grouploot-coin-up" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="-5"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\buttons\ui-grouploot-coin-down" alphaMode="ADD">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="-5"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\buttons\ui-grouploot-coin-highlight" alphaMode="ADD">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="-5"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentMSUpgradeButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="1" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame:NeedClick('os');
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Off Spec', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentXMOGButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\Addons\Talc\images\need\xmog_icon" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\Addons\Talc\images\need\xmog_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\Addons\Talc\images\need\xmog_icon_highlight">
+                    <Size x="64" y="64"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentOSButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="1" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame:NeedClick('xmog');
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Transmog', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+            <Button name="$parentPassButton" hidden="true" inherits="UIPanelButtonTemplate">
+                <NormalTexture file="Interface\buttons\ui-grouploot-pass-up" parentKey="fade">
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                            <Alpha change="1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture file="Interface\buttons\ui-grouploot-pass-up">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <HighlightTexture file="Interface\buttons\ui-grouploot-pass-up" alphaMode="ADD">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                </HighlightTexture>
+                <DisabledTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="36" y="36"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentXMOGButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="1" y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        NeedFrame:NeedClick('pass');
+                    </OnClick>
+                    <OnEnter>
+                        GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT", 28, -8)
+                        GameTooltip:AddLine('Pass', 1, 1, 1)
+                        GameTooltip:AddLine('Shift-Click to add this item \nto your Need Blacklist', 1, 1, 1)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
+            </Button>
+
+            <Frame name="$parentQuestRewards" framestrata="MEDIUM" hidden="true">
+                <Backdrop bgFile="Interface\Addons\Talc\images\need\quest-rewards">
+                </Backdrop>
+                <Size>
+                    <AbsDimension x="128" y="128"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="5" y="-30"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentQuestRewardsText" inherits="GameFontNormal" text="Awards:">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="20" y="-15"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentReward1" hidden="true" inherits="Talc_RewardItemButtonTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="20" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentReward2" hidden="true" inherits="Talc_RewardItemButtonTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="43" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentReward3" hidden="true" inherits="Talc_RewardItemButtonTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="66" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentReward4" hidden="true" inherits="Talc_RewardItemButtonTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="89" y="-32"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                    </Button>
+                </Frames>
+            </Frame>
+
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+            </OnLoad>
+            <OnDragStart>
+                TalcNeedFrame:StartMoving();
+                TalcNeedFrame.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                TalcNeedFrame:StopMovingOrSizing();
+                TalcNeedFrame.isMoving = false;
+            </OnDragStop>
+        </Scripts>
+    </Frame>
+
+    <Frame name="Talc_WinFrameItemTemplate" virtual="true" hidden="true">
+        <Size>
+            <AbsDimension x="288" y="111"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset>
+                    <AbsDimension x="0" y="120"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Animations>
+            <AnimationGroup parentKey="animIn">
+                <Alpha change="-1" duration="0" order="1" parentKey="animIn"/>
+                <Alpha change="1" duration="0.2" order="2">
+                    <Scripts>
+                        <OnFinished>
+                            NeedFrame:AnimInFinished()
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+            <AnimationGroup parentKey="animOut">
+                <Alpha change="-1" duration="0.2" parentKey="animOut">
+                    <Scripts>
+                        <OnFinished>
+                            WinFrame:AnimOutFinished()
+                        </OnFinished>
+                    </Scripts>
+                </Alpha>
+            </AnimationGroup>
+        </Animations>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackgroundHigh" hidden="false" file="Interface\addons\talc\images\win\winatlas">
+                    <Size>
+                        <AbsDimension x="288" y="111"/>
+                    </Size>
+                    <TexCoords left="0" right="0.5615" top="0" bottom="0.216796875"/>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBackgroundLow" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                    <Size>
+                        <AbsDimension x="288" y="111"/>
+                    </Size>
+                    <TexCoords left="0" right="0.5625" top="0.216796875" bottom="0.43119375"/>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentBackgroundXmog" hidden="true" file="Interface\addons\talc\images\win\winatlas">
+                    <Size>
+                        <AbsDimension x="288" y="111"/>
+                    </Size>
+                    <TexCoords left="0" right="0.5625" top="0.650390625" bottom="0.8671875"/>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentGlow" file="Interface\addons\talc\images\win\winatlas"
+                         alphaMode="ADD" alpha="0" parentKey="glow">
+                    <Size>
+                        <AbsDimension x="288" y="111"/>
+                    </Size>
+                    <TexCoords left="0" right="0.5625" top="0.43359375" bottom="0.650390625"/>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset x="0" y="0"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Alpha change="-1" duration="0.5" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+                <Texture name="$parentShine" file="Interface\addons\talc\images\win\winatlas"
+                         alphaMode="ADD" alpha="0" parentKey="shine">
+                    <Size>
+                        <AbsDimension x="173" y="77"/>
+                    </Size>
+                    <TexCoords left="0.5625" right="0.900390625" top="0" bottom="0.150390625"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="0" y="-16"/>
+                        </Anchor>
+                    </Anchors>
+                    <Animations>
+                        <AnimationGroup parentKey="animIn">
+                            <Alpha change="1" duration="0.2" order="1" parentKey="animIn"/>
+                            <Translation offsetX="110" offsetY="0" duration="0.85" order="2"/>
+                            <Alpha startDelay="0.55" change="-1" duration="0.3" order="2"/>
+                        </AnimationGroup>
+                    </Animations>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+
+            <Button name="$parentItem" inherits="UIPanelButtonTemplate" text="">
+                <NormalTexture name="$parentNormalTexture" file="Interface\Icons\inv_staff_20">
+                    <TexCoords left="0.08" right="0.92" top="0.08" bottom="0.92"/>
+                    <Size>
+                        <AbsDimension x="44" y="44"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </NormalTexture>
+                <PushedTexture name="$parentPushedTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </PushedTexture>
+                <DisabledTexture name="$parentDisabledTexture" file="Interface\Icons\inv_staff_20">
+                    <Size>
+                        <AbsDimension x="40" y="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </DisabledTexture>
+                <HighlightTexture inherits=""/>
+                <Size>
+                    <AbsDimension x="39" y="39"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="36" y="-36"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                    </Layer>
+                    <Layer level="BORDER">
+
+                        <FontString name="$parentWay" inherits="GameFontNormal" text="You create">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="53" y="8"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentName" inherits="GameFontNormalLarge"
+                                    justifyH="LEFT" justifyV="CENTER"
+                                    text="[Item of the Whale]">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="53" y="-9"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                            <Size>
+                                <AbsDimension x="170" y="38"/>
+                            </Size>
+                        </FontString>
+
+                        <Texture name="$parentQuality2" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.333984375" bottom="0.451171875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality3" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.69921875" right="0.81640625" top="0.333984375" bottom="0.451171875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality4" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.685546875" bottom="0.802734375"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture name="$parentQuality5" file="Interface\addons\talc\images\win\winatlas">
+                            <Size>
+                                <AbsDimension x="60" y="60"/>
+                            </Size>
+                            <TexCoords left="0.81640625" right="0.93359375" top="0.568359375" bottom="0.685546875"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <Texture name="$parentQualityGlow" file="Interface\addons\talc\images\win\winatlas"
+                                 alphaMode="BLEND" alpha="0" parentKey="glow">
+                            <Size>
+                                <AbsDimension x="70" y="70"/>
+                            </Size>
+                            <TexCoords left="0.5625" right="0.69921875" top="0.216796875" bottom="0.353515625"/>
+                            <Anchors>
+                                <Anchor point="CENTER">
+                                    <Offset x="0" y="0"/>
+                                </Anchor>
+                            </Anchors>
+                            <Animations>
+                                <AnimationGroup parentKey="animIn">
+                                    <Alpha change="1" duration="0.1" order="1" parentKey="animIn"/>
+                                    <Alpha change="-1" duration="0.8" order="2"/>
+                                </AnimationGroup>
+                            </Animations>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+        </Frames>
+
+        <Scripts>
+            <OnLoad>
+                this:RegisterForDrag("LeftButton");
+            </OnLoad>
+            <OnDragStart>
+                TalcWinFrame:StartMoving();
+                TalcWinFrame.isMoving = true;
+            </OnDragStart>
+            <OnDragStop>
+                TalcWinFrame:StopMovingOrSizing();
+                TalcWinFrame.isMoving = false;
+            </OnDragStop>
+        </Scripts>
     </Frame>
 
 </Ui>
