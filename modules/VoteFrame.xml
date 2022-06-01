@@ -75,7 +75,6 @@
                             <Offset x="2" y="-24"/>
                         </Anchor>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
-<!--                            <Offset x="-2" y="28"/>-->
                             <Offset x="-2" y="4"/>
                         </Anchor>
                     </Anchors>
@@ -293,7 +292,7 @@
                 </Scripts>
             </Button>
 
-            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER" >
+            <StatusBar name="$parentTimeLeftBar" drawLayer="BORDER">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
                         <Offset x="6" y="4"/>
@@ -1356,6 +1355,34 @@
                 </Layers>
                 <Frames>
 
+                    <Button name="$parentEventButton" inherits="UIPanelButtonTemplate">
+                        <NormalTexture file=""/>
+                        <PushedTexture file=""/>
+                        <HighlightTexture file=""/>
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="105" y="-30"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                if (CalendarFrame and CalendarFrame:IsShown()) then
+                                ToggleCalendar();
+                                else
+                                Calendar_LoadUI();
+                                if ( Calendar_Show ) then
+                                Calendar_Show();
+                                end
+                                end
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
                     <Button name="$parentOpenSettings" inherits="Talc_ButtonTemplate" text="Settings">
                         <Size>
                             <AbsDimension x="130" y="20"/>
@@ -1392,43 +1419,43 @@
                         </Scripts>
                     </Button>
 
-<!--                    <Button name="$parentAttendanceStopButton" inherits="Talc_ButtonTemplate"-->
-<!--                            text="Stop Tracking Attendance">-->
-<!--                        <Size>-->
-<!--                            <AbsDimension x="180" y="20"/>-->
-<!--                        </Size>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="TOPRIGHT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="0" y="-54"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame.AttendanceTracker:Stop()-->
-<!--                            </OnClick>-->
-<!--                        </Scripts>-->
-<!--                    </Button>-->
+                    <!--                    <Button name="$parentAttendanceStopButton" inherits="Talc_ButtonTemplate"-->
+                    <!--                            text="Stop Tracking Attendance">-->
+                    <!--                        <Size>-->
+                    <!--                            <AbsDimension x="180" y="20"/>-->
+                    <!--                        </Size>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="TOPRIGHT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="0" y="-54"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame.AttendanceTracker:Stop()-->
+                    <!--                            </OnClick>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </Button>-->
 
-<!--                    <Button name="$parentAttendanceStartButton" inherits="Talc_ButtonTemplate"-->
-<!--                            text="Start Tracking Attendance">-->
-<!--                        <Size>-->
-<!--                            <AbsDimension x="180" y="20"/>-->
-<!--                        </Size>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="TOPRIGHT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="0" y="-54"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame.AttendanceTracker:Start()-->
-<!--                            </OnClick>-->
-<!--                        </Scripts>-->
-<!--                    </Button>-->
+                    <!--                    <Button name="$parentAttendanceStartButton" inherits="Talc_ButtonTemplate"-->
+                    <!--                            text="Start Tracking Attendance">-->
+                    <!--                        <Size>-->
+                    <!--                            <AbsDimension x="180" y="20"/>-->
+                    <!--                        </Size>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="TOPRIGHT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="0" y="-54"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame.AttendanceTracker:Start()-->
+                    <!--                            </OnClick>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </Button>-->
 
                     <Button name="$parentBackButton" inherits="UIPanelButtonTemplate">
                         <NormalTexture inherits=""/>
@@ -1656,16 +1683,16 @@
                             </Anchors>
                         </FontString>
 
-<!--                        <FontString name="$parentAttendanceLabel" inherits="GameFontHighlight"-->
-<!--                                    text="Attendance Tracking">-->
-<!--                            <Anchors>-->
-<!--                                <Anchor point="TOPLEFT">-->
-<!--                                    <Offset>-->
-<!--                                        <AbsDimension x="520" y="-40"/>-->
-<!--                                    </Offset>-->
-<!--                                </Anchor>-->
-<!--                            </Anchors>-->
-<!--                        </FontString>-->
+                        <!--                        <FontString name="$parentAttendanceLabel" inherits="GameFontHighlight"-->
+                        <!--                                    text="Attendance Tracking">-->
+                        <!--                            <Anchors>-->
+                        <!--                                <Anchor point="TOPLEFT">-->
+                        <!--                                    <Offset>-->
+                        <!--                                        <AbsDimension x="520" y="-40"/>-->
+                        <!--                                    </Offset>-->
+                        <!--                                </Anchor>-->
+                        <!--                            </Anchors>-->
+                        <!--                        </FontString>-->
 
                         <FontString name="$parentBossFrameLabel" inherits="GameFontHighlight"
                                     text="Boss Defeated Frame">
@@ -2237,142 +2264,138 @@
                         </Scripts>
                     </CheckButton>
 
-<!--                    <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">-->
-<!--                        <Size x="20" y="20"/>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceLabel" relativePoint="BOTTOMLEFT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="0" y="-5"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Layers>-->
-<!--                            <Layer level="OVERLAY">-->
-<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
-<!--                                            text="Track Attendance">-->
-<!--                                    <Anchors>-->
-<!--                                        <Anchor point="LEFT">-->
-<!--                                            <Offset>-->
-<!--                                                <AbsDimension x="20" y="0"/>-->
-<!--                                            </Offset>-->
-<!--                                        </Anchor>-->
-<!--                                    </Anchors>-->
-<!--                                </FontString>-->
-<!--                            </Layer>-->
-<!--                        </Layers>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())-->
-<!--                            </OnClick>-->
-<!--                            <OnEnter>-->
-<!--                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")-->
-<!--                                GameTooltip:AddLine('Track attendance')-->
-<!--                                GameTooltip:AddLine('Attendance is saved on each boss kills.', 1, 1, 1)-->
-<!--                                GameTooltip:AddLine('Each kill is worth one point.', 1, 1, 1)-->
-<!--                                GameTooltip:Show()-->
-<!--                            </OnEnter>-->
-<!--                            <OnLeave>-->
-<!--                                GameTooltip:Hide()-->
-<!--                            </OnLeave>-->
-<!--                        </Scripts>-->
-<!--                    </CheckButton>-->
+                    <!--                    <CheckButton name="$parentAttendanceTrack" inherits="UICheckButtonTemplate">-->
+                    <!--                        <Size x="20" y="20"/>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceLabel" relativePoint="BOTTOMLEFT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="0" y="-5"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Layers>-->
+                    <!--                            <Layer level="OVERLAY">-->
+                    <!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+                    <!--                                            text="Track Attendance">-->
+                    <!--                                    <Anchors>-->
+                    <!--                                        <Anchor point="LEFT">-->
+                    <!--                                            <Offset>-->
+                    <!--                                                <AbsDimension x="20" y="0"/>-->
+                    <!--                                            </Offset>-->
+                    <!--                                        </Anchor>-->
+                    <!--                                    </Anchors>-->
+                    <!--                                </FontString>-->
+                    <!--                            </Layer>-->
+                    <!--                        </Layers>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'enabled'}, this:GetChecked())-->
+                    <!--                            </OnClick>-->
+                    <!--                            <OnEnter>-->
+                    <!--                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")-->
+                    <!--                                GameTooltip:AddLine('Track attendance')-->
+                    <!--                                GameTooltip:AddLine('Attendance is saved on each boss kills.', 1, 1, 1)-->
+                    <!--                                GameTooltip:AddLine('Each kill is worth one point.', 1, 1, 1)-->
+                    <!--                                GameTooltip:Show()-->
+                    <!--                            </OnEnter>-->
+                    <!--                            <OnLeave>-->
+                    <!--                                GameTooltip:Hide()-->
+                    <!--                            </OnLeave>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </CheckButton>-->
 
-<!--                    <CheckButton name="$parentAttendanceBossKills" inherits="UICheckButtonTemplate">-->
-<!--                        <Size x="20" y="20"/>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceTrack" relativePoint="BOTTOMRIGHT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="0" y="0"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Layers>-->
-<!--                            <Layer level="OVERLAY">-->
-<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
-<!--                                            text="Track Boss Kills">-->
-<!--                                    <Anchors>-->
-<!--                                        <Anchor point="LEFT">-->
-<!--                                            <Offset>-->
-<!--                                                <AbsDimension x="20" y="0"/>-->
-<!--                                            </Offset>-->
-<!--                                        </Anchor>-->
-<!--                                    </Anchors>-->
-<!--                                </FontString>-->
-<!--                            </Layer>-->
-<!--                        </Layers>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())-->
-<!--                            </OnClick>-->
-<!--                        </Scripts>-->
-<!--                    </CheckButton>-->
+                    <!--                    <CheckButton name="$parentAttendanceBossKills" inherits="UICheckButtonTemplate">-->
+                    <!--                        <Size x="20" y="20"/>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceTrack" relativePoint="BOTTOMRIGHT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="0" y="0"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Layers>-->
+                    <!--                            <Layer level="OVERLAY">-->
+                    <!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+                    <!--                                            text="Track Boss Kills">-->
+                    <!--                                    <Anchors>-->
+                    <!--                                        <Anchor point="LEFT">-->
+                    <!--                                            <Offset>-->
+                    <!--                                                <AbsDimension x="20" y="0"/>-->
+                    <!--                                            </Offset>-->
+                    <!--                                        </Anchor>-->
+                    <!--                                    </Anchors>-->
+                    <!--                                </FontString>-->
+                    <!--                            </Layer>-->
+                    <!--                        </Layers>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'bossKills'}, this:GetChecked())-->
+                    <!--                            </OnClick>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </CheckButton>-->
 
-<!--                    <CheckButton name="$parentAttendanceTime" inherits="UICheckButtonTemplate">-->
-<!--                        <Size x="20" y="20"/>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceBossKills" relativePoint="BOTTOMLEFT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="0" y="0"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Layers>-->
-<!--                            <Layer level="OVERLAY">-->
-<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
-<!--                                            text="Track Time">-->
-<!--                                    <Anchors>-->
-<!--                                        <Anchor point="LEFT">-->
-<!--                                            <Offset>-->
-<!--                                                <AbsDimension x="20" y="0"/>-->
-<!--                                            </Offset>-->
-<!--                                        </Anchor>-->
-<!--                                    </Anchors>-->
-<!--                                </FontString>-->
-<!--                            </Layer>-->
-<!--                        </Layers>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())-->
-<!--                            </OnClick>-->
-<!--                        </Scripts>-->
-<!--                    </CheckButton>-->
-
-
-<!--                    <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">-->
-<!--                        <Size>-->
-<!--                            <AbsDimension x="20" y="20"/>-->
-<!--                        </Size>-->
-<!--                        <Anchors>-->
-<!--                            <Anchor point="BOTTOMRIGHT">-->
-<!--                                <Offset>-->
-<!--                                    <AbsDimension x="-80" y="30"/>-->
-<!--                                </Offset>-->
-<!--                            </Anchor>-->
-<!--                        </Anchors>-->
-<!--                        <Layers>-->
-<!--                            <Layer level="OVERLAY">-->
-<!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
-<!--                                            text="Debugging">-->
-<!--                                    <Anchors>-->
-<!--                                        <Anchor point="LEFT">-->
-<!--                                            <Offset>-->
-<!--                                                <AbsDimension x="20" y="0"/>-->
-<!--                                            </Offset>-->
-<!--                                        </Anchor>-->
-<!--                                    </Anchors>-->
-<!--                                </FontString>-->
-<!--                            </Layer>-->
-<!--                        </Layers>-->
-<!--                        <Scripts>-->
-<!--                            <OnClick>-->
-<!--                                VoteFrame:SaveSetting('_DEBUG', this:GetChecked())-->
-<!--                            </OnClick>-->
-<!--                        </Scripts>-->
-<!--                    </CheckButton>-->
+                    <!--                    <CheckButton name="$parentAttendanceTime" inherits="UICheckButtonTemplate">-->
+                    <!--                        <Size x="20" y="20"/>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="TOPLEFT" relativeTo="$parentAttendanceBossKills" relativePoint="BOTTOMLEFT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="0" y="0"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Layers>-->
+                    <!--                            <Layer level="OVERLAY">-->
+                    <!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+                    <!--                                            text="Track Time">-->
+                    <!--                                    <Anchors>-->
+                    <!--                                        <Anchor point="LEFT">-->
+                    <!--                                            <Offset>-->
+                    <!--                                                <AbsDimension x="20" y="0"/>-->
+                    <!--                                            </Offset>-->
+                    <!--                                        </Anchor>-->
+                    <!--                                    </Anchors>-->
+                    <!--                                </FontString>-->
+                    <!--                            </Layer>-->
+                    <!--                        </Layers>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame:SaveSetting({'ATTENDANCE_TRACKING', 'periodic'}, this:GetChecked())-->
+                    <!--                            </OnClick>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </CheckButton>-->
 
 
-
-
+                    <!--                    <CheckButton name="$parentDebug" inherits="UICheckButtonTemplate">-->
+                    <!--                        <Size>-->
+                    <!--                            <AbsDimension x="20" y="20"/>-->
+                    <!--                        </Size>-->
+                    <!--                        <Anchors>-->
+                    <!--                            <Anchor point="BOTTOMRIGHT">-->
+                    <!--                                <Offset>-->
+                    <!--                                    <AbsDimension x="-80" y="30"/>-->
+                    <!--                                </Offset>-->
+                    <!--                            </Anchor>-->
+                    <!--                        </Anchors>-->
+                    <!--                        <Layers>-->
+                    <!--                            <Layer level="OVERLAY">-->
+                    <!--                                <FontString name="$parentText" inherits="GameFontNormal"-->
+                    <!--                                            text="Debugging">-->
+                    <!--                                    <Anchors>-->
+                    <!--                                        <Anchor point="LEFT">-->
+                    <!--                                            <Offset>-->
+                    <!--                                                <AbsDimension x="20" y="0"/>-->
+                    <!--                                            </Offset>-->
+                    <!--                                        </Anchor>-->
+                    <!--                                    </Anchors>-->
+                    <!--                                </FontString>-->
+                    <!--                            </Layer>-->
+                    <!--                        </Layers>-->
+                    <!--                        <Scripts>-->
+                    <!--                            <OnClick>-->
+                    <!--                                VoteFrame:SaveSetting('_DEBUG', this:GetChecked())-->
+                    <!--                            </OnClick>-->
+                    <!--                        </Scripts>-->
+                    <!--                    </CheckButton>-->
 
 
                     <Button name="$parentPurgeLootHistory" inherits="Talc_ButtonTemplate" text="Purge Loot History">
@@ -3326,254 +3349,254 @@
         </Scripts>
     </Frame>
 
-<!--    <Frame name="TalcVoteAttendanceQueryStart" hidden="true" toplevel="true" parent="UIParent"-->
-<!--           movable="true" enableMouse="true">-->
-<!--        <Size>-->
-<!--            <AbsDimension x="240" y="60"/>-->
-<!--        </Size>-->
-<!--        <Anchors>-->
-<!--            <Anchor point="CENTER">-->
-<!--                <Offset>-->
-<!--                    <AbsDimension x="0" y="0"/>-->
-<!--                </Offset>-->
-<!--            </Anchor>-->
-<!--        </Anchors>-->
-<!--        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"-->
-<!--                  edgeFile="Interface\addons\Talc\images\border-maw"-->
-<!--                  tile="false">-->
-<!--            <EdgeSize>-->
-<!--                <AbsValue val="16"/>-->
-<!--            </EdgeSize>-->
-<!--            <TileSize>-->
-<!--                <AbsValue val="1"/>-->
-<!--            </TileSize>-->
-<!--            <BackgroundInsets>-->
-<!--                <AbsInset left="5" right="5" top="5" bottom="5"/>-->
-<!--            </BackgroundInsets>-->
-<!--        </Backdrop>-->
-<!--        <Layers>-->
-<!--            <Layer level="BACKGROUND">-->
-<!--                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">-->
-<!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
-<!--                            <Offset x="2" y="-4"/>-->
-<!--                        </Anchor>-->
-<!--                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">-->
-<!--                            <Offset x="-2" y="-24"/>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </Texture>-->
-<!--                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
-<!--                            <Offset x="2" y="-24"/>-->
-<!--                        </Anchor>-->
-<!--                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">-->
-<!--                            <Offset x="-2" y="5"/>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </Texture>-->
-<!--            </Layer>-->
-<!--            <Layer level="OVERLAY">-->
-<!--                <FontString name="$parentTitle" text="Start tracking attendance ?" inherits="GameFontNormal">-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOP">-->
-<!--                            <Offset>-->
-<!--                                <AbsDimension x="0" y="-8"/>-->
-<!--                            </Offset>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </FontString>-->
-<!--            </Layer>-->
-<!--        </Layers>-->
-<!--        <Frames>-->
-<!--            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">-->
-<!--                <Size>-->
-<!--                    <AbsDimension x="90" y="20"/>-->
-<!--                </Size>-->
-<!--                <Anchors>-->
-<!--                    <Anchor point="TOPLEFT">-->
-<!--                        <Offset>-->
-<!--                            <AbsDimension x="10" y="-30"/>-->
-<!--                        </Offset>-->
-<!--                    </Anchor>-->
-<!--                </Anchors>-->
-<!--                <Scripts>-->
-<!--                    <OnClick>-->
-<!--                        this:GetParent():Hide()-->
-<!--                        VoteFrame.AttendanceTracker:Start()-->
-<!--                    </OnClick>-->
-<!--                </Scripts>-->
-<!--            </Button>-->
-<!--            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">-->
-<!--                <Size>-->
-<!--                    <AbsDimension x="90" y="20"/>-->
-<!--                </Size>-->
-<!--                <Anchors>-->
-<!--                    <Anchor point="TOPRIGHT">-->
-<!--                        <Offset>-->
-<!--                            <AbsDimension x="-10" y="-30"/>-->
-<!--                        </Offset>-->
-<!--                    </Anchor>-->
-<!--                </Anchors>-->
-<!--                <Scripts>-->
-<!--                    <OnClick>-->
-<!--                        this:GetParent():Hide()-->
-<!--                    </OnClick>-->
-<!--                </Scripts>-->
-<!--            </Button>-->
-<!--        </Frames>-->
-<!--        <Scripts>-->
-<!--            <OnLoad>-->
-<!--                this:RegisterForDrag("LeftButton");-->
-<!--                this:SetMovable(1);-->
-<!--                this:SetUserPlaced(true);-->
-<!--            </OnLoad>-->
-<!--            <OnShow>-->
-<!--                this.timeout = 15;-->
-<!--                this.startTime = GetTime();-->
-<!--            </OnShow>-->
-<!--            <OnHide>-->
-<!--                PlaySound("igMainMenuOptionCheckBoxOff");-->
-<!--            </OnHide>-->
-<!--            <OnUpdate>-->
-<!--                Talc_AttendanceQueryWindow_OnUpdate()-->
-<!--            </OnUpdate>-->
-<!--            <OnDragStart>-->
-<!--                this:StartMoving();-->
-<!--                this.isMoving = true;-->
-<!--            </OnDragStart>-->
-<!--            <OnDragStop>-->
-<!--                this:StopMovingOrSizing();-->
-<!--                this.isMoving = false;-->
-<!--            </OnDragStop>-->
-<!--        </Scripts>-->
-<!--    </Frame>-->
+    <!--    <Frame name="TalcVoteAttendanceQueryStart" hidden="true" toplevel="true" parent="UIParent"-->
+    <!--           movable="true" enableMouse="true">-->
+    <!--        <Size>-->
+    <!--            <AbsDimension x="240" y="60"/>-->
+    <!--        </Size>-->
+    <!--        <Anchors>-->
+    <!--            <Anchor point="CENTER">-->
+    <!--                <Offset>-->
+    <!--                    <AbsDimension x="0" y="0"/>-->
+    <!--                </Offset>-->
+    <!--            </Anchor>-->
+    <!--        </Anchors>-->
+    <!--        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"-->
+    <!--                  edgeFile="Interface\addons\Talc\images\border-maw"-->
+    <!--                  tile="false">-->
+    <!--            <EdgeSize>-->
+    <!--                <AbsValue val="16"/>-->
+    <!--            </EdgeSize>-->
+    <!--            <TileSize>-->
+    <!--                <AbsValue val="1"/>-->
+    <!--            </TileSize>-->
+    <!--            <BackgroundInsets>-->
+    <!--                <AbsInset left="5" right="5" top="5" bottom="5"/>-->
+    <!--            </BackgroundInsets>-->
+    <!--        </Backdrop>-->
+    <!--        <Layers>-->
+    <!--            <Layer level="BACKGROUND">-->
+    <!--                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">-->
+    <!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
+    <!--                            <Offset x="2" y="-4"/>-->
+    <!--                        </Anchor>-->
+    <!--                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">-->
+    <!--                            <Offset x="-2" y="-24"/>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </Texture>-->
+    <!--                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
+    <!--                            <Offset x="2" y="-24"/>-->
+    <!--                        </Anchor>-->
+    <!--                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">-->
+    <!--                            <Offset x="-2" y="5"/>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </Texture>-->
+    <!--            </Layer>-->
+    <!--            <Layer level="OVERLAY">-->
+    <!--                <FontString name="$parentTitle" text="Start tracking attendance ?" inherits="GameFontNormal">-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOP">-->
+    <!--                            <Offset>-->
+    <!--                                <AbsDimension x="0" y="-8"/>-->
+    <!--                            </Offset>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </FontString>-->
+    <!--            </Layer>-->
+    <!--        </Layers>-->
+    <!--        <Frames>-->
+    <!--            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">-->
+    <!--                <Size>-->
+    <!--                    <AbsDimension x="90" y="20"/>-->
+    <!--                </Size>-->
+    <!--                <Anchors>-->
+    <!--                    <Anchor point="TOPLEFT">-->
+    <!--                        <Offset>-->
+    <!--                            <AbsDimension x="10" y="-30"/>-->
+    <!--                        </Offset>-->
+    <!--                    </Anchor>-->
+    <!--                </Anchors>-->
+    <!--                <Scripts>-->
+    <!--                    <OnClick>-->
+    <!--                        this:GetParent():Hide()-->
+    <!--                        VoteFrame.AttendanceTracker:Start()-->
+    <!--                    </OnClick>-->
+    <!--                </Scripts>-->
+    <!--            </Button>-->
+    <!--            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">-->
+    <!--                <Size>-->
+    <!--                    <AbsDimension x="90" y="20"/>-->
+    <!--                </Size>-->
+    <!--                <Anchors>-->
+    <!--                    <Anchor point="TOPRIGHT">-->
+    <!--                        <Offset>-->
+    <!--                            <AbsDimension x="-10" y="-30"/>-->
+    <!--                        </Offset>-->
+    <!--                    </Anchor>-->
+    <!--                </Anchors>-->
+    <!--                <Scripts>-->
+    <!--                    <OnClick>-->
+    <!--                        this:GetParent():Hide()-->
+    <!--                    </OnClick>-->
+    <!--                </Scripts>-->
+    <!--            </Button>-->
+    <!--        </Frames>-->
+    <!--        <Scripts>-->
+    <!--            <OnLoad>-->
+    <!--                this:RegisterForDrag("LeftButton");-->
+    <!--                this:SetMovable(1);-->
+    <!--                this:SetUserPlaced(true);-->
+    <!--            </OnLoad>-->
+    <!--            <OnShow>-->
+    <!--                this.timeout = 15;-->
+    <!--                this.startTime = GetTime();-->
+    <!--            </OnShow>-->
+    <!--            <OnHide>-->
+    <!--                PlaySound("igMainMenuOptionCheckBoxOff");-->
+    <!--            </OnHide>-->
+    <!--            <OnUpdate>-->
+    <!--                Talc_AttendanceQueryWindow_OnUpdate()-->
+    <!--            </OnUpdate>-->
+    <!--            <OnDragStart>-->
+    <!--                this:StartMoving();-->
+    <!--                this.isMoving = true;-->
+    <!--            </OnDragStart>-->
+    <!--            <OnDragStop>-->
+    <!--                this:StopMovingOrSizing();-->
+    <!--                this.isMoving = false;-->
+    <!--            </OnDragStop>-->
+    <!--        </Scripts>-->
+    <!--    </Frame>-->
 
-<!--    <Frame name="TalcVoteAttendanceQueryStop" hidden="true" toplevel="true" parent="UIParent"-->
-<!--           movable="true" enableMouse="true">-->
-<!--        <Size>-->
-<!--            <AbsDimension x="240" y="60"/>-->
-<!--        </Size>-->
-<!--        <Anchors>-->
-<!--            <Anchor point="CENTER">-->
-<!--                <Offset>-->
-<!--                    <AbsDimension x="0" y="0"/>-->
-<!--                </Offset>-->
-<!--            </Anchor>-->
-<!--        </Anchors>-->
-<!--        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"-->
-<!--                  edgeFile="Interface\addons\Talc\images\border-maw"-->
-<!--                  tile="false">-->
-<!--            <EdgeSize>-->
-<!--                <AbsValue val="16"/>-->
-<!--            </EdgeSize>-->
-<!--            <TileSize>-->
-<!--                <AbsValue val="1"/>-->
-<!--            </TileSize>-->
-<!--            <BackgroundInsets>-->
-<!--                <AbsInset left="5" right="5" top="5" bottom="5"/>-->
-<!--            </BackgroundInsets>-->
-<!--        </Backdrop>-->
-<!--        <Layers>-->
-<!--            <Layer level="BACKGROUND">-->
-<!--                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">-->
-<!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
-<!--                            <Offset x="2" y="-4"/>-->
-<!--                        </Anchor>-->
-<!--                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">-->
-<!--                            <Offset x="-2" y="-24"/>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </Texture>-->
-<!--                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
-<!--                            <Offset x="2" y="-24"/>-->
-<!--                        </Anchor>-->
-<!--                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">-->
-<!--                            <Offset x="-2" y="5"/>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </Texture>-->
-<!--            </Layer>-->
-<!--            <Layer level="OVERLAY">-->
-<!--                <FontString name="$parentTitle" text="Stop tracking attendance ?" inherits="GameFontNormal">-->
-<!--                    <Anchors>-->
-<!--                        <Anchor point="TOP">-->
-<!--                            <Offset>-->
-<!--                                <AbsDimension x="0" y="-8"/>-->
-<!--                            </Offset>-->
-<!--                        </Anchor>-->
-<!--                    </Anchors>-->
-<!--                </FontString>-->
-<!--            </Layer>-->
-<!--        </Layers>-->
-<!--        <Frames>-->
-<!--            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">-->
-<!--                <Size>-->
-<!--                    <AbsDimension x="90" y="20"/>-->
-<!--                </Size>-->
-<!--                <Anchors>-->
-<!--                    <Anchor point="TOPLEFT">-->
-<!--                        <Offset>-->
-<!--                            <AbsDimension x="10" y="-30"/>-->
-<!--                        </Offset>-->
-<!--                    </Anchor>-->
-<!--                </Anchors>-->
-<!--                <Scripts>-->
-<!--                    <OnClick>-->
-<!--                        this:GetParent():Hide()-->
-<!--                        VoteFrame.AttendanceTracker:Stop()-->
-<!--                    </OnClick>-->
-<!--                </Scripts>-->
-<!--            </Button>-->
-<!--            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">-->
-<!--                <Size>-->
-<!--                    <AbsDimension x="90" y="20"/>-->
-<!--                </Size>-->
-<!--                <Anchors>-->
-<!--                    <Anchor point="TOPRIGHT">-->
-<!--                        <Offset>-->
-<!--                            <AbsDimension x="-10" y="-30"/>-->
-<!--                        </Offset>-->
-<!--                    </Anchor>-->
-<!--                </Anchors>-->
-<!--                <Scripts>-->
-<!--                    <OnClick>-->
-<!--                        this:GetParent():Hide()-->
-<!--                    </OnClick>-->
-<!--                </Scripts>-->
-<!--            </Button>-->
-<!--        </Frames>-->
-<!--        <Scripts>-->
-<!--            <OnLoad>-->
-<!--                this:RegisterForDrag("LeftButton");-->
-<!--                this:SetMovable(1);-->
-<!--                this:SetUserPlaced(true);-->
-<!--            </OnLoad>-->
-<!--            <OnShow>-->
-<!--                this.startTime = GetTime();-->
-<!--                this.timeout = 15;-->
-<!--            </OnShow>-->
-<!--            <OnHide>-->
-<!--                PlaySound("igMainMenuOptionCheckBoxOff");-->
-<!--            </OnHide>-->
-<!--            <OnUpdate>-->
-<!--                Talc_AttendanceQueryWindow_OnUpdate()-->
-<!--            </OnUpdate>-->
-<!--            <OnDragStart>-->
-<!--                this:StartMoving();-->
-<!--                this.isMoving = true;-->
-<!--            </OnDragStart>-->
-<!--            <OnDragStop>-->
-<!--                this:StopMovingOrSizing();-->
-<!--                this.isMoving = false;-->
-<!--            </OnDragStop>-->
-<!--        </Scripts>-->
-<!--    </Frame>-->
+    <!--    <Frame name="TalcVoteAttendanceQueryStop" hidden="true" toplevel="true" parent="UIParent"-->
+    <!--           movable="true" enableMouse="true">-->
+    <!--        <Size>-->
+    <!--            <AbsDimension x="240" y="60"/>-->
+    <!--        </Size>-->
+    <!--        <Anchors>-->
+    <!--            <Anchor point="CENTER">-->
+    <!--                <Offset>-->
+    <!--                    <AbsDimension x="0" y="0"/>-->
+    <!--                </Offset>-->
+    <!--            </Anchor>-->
+    <!--        </Anchors>-->
+    <!--        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"-->
+    <!--                  edgeFile="Interface\addons\Talc\images\border-maw"-->
+    <!--                  tile="false">-->
+    <!--            <EdgeSize>-->
+    <!--                <AbsValue val="16"/>-->
+    <!--            </EdgeSize>-->
+    <!--            <TileSize>-->
+    <!--                <AbsValue val="1"/>-->
+    <!--            </TileSize>-->
+    <!--            <BackgroundInsets>-->
+    <!--                <AbsInset left="5" right="5" top="5" bottom="5"/>-->
+    <!--            </BackgroundInsets>-->
+    <!--        </Backdrop>-->
+    <!--        <Layers>-->
+    <!--            <Layer level="BACKGROUND">-->
+    <!--                <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleBackground">-->
+    <!--                    <Color r="0.24" g="0.45" b="0.84"/>-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
+    <!--                            <Offset x="2" y="-4"/>-->
+    <!--                        </Anchor>-->
+    <!--                        <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">-->
+    <!--                            <Offset x="-2" y="-24"/>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </Texture>-->
+    <!--                <Texture name="$parentBG1" file="Interface\DialogFrame\UI-DialogBox-Background">-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
+    <!--                            <Offset x="2" y="-24"/>-->
+    <!--                        </Anchor>-->
+    <!--                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">-->
+    <!--                            <Offset x="-2" y="5"/>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </Texture>-->
+    <!--            </Layer>-->
+    <!--            <Layer level="OVERLAY">-->
+    <!--                <FontString name="$parentTitle" text="Stop tracking attendance ?" inherits="GameFontNormal">-->
+    <!--                    <Anchors>-->
+    <!--                        <Anchor point="TOP">-->
+    <!--                            <Offset>-->
+    <!--                                <AbsDimension x="0" y="-8"/>-->
+    <!--                            </Offset>-->
+    <!--                        </Anchor>-->
+    <!--                    </Anchors>-->
+    <!--                </FontString>-->
+    <!--            </Layer>-->
+    <!--        </Layers>-->
+    <!--        <Frames>-->
+    <!--            <Button name="$parentYes" inherits="Talc_ButtonTemplate" text="Yes">-->
+    <!--                <Size>-->
+    <!--                    <AbsDimension x="90" y="20"/>-->
+    <!--                </Size>-->
+    <!--                <Anchors>-->
+    <!--                    <Anchor point="TOPLEFT">-->
+    <!--                        <Offset>-->
+    <!--                            <AbsDimension x="10" y="-30"/>-->
+    <!--                        </Offset>-->
+    <!--                    </Anchor>-->
+    <!--                </Anchors>-->
+    <!--                <Scripts>-->
+    <!--                    <OnClick>-->
+    <!--                        this:GetParent():Hide()-->
+    <!--                        VoteFrame.AttendanceTracker:Stop()-->
+    <!--                    </OnClick>-->
+    <!--                </Scripts>-->
+    <!--            </Button>-->
+    <!--            <Button name="$parentNo" inherits="Talc_ButtonTemplate" text="NO">-->
+    <!--                <Size>-->
+    <!--                    <AbsDimension x="90" y="20"/>-->
+    <!--                </Size>-->
+    <!--                <Anchors>-->
+    <!--                    <Anchor point="TOPRIGHT">-->
+    <!--                        <Offset>-->
+    <!--                            <AbsDimension x="-10" y="-30"/>-->
+    <!--                        </Offset>-->
+    <!--                    </Anchor>-->
+    <!--                </Anchors>-->
+    <!--                <Scripts>-->
+    <!--                    <OnClick>-->
+    <!--                        this:GetParent():Hide()-->
+    <!--                    </OnClick>-->
+    <!--                </Scripts>-->
+    <!--            </Button>-->
+    <!--        </Frames>-->
+    <!--        <Scripts>-->
+    <!--            <OnLoad>-->
+    <!--                this:RegisterForDrag("LeftButton");-->
+    <!--                this:SetMovable(1);-->
+    <!--                this:SetUserPlaced(true);-->
+    <!--            </OnLoad>-->
+    <!--            <OnShow>-->
+    <!--                this.startTime = GetTime();-->
+    <!--                this.timeout = 15;-->
+    <!--            </OnShow>-->
+    <!--            <OnHide>-->
+    <!--                PlaySound("igMainMenuOptionCheckBoxOff");-->
+    <!--            </OnHide>-->
+    <!--            <OnUpdate>-->
+    <!--                Talc_AttendanceQueryWindow_OnUpdate()-->
+    <!--            </OnUpdate>-->
+    <!--            <OnDragStart>-->
+    <!--                this:StartMoving();-->
+    <!--                this.isMoving = true;-->
+    <!--            </OnDragStart>-->
+    <!--            <OnDragStop>-->
+    <!--                this:StopMovingOrSizing();-->
+    <!--                this.isMoving = false;-->
+    <!--            </OnDragStop>-->
+    <!--        </Scripts>-->
+    <!--    </Frame>-->
 
 </Ui>

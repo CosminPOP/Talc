@@ -3306,7 +3306,7 @@ function VoteFrame:WelcomeFrame_OnShow()
     locked, autoApprove, pendingInvite, inviteStatus, inviteType, calendarType = CalendarGetEventInfo()
 
     if not title then
-        -- try to trigger callendar stuff
+        -- try to trigger calendar stuff
         for i = core.int(date('%d')), 31 do
             if CalendarGetDayEvent(0, i, 1) then
                 title, hour, minute, _, _, _, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
@@ -3316,6 +3316,19 @@ function VoteFrame:WelcomeFrame_OnShow()
                 today.day = day
                 weekday = date('%w', time(today)) + 1
                 break
+            end
+        end
+        if not title then
+            for i = 1, 31 do
+                if CalendarGetDayEvent(1, i, 1) then
+                    title, hour, minute, _, _, _, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
+                    day = i
+                    month = core.int(date('%m'))
+                    local today = date("*t")
+                    today.day = day
+                    weekday = date('%w', time(today)) + 1
+                    break
+                end
             end
         end
     end

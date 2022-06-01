@@ -98,7 +98,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 TALC_DB['NEED_PASSES'] = {}
             end
 
-
             if TALC_DB['NEED_FRAME_COLLAPSE'] == nil then
                 TALC_DB['NEED_FRAME_COLLAPSE'] = false
             end
@@ -228,10 +227,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             RollFrame:Init();
             BossFrame:Init();
             BossLootFrame:Init();
-
-            OpenCalendar();
-
-            print("TALC INIt")
 
             init = true
             return
