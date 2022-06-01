@@ -265,7 +265,7 @@ function TALCUtils:Init()
                         GameTooltip:AddLine('------- AWARD HISTORY -------')
                         GameTooltip:AddLine('No records.')
                     else
-                        GameTooltip:AddLine('------- AWARD HISTORY ('.. numItems ..') -------')
+                        GameTooltip:AddLine('------- AWARD HISTORY (' .. numItems .. ') -------')
 
                         for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
                             if core.find(core.lower(item['item']), core.lower(name)) then
@@ -789,7 +789,7 @@ function TALCUtils:Init()
         return GetZoneText()
     end
 
-    core.SendVersion = function ()
+    core.SendVersion = function()
         core.asend("TALCVersion=" .. core.addonVer, "PARTY")
         core.asend("TALCVersion=" .. core.addonVer, "GUILD")
         core.asend("TALCVersion=" .. core.addonVer, "RAID")
