@@ -113,9 +113,6 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if TALC_DB['VOTE_ROSTER'] == nil then
                 TALC_DB['VOTE_ROSTER'] = {}
             end
-            if TALC_DB['VOTE_ROSTER_GUILD_NAME'] == nil then
-                TALC_DB['VOTE_ROSTER_GUILD_NAME'] = ''
-            end
             if TALC_DB['VOTE_LOOT_HISTORY'] == nil then
                 TALC_DB['VOTE_LOOT_HISTORY'] = {}
             end

@@ -3294,11 +3294,6 @@ end
 ----------------------------------------------------
 
 function VoteFrame:WelcomeFrame_OnShow()
-    if GetGuildInfo('player') then
-        db['VOTE_ROSTER_GUILD_NAME'] = GetGuildInfo('player')
-    end
-
-
     local title, description, creator, eventType, repeatOption, maxSize, textureIndex,
     weekday, month, day, year, hour, minute, lockoutWeekday, lockoutMonth,
     lockoutDay, lockoutYear, lockoutHour, lockoutMinute, locked, autoApprove = CalendarGetEventInfo()
