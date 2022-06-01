@@ -199,9 +199,12 @@
             <Layer level="BACKGROUND">
                 <Texture name="$parentIcon" file="Interface\Icons\inv_staff_20">
                     <TexCoords left="0.075" right="0.925" top="0.075" bottom="0.925"/>
-                    <Size x="36" y="36"/>
+                    <Size x="34" y="34"/>
                     <Anchors>
                         <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="2" y="0"/>
+                            </Offset>
                         </Anchor>
                     </Anchors>
                 </Texture>
