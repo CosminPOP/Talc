@@ -44,6 +44,21 @@ function TALCUtils:Init()
         [6] = "Saturday"
     }
 
+    core.months = {
+        [1] = "January",
+        [2] = "February",
+        [3] = "March",
+        [4] = "April",
+        [5] = "May",
+        [6] = "June",
+        [7] = "July",
+        [8] = "August",
+        [9] = "September",
+        [10] = "October",
+        [11] = "November",
+        [12] = "December"
+    }
+
     core.classColors = {
         ["warrior"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "|cffc79c6e" },
         ["mage"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "|cff69ccf0" },
@@ -69,7 +84,7 @@ function TALCUtils:Init()
     }
 
     core.equipSlotsDetails = {
-        ["INVTYPE_HEAD"] = { slot = "Head", id = 1, canHaveEnchant = true, name = 'Head'},
+        ["INVTYPE_HEAD"] = { slot = "Head", id = 1, canHaveEnchant = true, name = 'Head' },
         ["INVTYPE_NECK"] = { slot = "Neck", id = 2, canHaveEnchant = false, name = 'Necklace' },
         ["INVTYPE_SHOULDER"] = { slot = "Shoulder", id = 3, canHaveEnchant = true, name = 'Shoulders' },
         ["INVTYPE_BODY"] = { slot = "Shirt", id = 4, canHaveEnchant = false, name = 'Shirt' },
@@ -139,6 +154,18 @@ function TALCUtils:Init()
         ["INVTYPE_BAG"] = 'Container', --	20,21,22,23',
         ["INVTYPE_QUIVER"] = 'Quiver', --	20,21,22,23',
     }
+
+    core.RGBToHex = function(r, g, b)
+        if r and not g and not b then
+            g = r.g
+            b = r.b
+            r = r.r
+        end
+        r = r <= 1 and r >= 0 and r or 0
+        g = g <= 1 and g >= 0 and g or 0
+        b = b <= 1 and b >= 0 and b or 0
+        return "|cff" .. core.format("%02x%02x%02x", r * 255, g * 255, b * 255)
+    end
 
     core.subFind = function(source, code)
         return core.sub(source, 1, core.len(code)) == code

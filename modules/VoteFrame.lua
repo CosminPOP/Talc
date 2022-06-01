@@ -1105,7 +1105,7 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
                 local n = GetRaidRosterInfo(i)
                 if n == playerName then
                     TalcVoteFrameRaiderDetailsFrameInspectGearFrameModelFrame:SetUnit('raid' .. i)
-                    TalcVoteFrameRaiderDetailsFrameInspectGearFrameModelFrame:SetPosition(-0.5,0,0)
+                    TalcVoteFrameRaiderDetailsFrameInspectGearFrameModelFrame:SetPosition(-0.5, 0, 0)
                     break
                 end
             end
@@ -1116,7 +1116,7 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
                         core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
-                        ((gearScore >= 0) and "|rGearscore: " .. gearScore or "" ))
+                        ((gearScore >= 0) and "|rGearscore: " .. gearScore or ""))
 
         for index in next, self.lootHistoryFrames do
             self.lootHistoryFrames[index]:Hide()
@@ -2741,7 +2741,6 @@ function VoteFrame:SetCurrentVotedItem(id)
         TalcVoteFrameVotedItemType:Show()
     end
 
-
     if core.find(t2, 'Quest', 1, true) then
         if tokenRewards[itemID] and tokenRewards[itemID].rewards then
             local _, _, qq, level = GetItemInfo(tokenRewards[itemID].rewards[1])
@@ -3172,7 +3171,6 @@ function VoteFrame:CheckAssists()
     TalcVoteFrameRLWindowFrameTab1ContentsOfficer:SetText('Officer(' .. core.n(db['VOTE_ROSTER']) .. ')')
 end
 
-
 function VoteFrame:SaveLootButton(button, value)
     db['VOTE_CONFIG']['NeedButtons'][button] = value
 end
@@ -3295,29 +3293,44 @@ end
 
 function VoteFrame:WelcomeFrame_OnShow()
     local title, description, creator, eventType, repeatOption, maxSize, textureIndex,
-    weekday, month, day, year, hour, minute, lockoutWeekday, lockoutMonth,
-    lockoutDay, lockoutYear, lockoutHour, lockoutMinute, locked, autoApprove = CalendarGetEventInfo()
+    weekday, month, day, year, hour, minute,
+    lockoutWeekday, lockoutMonth, lockoutDay, lockoutYear, lockoutHour, lockoutMinute,
+    locked, autoApprove, pendingInvite, inviteStatus, inviteType, calendarType = CalendarGetEventInfo()
+
+    local eventColor = core.RGBToHex(NORMAL_FONT_COLOR)
+
+    if inviteStatus == CALENDAR_INVITESTATUS_ACCEPTED or inviteStatus == CALENDAR_INVITESTATUS_CONFIRMED or
+        inviteStatus == CALENDAR_INVITESTATUS_SIGNEDUP then
+        eventColor = core.RGBToHex(GREEN_FONT_COLOR)
+    elseif inviteStatus == CALENDAR_INVITESTATUS_STANDBY or inviteStatus == CALENDAR_INVITESTATUS_TENTATIVE then
+        eventColor = core.RGBToHex(ORANGE_FONT_COLOR)
+    end
 
     local nextEventText = ''
 
     if title and description then
-
         if minute < 10 then
             minute = '0' .. minute
         end
-
         if hour < 10 then
             hour = '0' .. hour
         end
 
-        nextEventText = 'Your next event is ' .. ITEM_QUALITY_COLORS[5].hex .. title ..
-                '|r, '
+        nextEventText = 'Your next event is ' .. eventColor .. title .. '|r, '
         if month == core.int(date('%m')) and
                 year == 2000 + core.int(date('%y')) and
                 day == core.int(date('%d')) then
             nextEventText = nextEventText .. "today at " .. hour .. ":" .. minute
         else
-            nextEventText = nextEventText .. core.dow[weekday - 1] .. " at " .. hour .. ":" .. minute
+            if day == 1 or day == 21 or day == 31 then
+                day = day .. "st"
+            elseif day == 2 or day == 22 then
+                day = day .. "nd"
+            else
+                day = day .. "th"
+            end
+            month = core.months[month]
+            nextEventText = nextEventText .. core.dow[weekday - 1] .. " " .. day .. " of " .. month .. "  at " .. hour .. ":" .. minute
         end
     else
         nextEventText = 'You have no upcoming events.'
