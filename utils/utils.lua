@@ -749,10 +749,6 @@ function TALCUtils:Init()
         return iter
     end
 
-    core.sortedLootHistory = function()
-        return core.sortTableBy(db['VOTE_LOOT_HISTORY'], 'timestamp')
-    end
-
     core.SaveItemLocation = function(lootText)
 
         local _, _, _, raidString = core.instanceInfo()
