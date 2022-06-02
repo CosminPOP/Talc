@@ -91,6 +91,8 @@ function VoteFrame:Init()
     VoteFrame.periodicSync.plus = 30 -- core.floor(3600 / core.min(core.periodicSyncMaxItems, core.n(db['VOTE_LOOT_HISTORY'])))
     VoteFrame.periodicSync:Show()
 
+    OpenCalendar()
+
     self:ResetVars()
 end
 
@@ -3305,29 +3307,47 @@ function VoteFrame:WelcomeFrame_OnShow()
     lockoutWeekday, lockoutMonth, lockoutDay, lockoutYear, lockoutHour, lockoutMinute,
     locked, autoApprove, pendingInvite, inviteStatus, inviteType, calendarType = CalendarGetEventInfo()
 
+    -- skip check past events
+    if title and month == core.int(date('%m')) and day < core.int(date('%d')) then
+        title = nil
+    end
+    if title and month == core.int(date('%m')) and day == core.int(date('%d')) then
+        if hour < core.int(date('%h')) then
+            title = nil
+        end
+    end
+
     if not title then
         -- try to trigger calendar stuff
         for i = core.int(date('%d')), 31 do
             if CalendarGetDayEvent(0, i, 1) then
-                title, hour, minute, _, _, _, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
-                day = i
-                month = core.int(date('%m'))
-                local today = date("*t")
-                today.day = day
-                weekday = date('%w', time(today)) + 1
-                break
-            end
-        end
-        if not title then
-            for i = 1, 31 do
-                if CalendarGetDayEvent(1, i, 1) then
-                    title, hour, minute, _, _, _, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
+                title, hour, minute, calendarType, _, eventType, _, _, inviteStatus = CalendarGetDayEvent(0, i, 1)
+                if calendarType ~= 'RAID_LOCKOUT' and calendarType ~= 'HOLIDAY' then
                     day = i
                     month = core.int(date('%m'))
                     local today = date("*t")
                     today.day = day
                     weekday = date('%w', time(today)) + 1
                     break
+                else
+                    title = nil
+                end
+            end
+        end
+        if not title then
+            for i = 1, 31 do
+                if CalendarGetDayEvent(1, i, 1) then
+                    title, hour, minute, calendarType, _, eventType, _, _, inviteStatus = CalendarGetDayEvent(1, i, 1)
+                    if calendarType ~= 'RAID_LOCKOUT' and calendarType ~= 'HOLIDAY' then
+                        day = i
+                        month = core.int(date('%m'))
+                        local today = date("*t")
+                        today.day = day
+                        weekday = date('%w', time(today)) + 1
+                        break
+                    else
+                        title = nil
+                    end
                 end
             end
         end
