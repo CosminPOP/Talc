@@ -1,8 +1,7 @@
 # Talc - Thunder Ale Loot Companion
 _WoW 3.3.5 enGB/enUS_
 
-![image](https://user-images.githubusercontent.com/7255825/171423054-1f2df548-6f85-4625-b32a-776789484a3b.png)
-
+![image](https://user-images.githubusercontent.com/7255825/171659476-4d1d8e4c-3a3c-42df-a7f5-3b3374620df9.png)
 
 ## Features
 
@@ -22,8 +21,7 @@ Raid leader can set which loot pick options from:
 
 ### Settings
 
-![image](https://user-images.githubusercontent.com/7255825/171359860-aef2f8b3-ff10-4eb5-9628-97001cfa5cfd.png)
-
+![image](https://user-images.githubusercontent.com/7255825/171659726-cc97630f-6d10-47b9-9900-27d8c2012731.png)
 
 Players can set if sounds play (and volume for some) on different events, move and enable or disable frames.<br>
 In this window players can also Purge local Loot History.
@@ -66,15 +64,15 @@ Shows the loot that dropped before the master looter sends it for picks.
 
 ### Welcome Screen
   
-![image](https://user-images.githubusercontent.com/7255825/171423110-66cb34d0-c690-479f-95ac-a3a207479ff9.png)
-
+![image](https://user-images.githubusercontent.com/7255825/171659527-cc4e4d95-a5af-4f4b-a789-d2d3bfcdeef1.png)
 
   
 Displays latest awarded loot, grouped by date allowing players to see items' history and other players' loot history.
 
 ### Wishlist
 
-![image](https://user-images.githubusercontent.com/7255825/171359761-56481825-1802-4103-a5d8-0d62d3956a27.png)
+![image](https://user-images.githubusercontent.com/7255825/171659638-e196d297-4760-417d-abe2-52fb0a8cbb11.png)
+
   
 Raiders can add up to 8 items in their wishlist. 
 When an item from the list drops the frame will glow letting the player know its a wishlist item and
