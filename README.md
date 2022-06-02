@@ -43,10 +43,10 @@ Shows a toast and plays a sound when two or more players have the same number of
 
 ### Need Frame
   
-  ![image](https://user-images.githubusercontent.com/7255825/171360096-5c02e31c-31e2-4754-aa9b-ff8dc2c8e401.png)
+![image](https://user-images.githubusercontent.com/7255825/171360096-5c02e31c-31e2-4754-aa9b-ff8dc2c8e401.png)
 
-  
-Shows a toast with the loot the master looter sends to the raid allowing players to pick from the set options.
+Shows a toast with the loot the master looter sends to the raid allowing players to pick from the set options.<Br>
+Shift-clicking the pass button will add an item to the Need Blacklist, hiding it next time it drops.
 
 ### Boss defeated Frame
   
@@ -74,9 +74,10 @@ Displays latest awarded loot, grouped by date allowing players to see items' his
 ![image](https://user-images.githubusercontent.com/7255825/171659638-e196d297-4760-417d-abe2-52fb0a8cbb11.png)
 
   
-Raiders can add up to 8 items in their wishlist. 
+Raiders can add up to 8 items in their wishlist.<br>
 When an item from the list drops the frame will glow letting the player know its a wishlist item and
-officers will see that that player had this item in his wishlist.
+officers will see that that player had this item in his wishlist.<br>
+You can add items by ID or DB website url, or, if you have Atlas Loot addon you can search by name.
 
 
 ## Slash commands
