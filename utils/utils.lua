@@ -795,11 +795,7 @@ function TALCUtils:Init()
 end
 
 function talc_print(a)
-    if a == nil then
-        talc_error(time() .. '|r attempt to print a nil value.')
-        return
-    end
-    print("|cff69ccf0[TALC] |r" .. a)
+    print("|cff69ccf0[TALC]: |r" .. core.tostring(a))
 end
 
 function talc_error(a)
