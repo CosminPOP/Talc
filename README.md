@@ -5,25 +5,29 @@ _WoW 3.3.5 enGB/enUS_
 
 ## Features
 
-### 10 max Officers 
+### Up to 10 Voting Officers 
 Officers will be able to vote on loot.
 
 ### Raid leader options
 
 #### Pick Buttons
 Raid leader can set which loot pick options from:
-- BIS
-- MS
-- OS
-- TRANSMOG
-#### Screenshot Awarded loot
+- BIS - Best In Slot
+- MS - Main Spec upgrade
+- OS - Off-spec
+- TRANSMOG - Cosmetic
+ 
+#### Screenshot Awarded Loot
+Addon will take a screenshot every time loot is distributed.
+
 #### Sync Loot History
+Manually send all recorded loot history to everybody in the raid.
 
 ### Settings
 
 ![image](https://user-images.githubusercontent.com/7255825/171659726-cc97630f-6d10-47b9-9900-27d8c2012731.png)
 
-Players can set if sounds play (and volume for some) on different events, move and enable or disable frames.<br>
+Players can set if sounds play (and at high/low volume for some) on different events, move and enable or disable frames.<br>
 In this window players can also Purge local Loot History.
 
 ### Win Frame
