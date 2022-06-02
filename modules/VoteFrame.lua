@@ -1439,7 +1439,7 @@ function VoteFrame.tradableItemsCheck:IsTradable(bag, slot)
     TradableItemsTooltip:SetOwner(UIParent, "ANCHOR_NONE")
     TradableItemsTooltip:SetBagItem(bag, slot)
 
-    local format = REFUND_TIME_REMAINING --BIND_TRADE_TIME_REMAINING
+    local format = BIND_TRADE_TIME_REMAINING --REFUND_TIME_REMAINING
 
     for i = 1, TradableItemsTooltip:NumLines() do
         if core.find(_G["TradableItemsTooltipTextLeft" .. i]:GetText(), core.format(format, ".*")) then

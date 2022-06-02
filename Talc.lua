@@ -276,9 +276,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             end
 
             if event == "PLAYER_ENTERING_WORLD" then
-                --- restart tradableItemsCheck on loading screen
                 VoteFrame.tradableItemsCheck:Hide()
-                VoteFrame.tradableItemsCheck:Show()
+                if core.isRaidLeader() and TALC_DB['VOTE_ENABLED'] then
+                    VoteFrame.tradableItemsCheck:Show()
+                end
 
                 core.SendVersion()
             end
