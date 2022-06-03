@@ -24,7 +24,7 @@ Raid leader can set which loot pick options from:
 - BIS - Best In Slot
 - MS - Main Spec upgrade
 - OS - Off-spec
-- TRANSMOG - Cosmetic
+- XMOG - Cosmetic/Transmog
  
 #### Screenshot Awarded Loot
 Addon will take a screenshot every time loot is distributed.
