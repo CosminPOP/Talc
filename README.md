@@ -8,7 +8,16 @@ _WoW 3.3.5 enGB/enUS_
 ### Up to 10 Voting Officers 
 Officers will be able to vote on loot.
 
-### Raid leader options
+### Raid Leader's extra frame
+
+![image](https://user-images.githubusercontent.com/7255825/171796513-689fe1bd-8ffb-4776-87e8-746e4c4a0d0a.png)
+Contains utility buttons to broadcast boss loot, reset voting after loot is distributed, query the raid to see people with the addon, test addon to show the raid how the loot will pop up, ability to drag loot from inventory to be rolled and button to open Raid Leader's Options.
+
+### Raid Leader Options
+
+![image](https://user-images.githubusercontent.com/7255825/171796760-241f6287-d501-4b23-873b-66ab4c28b93f.png)
+
+![image](https://user-images.githubusercontent.com/7255825/171796787-2bc2d94b-f068-482b-8ba3-14f5ded19db4.png)
 
 #### Pick Buttons
 Raid leader can set which loot pick options from:
