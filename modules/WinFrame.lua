@@ -42,7 +42,7 @@ function WinFrame:HandleLoot(arg1)
         return
     end
     if core.find(arg1, 'You create', 1, true) then
-        local recEx = core.split(' create:', arg1)
+        local recEx = core.split(': ', arg1)
         if recEx[1] then
             self:AddWonItem(recEx[2], recEx[1])
         end
