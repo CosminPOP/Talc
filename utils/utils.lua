@@ -792,6 +792,24 @@ function TALCUtils:Init()
         core.asend("TALCVersion=" .. core.addonVer, "BATTLEGROUND")
     end
 
+    core.getAverageItemLevel = function()
+        local t, c, u = 0, 0, "player"
+        for i = 1, 18 do
+            if i ~= 4 then
+                local k = GetInventoryItemLink(u, i)
+                if k then
+                    local _, _, _, l = GetItemInfo(k)
+                    t = t + l
+                    c = c + 1
+                end
+            end
+        end
+        if c > 0 then
+            return math.floor(t / c)
+        end
+        return
+    end
+
 end
 
 function talc_print(a)

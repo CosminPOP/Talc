@@ -3421,6 +3421,8 @@ function VoteFrame:WelcomeFrame_OnShow()
     TalcVoteFrameWelcomeFrameItemHistoryScrollFrame:Hide()
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame:Hide()
 
+    TalcVoteFrameWelcomeFrameTitle:SetText("Welcome (Average Item Level: " .. core.getAverageItemLevel() .. ")")
+
     --if db['ATTENDANCE_TRACKING'].enabled then
     --    if db['ATTENDANCE_TRACKING'].started then
     --        TalcVoteFrameWelcomeFrameAttendanceStopButton:Show()
