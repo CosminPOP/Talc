@@ -211,6 +211,24 @@ function VoteFrame:HandleSync(_, t, _, sender)
         talc_debug(sender .. ' says: ' .. t)
     end
 
+    if core.subFind(t, 'SendAverageItemLevel=') then
+        core.wsend("ALERT", "MyAverageItemLevel=" .. core.getAverageItemLevel(), sender)
+        return
+    end
+
+    if core.subFind(t, 'MyAverageItemLevel=') then
+        local ilEx = core.split('=', t)
+        local ilColor = ITEM_QUALITY_COLORS[4].hex
+
+        if core.int(ilEx[2]) < 140 then
+            ilColor = ITEM_QUALITY_COLORS[2].hex
+        elseif core.int(ilEx[2]) < 200 then
+            ilColor = ITEM_QUALITY_COLORS[3].hex
+        end
+        talc_print(sender .. "'s average item level is " .. ilColor .. ilEx[2])
+        return
+    end
+
     if core.subFind(t, 'CurrentBoss=') then
         if not core.canVote() then
             return

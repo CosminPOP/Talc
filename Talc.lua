@@ -507,6 +507,38 @@ TALC:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
 SLASH_TALC1 = "/talc"
 SlashCmdList["TALC"] = function(cmd)
     if cmd then
+        if core.sub(cmd, 1, 3) == 'il' then
+
+            local il = 0
+            local ilColor = ITEM_QUALITY_COLORS[4].hex
+            local targetName = core.me
+
+            if UnitExists("target") then
+
+                if CheckInteractDistance("target", 1) then
+                    targetName = UnitName("target")
+                    il = core.getAverageItemLevel("target")
+                else
+                    core.wsend("ALERT", "SendAverageItemLevel=", UnitName("target"))
+                    return
+                end
+            else
+                il = core.getAverageItemLevel()
+            end
+
+            if il < 140 then
+                ilColor = ITEM_QUALITY_COLORS[2].hex
+            elseif il < 200 then
+                ilColor = ITEM_QUALITY_COLORS[3].hex
+            end
+
+            if UnitName('target') == core.me then
+                talc_print(UnitName('target') .. "'s average item level is " .. ilColor .. il)
+            else
+                talc_print("Your average item level is " .. ilColor .. il)
+            end
+
+        end
         if core.sub(cmd, 1, 3) == 'set' then
             local setEx = core.split(' ', cmd)
             if setEx[2] and setEx[3] then
