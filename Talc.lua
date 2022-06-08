@@ -514,8 +514,8 @@ SlashCmdList["TALC"] = function(cmd)
             local targetName = core.me
 
             if UnitExists("target") then
-
                 if CheckInteractDistance("target", 1) then
+                    InspectUnit("target")
                     targetName = UnitName("target")
                     il = core.getAverageItemLevel("target")
                 else
@@ -532,8 +532,8 @@ SlashCmdList["TALC"] = function(cmd)
                 ilColor = ITEM_QUALITY_COLORS[3].hex
             end
 
-            if UnitName('target') == core.me then
-                talc_print(UnitName('target') .. "'s average item level is " .. ilColor .. il)
+            if targetName ~= core.me then
+                talc_print(targetName .. "'s average item level is " .. ilColor .. il)
             else
                 talc_print("Your average item level is " .. ilColor .. il)
             end
