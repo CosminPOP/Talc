@@ -3260,6 +3260,13 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
 
         local i = 0
         for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+
+            -- dont send old testing items
+            if timestamp < 1654672311 then
+                core.wipe(db['VOTE_LOOT_HISTORY'])
+                return
+            end
+
             i = i + 1
             if i == db['PERIODIC_SYNC_INDEX'] then
                 talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
