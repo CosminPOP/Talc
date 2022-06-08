@@ -112,7 +112,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentGearScoreLabel" inherits="GameFontHighlight" text="Gear Score">
+                <FontString name="$parentItemLevelLabel" inherits="GameFontHighlight" text="Item Level">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>

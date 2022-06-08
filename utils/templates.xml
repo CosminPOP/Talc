@@ -788,7 +788,7 @@
                     </Anchors>
                 </FontString>
 
-                <FontString name="$parentGearScore" inherits="GameFontNormal" text="[gearscore]">
+                <FontString name="$parentItemLevel" inherits="GameFontNormal" text="[itemLevel]">
                     <Anchors>
                         <Anchor point="LEFT">
                             <Offset>

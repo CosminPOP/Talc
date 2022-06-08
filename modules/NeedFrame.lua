@@ -500,14 +500,6 @@ function NeedFrame:NeedClick(need, f)
         return false
     end
 
-    local gearscore = 0
-    for i = 0, 18 do
-        if GetInventoryItemLink("player", i) and i ~= 4 then
-            local _, _, _, itemLevel = GetItemInfo(GetInventoryItemLink("player", i));
-            gearscore = gearscore + itemLevel
-        end
-    end
-
     local myItem = { '0', '0', '0', '0' }
 
     local _, _, itemLink = core.find(self.itemFrames[id].link, "(item:%d+:%d+:%d+:%d+)");
@@ -625,7 +617,7 @@ function NeedFrame:NeedClick(need, f)
     end
 
     local inWishlist = self.itemFrames[id].inWishlist and '1' or '0'
-    core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. gearscore .. "=" .. inWishlist)
+    core.asend(need .. "=" .. id .. "=" .. myItem[1] .. "=" .. myItem[2] .. "=" .. myItem[3] .. "=" .. myItem[4] .. "=" .. core.getAverageItemLevel() .. "=" .. inWishlist)
 
     self:FadeOutFrame(frame)
 end

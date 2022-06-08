@@ -793,21 +793,21 @@ function TALCUtils:Init()
     end
 
     core.getAverageItemLevel = function()
-        local t, c, u = 0, 0, "player"
+        local itemLevel, numItems = 0, 0
         for i = 1, 18 do
-            if i ~= 4 then
-                local k = GetInventoryItemLink(u, i)
-                if k then
-                    local _, _, _, l = GetItemInfo(k)
-                    t = t + l
-                    c = c + 1
+            if i ~= 4 then -- skip shirt
+                local itemLink = GetInventoryItemLink("player", i)
+                if itemLink then
+                    local _, _, _, l = GetItemInfo(itemLink)
+                    itemLevel = itemLevel + l
+                    numItems = numItems + 1
                 end
             end
         end
-        if c > 0 then
-            return math.floor(t / c)
+        if numItems > 0 then
+            return math.floor(itemLevel / numItems)
         end
-        return
+        return 0
     end
 
 end

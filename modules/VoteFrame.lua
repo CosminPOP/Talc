@@ -585,7 +585,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
             ci4 = needEx[6],
             votes = 0,
             roll = 0,
-            gearscore = core.int(needEx[7]),
+            itemLevel = core.int(needEx[7]),
             inWishlist = needEx[8] == '1'
         })
 
@@ -1113,12 +1113,12 @@ function VoteFrame:RaiderDetailsTab_OnClick(tab, playerName)
             end
         end
 
-        local _, _, _, _, _, _, _, _, _, _, gearScore = self:GetPlayerInfo(playerName)
+        local _, _, _, _, _, _, _, _, _, _, itemLevel = self:GetPlayerInfo(playerName)
 
         TalcVoteFrameRaiderDetailsFrameInspectGearFrameNameClassGS:SetText(
                 core.classColors[core.getPlayerClass(playerName)].colorStr .. playerName .. "\n" ..
                         core.classColors[core.getPlayerClass(playerName)].colorStr .. core.ucFirst(core.getPlayerClass(playerName)) .. "\n" ..
-                        ((gearScore >= 0) and "|rGearscore: " .. gearScore or ""))
+                        ((itemLevel >= 0) and "|rItem Level: " .. itemLevel or ""))
 
         for index in next, self.lootHistoryFrames do
             self.lootHistoryFrames[index]:Hide()
@@ -1481,7 +1481,7 @@ TalcVoteFrameVotingFrame:SetScript("OnHide", function()
     TalcVoteFrameTimeLeftBar:Hide()
     TalcVoteFrameLabelsBackground:Hide()
     TalcVoteFrameNameLabel:Hide()
-    TalcVoteFrameGearScoreLabel:Hide()
+    TalcVoteFrameItemLevelLabel:Hide()
     TalcVoteFramePickLabel:Hide()
     TalcVoteFrameReplacesLabel:Hide()
     TalcVoteFrameRollLabel:Hide()
@@ -1498,7 +1498,7 @@ TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameTimeLeftBar:Show()
     TalcVoteFrameLabelsBackground:Show()
     TalcVoteFrameNameLabel:Show()
-    TalcVoteFrameGearScoreLabel:Show()
+    TalcVoteFrameItemLevelLabel:Show()
     TalcVoteFramePickLabel:Show()
     TalcVoteFrameReplacesLabel:Show()
     TalcVoteFrameRollLabel:Show()
@@ -2196,12 +2196,12 @@ function VoteFrame:VoteFrameListUpdate()
     local index = 0
 
     -- calc max gs
-    local maxGS = 0
+    local maxIL = 0
     for i in next, self.currentPlayersList do
         if self:GetPlayerInfo(i) then
-            local _, _, _, _, _, _, _, _, _, _, gearscore = self:GetPlayerInfo(i)
-            if gearscore > maxGS then
-                maxGS = gearscore
+            local _, _, _, _, _, _, _, _, _, _, itemLevel = self:GetPlayerInfo(i)
+            if itemLevel > maxIL then
+                maxIL = itemLevel
             end
         end
     end
@@ -2230,7 +2230,7 @@ function VoteFrame:VoteFrameListUpdate()
 
                 local ratio = TalcVoteFrame:GetWidth() / 600
                 _G[frame .. 'Name']:SetPoint("LEFT", _G[frame], core.floor(8 * ratio) + 20, 0)
-                _G[frame .. 'GearScore']:SetPoint("LEFT", _G[frame], core.floor(100 * ratio) - 5, 0)
+                _G[frame .. 'ItemLevel']:SetPoint("LEFT", _G[frame], core.floor(100 * ratio) - 5, 0)
                 _G[frame .. 'Need']:SetPoint("LEFT", _G[frame], core.floor(165 * ratio) - 5, 0)
                 _G[frame .. 'ReplacesItem1']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5, -2)
                 _G[frame .. 'ReplacesItem2']:SetPoint("TOPLEFT", _G[frame], core.floor(225 * ratio) - 5 + 21, -2)
@@ -2245,7 +2245,7 @@ function VoteFrame:VoteFrameListUpdate()
                 _G[frame]:Show()
 
                 local currentItem = {}
-                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, gearscore, inWishlist = self:GetPlayerInfo(index)
+                local _, name, need, votes, ci1, ci2, ci3, ci4, roll, _, itemLevel, inWishlist = self:GetPlayerInfo(index)
                 currentItem[1] = ci1
                 currentItem[2] = ci2
                 currentItem[3] = ci3
@@ -2253,7 +2253,7 @@ function VoteFrame:VoteFrameListUpdate()
 
                 _G[frame].name = name
                 _G[frame].need = need
-                _G[frame].gearscore = gearscore
+                _G[frame].itemLevel = itemLevel
 
                 local class = core.getPlayerClass(name)
                 local color = core.classColors[class]
@@ -2266,20 +2266,20 @@ function VoteFrame:VoteFrameListUpdate()
                     _G[frame .. 'Wishlist']:Show()
                 end
 
-                -- color gs
-                local GSColor = '|cff0be700'
-                local GSPerc = core.floor(gearscore * 100 / maxGS)
-                if GSPerc < 75 and GSPerc >= 50 then
-                    GSColor = '|cffffb400'
-                elseif GSPerc < 50 then
-                    GSColor = '|cffc80500'
+                -- color item level
+                local ILColor = '|cff0be700'
+                local ILPerc = core.floor(itemLevel * 100 / maxIL)
+                if ILPerc < 75 and ILPerc >= 50 then
+                    ILColor = '|cffffb400'
+                elseif ILPerc < 50 then
+                    ILColor = '|cffc80500'
                 end
 
-                _G[frame .. 'GearScore']:SetText(GSColor .. gearscore)
-                if gearscore >= 0 then
-                    _G[frame .. 'GearScore']:Show()
+                _G[frame .. 'ItemLevel']:SetText(ILColor .. itemLevel)
+                if itemLevel >= 0 then
+                    _G[frame .. 'ItemLevel']:Show()
                 else
-                    _G[frame .. 'GearScore']:Hide()
+                    _G[frame .. 'ItemLevel']:Hide()
                 end
                 _G[frame .. 'RollPass']:Hide()
 
@@ -2981,7 +2981,7 @@ VoteFrame.LootCountdown:SetScript("OnUpdate", function()
                                     ci1 = '0', ci2 = '0', ci3 = '0', ci4 = '0',
                                     votes = 0,
                                     roll = 0,
-                                    gearscore = -1,
+                                    itemLevel = -1,
                                     inWishlist = false
                                 })
 
@@ -4270,7 +4270,7 @@ function VoteFrame:Resized()
 
     local ratio = TalcVoteFrame:GetWidth() / 600
     TalcVoteFrameNameLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(8 * ratio), -92)
-    TalcVoteFrameGearScoreLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(100 * ratio), -92)
+    TalcVoteFrameItemLevelLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(100 * ratio), -92)
     TalcVoteFramePickLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(165 * ratio), -92)
     TalcVoteFrameReplacesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(225 * ratio), -92)
     TalcVoteFrameRollLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(285 * ratio), -92)
@@ -4318,17 +4318,17 @@ function VoteFrame:SetTitle(to)
 end
 
 function VoteFrame:GetPlayerInfo(playerIndexOrName)
-    --returns itemIndex, name, need, votes, ci1, ci2, ci3, ci4, roll, k, gearscore, inWishlist
+    --returns itemIndex, name, need, votes, ci1, ci2, ci3, ci4, roll, k, itemLevel, inWishlist
     if core.type(playerIndexOrName) == 'string' then
         for k, player in next, self.currentPlayersList do
             if player.name == playerIndexOrName then
-                return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, k, player.gearscore, player.inWishlist
+                return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, k, player.itemLevel, player.inWishlist
             end
         end
     end
     local player = self.currentPlayersList[playerIndexOrName]
     if player then
-        return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, playerIndexOrName, player.gearscore, player.inWishlist
+        return player.itemIndex, player.name, player.need, player.votes, player.ci1, player.ci2, player.ci3, player.ci4, player.roll, playerIndexOrName, player.itemLevel, player.inWishlist
     else
         return false
     end
