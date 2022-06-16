@@ -859,6 +859,12 @@ end
 --- Minimap
 ----------------------------------------------------
 
+function VoteFrame:HideMinimapButton()
+    Talc_Minimap:Hide()
+    TALC_DB['MINIMAP_BUTTON'] = 'hidden'
+    talc_print("Minimap Button hidden. Type /talc minimap to restore it.")
+end
+
 function Talc_BuildMinimapMenu()
     local separator = {}
     separator.text = ""
@@ -898,6 +904,15 @@ function Talc_BuildMinimapMenu()
         VoteFrame:ShowScreen("Settings")
     end
     UIDropDownMenu_AddButton(menu_settings)
+
+    local menu_hide = {}
+    menu_hide.text = "Hide Minimap Button"
+    menu_hide.isTitle = false
+    menu_hide.justifyH = 'LEFT'
+    menu_hide.func = function()
+        VoteFrame:HideMinimapButton()
+    end
+    UIDropDownMenu_AddButton(menu_hide)
     UIDropDownMenu_AddButton(separator)
 
     local close = {}
@@ -4416,5 +4431,3 @@ PlaySound("igMainMenuOptionCheckBoxOff")
 PlaySound("igCharacterInfoTab")
 PlaySound("igMainMenuClose")
 ]]--
-
---/run t=time(date("!*t")) l=date("!*t", t) tu=date("*t") tzDH=l.hour-tu.hour+(tu.isdst and 1 or 0) tzDM=l.min-tu.min DEFAULT_CHAT_FRAME:AddMessage(date("%c",t+((date("%H",t)-tu.hour)*3600+(date("%M",t)-tu.min)*60)-(tzDH*3600+tzDM*60)))

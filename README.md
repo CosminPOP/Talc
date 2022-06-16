@@ -94,6 +94,8 @@ You can add items by ID or DB website url, or, if you have Atlas Loot addon you 
 
 
 ## Slash commands
+`/talc minimap` - Restores hidden minimap button<BR><Br>
+
 `/talc set enchanter [name]` - Sets raid enchanter for disenchanting items<BR>
 `/talc search [player/item]` - Search the loot history for players or items<Br>
 `/talc scale [0.5-2]` - Scales the main window<Br>

@@ -154,6 +154,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 }
             end
 
+            if TALC_DB['MINIMAP_BUTTON'] == nil then
+                TALC_DB['MINIMAP_BUTTON'] = 'visible'
+            end
+
             TALCUtils:Init();
 
             --- pre cache
@@ -168,6 +172,12 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             --- update UI
             TalcNeedFrame:SetScale(TALC_DB['NEED_SCALE'])
+
+            if TALC_DB['MINIMAP_BUTTON'] == 'visible' then
+                Talc_Minimap:Show()
+            else
+                Talc_Minimap:Hide()
+            end
 
             TalcVoteFrameRLWindowFrameTab2ContentsBISButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['BIS']);
             TalcVoteFrameRLWindowFrameTab2ContentsMSButton:SetChecked(TALC_DB['VOTE_CONFIG']['NeedButtons']['MS']);
@@ -514,6 +524,10 @@ TALC:RegisterEvent("PLAYER_REGEN_DISABLED")
 SLASH_TALC1 = "/talc"
 SlashCmdList["TALC"] = function(cmd)
     if cmd then
+        if core.sub(cmd, 1, 7) == 'minimap' then
+            Talc_Minimap:Show()
+            TALC_DB['MINIMAP_BUTTON'] = 'visible'
+        end
         if core.sub(cmd, 1, 3) == 'il' then
 
             local il = 0
