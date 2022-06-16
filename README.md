@@ -1,5 +1,5 @@
 # Talc - Thunder Ale Loot Companion
-v3.0.0.1 - _WoW 3.3.5 enGB/enUS_
+v3.0.0.2 - _WoW 3.3.5 enGB/enUS_
 
 ![image](https://user-images.githubusercontent.com/7255825/171659476-4d1d8e4c-3a3c-42df-a7f5-3b3374620df9.png)
 
