@@ -372,9 +372,11 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                             local _, _, itemLink = core.find(GetLootSlotLink(i), "(item:%d+:%d+:%d+:%d+)");
                             local _, _, quality = GetItemInfo(itemLink)
                             if quality >= 4 then
-                                core.SaveItemLocation(itemLink)
                                 local _, name = GetLootSlotInfo(i)
-                                if not core.find(name, "Emblem of", 1, true) then
+                                if not core.find(name, "Emblem of", 1, true)
+                                        and not core.find(name, 'Abyss Crystal')
+                                        and not core.find(name, 'Void Crystal') then
+                                    core.SaveItemLocation(itemLink)
                                     core.insert(bossItems, itemLink)
                                 end
                             end
@@ -482,6 +484,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                 core.SaveItemLocation(arg1)
                 return
             end
+
+            if event == 'PLAYER_REGEN_DISABLED' then
+                BossLootFrame:ResetVars()
+            end
         end
     end
 end)
@@ -498,6 +504,7 @@ TALC:RegisterEvent("CHAT_MSG_LOOT")
 TALC:RegisterEvent("COMBAT_LOG_EVENT")
 TALC:RegisterEvent("PLAYER_ENTERING_WORLD")
 TALC:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
+TALC:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 
 ----------------------------------------------------
