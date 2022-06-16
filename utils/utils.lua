@@ -189,13 +189,22 @@ function TALCUtils:Init()
     end
 
     core.bsend = function(prio, msg)
+        if not prio then
+            prio = "NORMAL"
+        end
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "RAID")
     end
     core.bsendg = function(prio, msg)
+        if not prio then
+            prio = "NORMAL"
+        end
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "GUILD")
     end
 
     core.wsend = function(prio, msg, to)
+        if not prio then
+            prio = "NORMAL"
+        end
         ChatThrottleLib:SendAddonMessage(prio, core.channel, msg, "WHISPER", to)
     end
 
