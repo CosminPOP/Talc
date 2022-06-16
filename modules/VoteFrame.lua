@@ -438,7 +438,12 @@ function VoteFrame:HandleSync(_, t, _, sender)
         return
     end
 
-    if core.subFind(t, 'VersionReply=') then
+    if core.subFind(t, 'VersionQueryGuild=') then
+        core.bsendg(nil, "VersionReplyGuild=" .. sender .. "=" .. core.addonVer)
+        return
+    end
+
+    if core.subFind(t, 'VersionReply=') or core.subFind(t, 'VersionReplyGuild=') then
         local vEx = core.split("=", t)
         if vEx[2] == core.me then
             if vEx[3] then
@@ -4104,31 +4109,47 @@ end
 
 function VoteFrame:QueryWho_OnClick()
 
-    if not UnitInRaid('player') then
-        talc_print('You are not in a raid.')
-        return
-    end
+    GuildRoster()
 
     TalcVoteFrameWho:Show()
 
-    core.asend("VersionQuery=")
+    if UnitInRaid('player') then
+        core.asend("VersionQuery=")
+    else
+        core.bsendg(nil, "VersionQueryGuild=")
+    end
 
     self.withAddon = {}
     self.withAddonFrames = {}
 
     TalcVoteFrameWhoTitle:SetText('TALC v' .. core.addonVer)
 
-    for i = 0, GetNumRaidMembers() do
-        if GetRaidRosterInfo(i) then
-            local n, _, _, _, _, _, z = GetRaidRosterInfo(i)
-            local _, class = UnitClass('raid' .. i)
+    if UnitInRaid('player') then
+        for i = 0, GetNumRaidMembers() do
+            if GetRaidRosterInfo(i) then
+                local n, _, _, _, _, _, z = GetRaidRosterInfo(i)
+                local _, class = UnitClass('raid' .. i)
 
-            self.withAddon[n] = {
-                class = core.lower(class),
-                v = '-'
-            }
-            if z == 'Offline' then
-                self.withAddon[n].v = '|cff777777offline'
+                self.withAddon[n] = {
+                    class = core.lower(class),
+                    v = '-'
+                }
+                if z == 'Offline' then
+                    self.withAddon[n].v = '|cff777777offline'
+                end
+            end
+        end
+    else
+        local numOnlineMembers = GetNumGuildMembers();
+        for i = 0, numOnlineMembers do
+            if GetGuildRosterInfo(i) then
+                local n, _, _, _, class = GetGuildRosterInfo(i)
+                class = core.lower(class)
+
+                self.withAddon[n] = {
+                    class = core.lower(class),
+                    v = '-'
+                }
             end
         end
     end
@@ -4201,6 +4222,8 @@ function VoteFrame:updateWithAddon()
         end
 
     end
+
+    TalcVoteFrameWho:SetHeight(row * 40 + 100)
 
     local without = 0
     local older = 0

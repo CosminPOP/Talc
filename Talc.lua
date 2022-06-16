@@ -767,11 +767,7 @@ SlashCmdList["TALC"] = function(cmd)
         end
 
         if cmd == 'who' then
-            if not UnitInRaid('player') then
-                talc_print('You are not in a raid.')
-                return
-            end
-            VoteFrame:queryWho()
+            VoteFrame:QueryWho_OnClick()
             return
         end
     end
