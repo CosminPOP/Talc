@@ -178,11 +178,11 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
 
     this.frame = this.frame + 1
 
-    if this.frame >= 1100 and this.frame < 1200 then
+    if this.frame >= 800 and this.frame < 900 then
         TalcBossLootFrame:SetAlpha(TalcBossLootFrame:GetAlpha() - 0.02)
     end
 
-    if this.frame >= 1200 then
+    if this.frame >= 900 then
         TalcBossLootFrame:Hide()
         this:Hide()
         return

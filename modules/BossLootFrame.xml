@@ -2,7 +2,8 @@
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="BossLootFrame.lua"/>
 
-    <Frame name="TalcBossLootFrame" hidden="false" toplevel="true" parent="UIParent" movable="true" enableMouse="true">
+    <Frame name="TalcBossLootFrame" hidden="false" parent="UIParent" movable="false"
+           enableMouse="false">
         <Size>
             <AbsDimension x="512" y="256"/>
         </Size>
