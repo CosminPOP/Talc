@@ -1,11 +1,13 @@
 TALC = CreateFrame("Frame")
 
+-- todo Sidebar integration
+-- resize TalcWinFrame
 ----------------------------------------------------
 --- Constants
 ----------------------------------------------------
 
 TALC.channel = 'TALC'
-TALC.addonVer = '3.0.0.2'
+TALC.addonVer = '3.0.0.3'
 TALC.me = UnitName('player')
 TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100

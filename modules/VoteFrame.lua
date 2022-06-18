@@ -4223,7 +4223,7 @@ function VoteFrame:updateWithAddon()
 
     end
 
-    TalcVoteFrameWho:SetHeight(row * 40 + 100)
+    TalcVoteFrameWho:SetHeight(500)
 
     local without = 0
     local older = 0
