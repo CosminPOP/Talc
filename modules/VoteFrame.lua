@@ -3564,8 +3564,10 @@ function VoteFrame:ShowWelcomeItems()
         _G[frame .. 'Border']:Hide()
         if item.player == core.me then
             local color = ITEM_QUALITY_COLORS[q]
-            _G[frame .. 'Border']:SetVertexColor(color.r, color.g, color.b, 1)
-            _G[frame .. 'Border']:Show()
+            if color then
+                _G[frame .. 'Border']:SetVertexColor(color.r, color.g, color.b, 1)
+                _G[frame .. 'Border']:Show()
+            end
         end
 
         core.addButtonOnEnterTooltip(_G[frame], item.item)
