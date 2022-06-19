@@ -64,7 +64,7 @@ function BossLootFrame:ShowLoot()
     TalcBossLootFrame:Show()
 
     for _, frame in next, self.animation.itemFrames do
-        frame:Hide()
+        _G[frame.name]:Hide()
     end
 
     for index, frame in next, self.animation.itemFrames do
