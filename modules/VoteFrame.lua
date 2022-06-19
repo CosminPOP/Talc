@@ -738,6 +738,11 @@ function VoteFrame:HandleSync(_, t, _, sender)
             pick = lh[6]
             raid = lh[7]
 
+            -- ignore old loot
+            if timestamp < 1654672311 then
+                return
+            end
+
             local _, _, itemLink = core.find(item, "(item:%d+:%d+:%d+:%d+)")
             local itemID = core.int(core.split(':', itemLink)[2])
             core.CacheItem(itemID)
@@ -3283,20 +3288,20 @@ VoteFrame.periodicSync:SetScript("OnUpdate", function()
 
             -- dont send old testing items
             if timestamp < 1654672311 then
-                core.wipe(db['VOTE_LOOT_HISTORY'])
-                return
-            end
-
-            i = i + 1
-            if i == db['PERIODIC_SYNC_INDEX'] then
-                talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
-                core.bsendg("BULK", "PeriodicLootHistorySync="
-                        .. timestamp .. "="
-                        .. item.player .. "="
-                        .. item.class .. "="
-                        .. item.item .. "="
-                        .. item.pick .. "="
-                        .. item.raid)
+                -- delete old testing items
+                db['VOTE_LOOT_HISTORY'] = nil
+            else
+                i = i + 1
+                if i == db['PERIODIC_SYNC_INDEX'] then
+                    talc_debug('periodic sync send index ' .. db['PERIODIC_SYNC_INDEX'])
+                    core.bsendg("BULK", "PeriodicLootHistorySync="
+                            .. timestamp .. "="
+                            .. item.player .. "="
+                            .. item.class .. "="
+                            .. item.item .. "="
+                            .. item.pick .. "="
+                            .. item.raid)
+                end
             end
         end
 
