@@ -63,12 +63,6 @@ function BossLootFrame:ShowLoot()
 
     TalcBossLootFrame:Show()
 
-    for _, frame in next, self.animation.itemFrames do
-        if _G[frame.name] then
-            _G[frame.name]:Hide()
-        end
-    end
-
     for index, frame in next, self.animation.itemFrames do
 
         if not _G['TalcBossLootFrameItem' .. index] then
@@ -190,6 +184,13 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
 
     if this.frame >= 900 then
         TalcBossLootFrame:Hide()
+
+        for _, frame in next, this.itemFrames do
+            if _G[frame.name] then
+                _G[frame.name]:Hide()
+            end
+        end
+
         this:Hide()
         return
     end
