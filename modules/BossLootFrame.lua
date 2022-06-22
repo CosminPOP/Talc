@@ -61,6 +61,12 @@ function BossLootFrame:ShowLoot()
         end
     end
 
+    for i = 1, 15 do
+        if _G['TalcBossLootFrameItem' .. i] then
+            _G['TalcBossLootFrameItem' .. i]:Hide()
+        end
+    end
+
     TalcBossLootFrame:Show()
 
     for index, frame in next, self.animation.itemFrames do
@@ -184,13 +190,6 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
 
     if this.frame >= 900 then
         TalcBossLootFrame:Hide()
-
-        for _, frame in next, this.itemFrames do
-            if _G[frame.name] then
-                _G[frame.name]:Hide()
-            end
-        end
-
         this:Hide()
         return
     end
@@ -228,14 +227,18 @@ function BossLootFrame:StartTestAnimation()
     local items = {
         'item:54582:0:0:0:0:0:0:0:0',
         'item:51484:0:0:0:0:0:0:0:0',
-        'item:51205:0:0:0:0:0:0:0:0'
+        'item:51205:0:0:0:0:0:0:0:0',
+        'item:51205:0:0:0:0:0:0:0:0',
+        'item:43346:0:0:0:0:0:0:0:0',
+        'item:40610:0:0:0:0:0:0:0:0',
+        'item:40622:0:0:0:0:0:0:0:0',
     }
-    for _, item in next, items do
+    for i = 1, math.random(#items) do
         core.insert(self.animation.itemFrames, {
             frameRef = nil,
             name = '',
             frame = 0, glowX = 0,
-            link = item,
+            link = items[i],
             r = 0, g = 0, b = 0
         })
 
