@@ -24,6 +24,7 @@ function BossLootFrame:HandleSync(_, msg, _, sender)
             if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] then
                 self:ShowLoot()
             end
+            BossLootFrame.delayReset:Show()
         else
             core.insert(self.animation.itemFrames, {
                 frameRef = nil,
@@ -212,8 +213,30 @@ BossLootFrame.delayAddBossLoot:SetScript("OnUpdate", function()
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
+        BossLootFrame:ResetVars()
         this:Hide()
-        BossLootFrame:ShowLoot()
+    end
+end)
+
+
+
+----------------------------------------------------
+--- Reset SendItems
+----------------------------------------------------
+
+BossLootFrame.delayReset = CreateFrame("Frame")
+BossLootFrame.delayReset:Hide()
+
+BossLootFrame.delayReset:SetScript("OnShow", function()
+    this.startTime = GetTime();
+end)
+BossLootFrame.delayReset:SetScript("OnUpdate", function()
+    local plus = 150
+    local gt = GetTime() * 1000
+    local st = (this.startTime + plus) * 1000
+    if gt >= st then
+        BossLootFrame.sendItems = true
+        this:Hide()
     end
 end)
 
