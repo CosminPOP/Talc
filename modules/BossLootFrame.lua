@@ -10,9 +10,6 @@ BossLootFrame.sendItems = true
 function BossLootFrame:HandleSync(_, msg, _, sender)
     if core.subFind(msg, 'BossLootFrame=') then
 
-        if sender ~= core.me then
-            self.sendItems = false
-        end
 
         local lootEx = core.split('=', msg)
 
@@ -21,6 +18,7 @@ function BossLootFrame:HandleSync(_, msg, _, sender)
         elseif lootEx[2] == 'Start' then
             self.animation.itemFrames = {}
         elseif lootEx[2] == 'End' then
+            self.sendItems = false
             if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] then
                 self:ShowLoot()
             end
