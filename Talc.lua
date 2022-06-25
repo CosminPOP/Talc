@@ -7,7 +7,7 @@ TALC = CreateFrame("Frame")
 ----------------------------------------------------
 
 TALC.channel = 'TALC'
-TALC.addonVer = '3.0.0.4'
+TALC.addonVer = '3.0.0.5'
 TALC.me = UnitName('player')
 TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100
