@@ -3092,6 +3092,7 @@
                 this:RegisterForDrag("LeftButton");
                 this:SetMovable(1);
                 this:SetUserPlaced(true);
+                tinsert(UISpecialFrames, this:GetName());
             </OnLoad>
             <OnDragStart>
                 this:StartMoving();
