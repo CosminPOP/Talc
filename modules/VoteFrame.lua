@@ -759,7 +759,7 @@ function VoteFrame:HandleSync(_, t, _, sender)
 
             -- update welcome items if visible
             if TalcVoteFrameWelcomeFrame:IsVisible() and not TalcVoteFrameWelcomeFrameBackButton:IsVisible() then
-                self:WelcomeFrame_OnShow()
+                --self:WelcomeFrame_OnShow()
             end
         end
         return
@@ -3362,8 +3362,10 @@ function VoteFrame:WelcomeFrame_OnShow()
         title = nil
     end
     if title and month == core.int(date('%m')) and day == core.int(date('%d')) then
-        if hour < core.int(date('%h')) then
-            title = nil
+        if date('%h') then
+            if hour < core.int(date('%h')) then
+                title = nil
+            end
         end
     end
 
