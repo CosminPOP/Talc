@@ -10,7 +10,6 @@ BossLootFrame.sendItems = true
 function BossLootFrame:HandleSync(_, msg, _, sender)
     if core.subFind(msg, 'BossLootFrame=') then
 
-
         local lootEx = core.split('=', msg)
 
         if lootEx[2] == 'Reset' then
@@ -18,10 +17,10 @@ function BossLootFrame:HandleSync(_, msg, _, sender)
         elseif lootEx[2] == 'Start' then
             self.animation.itemFrames = {}
         elseif lootEx[2] == 'End' then
-            self.sendItems = false
-            if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] then
+            if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] and self.sendItems then
                 self:ShowLoot()
             end
+            self.sendItems = false
             BossLootFrame.delayReset:Show()
         else
             core.insert(self.animation.itemFrames, {
@@ -147,35 +146,39 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
 
     for index, frame in next, this.itemFrames do
 
-        if this.frame > 5 + (index * 30) then
+        if frame.frameRef then
 
-            if _G[frame.name .. 'WhiteGlow']:GetAlpha() < 1 then
-                _G[frame.name .. 'WhiteGlow']:SetAlpha(_G[frame.name .. 'WhiteGlow']:GetAlpha() + 0.2)
-            end
+            if this.frame > 5 + (index * 30) then
 
-            if _G[frame.name .. 'WhiteGlow']:GetWidth() < 40 then
-                _G[frame.name .. 'WhiteGlow']:SetSize(_G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5,
-                        _G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5)
-            else
-                if frame.glowX > -100 then
-                    frame.glowX = frame.glowX - 3
-                    _G[frame.name .. 'WhiteGlow']:SetPoint('CENTER', frame.glowX, 0)
+                if _G[frame.name .. 'WhiteGlow']:GetAlpha() < 1 then
+                    _G[frame.name .. 'WhiteGlow']:SetAlpha(_G[frame.name .. 'WhiteGlow']:GetAlpha() + 0.2)
+                end
 
-                    _G[frame.name]:SetBackdropColor(frame.r, frame.g, frame.b, (frame.glowX * -1) / 300)
+                if _G[frame.name .. 'WhiteGlow']:GetWidth() < 40 then
+                    _G[frame.name .. 'WhiteGlow']:SetSize(_G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5,
+                            _G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5)
                 else
+                    if frame.glowX > -100 then
+                        frame.glowX = frame.glowX - 3
+                        _G[frame.name .. 'WhiteGlow']:SetPoint('CENTER', frame.glowX, 0)
 
-                    if _G[frame.name .. 'ButtonTexture']:GetAlpha() < 1 then
-                        _G[frame.name .. 'ButtonTexture']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha() + 0.1)
-
-                        _G[frame.name .. 'ButtonBorder']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
-                        _G[frame.name .. 'ButtonName']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
+                        _G[frame.name]:SetBackdropColor(frame.r, frame.g, frame.b, (frame.glowX * -1) / 300)
                     else
-                        _G[frame.name .. 'WhiteGlow']:Hide()
+
+                        if _G[frame.name .. 'ButtonTexture']:GetAlpha() < 1 then
+                            _G[frame.name .. 'ButtonTexture']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha() + 0.1)
+
+                            _G[frame.name .. 'ButtonBorder']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
+                            _G[frame.name .. 'ButtonName']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
+                        else
+                            _G[frame.name .. 'WhiteGlow']:Hide()
+                        end
                     end
                 end
-            end
 
-            frame.frame = frame.frame + 1
+                frame.frame = frame.frame + 1
+
+            end
 
         end
 
