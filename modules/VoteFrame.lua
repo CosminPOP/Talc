@@ -3362,10 +3362,8 @@ function VoteFrame:WelcomeFrame_OnShow()
         title = nil
     end
     if title and month == core.int(date('%m')) and day == core.int(date('%d')) then
-        if date('%h') then
-            if hour < core.int(date('%h')) then
-                title = nil
-            end
+        if hour < core.int(date('%H')) then
+            title = nil
         end
     end
 
