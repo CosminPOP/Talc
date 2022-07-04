@@ -3,13 +3,13 @@ TALC_TOKENS = {
     --- Phase 1 ---
     ---------------
 
-    [44569] = { name = "The Key to the Focusing Iris", rewards = { 44582 } },
-    [44577] = { name = "Heroic Key to the Focusing Iris", rewards = { 44581 } },
+    [44569] = { name = "The Key to the Focusing Iris", rewards = { 44582, 44657, 44658, 44659, 44660 } },
+    [44577] = { name = "Heroic Key to the Focusing Iris", rewards = { 44581, 44661, 44662, 44664, 44665 } },
 
     [43347] = { name = "Satchel of Spoils", rewards = { 47241 }, count = 5 },
     [43346] = { name = "Large Satchel of Spoils", rewards = { 47241 }, count = 5 },
 
-    -- t8
+    -- t7
 
     [40610] = { name = "Chestguard of the Lost Conqueror", rewards = { 39497, 39515, 39523, 39629, 39633, 39638, } },
     [40625] = { name = "Breastplate of the Lost Conqueror", rewards = { 40423, 40449, 40458, 40569, 40574, 40579 } },
