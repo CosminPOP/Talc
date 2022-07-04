@@ -3661,16 +3661,20 @@ function VoteFrame:WelcomePlayer_OnClick(name)
     TalcVoteFrameWelcomeFramePlayerHistoryScrollFrame.name = name
 
     local playerHistory = {}
+    local forDE = 0
     for _, item in next, db['VOTE_LOOT_HISTORY'] do
         if item.player == name then
             core.insert(playerHistory, item)
+            if item.pick == 'de' then
+                forDE = forDE + 1
+            end
         end
     end
 
     if core.sub(name, core.len(name), core.len(name)) == 's' then
-        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\' Loot History (' .. core.n(playerHistory) .. ')')
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\' Loot History (' .. (core.n(playerHistory) - forDE) .. ')')
     else
-        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. core.n(playerHistory) .. ')')
+        TalcVoteFrameWelcomeFrameRecentItems:SetText('  ' .. name .. '\'s Loot History (' .. (core.n(playerHistory) - forDE) .. ')')
     end
 
     for _, frame in next, self.playerHistoryFrames do
