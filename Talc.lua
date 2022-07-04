@@ -401,7 +401,7 @@ TALC:SetScript("OnEvent", function(__, event, ...)
                         core.asend("BossLootFrame=" .. i .. "=" .. item)
                     end
                     core.asend("BossLootFrame=End")
-                    --BossLootFrame.sendItems = false
+                    BossLootFrame.sendItems = false
                 end
 
                 if not TALC_DB['VOTE_ENABLED'] then

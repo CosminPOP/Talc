@@ -15,9 +15,12 @@ function BossLootFrame:HandleSync(_, msg, _, sender)
         if lootEx[2] == 'Reset' then
             self:ResetVars()
         elseif lootEx[2] == 'Start' then
+            if sender ~= core.me then
+                self.sendItems = false
+            end
             self.animation.itemFrames = {}
         elseif lootEx[2] == 'End' then
-            if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] and self.sendItems then
+            if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] and core.n(self.animation.itemFrames) > 0 then
                 self:ShowLoot()
             end
             self.sendItems = false
@@ -52,16 +55,9 @@ function BossLootFrame:ShowLoot()
     for _, frame in next, self.animation.itemFrames do
         local itemID = core.split(":", frame.link)[2]
         if not GetItemInfo(itemID) then
-            talc_debug("bosslootframe item need cache")
             core.CacheItem(itemID);
             self.delayAddBossLoot:Show()
             return
-        end
-    end
-
-    for i = 1, 15 do
-        if _G['TalcBossLootFrameItem' .. i] then
-            _G['TalcBossLootFrameItem' .. i]:Hide()
         end
     end
 
@@ -146,39 +142,35 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
 
     for index, frame in next, this.itemFrames do
 
-        if frame.frameRef then
+        if this.frame > 5 + (index * 30) then
 
-            if this.frame > 5 + (index * 30) then
+            if _G[frame.name .. 'WhiteGlow']:GetAlpha() < 1 then
+                _G[frame.name .. 'WhiteGlow']:SetAlpha(_G[frame.name .. 'WhiteGlow']:GetAlpha() + 0.2)
+            end
 
-                if _G[frame.name .. 'WhiteGlow']:GetAlpha() < 1 then
-                    _G[frame.name .. 'WhiteGlow']:SetAlpha(_G[frame.name .. 'WhiteGlow']:GetAlpha() + 0.2)
-                end
+            if _G[frame.name .. 'WhiteGlow']:GetWidth() < 40 then
+                _G[frame.name .. 'WhiteGlow']:SetSize(_G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5,
+                        _G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5)
+            else
+                if frame.glowX > -100 then
+                    frame.glowX = frame.glowX - 3
+                    _G[frame.name .. 'WhiteGlow']:SetPoint('CENTER', frame.glowX, 0)
 
-                if _G[frame.name .. 'WhiteGlow']:GetWidth() < 40 then
-                    _G[frame.name .. 'WhiteGlow']:SetSize(_G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5,
-                            _G[frame.name .. 'WhiteGlow']:GetWidth() + 1.5)
+                    _G[frame.name]:SetBackdropColor(frame.r, frame.g, frame.b, (frame.glowX * -1) / 300)
                 else
-                    if frame.glowX > -100 then
-                        frame.glowX = frame.glowX - 3
-                        _G[frame.name .. 'WhiteGlow']:SetPoint('CENTER', frame.glowX, 0)
 
-                        _G[frame.name]:SetBackdropColor(frame.r, frame.g, frame.b, (frame.glowX * -1) / 300)
+                    if _G[frame.name .. 'ButtonTexture']:GetAlpha() < 1 then
+                        _G[frame.name .. 'ButtonTexture']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha() + 0.1)
+
+                        _G[frame.name .. 'ButtonBorder']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
+                        _G[frame.name .. 'ButtonName']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
                     else
-
-                        if _G[frame.name .. 'ButtonTexture']:GetAlpha() < 1 then
-                            _G[frame.name .. 'ButtonTexture']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha() + 0.1)
-
-                            _G[frame.name .. 'ButtonBorder']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
-                            _G[frame.name .. 'ButtonName']:SetAlpha(_G[frame.name .. 'ButtonTexture']:GetAlpha())
-                        else
-                            _G[frame.name .. 'WhiteGlow']:Hide()
-                        end
+                        _G[frame.name .. 'WhiteGlow']:Hide()
                     end
                 end
-
-                frame.frame = frame.frame + 1
-
             end
+
+            frame.frame = frame.frame + 1
 
         end
 
@@ -193,6 +185,9 @@ BossLootFrame.animation:SetScript("OnUpdate", function()
     if this.frame >= 900 then
         TalcBossLootFrame:Hide()
         this:Hide()
+        for _, frame in next, this.itemFrames do
+            _G[frame.name]:Hide()
+        end
         return
     end
 
