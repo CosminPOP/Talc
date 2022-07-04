@@ -3559,6 +3559,7 @@ function VoteFrame:ShowWelcomeItems()
             _G[frame .. 'RaidTitle']:Show()
         end
 
+        _G[frame].itemLink = item.item
         _G[frame .. 'TopText']:SetText(item.item)
         _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
         _G[frame .. 'BottomText']:SetText(core.classColors[item.class].colorStr .. item.player)
@@ -3595,6 +3596,19 @@ function VoteFrame:ShowWelcomeItems()
 end
 
 function VoteFrame:WelcomeItem_OnClick(id)
+
+    if this.itemLink then
+        if IsControlKeyDown() then
+            DressUpItemLink(this.itemLink)
+            return
+        end
+        if IsShiftKeyDown() then
+            if ChatFrame1EditBox:IsVisible() then
+                ChatFrame1EditBox:Insert(this.itemLink);
+                return
+            end
+        end
+    end
 
     VoteFrame.itemHistoryIndex = id
 
@@ -3737,6 +3751,7 @@ function VoteFrame:WelcomePlayer_OnClick(name)
             end
 
             _G[frame .. 'TopText']:SetText(item.item)
+            _G[frame].itemLink = item.item
             _G[frame .. 'MiddleText']:SetText(core.needs[item.pick].colorStr .. core.needs[item.pick].text)
             _G[frame .. 'BottomText']:SetText("")
 
