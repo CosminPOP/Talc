@@ -3,6 +3,7 @@ local _G = _G
 
 BossLootFrame = CreateFrame("Frame")
 BossLootFrame.sendItems = true
+BossLootFrame.displayed = false
 ----------------------------------------------------
 --- Event Handler
 ----------------------------------------------------
@@ -19,16 +20,19 @@ function BossLootFrame:HandleSync(_, msg, _, sender)
                 self.sendItems = false
             end
             self.animation.itemFrames = {}
+            core.wipe(self.animation.itemFrames)
         elseif lootEx[2] == 'End' then
             if TALC_DB['BOSS_LOOT_FRAME_ENABLE'] and core.n(self.animation.itemFrames) > 0 then
-                self:ShowLoot()
+                if not self.displayed then
+                    self:ShowLoot()
+                end
             end
             self.sendItems = false
             BossLootFrame.delayReset:Show()
         else
             core.insert(self.animation.itemFrames, {
                 frameRef = nil,
-                name = '',
+                name = 'TalcBossLootFrameItem' .. (#self.animation.itemFrames + 1),
                 frame = 0, glowX = 0,
                 link = lootEx[3],
                 r = 0, g = 0, b = 0
@@ -47,6 +51,7 @@ end
 
 function BossLootFrame:ResetVars()
     self.sendItems = true
+    self.displayed = false
 end
 
 function BossLootFrame:ShowLoot()
@@ -67,6 +72,8 @@ function BossLootFrame:ShowLoot()
 
         if not _G['TalcBossLootFrameItem' .. index] then
             frame.frameRef = CreateFrame("Frame", "TalcBossLootFrameItem" .. index, TalcBossLootFrame, "Talc_BossLootItemTemplate")
+        else
+            frame.frameRef = _G[frame.name]
         end
 
         frame.name = "TalcBossLootFrameItem" .. index
@@ -109,6 +116,7 @@ function BossLootFrame:ShowLoot()
     self.animation.middleHeight = 22 + 40 * #self.animation.itemFrames
     self.animation.frame = 0
     self.animation:Show()
+    self.displayed = true
 end
 
 BossLootFrame.animation = CreateFrame("Frame")
@@ -231,7 +239,7 @@ BossLootFrame.delayReset:SetScript("OnUpdate", function()
     local gt = GetTime() * 1000
     local st = (this.startTime + plus) * 1000
     if gt >= st then
-        BossLootFrame.sendItems = true
+        BossLootFrame:ResetVars()
         this:Hide()
     end
 end)
