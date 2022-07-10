@@ -223,12 +223,12 @@ end
 
 function NeedFrame:FadeOutFinished()
     TalcRollFrameItem:Hide()
-    RollFrame:PickRoll(self.id, 'roll');
+    RollFrame:PickRoll('roll');
 end
 
 function RollFrame:PickRoll(roll)
 
-    if self.id == 0 then
+    if self.id and self.id == 0 then
         self:FadeOutFrame()
         return
     end
