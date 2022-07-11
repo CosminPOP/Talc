@@ -53,8 +53,8 @@ function RollFrame:HandleSync(_, msg, _, sender)
 
             if wonData[3] ~= core.me and db['ROLL_TROMBONE'] and db['ROLL_ENABLE_SOUND'] then
                 PlaySoundFile("Interface\\AddOns\\Talc\\sound\\sadtrombone.ogg")
-                RollFrame.watchRolls = false
             end
+            self.watchRolls = false
             return
         end
     end
