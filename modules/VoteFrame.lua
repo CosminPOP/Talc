@@ -1529,6 +1529,7 @@ TalcVoteFrameVotingFrame:SetScript("OnHide", function()
     TalcVoteFrameReplacesLabel:Hide()
     TalcVoteFrameRollLabel:Hide()
     TalcVoteFrameVotesLabel:Hide()
+    TalcVoteFrameRecentItemsLabel:Hide()
     TalcVoteFrameDoneVoting:Hide()
 
     TalcVoteFrameWinnerStatus:Hide()
@@ -1546,6 +1547,7 @@ TalcVoteFrameVotingFrame:SetScript("OnShow", function()
     TalcVoteFrameReplacesLabel:Show()
     TalcVoteFrameRollLabel:Show()
     TalcVoteFrameVotesLabel:Show()
+    TalcVoteFrameRecentItemsLabel:Show()
     TalcVoteFrameDoneVoting:Show()
 
     VoteFrame:RaiderDetailsClose()
@@ -2391,6 +2393,46 @@ function VoteFrame:VoteFrameListUpdate()
 
                 for _, f in next, _G[frame].officerVotedFrames do
                     f:Hide()
+                end
+
+                if not _G[frame].recentItemsFrames then
+                    _G[frame].recentItemsFrames = {}
+                end
+
+                for _, f in next, _G[frame].recentItemsFrames do
+                    f:Hide()
+                end
+
+                local rIndex = 0
+                for _, item in core.pairsByKeysReverse(core.getRecentItems(name)) do
+                    rIndex = rIndex + 1
+                    if not _G[frame].recentItemsFrames[rIndex] then
+                        _G[frame].recentItemsFrames[rIndex] = CreateFrame("Button", "TALCRecentItemsFrameF" .. index .. "I" .. rIndex, _G[frame], 'Talc_SmallIconButtonTemplate')
+                    end
+                    local rFrame = "TALCRecentItemsFrameF" .. index .. "I" .. rIndex
+                    _G[rFrame]:ClearAllPoints()
+                    _G[rFrame]:SetSize(20, 20)
+
+                    if rIndex == 1 then
+                        _G[rFrame]:SetPoint("LEFT", _G[frame], "LEFT", core.floor(486 * ratio) - 5, 0)
+                    else
+                        _G[rFrame]:SetPoint("LEFT", _G["TALCRecentItemsFrameF" .. index .. "I" .. (rIndex - 1)], "RIGHT", 1, 0)
+                    end
+
+                    local _, _, itemLink = core.find(item.item, "(item:%d+:%d+:%d+:%d+)")
+                    local _, _, _, _, _, _, _, _, _, tex = GetItemInfo(itemLink)
+                    if not tex then
+                        core.CacheItem(core.int(core.split(':', itemLink)[2]))
+                        break
+                    end
+
+                    core.addButtonOnEnterTooltip(_G[rFrame], itemLink)
+
+                    _G[rFrame]:SetNormalTexture(tex)
+                    _G[rFrame]:SetHighlightTexture(tex)
+                    _G[rFrame]:SetPushedTexture(tex)
+                    _G[rFrame]:Show()
+
                 end
 
                 if self.itemVotes[self.CurrentVotedItem][name] then
@@ -4364,6 +4406,7 @@ function VoteFrame:Resized()
     TalcVoteFrameReplacesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(225 * ratio), -92)
     TalcVoteFrameRollLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(285 * ratio), -92)
     TalcVoteFrameVotesLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(406 * ratio), -92)
+    TalcVoteFrameRecentItemsLabel:SetPoint("TOPLEFT", TalcVoteFrame, core.floor(486 * ratio), -92)
 
     TalcVoteFrame:SetAlpha(db['VOTE_ALPHA'])
 

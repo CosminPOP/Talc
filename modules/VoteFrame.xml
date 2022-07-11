@@ -157,6 +157,15 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
+                <FontString name="$parentRecentItemsLabel" inherits="GameFontHighlight" text="RecentItems">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="486" y="-85"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
                 <FontString name="$parentVotedItemName" inherits="GameFontNormalLarge"
                             text="[voted item name]" justifyH="LEFT">
                     <Size>

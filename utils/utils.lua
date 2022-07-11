@@ -823,6 +823,26 @@ function TALCUtils:Init()
         return 0
     end
 
+    core.getRecentItems = function(player)
+        local items = {}
+        local i = 0
+        for timestamp, item in core.pairsByKeysReverse(db['VOTE_LOOT_HISTORY']) do
+            if item.player == player and item.pick ~= 'de' then
+                if date("%d/%m") == date("%d/%m", core.localTimeFromServerTime(timestamp)) then
+                    items[timestamp] = item
+                end
+                if core.int(date('%d')) ~= 1 then
+                    if date("%m") == date("%m", core.localTimeFromServerTime(timestamp)) then
+                        if (core.int(date("%d")) - 1) == core.int(date("%d", core.localTimeFromServerTime(timestamp))) then
+                            items[timestamp] = item
+                        end
+                    end
+                end
+            end
+        end
+        return items
+    end
+
 end
 
 function talc_print(a)
