@@ -17,9 +17,10 @@
             <minResize x="785" y="350"/>
             <maxResize x="1200" y="600"/>
         </ResizeBounds>
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background2"
+        <Backdrop bgFile="Interface\addons\Talc\images\grad2"
                   edgeFile="Interface\addons\Talc\images\border-main"
                   tile="false">
+            <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
             <EdgeSize>
                 <AbsValue val="32"/>
             </EdgeSize>
@@ -68,17 +69,17 @@
                     </Anchors>
                     <TexCoords left="0" right="2" top="0" bottom="0.375"/>
                 </Texture>
-                <Texture name="$parentBackground" file="Interface\addons\Talc\images\grad2" tile="true">
-                    <Color r="0.02" g="0.04" b="0.08" a="0.9"/>
-                    <Anchors>
-                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
-                            <Offset x="2" y="-24"/>
-                        </Anchor>
-                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
-                            <Offset x="-2" y="4"/>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
+<!--                <Texture name="$parentBackground" file="Interface\addons\Talc\images\grad2" tile="true">-->
+<!--                    <Color r="0.02" g="0.04" b="0.08" a="0.9"/>-->
+<!--                    <Anchors>-->
+<!--                        <Anchor point="TOPLEFT" relativePoint="TOPLEFT">-->
+<!--                            <Offset x="2" y="-24"/>-->
+<!--                        </Anchor>-->
+<!--                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">-->
+<!--                            <Offset x="-2" y="4"/>-->
+<!--                        </Anchor>-->
+<!--                    </Anchors>-->
+<!--                </Texture>-->
             </Layer>
             <Layer level="BORDER">
                 <Texture name="$parentLabelsBackground" file="Interface\addons\Talc\images\background-main">
