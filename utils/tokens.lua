@@ -3,8 +3,8 @@ TALC_TOKENS = {
     --- Phase 1 ---
     ---------------
 
-    [44569] = { name = "The Key to the Focusing Iris", rewards = { 44582, 44657, 44658, 44659, 44660 } },
-    [44577] = { name = "Heroic Key to the Focusing Iris", rewards = { 44581, 44661, 44662, 44664, 44665 } },
+    [44569] = { name = "The Key to the Focusing Iris", rewards = { 44657, 44658, 44659, 44660 } },
+    [44577] = { name = "Heroic Key to the Focusing Iris", rewards = { 44661, 44662, 44664, 44665 } },
 
     [43347] = { name = "Satchel of Spoils", rewards = { 47241 }, count = 5 },
     [43346] = { name = "Large Satchel of Spoils", rewards = { 47241 }, count = 5 },
