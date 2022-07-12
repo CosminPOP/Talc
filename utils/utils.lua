@@ -244,7 +244,7 @@ function TALCUtils:Init()
         return iter
     end
 
-    core.addButtonOnEnterTooltip = function(frame, itemLink, custom, defaultClickEvents)
+    core.addButtonOnEnterTooltip = function(frame, itemLink, custom, defaultClickEvents, customData)
 
         if core.find(itemLink, "|", 1, true) then
             local ex = core.split("|", itemLink)
@@ -281,6 +281,14 @@ function TALCUtils:Init()
                                 GameTooltip:AddLine('|r' .. date("%d/%m", core.localTimeFromServerTime(timestamp)) .. " " .. core.classColors[core.getPlayerClass(item.player)].colorStr .. item.player)
                             end
                         end
+                    end
+                end
+
+                if custom and custom == 'recentItems' then
+                    GameTooltip:AddLine('------- AWARD HISTORY -------')
+                    for timestamp, item in next, customData do
+                        GameTooltip:AddLine('|r' .. date("%d/%m", core.localTimeFromServerTime(timestamp)) .. " - " ..
+                                core.needs[item.pick].colorStr .. core.needs[item.pick].text)
                     end
                 end
 
@@ -830,14 +838,19 @@ function TALCUtils:Init()
             if item.player == player and item.pick ~= 'de' then
                 if date("%d/%m") == date("%d/%m", core.localTimeFromServerTime(timestamp)) then
                     items[timestamp] = item
+                    i = i + 1
                 end
                 if core.int(date('%d')) ~= 1 then
                     if date("%m") == date("%m", core.localTimeFromServerTime(timestamp)) then
                         if (core.int(date("%d")) - 1) == core.int(date("%d", core.localTimeFromServerTime(timestamp))) then
                             items[timestamp] = item
+                            i = i + 1
                         end
                     end
                 end
+            end
+            if i == 7 then
+                break
             end
         end
         return items

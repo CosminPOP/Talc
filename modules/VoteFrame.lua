@@ -2404,14 +2404,14 @@ function VoteFrame:VoteFrameListUpdate()
                 end
 
                 local rIndex = 0
-                for _, item in core.pairsByKeysReverse(core.getRecentItems(name)) do
+                for timestamp, item in core.pairsByKeysReverse(core.getRecentItems(name)) do
                     rIndex = rIndex + 1
                     if not _G[frame].recentItemsFrames[rIndex] then
                         _G[frame].recentItemsFrames[rIndex] = CreateFrame("Button", "TALCRecentItemsFrameF" .. index .. "I" .. rIndex, _G[frame], 'Talc_SmallIconButtonTemplate')
                     end
                     local rFrame = "TALCRecentItemsFrameF" .. index .. "I" .. rIndex
                     _G[rFrame]:ClearAllPoints()
-                    _G[rFrame]:SetSize(20, 20)
+                    _G[rFrame]:SetSize(18, 18)
 
                     if rIndex == 1 then
                         _G[rFrame]:SetPoint("LEFT", _G[frame], "LEFT", core.floor(486 * ratio) - 5, 0)
@@ -2426,11 +2426,20 @@ function VoteFrame:VoteFrameListUpdate()
                         break
                     end
 
-                    core.addButtonOnEnterTooltip(_G[rFrame], itemLink)
+                    core.addButtonOnEnterTooltip(_G[rFrame], item.item, 'recentItems', false, {
+                        [timestamp] = item
+                    })
 
                     _G[rFrame]:SetNormalTexture(tex)
                     _G[rFrame]:SetHighlightTexture(tex)
                     _G[rFrame]:SetPushedTexture(tex)
+
+                    _G[rFrame .. "Border"]:Hide()
+                    _G[rFrame]:SetAlpha(1)
+                    if item.pick == 'os' or item.pick == 'xmog' or true then
+                        _G[rFrame]:SetAlpha(0.5)
+                    end
+
                     _G[rFrame]:Show()
 
                 end
