@@ -62,9 +62,11 @@ VoteFrame.itemHistoryIndex = 0
 VoteFrame.itemHistoryFrames = {}
 VoteFrame.playerHistoryFrames = {}
 
+VoteFrame.professionsFrames = {}
+
 VoteFrame.screens = {
     'Voting',
-    'Welcome', 'Settings', 'Wishlist' --, Attendance
+    'Welcome', 'Settings', 'Wishlist', 'Professions' --, Attendance
 }
 
 VoteFrame.syncLootHistoryCount = 0
@@ -199,6 +201,7 @@ function VoteFrame:ResetVars()
     core.clearScrollbarTexture(TalcVoteFrameWelcomeFramePlayerHistoryScrollFrameScrollBar)
     core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameLootHistoryFrameScrollFrameScrollBar)
     core.clearScrollbarTexture(TalcVoteFrameRaiderDetailsFrameAttendanceFrameScrollFrameScrollBar)
+    core.clearScrollbarTexture(TalcVoteFrameProfessionsFrameItemsScrollFrameScrollBar)
 
 end
 
@@ -3839,6 +3842,134 @@ function VoteFrame:WelcomeFrameBackButton_OnClick()
     end
 end
 
+
+----------------------------------------------------
+--- Professions Screen
+----------------------------------------------------
+
+function VoteFrame:ProfessionsFrame_OnShow()
+    self:ProfessionsUpdate()
+end
+
+function VoteFrame:ProfessionButtonTest()
+    local res = string.match(this.link, "|H(trade:[^|]+)|h")
+    if not res then
+        res = this.link
+    end
+    SetItemRef(res, this.link, "LeftButton", ChatFrame1)
+end
+
+function VoteFrame:ProfessionsUpdate()
+
+    local totalProfessions = 0
+    for _ in next, db['GUILD_PROFESSIONS'] do
+        totalProfessions = totalProfessions + 1
+    end
+
+    --if totalProfessions == 0 then
+    --    TalcVoteFrameWelcomeFrameNoRecentItems:Show()
+    --else
+    --    TalcVoteFrameWelcomeFrameNoRecentItems:Hide()
+    --end
+
+    for _, frame in next, self.professionsFrames do
+        frame:Hide()
+    end
+
+    local index = 0
+    local x = TalcVoteFrameWelcomeFrame:GetWidth()
+    local numCols = core.floor(x / 185)
+    local col, row = 1, 1
+    local profession = ''
+    local offset = 0
+
+    for p in next, core.professionIcons do
+        for _, item in next, db['GUILD_PROFESSIONS'] do
+            if item.profession == p then
+                index = index + 1
+
+                local title = false
+
+                if profession ~= item.profession then
+                    profession = item.profession
+                    title = true
+                    offset = offset + 1
+                    if col ~= 1 then
+                        row = row + 1
+                    end
+                    col = 1
+                end
+
+                if not self.professionsFrames[index] then
+                    self.professionsFrames[index] = CreateFrame('Button', 'TALCProfessionFrame' .. index, TalcVoteFrameProfessionsFrameItemsScrollFrameChild, 'Talc_WelcomeItemTemplate')
+                end
+
+                self.professionsFrames[index]:SetID(index)
+                self.professionsFrames[index].link = item.link
+
+                local frame = 'TALCProfessionFrame' .. index
+                _G[frame]:SetPoint('TOPLEFT', 'TalcVoteFrameProfessionsFrameItemsScrollFrameChild', 'TOPLEFT', -180 + 185 * col, 54 - 44 * row - (offset * 30))
+
+                _G[frame .. 'RaidTitle']:Hide()
+                if title then
+                    _G[frame .. 'RaidTitle']:SetText(profession)
+                    _G[frame .. 'RaidTitle']:Show()
+                end
+
+                _G[frame .. 'TopText']:SetText(" " .. core.classColors[core.getPlayerClass(item.crafter)].colorStr .. item.crafter)
+                _G[frame .. 'MiddleText']:SetText(" " .. item.spec)
+                _G[frame .. 'BottomText']:SetText(" " .. item.skill)
+
+                _G[frame .. 'Icon']:SetTexture("interface\\icons\\" .. core.professionIcons[item.profession])
+
+                _G[frame .. 'Border']:Hide()
+                if item.crafter == core.me then
+                    local color = ITEM_QUALITY_COLORS[q]
+                    if color then
+                        _G[frame .. 'Border']:SetVertexColor(color.r, color.g, color.b, 1)
+                        _G[frame .. 'Border']:Show()
+                    end
+                end
+
+                _G[frame]:SetScript("OnClick", function(self)
+                    if IsShiftKeyDown() then
+                        --if ChatFrame1EditBox:IsVisible() then
+                        --    ChatFrame1EditBox:Insert(itemLink);
+                        --end
+                    else
+                        local res = string.match(this.link, "|H(trade:[^|]+)|h")
+                        if not res then
+                            res = this.link
+                        end
+                        SetItemRef(res, this.link, "LeftButton", ChatFrame1)
+                    end
+                end)
+
+                _G[frame]:Show()
+
+                col = col + 1
+
+                if col > numCols then
+                    col = 1
+                    row = row + 1
+                end
+
+                if index == core.maxRecentItems then
+                    break
+                end
+            end
+        end
+    end
+
+    TalcVoteFrameProfessionsFrameItemsScrollFrame:SetVerticalScroll(0)
+
+end
+
+function VoteFrame:ResetSavedGuildProfessions()
+    db['GUILD_PROFESSIONS'] = {}
+    VoteFrame:ProfessionsUpdate()
+end
+
 ----------------------------------------------------
 --- Wishlist Screen
 ----------------------------------------------------
@@ -4532,3 +4663,4 @@ PlaySound("igMainMenuOptionCheckBoxOff")
 PlaySound("igCharacterInfoTab")
 PlaySound("igMainMenuClose")
 ]]--
+

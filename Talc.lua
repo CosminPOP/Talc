@@ -7,7 +7,7 @@ TALC = CreateFrame("Frame")
 ----------------------------------------------------
 
 TALC.channel = 'TALC'
-TALC.addonVer = '3.0.0.5'
+TALC.addonVer = '3.0.0.6'
 TALC.me = UnitName('player')
 TALC.numWishlistItems = 8
 TALC.maxRecentItems = 100
@@ -158,6 +158,10 @@ TALC:SetScript("OnEvent", function(__, event, ...)
 
             if TALC_DB['MINIMAP_BUTTON'] == nil then
                 TALC_DB['MINIMAP_BUTTON'] = 'visible'
+            end
+
+            if TALC_DB['GUILD_PROFESSIONS'] == nil then
+                TALC_DB['GUILD_PROFESSIONS'] = {}
             end
 
             TALCUtils:Init();
@@ -500,6 +504,42 @@ TALC:SetScript("OnEvent", function(__, event, ...)
             if event == 'PLAYER_REGEN_DISABLED' then
                 BossLootFrame:ResetVars()
             end
+
+            --if event == 'CHAT_MSG_GUILD' then
+            if event == 'CHAT_MSG_WHISPER2' or event == 'CHAT_MSG_GUILD' then
+                if core.find(arg1, '\124Htrade:', 1, true) then
+                    local crafter = arg2
+                    local skill, profession, spec, link = core.linkParse(arg1)
+
+                    local exists = 0
+                    for i, data in next, TALC_DB['GUILD_PROFESSIONS'] do
+                        if data.crafter == crafter and data.profession == profession then
+                            exists = i
+                            break
+                        end
+                    end
+                    if exists > 0 then
+                        TALC_DB['GUILD_PROFESSIONS'][exists] = {
+                            crafter = crafter,
+                            profession = profession,
+                            link = link,
+                            skill = skill,
+                            spec = spec,
+                        }
+                    else
+                        core.insert(TALC_DB['GUILD_PROFESSIONS'], {
+                            crafter = crafter,
+                            profession = profession,
+                            link = link,
+                            skill = skill,
+                            spec = spec,
+                        })
+                    end
+                    if TalcVoteFrameProfessionsFrame:IsVisible() then
+                        VoteFrame:ProfessionsUpdate()
+                    end
+                end
+            end
         end
     end
 end)
@@ -517,6 +557,8 @@ TALC:RegisterEvent("COMBAT_LOG_EVENT")
 TALC:RegisterEvent("PLAYER_ENTERING_WORLD")
 TALC:RegisterEvent("CALENDAR_UPDATE_EVENT_LIST")
 TALC:RegisterEvent("PLAYER_REGEN_DISABLED")
+TALC:RegisterEvent("CHAT_MSG_WHISPER")
+TALC:RegisterEvent("CHAT_MSG_GUILD")
 
 
 ----------------------------------------------------

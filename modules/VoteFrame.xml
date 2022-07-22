@@ -1429,6 +1429,24 @@
                         </Scripts>
                     </Button>
 
+                    <Button name="$parentOpenProfessions" inherits="Talc_ButtonTemplate" text="Professions(test)">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-275" y="-4"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                VoteFrame:ShowScreen("Professions")
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
                     <!--                    <Button name="$parentAttendanceStopButton" inherits="Talc_ButtonTemplate"-->
                     <!--                            text="Stop Tracking Attendance">-->
                     <!--                        <Size>-->
@@ -2638,6 +2656,157 @@
                 <Scripts>
                     <OnShow>
                         VoteFrame:WishlistFrame_OnShow();
+                        PlaySound("igMainMenuOptionCheckBoxOn");
+                    </OnShow>
+                    <OnHide>
+                        PlaySound("igMainMenuOptionCheckBoxOff");
+                    </OnHide>
+                </Scripts>
+            </Frame>
+
+            <Frame name="$parentProfessionsFrame" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="10" y="-35"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-10" y="10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitleUnderline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-25"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-26"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture file="Interface\addons\Talc\images\grad1" name="$parentTitle2Underline">
+                            <Color r="0.24" g="0.45" b="0.84"/>
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset x="0" y="-75"/>
+                                </Anchor>
+                                <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT">
+                                    <Offset x="0" y="-76"/>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentTitle" inherits="GameFontHighlightLarge" text="Guild Professions">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-8"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentDescription" inherits="GameFontHighlight"
+                                    text="Profession links are gathered when players link their profession in guild chat.">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-35"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentRecentItems" inherits="GameFontHighlightLarge" text="Professions">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-58"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                    </Layer>
+                </Layers>
+                <Frames>
+
+                    <Button name="$parentResetProfessions" inherits="Talc_ButtonTemplate" text="Reset">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="0" y="-4"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                VoteFrame:ResetSavedGuildProfessions()
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                    <ScrollFrame name="$parentItemsScrollFrame" inherits="UIPanelScrollFrameTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="5" y="-92"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="8" y="-5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <ScrollChild>
+                            <Frame name="$parentChild">
+                                <Anchors>
+                                    <Anchor point="TOPLEFT">
+                                        <Offset>
+                                            <AbsDimension x="0" y="0"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <Size>
+                                    <AbsDimension x="181" y="351"/>
+                                </Size>
+                                <Frames>
+                                </Frames>
+                            </Frame>
+                        </ScrollChild>
+                    </ScrollFrame>
+
+                    <Button name="$parentCloseWindow" inherits="Talc_ButtonTemplate" text="Close">
+                        <Size>
+                            <AbsDimension x="130" y="20"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="-10" y="5"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Scripts>
+                            <OnClick>
+                                VoteFrame:ShowScreen("Welcome")
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+
+                </Frames>
+                <Scripts>
+                    <OnShow>
+                        VoteFrame:ProfessionsFrame_OnShow();
                         PlaySound("igMainMenuOptionCheckBoxOn");
                     </OnShow>
                     <OnHide>

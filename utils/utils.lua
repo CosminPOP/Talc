@@ -33,6 +33,7 @@ function TALCUtils:Init()
     core.sort = table.sort
     core.insert = table.insert
     core.wipe = table.wipe
+    core.strtrim = strtrim
 
     core.dow = {
         [0] = "Sunday",
@@ -155,6 +156,17 @@ function TALCUtils:Init()
         ["INVTYPE_QUIVER"] = 'Quiver', --	20,21,22,23',
     }
 
+    core.professionIcons = {
+        ['Alchemy'] = "INV_Potion_23",
+        ['Blacksmithing'] = "Trade_BlackSmithing",
+        ['Cooking'] = "INV_Misc_Food_15",
+        ['Enchanting'] = "Trade_Engraving",
+        ['Engineering'] = "Trade_Engineering",
+        ['Inscription'] = "INV_Inscription_Tradeskill01",
+        ['Jewelcrafting'] = "INV_Misc_Gem_01",
+        ['Leatherworking'] = "INV_Misc_ArmorKit_17",
+        ['Tailoring'] = "Trade_Tailoring"
+    }
     core.RGBToHex = function(r, g, b)
         if r and not g and not b then
             g = r.g
@@ -854,6 +866,97 @@ function TALCUtils:Init()
             end
         end
         return items
+    end
+
+    core.linkParse = function(chatText)
+        local id, skill, sk2, se, magic = chatText:match("\124Htrade:([^:]*):([^:]*):([^:]*):([^:]*):([^\124]*)\124h")
+
+        local text = chatText:match("\124h%[([^\124]+)%]\124h")
+        text = core.strtrim(core.strtrim(text):gsub("^%[(.*)%]$", "%1")) -- strip brackets and ws
+
+        local link = "\124Htrade:" .. id .. ":" .. skill .. ":" .. sk2 .. ":" .. se .. ":" .. magic
+        link = link .. "\124h[" .. text .. "]\124h"
+
+        local profession = ''
+        local spec = ''
+        -- Alchemy
+        if core.find(core.lower(text), 'alchemy', 1, true) or core.find(core.lower(text), 'potion', 1, true) or
+                core.find(core.lower(text), 'elixir', 1, true) or core.find(core.lower(text), 'transmute', 1, true) then
+            profession = 'Alchemy'
+            if core.find(core.lower(text), 'potion', 1, true) then
+                spec = 'Potions'
+            end
+            if core.find(core.lower(text), 'elixir', 1, true) then
+                spec = 'Elixir and Flask'
+            end
+            if core.find(core.lower(text), 'transmu', 1, true) then
+                spec = 'Transmute'
+            end
+        end
+        -- Blacksmithing
+        if core.find(core.lower(text), 'blacksmi', 1, true) then
+            profession = 'Blacksmithing'
+            if core.find(core.lower(text), 'armor', 1, true) then
+                spec = 'Armorsmith'
+            end
+            if core.find(core.lower(text), 'weapon', 1, true) then
+                spec = 'Weaponsmith'
+            end
+        end
+        -- Cooking
+        if core.find(core.lower(text), 'cooking', 1, true) then
+            profession = 'Cooking'
+        end
+        -- Enchanting
+        if core.find(core.lower(text), 'enchantin', 1, true) then
+            profession = 'Enchanting'
+        end
+        -- Engineering
+        if core.find(core.lower(text), 'engineer', 1, true) then
+            profession = 'Engineering'
+            if core.find(core.lower(text), 'gobli', 1, true) then
+                spec = 'Goblin'
+            end
+            if core.find(core.lower(text), 'gnomi', 1, true) then
+                spec = 'Gnomish'
+            end
+        end
+        -- Inscription
+        if core.find(core.lower(text), 'inscrip', 1, true) then
+            profession = 'Inscription'
+        end
+        -- Inscription
+        if core.find(core.lower(text), 'jewelc', 1, true) then
+            profession = 'Jewelcrafting'
+        end
+        -- Leatherworking
+        if core.find(core.lower(text), 'leatherwo', 1, true) then
+            profession = 'Leatherworking'
+            if core.find(core.lower(text), 'dragons', 1, true) then
+                spec = 'Dragonscale'
+            end
+            if core.find(core.lower(text), 'element', 1, true) then
+                spec = 'Elemental'
+            end
+            if core.find(core.lower(text), 'tribal', 1, true) then
+                spec = 'Tribal'
+            end
+        end
+        -- Tailoring
+        if core.find(core.lower(text), 'tailor', 1, true) then
+            profession = 'Tailoring'
+            if core.find(core.lower(text), 'mooncloth', 1, true) then
+                spec = 'Mooncloth'
+            end
+            if core.find(core.lower(text), 'Shadowe', 1, true) then
+                spec = 'Shadoweave'
+            end
+            if core.find(core.lower(text), 'spellfi', 1, true) then
+                spec = 'Spellfire'
+            end
+        end
+
+        return skill, profession, spec, link
     end
 
 end
