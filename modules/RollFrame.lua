@@ -9,6 +9,7 @@ RollFrame = CreateFrame("Frame")
 
 RollFrame.watchRolls = false
 RollFrame.id = 0
+RollFrame.rolled = false
 
 ----------------------------------------------------
 --- Event Handler
@@ -25,6 +26,7 @@ function RollFrame:HandleSync(_, msg, _, sender)
                         TalcRollFrame:Show()
                     end
                     self.watchRolls = true
+                    self.rolled = false
                 end
             end
             return
@@ -76,6 +78,7 @@ function RollFrame:ResetVars()
     TalcRollFrame:Hide()
     self:HideAnchor()
     self.watchRolls = false
+    self.rolled = false
 end
 
 function RollFrame:ShowAnchor()
@@ -221,9 +224,11 @@ function RollFrame:FadeOutFrame()
     --TalcRollFrameItemButton.qualityBorder.animOut:Play();
 end
 
-function NeedFrame:FadeOutFinished()
+function RollFrame:FadeOutFinished()
     TalcRollFrameItem:Hide()
-    RollFrame:PickRoll('roll');
+    if not self.rolled then
+        self:PickRoll('roll')
+    end
 end
 
 function RollFrame:PickRoll(roll)
@@ -238,6 +243,8 @@ function RollFrame:PickRoll(roll)
     elseif roll == 'roll' then
         RandomRoll(1, 100)
     end
+
+    self.rolled = true
 
     self:FadeOutFrame()
 end

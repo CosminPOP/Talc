@@ -62,7 +62,7 @@
                         <Scale scaleX="1.1" scaleY="1.1" duration="0.2" order="1">
                             <Scripts>
                                 <OnFinished>
-                                    NeedFrame:FadeOutFinished();
+                                    RollFrame:FadeOutFinished();
                                 </OnFinished>
                             </Scripts>
                         </Scale>
