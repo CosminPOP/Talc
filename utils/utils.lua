@@ -359,33 +359,33 @@ function TALCUtils:Init()
     core.SetDynTTN = function(numItems)
         local t = 20
         if numItems == 2 then
-            t = 25
+            t = 20
         end
         if numItems == 3 then
-            t = 30
+            t = 25
         end
         if numItems == 4 then
-            t = 40
+            t = 30
         end
         if numItems >= 5 then
-            t = 50
+            t = 40
         end
         db['VOTE_TTN'] = t
     end
 
     core.SetDynTTV = function(numItems)
-        local t = 45
+        local t = 30
         if numItems == 2 then
-            t = 60
+            t = 30
         end
         if numItems == 3 then
-            t = 80
+            t = 40
         end
         if numItems == 4 then
-            t = 100
+            t = 50
         end
         if numItems >= 5 then
-            t = 120
+            t = 60
         end
         db['VOTE_TTV'] = t
     end
