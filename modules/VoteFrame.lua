@@ -376,6 +376,9 @@ function VoteFrame:HandleSync(_, t, _, sender)
             --pass
             for pwIndex, pwPlayer in next, self.playersWhoWantItems do
                 if pwPlayer.name == sender and pwPlayer.roll == -2 then
+                    if core.isRaidLeader() then
+                        SendChatMessage(sender .. ' has passed on ' .. self.VotedItemsFrames[self.playersWhoWantItems[pwIndex].itemIndex].link .. ' roll!', "RAID")
+                    end
                     self.playersWhoWantItems[pwIndex].roll = core.int(r[3])
                     self:updateVotedItemsFrames()
                     break
@@ -576,14 +579,6 @@ function VoteFrame:HandleSync(_, t, _, sender)
             or core.subFind(t, 'autopass=') then
 
         if not core.canVote() then
-            return
-        end
-
-        local needEx = core.split('=', t)
-
-        if not needEx[7] then
-            talc_error('bad need syntax')
-            talc_error(t)
             return
         end
 
