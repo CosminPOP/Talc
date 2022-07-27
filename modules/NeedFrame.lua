@@ -9,6 +9,7 @@ NeedFrame = CreateFrame("Frame")
 
 NeedFrame.numItems = 0
 NeedFrame.itemFrames = {}
+NeedFrame.badges = {}
 
 ----------------------------------------------------
 --- Event Handler
@@ -86,6 +87,7 @@ function NeedFrame:ResetVars()
     end
 
     self.numItems = 0
+    self.badges = {}
 end
 
 
@@ -142,6 +144,11 @@ function NeedFrame:AddItem(data)
     if db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
         _G[frame .. 'XMOGButton']:Show()
     end
+
+    _G[frame .. 'BISButtonBadgeText']:Hide()
+    _G[frame .. 'MSUpgradeButtonBadgeText']:Hide()
+    _G[frame .. 'OSButtonBadgeText']:Hide()
+    _G[frame .. 'XMOGButtonBadgeText']:Hide()
 
     --hide xmog button for necks, rings, trinkets
     if itemSlot and db['VOTE_CONFIG']['NeedButtons']['XMOG'] then
@@ -317,7 +324,42 @@ function NeedFrame:AddItem(data)
         end
     end
 
+    self:UpdateBadges(index)
+
     self:FadeInFrame(_G[frame])
+end
+
+function NeedFrame:UpdateBadges(index)
+    local frame = "NeedFrame" .. index
+
+    _G[frame .. 'BISButtonBadgeText']:Hide()
+    _G[frame .. 'MSUpgradeButtonBadgeText']:Hide()
+    _G[frame .. 'OSButtonBadgeText']:Hide()
+    _G[frame .. 'XMOGButtonBadgeText']:Hide()
+
+    if not self.badges[index] then
+        return
+    end
+
+    if self.badges[index]['bis'] > 0 then
+        _G[frame .. 'BISButtonBadgeText']:SetText(self.badges[index]['bis'])
+        _G[frame .. 'BISButtonBadgeText']:Show()
+    end
+
+    if self.badges[index]['ms'] > 0 then
+        _G[frame .. 'MSUpgradeButtonBadgeText']:SetText(self.badges[index]['ms'])
+        _G[frame .. 'MSUpgradeButtonBadgeText']:Show()
+    end
+
+    if self.badges[index]['os'] > 0 then
+        _G[frame .. 'OSButtonBadgeText']:SetText(self.badges[index]['os'])
+        _G[frame .. 'OSButtonBadgeText']:Show()
+    end
+
+    if self.badges[index]['xmog'] > 0 then
+        _G[frame .. 'XMOGButtonBadgeText']:SetText(self.badges[index]['xmog'])
+        _G[frame .. 'XMOGButtonBadgeText']:Show()
+    end
 end
 
 function NeedFrame:SendGear(to)
@@ -666,6 +708,8 @@ end)
 ----------------------------------------------------
 
 function NeedFrame:Test()
+
+    NeedFrame.badges = {}
 
     local linkStrings = {
         '\124cffa335ee\124Hitem:40610:0:0:0:0:0:0:0:0\124h[Chestguard of the Lost Conqueror]\124h\124r',

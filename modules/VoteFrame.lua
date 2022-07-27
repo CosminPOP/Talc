@@ -578,6 +578,31 @@ function VoteFrame:HandleSync(_, t, _, sender)
             or core.subFind(t, 'pass=')
             or core.subFind(t, 'autopass=') then
 
+        local needEx = core.split('=', t)
+
+        if not needEx[7] then
+            talc_error('bad need syntax')
+            talc_error(t)
+            return
+        end
+
+        local index = core.int(needEx[2])
+        local pick = needEx[1]
+
+        if not NeedFrame.badges[index] then
+            NeedFrame.badges[index] = {
+                ['bis'] = 0,
+                ['ms'] = 0,
+                ['os'] = 0,
+                ['xmog'] = 0,
+                ['pass'] = 0,
+                ['autopass'] = 0,
+            }
+        end
+
+        NeedFrame.badges[index][pick] = NeedFrame.badges[index][pick] + 1
+        NeedFrame:UpdateBadges(index)
+
         if not core.canVote() then
             return
         end
