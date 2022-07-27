@@ -196,8 +196,11 @@ function TALCUtils:Init()
         return result
     end
 
-    core.asend = function(msg)
-        SendAddonMessage(core.channel, msg, "RAID")
+    core.asend = function(msg, channel)
+        if not channel then
+            channel = "RAID"
+        end
+        SendAddonMessage(core.channel, msg, channel)
     end
 
     core.bsend = function(prio, msg)
